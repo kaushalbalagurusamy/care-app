@@ -56,11 +56,11 @@ public struct HeaderNavBar: View {
                     } else {
                         // Figma Frame 5:12 Home Capsule Pill with Poppins typography
                         Button(action: { onHome?() }) {
-                            HStack(spacing: 6) {
+                            HStack(spacing: 8) {
                                 Image("icon_home")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 14, height: 14)
+                                    .frame(width: 17, height: 17)
                                 
                                 Text("Home")
                                     .font(Theme.Typography.menuLabel)
@@ -135,13 +135,13 @@ public struct CircularNavIconButton: View {
                     Group {
                         if isSystemImage {
                             Image(systemName: iconName)
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(Theme.Colors.primary)
                         } else {
                             Image(iconName)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: 18, height: 18)
+                                .frame(width: 20, height: 20) // Exact Figma proportion
                         }
                     }
                 )

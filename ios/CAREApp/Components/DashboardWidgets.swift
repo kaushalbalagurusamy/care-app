@@ -1,15 +1,26 @@
 import SwiftUI
 
-// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — 100% Direct Vector/Raster Export)
+// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Centered Alignment & No Floating Numbers)
 public struct ActionCardView: View {
-    public let imageName: String
+    public let title: String
+    public let subtitle: String
+    public let iconName: String
+    public let backgroundImageName: String
     public let action: () -> Void
     
+    private let cardHeight: CGFloat = 164.0
+    
     public init(
-        imageName: String,
+        title: String,
+        subtitle: String,
+        iconName: String,
+        backgroundImageName: String,
         action: @escaping () -> Void
     ) {
-        self.imageName = imageName
+        self.title = title
+        self.subtitle = subtitle
+        self.iconName = iconName
+        self.backgroundImageName = backgroundImageName
         self.action = action
     }
     
@@ -19,13 +30,53 @@ public struct ActionCardView: View {
             generator.impactOccurred()
             action()
         }) {
-            Image(imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity)
-                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+            ZStack {
+                // Background 3D Render Art strictly bounded to frame
+                Color.clear
+                    .overlay(
+                        Image(backgroundImageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    )
+                    .clipped()
+                
+                // Vertically Centered Content Layout (Icon and Text in-line on horizontal centerline)
+                HStack(alignment: .center, spacing: 16) {
+                    // Left Column: Frosted Glass Icon Badge (Vertically Centered)
+                    Circle()
+                        .fill(Color.white.opacity(0.20))
+                        .frame(width: 48, height: 48)
+                        .overlay(
+                            Image(iconName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24, height: 24)
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.35), lineWidth: 1)
+                        )
+                    
+                    Spacer()
+                    
+                    // Right Column: Title & Subtitle (Vertically Centered with Icon)
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text(title)
+                            .font(Theme.Typography.poppins(.bold, size: 20))
+                            .foregroundColor(.white)
+                        
+                        Text(subtitle)
+                            .font(Theme.Typography.poppins(.medium, size: 12))
+                            .foregroundColor(.white.opacity(0.92))
+                    }
+                }
+                .padding(.horizontal, 24)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: cardHeight)
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
         }
         .buttonStyle(ScaleCardButtonStyle())
         .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
@@ -86,9 +137,9 @@ public struct StreakBadgeView: View {
 // MARK: - Previews
 #Preview("Dashboard Widgets") {
     VStack(spacing: 14) {
-        ActionCardView(imageName: "card_education_full", action: {})
-        ActionCardView(imageName: "card_assessment_full", action: {})
-        ActionCardView(imageName: "card_exercises_full", action: {})
+        ActionCardView(title: "Education", subtitle: "Learn Wellness", iconName: "icon_book_open", backgroundImageName: "card_education_bg", action: {})
+        ActionCardView(title: "Assessment", subtitle: "Track Mind", iconName: "icon_heart_pulse", backgroundImageName: "card_assessment_bg", action: {})
+        ActionCardView(title: "Exercises", subtitle: "Active Care", iconName: "icon_activity", backgroundImageName: "card_exercises_bg", action: {})
         StreakBadgeView(daysCount: 5)
     }
     .padding(20)

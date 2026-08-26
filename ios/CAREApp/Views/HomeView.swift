@@ -61,23 +61,32 @@ public struct HomeView: View {
                     .foregroundColor(Theme.Colors.textPrimary)
                     .padding(.top, 2)
                 
-                // 3 Action Cards (Direct Figma Exports with 20pt side margin clearance)
+                // 3 Action Cards (Vertically Centered Icons & Labels, No Floating Numbers)
                 ActionCardView(
-                    imageName: "card_education_full",
+                    title: "Education",
+                    subtitle: "Learn Wellness",
+                    iconName: "icon_book_open",
+                    backgroundImageName: "card_education_bg",
                     action: {
                         activeAlert = .education
                     }
                 )
                 
                 ActionCardView(
-                    imageName: "card_assessment_full",
+                    title: "Assessment",
+                    subtitle: "Track Mind",
+                    iconName: "icon_heart_pulse",
+                    backgroundImageName: "card_assessment_bg",
                     action: {
                         router.navigate(to: .assessmentOverview)
                     }
                 )
                 
                 ActionCardView(
-                    imageName: "card_exercises_full",
+                    title: "Exercises",
+                    subtitle: "Active Care",
+                    iconName: "icon_activity",
+                    backgroundImageName: "card_exercises_bg",
                     action: {
                         activeAlert = .exercises
                     }
@@ -87,7 +96,7 @@ public struct HomeView: View {
                 StreakBadgeView(daysCount: 5)
                     .padding(.bottom, 6)
             }
-            .padding(.horizontal, 20) // 20pt left & right clearance from screen edges
+            .padding(.horizontal, 20)
         }
         .background(Theme.Colors.background)
         .alert(
