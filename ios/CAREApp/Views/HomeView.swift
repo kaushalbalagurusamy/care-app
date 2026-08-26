@@ -32,13 +32,16 @@ public struct HomeView: View {
     public let router: AppRouter
     @State private var activeAlert: HomeAlertItem? = nil
     
+    // Equal 14pt vertical spacing throughout entire column matching Figma
+    private let uniformSpacing: CGFloat = 14.0
+    
     public init(router: AppRouter) {
         self.router = router
     }
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Modular Compact Header Bar (52pt)
+            // Modular Compact Header Bar (52pt) with Direct Figma Icons & Poppins Font
             HeaderNavBar(
                 showBackButton: false,
                 showHomeButton: true,
@@ -49,62 +52,42 @@ public struct HomeView: View {
                 onProfile: {}
             )
             
-            // Main Dashboard Body - Fitted to 1 Single Screen
-            VStack(alignment: .leading, spacing: 12) {
+            // Main Dashboard Body - Fitted with Uniform Spacing
+            VStack(alignment: .leading, spacing: uniformSpacing) {
                 
-                // Welcome Title (Matching Figma Frame 5:19)
+                // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt)
                 Text("Welcome Back")
-                    .font(.system(size: 26, weight: .bold))
+                    .font(Theme.Typography.welcomeTitle)
                     .foregroundColor(Theme.Colors.textPrimary)
-                    .padding(.top, 2)
+                    .padding(.top, 4)
                 
-                // 3 Action Cards (Matching Figma 350x162 frames)
-                VStack(spacing: 12) {
-                    // Module 01: Education
-                    ActionCardView(
-                        number: "01",
-                        title: "Education",
-                        subtitle: "Learn Wellness",
-                        iconSystemName: "book.fill",
-                        backgroundImageName: "card_education_bg",
-                        action: {
-                            activeAlert = .education
-                        }
-                    )
-                    
-                    // Module 02: Assessment (Primary Flow)
-                    ActionCardView(
-                        number: "02",
-                        title: "Assessment",
-                        subtitle: "Track Mind",
-                        iconSystemName: "heart.fill",
-                        backgroundImageName: "card_assessment_bg",
-                        action: {
-                            router.navigate(to: .assessmentOverview)
-                        }
-                    )
-                    
-                    // Module 03: Exercises
-                    ActionCardView(
-                        number: "03",
-                        title: "Exercises",
-                        subtitle: "Active Care",
-                        iconSystemName: "bolt.fill",
-                        backgroundImageName: "card_exercises_bg",
-                        action: {
-                            activeAlert = .exercises
-                        }
-                    )
-                }
+                // 3 Action Cards (Direct Figma Exports)
+                ActionCardView(
+                    imageName: "card_education_full",
+                    action: {
+                        activeAlert = .education
+                    }
+                )
                 
-                Spacer(minLength: 4)
+                ActionCardView(
+                    imageName: "card_assessment_full",
+                    action: {
+                        router.navigate(to: .assessmentOverview)
+                    }
+                )
                 
-                // Daily Streak Capsule Pill (Matching Figma Frame 5:47)
+                ActionCardView(
+                    imageName: "card_exercises_full",
+                    action: {
+                        activeAlert = .exercises
+                    }
+                )
+                
+                // Daily Streak Capsule Pill with Exactly Equal Spacing (14pt) & Direct Figma Sparkles
                 StreakBadgeView(daysCount: 5)
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 6)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 8)
         }
         .background(Theme.Colors.background)
         .alert(

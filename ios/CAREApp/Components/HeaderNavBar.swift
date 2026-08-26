@@ -40,7 +40,8 @@ public struct HeaderNavBar: View {
             HStack(spacing: 8) {
                 if showBackButton {
                     CircularNavIconButton(
-                        icon: "chevron.left",
+                        iconName: "chevron.left",
+                        isSystemImage: true,
                         action: { onBack?() }
                     )
                 }
@@ -48,19 +49,23 @@ public struct HeaderNavBar: View {
                 if showHomeButton {
                     if showBackButton {
                         CircularNavIconButton(
-                            icon: "house.fill",
+                            iconName: "icon_home",
+                            isSystemImage: false,
                             action: { onHome?() }
                         )
                     } else {
-                        // Figma Frame 5:12 Home Capsule Pill
+                        // Figma Frame 5:12 Home Capsule Pill with Poppins typography
                         Button(action: { onHome?() }) {
                             HStack(spacing: 6) {
-                                Image(systemName: "house.fill")
-                                    .font(.system(size: 13, weight: .semibold))
+                                Image("icon_home")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 14, height: 14)
+                                
                                 Text("Home")
-                                    .font(.system(size: 13, weight: .semibold))
+                                    .font(Theme.Typography.menuLabel)
+                                    .foregroundColor(Theme.Colors.primary)
                             }
-                            .foregroundColor(Theme.Colors.primary)
                             .padding(.horizontal, 14)
                             .frame(height: 36)
                             .background(Theme.Colors.surfaceSecondary)
@@ -88,32 +93,36 @@ public struct HeaderNavBar: View {
             HStack(spacing: 8) {
                 if showChartButton {
                     CircularNavIconButton(
-                        icon: "chart.bar.fill",
+                        iconName: "icon_chart",
+                        isSystemImage: false,
                         action: { onChart?() }
                     )
                 }
                 
                 if showProfileButton {
                     CircularNavIconButton(
-                        icon: "person.fill",
+                        iconName: "icon_profile",
+                        isSystemImage: false,
                         action: { onProfile?() }
                     )
                 }
             }
         }
         .padding(.horizontal, 20)
-        .frame(height: 52) // Modular compact clearance
+        .frame(height: 52)
         .background(Theme.Colors.background)
     }
 }
 
 // MARK: - 36x36 Circular Navigation Button (Figma Node 11:7, 5:12, 76:4, 76:7)
 public struct CircularNavIconButton: View {
-    public let icon: String
+    public let iconName: String
+    public let isSystemImage: Bool
     public let action: () -> Void
     
-    public init(icon: String, action: @escaping () -> Void) {
-        self.icon = icon
+    public init(iconName: String, isSystemImage: Bool = false, action: @escaping () -> Void) {
+        self.iconName = iconName
+        self.isSystemImage = isSystemImage
         self.action = action
     }
     
@@ -123,9 +132,18 @@ public struct CircularNavIconButton: View {
                 .fill(Theme.Colors.surfaceSecondary)
                 .frame(width: 36, height: 36)
                 .overlay(
-                    Image(systemName: icon)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Theme.Colors.primary)
+                    Group {
+                        if isSystemImage {
+                            Image(systemName: iconName)
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(Theme.Colors.primary)
+                        } else {
+                            Image(iconName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 18, height: 18)
+                        }
+                    }
                 )
                 .contentShape(Circle())
         }
@@ -137,22 +155,8 @@ public struct CircularNavIconButton: View {
 // MARK: - Previews
 #Preview("Header Navigation Variants") {
     VStack(spacing: 20) {
-        // Full 4-button header
-        HeaderNavBar(
-            showBackButton: true,
-            showHomeButton: true,
-            showChartButton: true,
-            showProfileButton: true
-        )
-        
-        // Homepage header (No back button)
-        HeaderNavBar(
-            showBackButton: false,
-            showHomeButton: true,
-            showChartButton: true,
-            showProfileButton: true,
-            title: "C.A.R.E."
-        )
+        HeaderNavBar(showBackButton: true, showHomeButton: true, showChartButton: true, showProfileButton: true)
+        HeaderNavBar(showBackButton: false, showHomeButton: true, showChartButton: true, showProfileButton: true)
     }
     .background(Theme.Colors.surfaceSecondary)
 }
