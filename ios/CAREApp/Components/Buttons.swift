@@ -27,6 +27,8 @@ public struct PrimaryButton: View {
     public var body: some View {
         Button(action: {
             if isEnabled && !isLoading {
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
                 action()
             }
         }) {
@@ -48,9 +50,11 @@ public struct PrimaryButton: View {
             .foregroundColor(.white)
             .background(isEnabled ? Theme.Colors.primary : Theme.Colors.textMuted)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
         .disabled(!isEnabled || isLoading)
         .buttonStyle(.plain)
+        .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
 
@@ -73,7 +77,11 @@ public struct SecondaryButton: View {
     }
     
     public var body: some View {
-        Button(action: action) {
+        Button(action: {
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+            action()
+        }) {
             HStack(spacing: 8) {
                 if let icon = icon {
                     Image(systemName: icon)
@@ -87,12 +95,14 @@ public struct SecondaryButton: View {
             .foregroundColor(Theme.Colors.primary)
             .background(Theme.Colors.background)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(Theme.Colors.dividerMedium, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
+        .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
 

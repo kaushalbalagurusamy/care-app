@@ -32,12 +32,13 @@ public struct ActionCardView: View {
             action()
         }) {
             ZStack {
-                // Background 3D Render Art
-                Image(backgroundImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 196)
+                // Background 3D Render Art strictly bounded to frame
+                Color.clear
+                    .overlay(
+                        Image(backgroundImageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    )
                     .clipped()
                 
                 // Content Overlay Layout Matching Figma Frame 5:21
@@ -83,9 +84,11 @@ public struct ActionCardView: View {
             .frame(maxWidth: .infinity)
             .frame(height: 196)
             .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(ScaleCardButtonStyle())
+        .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 }
 
@@ -131,6 +134,7 @@ public struct StreakBadgeView: View {
         .frame(height: 44)
         .background(Theme.Colors.cardSurface)
         .clipShape(Capsule())
+        .contentShape(Capsule())
         .overlay(
             Capsule()
                 .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
