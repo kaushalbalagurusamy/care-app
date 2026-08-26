@@ -1,6 +1,7 @@
 {
   "images": [
     {
+      "filename": "card_assessment_full.png",
       "idiom": "universal",
       "scale": "1x"
     },
@@ -10,6 +11,7 @@
       "scale": "2x"
     },
     {
+      "filename": "card_assessment_full.png",
       "idiom": "universal",
       "scale": "3x"
     }

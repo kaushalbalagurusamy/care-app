@@ -1,11 +1,9 @@
 import SwiftUI
 
-// MARK: - Screen 1: Loading & Brand Splash View (Figma Frame 3:2)
+// MARK: - Screen 1: Loading & Brand Splash View (Figma Frame 3:2 — 1:1 Match)
 public struct LoadingView: View {
     public let router: AppRouter?
     public let onFinished: (() -> Void)?
-    
-    @State private var isAnimating: Bool = false
     
     public init(router: AppRouter? = nil, onFinished: (() -> Void)? = nil) {
         self.router = router
@@ -14,53 +12,45 @@ public struct LoadingView: View {
     
     public var body: some View {
         ZStack {
-            Theme.Colors.background
+            Color.white
                 .ignoresSafeArea()
             
-            VStack(spacing: 24) {
+            VStack(spacing: 28) {
                 Spacer()
                 
-                // Brand Logo Graphic
+                // Pristine Direct Figma Logo Illustration (256x288)
                 Image("care_logo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 140, height: 140)
-                    .scaleEffect(isAnimating ? 1.0 : 0.85)
-                    .opacity(isAnimating ? 1.0 : 0.0)
-                    .animation(.spring(response: 0.8, dampingFraction: 0.7), value: isAnimating)
+                    .frame(width: 240, height: 260)
                 
-                VStack(spacing: 8) {
-                    Text("C.A.R.E.")
-                        .font(Theme.Typography.title)
-                        .foregroundColor(Theme.Colors.textPrimary)
-                    
-                    Text("Connectedness & Relational Evaluation")
-                        .font(Theme.Typography.subheadline)
-                        .foregroundColor(Theme.Colors.textSecondary)
-                        .multilineTextAlignment(.center)
-                }
-                .opacity(isAnimating ? 1.0 : 0.0)
-                .animation(.easeIn(duration: 0.6).delay(0.2), value: isAnimating)
+                // Exact Typography: Poppins SemiBold 36pt, Tracking 5.0, Color #12A3D4 (No subtext)
+                Text("C.A.R.E.")
+                    .font(.custom("Poppins-SemiBold", size: 36))
+                    .tracking(6.0)
+                    .foregroundColor(Color(red: 18/255.0, green: 163/255.0, blue: 212/255.0))
                 
                 Spacer()
             }
-            .padding(.horizontal, 32)
         }
         .onAppear {
-            isAnimating = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                withAnimation(.easeOut(duration: 0.35)) {
+                    if let onFinished = onFinished {
+                        onFinished()
+                    } else {
+                        router?.navigate(to: .home)
+                    }
+                }
+            }
+        }
+        .onTapGesture {
+            withAnimation(.easeOut(duration: 0.2)) {
                 if let onFinished = onFinished {
                     onFinished()
                 } else {
                     router?.navigate(to: .home)
                 }
-            }
-        }
-        .onTapGesture {
-            if let onFinished = onFinished {
-                onFinished()
-            } else {
-                router?.navigate(to: .home)
             }
         }
     }

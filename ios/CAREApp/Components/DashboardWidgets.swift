@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Centered Alignment & No Floating Numbers)
+// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Full Width 3D Art & Centered Content)
 public struct ActionCardView: View {
     public let title: String
     public let subtitle: String
@@ -8,7 +8,7 @@ public struct ActionCardView: View {
     public let backgroundImageName: String
     public let action: () -> Void
     
-    private let cardHeight: CGFloat = 164.0
+    private let cardHeight: CGFloat = 176.0
     
     public init(
         title: String,
@@ -31,16 +31,15 @@ public struct ActionCardView: View {
             action()
         }) {
             ZStack {
-                // Background 3D Render Art strictly bounded to frame
-                Color.clear
-                    .overlay(
-                        Image(backgroundImageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    )
+                // Background 3D Render Art (Exact Figma Image Fill Filling Card)
+                Image(backgroundImageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: cardHeight)
                     .clipped()
                 
-                // Vertically Centered Content Layout (Icon and Text in-line on horizontal centerline)
+                // Vertically Centered Content Layout
                 HStack(alignment: .center, spacing: 16) {
                     // Left Column: Frosted Glass Icon Badge (Vertically Centered)
                     Circle()
@@ -60,9 +59,9 @@ public struct ActionCardView: View {
                     Spacer()
                     
                     // Right Column: Title & Subtitle (Vertically Centered with Icon)
-                    VStack(alignment: .trailing, spacing: 4) {
+                    VStack(alignment: .trailing, spacing: 3) {
                         Text(title)
-                            .font(Theme.Typography.poppins(.bold, size: 20))
+                            .font(Theme.Typography.poppins(.bold, size: 21))
                             .foregroundColor(.white)
                         
                         Text(subtitle)
