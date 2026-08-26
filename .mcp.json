@@ -11,6 +11,17 @@
     "DesktopCommander": {
       "command": "npx",
       "args": ["-y", "@wonderwhy-er/desktop-commander@latest", "setup"]
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_API_KEY": "figd_hHA5-0wXq_IAbXGUbTwdBl684E0eVl95jhVh5Umu"
+      }
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@cyanheads/git-mcp-server"]
     }
   }
 }
