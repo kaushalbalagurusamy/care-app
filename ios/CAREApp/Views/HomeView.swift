@@ -38,7 +38,7 @@ public struct HomeView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Header Bar
+            // Modular Compact Header Bar (52pt)
             HeaderNavBar(
                 showBackButton: false,
                 showHomeButton: true,
@@ -49,62 +49,62 @@ public struct HomeView: View {
                 onProfile: {}
             )
             
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 20) {
+            // Main Dashboard Body - Fitted to 1 Single Screen
+            VStack(alignment: .leading, spacing: 12) {
+                
+                // Welcome Title (Matching Figma Frame 5:19)
+                Text("Welcome Back")
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(Theme.Colors.textPrimary)
+                    .padding(.top, 2)
+                
+                // 3 Action Cards (Matching Figma 350x162 frames)
+                VStack(spacing: 12) {
+                    // Module 01: Education
+                    ActionCardView(
+                        number: "01",
+                        title: "Education",
+                        subtitle: "Learn Wellness",
+                        iconSystemName: "book.fill",
+                        backgroundImageName: "card_education_bg",
+                        action: {
+                            activeAlert = .education
+                        }
+                    )
                     
-                    // Welcome Title (Matching Figma Frame 5:19)
-                    Text("Welcome Back")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 4)
+                    // Module 02: Assessment (Primary Flow)
+                    ActionCardView(
+                        number: "02",
+                        title: "Assessment",
+                        subtitle: "Track Mind",
+                        iconSystemName: "heart.fill",
+                        backgroundImageName: "card_assessment_bg",
+                        action: {
+                            router.navigate(to: .assessmentOverview)
+                        }
+                    )
                     
-                    // 3 Action Cards (Matching Figma 350x196 frames)
-                    VStack(spacing: 16) {
-                        // Module 01: Education
-                        ActionCardView(
-                            number: "01",
-                            title: "Education",
-                            subtitle: "Learn Wellness",
-                            iconSystemName: "book.fill",
-                            backgroundImageName: "card_education_bg",
-                            action: {
-                                activeAlert = .education
-                            }
-                        )
-                        
-                        // Module 02: Assessment (Primary Flow)
-                        ActionCardView(
-                            number: "02",
-                            title: "Assessment",
-                            subtitle: "Track Mind",
-                            iconSystemName: "heart.fill",
-                            backgroundImageName: "card_assessment_bg",
-                            action: {
-                                router.navigate(to: .assessmentOverview)
-                            }
-                        )
-                        
-                        // Module 03: Exercises
-                        ActionCardView(
-                            number: "03",
-                            title: "Exercises",
-                            subtitle: "Active Care",
-                            iconSystemName: "bolt.fill",
-                            backgroundImageName: "card_exercises_bg",
-                            action: {
-                                activeAlert = .exercises
-                            }
-                        )
-                    }
-                    
-                    // Daily Streak Capsule Pill (Matching Figma Frame 5:47)
-                    StreakBadgeView(daysCount: 5)
-                        .padding(.top, 4)
-                        .padding(.bottom, 24)
+                    // Module 03: Exercises
+                    ActionCardView(
+                        number: "03",
+                        title: "Exercises",
+                        subtitle: "Active Care",
+                        iconSystemName: "bolt.fill",
+                        backgroundImageName: "card_exercises_bg",
+                        action: {
+                            activeAlert = .exercises
+                        }
+                    )
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                
+                Spacer(minLength: 4)
+                
+                // Daily Streak Capsule Pill (Matching Figma Frame 5:47)
+                StreakBadgeView(daysCount: 5)
+                    .padding(.bottom, 8)
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 8)
         }
         .background(Theme.Colors.background)
         .alert(

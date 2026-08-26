@@ -46,10 +46,29 @@ public struct HeaderNavBar: View {
                 }
                 
                 if showHomeButton {
-                    CircularNavIconButton(
-                        icon: "house.fill",
-                        action: { onHome?() }
-                    )
+                    if showBackButton {
+                        CircularNavIconButton(
+                            icon: "house.fill",
+                            action: { onHome?() }
+                        )
+                    } else {
+                        // Figma Frame 5:12 Home Capsule Pill
+                        Button(action: { onHome?() }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "house.fill")
+                                    .font(.system(size: 13, weight: .semibold))
+                                Text("Home")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                            .foregroundColor(Theme.Colors.primary)
+                            .padding(.horizontal, 14)
+                            .frame(height: 36)
+                            .background(Theme.Colors.surfaceSecondary)
+                            .clipShape(Capsule())
+                            .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
             }
             
@@ -83,7 +102,7 @@ public struct HeaderNavBar: View {
             }
         }
         .padding(.horizontal, 20)
-        .frame(height: 64)
+        .frame(height: 52) // Modular compact clearance
         .background(Theme.Colors.background)
     }
 }
@@ -108,8 +127,10 @@ public struct CircularNavIconButton: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Theme.Colors.primary)
                 )
+                .contentShape(Circle())
         }
         .buttonStyle(.plain)
+        .contentShape(Circle())
     }
 }
 

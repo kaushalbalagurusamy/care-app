@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — 350x196pt)
+// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Scaled to 164pt for 1-screen fit)
 public struct ActionCardView: View {
     public let number: String
     public let title: String
@@ -8,6 +8,8 @@ public struct ActionCardView: View {
     public let iconSystemName: String
     public let backgroundImageName: String
     public let action: () -> Void
+    
+    private let cardHeight: CGFloat = 162.0
     
     public init(
         number: String,
@@ -44,7 +46,7 @@ public struct ActionCardView: View {
                 // Content Overlay Layout Matching Figma Frame 5:21
                 HStack(spacing: 0) {
                     // Left Column: Index & Icon
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
                         Text(number)
                             .font(.system(size: 14, weight: .bold, design: .rounded))
                             .foregroundColor(.white.opacity(0.85))
@@ -53,10 +55,10 @@ public struct ActionCardView: View {
                         // Translucent Glass Icon Circle
                         Circle()
                             .fill(Color.white.opacity(0.18))
-                            .frame(width: 44, height: 44)
+                            .frame(width: 42, height: 42)
                             .overlay(
                                 Image(systemName: iconSystemName)
-                                    .font(.system(size: 18, weight: .semibold))
+                                    .font(.system(size: 17, weight: .semibold))
                                     .foregroundColor(.white)
                             )
                             .overlay(
@@ -68,9 +70,9 @@ public struct ActionCardView: View {
                     Spacer()
                     
                     // Right Column: Title & Subtitle
-                    VStack(alignment: .trailing, spacing: 4) {
+                    VStack(alignment: .trailing, spacing: 3) {
                         Text(title)
-                            .font(.system(size: 22, weight: .bold))
+                            .font(.system(size: 21, weight: .bold))
                             .foregroundColor(.white)
                         
                         Text(subtitle)
@@ -78,17 +80,17 @@ public struct ActionCardView: View {
                             .foregroundColor(.white.opacity(0.9))
                     }
                 }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 20)
+                .padding(.horizontal, 22)
+                .padding(.vertical, 16)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 196)
-            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+            .frame(height: cardHeight)
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
         }
         .buttonStyle(ScaleCardButtonStyle())
-        .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 }
 
@@ -101,7 +103,7 @@ struct ScaleCardButtonStyle: ButtonStyle {
     }
 }
 
-// MARK: - Daily Streak Pill Widget (Figma Frame 5:47 — 350x44pt Capsule)
+// MARK: - Daily Streak Pill Widget (Figma Frame 5:47 — 350x40pt Capsule)
 public struct StreakBadgeView: View {
     public let daysCount: Int
     
@@ -113,25 +115,25 @@ public struct StreakBadgeView: View {
         HStack(spacing: 10) {
             // Blue Sparkles Icon
             Image(systemName: "sparkles")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Theme.Colors.primary)
             
             // Streak Text
             HStack(spacing: 4) {
                 Text("Daily Streak:")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Theme.Colors.textPrimary)
                 
                 Text("\(daysCount) Days Active")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 13, weight: .bold))
                     .foregroundColor(Theme.Colors.primary)
             }
             
             Spacer()
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 18)
         .frame(maxWidth: .infinity)
-        .frame(height: 44)
+        .frame(height: 40)
         .background(Theme.Colors.cardSurface)
         .clipShape(Capsule())
         .contentShape(Capsule())
@@ -144,7 +146,7 @@ public struct StreakBadgeView: View {
 
 // MARK: - Previews
 #Preview("Dashboard Widgets") {
-    VStack(spacing: 16) {
+    VStack(spacing: 14) {
         ActionCardView(number: "01", title: "Education", subtitle: "Learn Wellness", iconSystemName: "book.fill", backgroundImageName: "card_education_bg", action: {})
         ActionCardView(number: "02", title: "Assessment", subtitle: "Track Mind", iconSystemName: "heart.fill", backgroundImageName: "card_assessment_bg", action: {})
         ActionCardView(number: "03", title: "Exercises", subtitle: "Active Care", iconSystemName: "bolt.fill", backgroundImageName: "card_exercises_bg", action: {})
