@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EAD93550F185461E00000001 /* BubbleCardContainer.swift */; };
 		2251B440743818A38200000001 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B95E93EAC5E189A400000001 /* Buttons.swift */; };
+		2252EF2EBEA151A37C00000001 /* CategoryBreakdownAccordion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */; };
 		220E58E1947B852B5F00000001 /* ComponentShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */; };
 		22B47F7780AEE3625A00000001 /* DashboardWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */; };
 		220009ECE37648D77400000001 /* DonutChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FC2506040EED036900000001 /* DonutChartView.swift */; };
@@ -18,6 +20,7 @@
 		223D9A20E74E538D2600000001 /* PageIndicatorDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */; };
 		221D6030DEF7570BC100000001 /* RelationshipSelectionPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */; };
 		22C932AB0CAD1BB77000000001 /* ScoreBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22286002FC1ACC004200000001 /* ScoreBubbleView.swift */; };
+		22C11FEDCC2F7E0E2700000001 /* VerticalTimeAllocationBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD762A6677B28F7A00000001 /* VerticalTimeAllocationBubble.swift */; };
 		2269159600FD31FB4E00000001 /* AssessmentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290D08DA15E5AC1FF00000001 /* AssessmentResult.swift */; };
 		22327D400337F7363500000001 /* AssessmentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAE153CDA6EB03CB00000001 /* AssessmentSession.swift */; };
 		22ECA7C1FB873B4CDF00000001 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228B338976089F40B600000001 /* Person.swift */; };
@@ -34,27 +37,30 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		22B95E93EAC5E189A400000001 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentShowcaseView.swift; sourceTree = "<group>"; };
-		22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWidgets.swift; sourceTree = "<group>"; };
-		22FC2506040EED036900000001 /* DonutChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartView.swift; sourceTree = "<group>"; };
-		2208299BEC42E4448800000001 /* ExpandableAccordionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableAccordionCard.swift; sourceTree = "<group>"; };
-		226E0EE462AA86FD0700000001 /* FrequencySliderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencySliderRow.swift; sourceTree = "<group>"; };
-		22CFA62694C5AAA59C00000001 /* HeaderNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderNavBar.swift; sourceTree = "<group>"; };
-		228A9293743DE1148800000001 /* IndividualResultCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndividualResultCard.swift; sourceTree = "<group>"; };
-		2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageIndicatorDots.swift; sourceTree = "<group>"; };
-		2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationshipSelectionPill.swift; sourceTree = "<group>"; };
-		22286002FC1ACC004200000001 /* ScoreBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBubbleView.swift; sourceTree = "<group>"; };
-		2290D08DA15E5AC1FF00000001 /* AssessmentResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssessmentResult.swift; sourceTree = "<group>"; };
-		22AAE153CDA6EB03CB00000001 /* AssessmentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssessmentSession.swift; sourceTree = "<group>"; };
-		228B338976089F40B600000001 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
-		226416CE132657AD1D00000001 /* ScoringEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringEngine.swift; sourceTree = "<group>"; };
-		22ED9C3F68111ABF5D00000001 /* SurveyQuestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyQuestions.swift; sourceTree = "<group>"; };
-		22A019EEC864B773B400000001 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
-		22984AFBCED47F677A00000001 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		2229DBCEF2E9EBDFC100000001 /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
-		2255C1EA7EDC6DC3DE00000001 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		22853C36C8606976F400000001 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		22EAD93550F185461E00000001 /* BubbleCardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BubbleCardContainer.swift"; sourceTree = "<group>"; };
+		22B95E93EAC5E189A400000001 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Buttons.swift"; sourceTree = "<group>"; };
+		224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryBreakdownAccordion.swift"; sourceTree = "<group>"; };
+		223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentShowcaseView.swift"; sourceTree = "<group>"; };
+		22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashboardWidgets.swift"; sourceTree = "<group>"; };
+		22FC2506040EED036900000001 /* DonutChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DonutChartView.swift"; sourceTree = "<group>"; };
+		2208299BEC42E4448800000001 /* ExpandableAccordionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExpandableAccordionCard.swift"; sourceTree = "<group>"; };
+		226E0EE462AA86FD0700000001 /* FrequencySliderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FrequencySliderRow.swift"; sourceTree = "<group>"; };
+		22CFA62694C5AAA59C00000001 /* HeaderNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HeaderNavBar.swift"; sourceTree = "<group>"; };
+		228A9293743DE1148800000001 /* IndividualResultCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IndividualResultCard.swift"; sourceTree = "<group>"; };
+		2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PageIndicatorDots.swift"; sourceTree = "<group>"; };
+		2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelationshipSelectionPill.swift"; sourceTree = "<group>"; };
+		22286002FC1ACC004200000001 /* ScoreBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScoreBubbleView.swift"; sourceTree = "<group>"; };
+		22AD762A6677B28F7A00000001 /* VerticalTimeAllocationBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerticalTimeAllocationBubble.swift"; sourceTree = "<group>"; };
+		2290D08DA15E5AC1FF00000001 /* AssessmentResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentResult.swift"; sourceTree = "<group>"; };
+		22AAE153CDA6EB03CB00000001 /* AssessmentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentSession.swift"; sourceTree = "<group>"; };
+		228B338976089F40B600000001 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person.swift"; sourceTree = "<group>"; };
+		226416CE132657AD1D00000001 /* ScoringEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScoringEngine.swift"; sourceTree = "<group>"; };
+		22ED9C3F68111ABF5D00000001 /* SurveyQuestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SurveyQuestions.swift"; sourceTree = "<group>"; };
+		22A019EEC864B773B400000001 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRouter.swift"; sourceTree = "<group>"; };
+		22984AFBCED47F677A00000001 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Colors.swift"; sourceTree = "<group>"; };
+		2229DBCEF2E9EBDFC100000001 /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spacing.swift"; sourceTree = "<group>"; };
+		2255C1EA7EDC6DC3DE00000001 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Theme.swift"; sourceTree = "<group>"; };
+		22853C36C8606976F400000001 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography.swift"; sourceTree = "<group>"; };
 		110000002C12345600000001 /* CAREApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CAREApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		110000022C12345600000001 /* CAREApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CAREApp.swift; sourceTree = "<group>"; };
 		110000042C12345600000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -75,7 +81,9 @@
 		22C34CE04453256C0700000001 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				22EAD93550F185461E00000001 /* BubbleCardContainer.swift */,
 				22B95E93EAC5E189A400000001 /* Buttons.swift */,
+				224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */,
 				223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */,
 				22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */,
 				22FC2506040EED036900000001 /* DonutChartView.swift */,
@@ -86,6 +94,7 @@
 				2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */,
 				2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */,
 				22286002FC1ACC004200000001 /* ScoreBubbleView.swift */,
+				22AD762A6677B28F7A00000001 /* VerticalTimeAllocationBubble.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -222,7 +231,9 @@
 			files = (
 				110000012C12345600000001 /* CAREApp.swift in Sources */,
 				110000032C12345600000001 /* ContentView.swift in Sources */,
+				228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */,
 				2251B440743818A38200000001 /* Buttons.swift in Sources */,
+				2252EF2EBEA151A37C00000001 /* CategoryBreakdownAccordion.swift in Sources */,
 				220E58E1947B852B5F00000001 /* ComponentShowcaseView.swift in Sources */,
 				22B47F7780AEE3625A00000001 /* DashboardWidgets.swift in Sources */,
 				220009ECE37648D77400000001 /* DonutChartView.swift in Sources */,
@@ -233,6 +244,7 @@
 				223D9A20E74E538D2600000001 /* PageIndicatorDots.swift in Sources */,
 				221D6030DEF7570BC100000001 /* RelationshipSelectionPill.swift in Sources */,
 				22C932AB0CAD1BB77000000001 /* ScoreBubbleView.swift in Sources */,
+				22C11FEDCC2F7E0E2700000001 /* VerticalTimeAllocationBubble.swift in Sources */,
 				2269159600FD31FB4E00000001 /* AssessmentResult.swift in Sources */,
 				22327D400337F7363500000001 /* AssessmentSession.swift in Sources */,
 				22ECA7C1FB873B4CDF00000001 /* Person.swift in Sources */,

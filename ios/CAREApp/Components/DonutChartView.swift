@@ -14,45 +14,23 @@ public struct DonutSegment: Identifiable, Hashable {
     }
 }
 
-// MARK: - Custom Angular Donut Segment Shape
-public struct DonutSegmentShape: Shape {
-    public var startAngle: Angle
-    public var endAngle: Angle
-    public var thickness: CGFloat
-    
-    public func path(in rect: CGRect) -> Path {
-        var path = Path()
-        let center = CGPoint(x: rect.midX, y: rect.midY)
-        let outerRadius = min(rect.width, rect.height) / 2
-        let innerRadius = outerRadius - thickness
-        
-        path.addArc(
-            center: center,
-            radius: outerRadius,
-            startAngle: startAngle - Angle(degrees: 90),
-            endAngle: endAngle - Angle(degrees: 90),
-            clockwise: false
-        )
-        path.addArc(
-            center: center,
-            radius: innerRadius,
-            startAngle: endAngle - Angle(degrees: 90),
-            endAngle: startAngle - Angle(degrees: 90),
-            clockwise: true
-        )
-        path.closeSubpath()
-        return path
-    }
-}
-
-// MARK: - Dynamic Multi-Segment Donut Chart (Figma Frame 29:4)
+// MARK: - High-Fidelity Donut Chart with Rounded Stroke Caps & Angular Gaps (Figma Frame 29:4)
 public struct DonutChartView: View {
     public let segments: [DonutSegment]
-    public let thickness: CGFloat
+    public let diameter: CGFloat
+    public let strokeWidth: CGFloat
+    public let gapDegrees: Double // Angular gap between segments (e.g. 6.0°)
     
-    public init(segments: [DonutSegment], thickness: CGFloat = 28) {
+    public init(
+        segments: [DonutSegment],
+        diameter: CGFloat = 200,
+        strokeWidth: CGFloat = 32,
+        gapDegrees: Double = 6.0
+    ) {
         self.segments = segments
-        self.thickness = thickness
+        self.diameter = diameter
+        self.strokeWidth = strokeWidth
+        self.gapDegrees = gapDegrees
     }
     
     public var totalAngularSpanDegrees: Double {
@@ -67,41 +45,78 @@ public struct DonutChartView: View {
                 let startPercent = segments.prefix(index).reduce(0.0) { $0 + $1.percentage }
                 let endPercent = startPercent + current.percentage
                 
-                DonutSegmentShape(
-                    startAngle: .degrees(startPercent * 360),
-                    endAngle: .degrees(endPercent * 360),
-                    thickness: thickness
-                )
-                .fill(current.color)
+                // Convert gap degrees into fraction of circumference
+                let gapFraction = (gapDegrees / 360.0) / 2.0
+                let trimmedStart = min(startPercent + gapFraction, endPercent)
+                let trimmedEnd = max(endPercent - gapFraction, trimmedStart)
+                
+                Circle()
+                    .trim(from: CGFloat(trimmedStart), to: CGFloat(trimmedEnd))
+                    .stroke(
+                        current.color,
+                        style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round)
+                    )
+                    .rotationEffect(.degrees(-90))
+                    .frame(width: diameter - strokeWidth, height: diameter - strokeWidth)
             }
         }
-        .frame(width: 180, height: 180)
+        .frame(width: diameter, height: diameter)
     }
 }
 
 // MARK: - Previews
-#Preview("Donut Chart - Relational Safety") {
-    VStack(spacing: 20) {
-        DonutChartView(segments: [
-            DonutSegment(title: "Safe", color: Theme.Colors.Safety.lowRisk, percentage: 0.21),
-            DonutSegment(title: "Medium Risk", color: Theme.Colors.Safety.moderateRisk, percentage: 0.39),
-            DonutSegment(title: "High Risk", color: Theme.Colors.Safety.highRisk, percentage: 0.40)
-        ])
+#Preview("High Fidelity Donut Charts") {
+    VStack(spacing: 32) {
+        // 1. Relational Safety 3-Tier Donut
+        BubbleCardContainer(title: "Relational Safety", showInfoIcon: true) {
+            VStack(spacing: 20) {
+                DonutChartView(
+                    segments: [
+                        DonutSegment(title: "Safe", color: Theme.Colors.Safety.lowRisk, percentage: 0.21),
+                        DonutSegment(title: "Medium Risk", color: Theme.Colors.Safety.moderateRisk, percentage: 0.39),
+                        DonutSegment(title: "High Risk", color: Theme.Colors.Safety.highRisk, percentage: 0.40)
+                    ]
+                )
+                .frame(maxWidth: .infinity)
+                
+                // Legend
+                VStack(spacing: 8) {
+                    HStack {
+                        Circle().fill(Theme.Colors.Safety.lowRisk).frame(width: 10, height: 10)
+                        Text("Safe").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                        Spacer()
+                        Text("21%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                    }
+                    HStack {
+                        Circle().fill(Theme.Colors.Safety.moderateRisk).frame(width: 10, height: 10)
+                        Text("Medium Risk").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                        Spacer()
+                        Text("39%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                    }
+                    HStack {
+                        Circle().fill(Theme.Colors.Safety.highRisk).frame(width: 10, height: 10)
+                        Text("High Risk").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                        Spacer()
+                        Text("40%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+        }
         
-        // Horizontal Legend
-        HStack(spacing: 16) {
-            Label("21% Safe", systemImage: "circle.fill")
-                .foregroundColor(Theme.Colors.Safety.lowRisk)
-                .font(Theme.Typography.caption)
-            Label("39% Medium", systemImage: "circle.fill")
-                .foregroundColor(Theme.Colors.Safety.moderateRisk)
-                .font(Theme.Typography.caption)
-            Label("40% High", systemImage: "circle.fill")
-                .foregroundColor(Theme.Colors.Safety.highRisk)
-                .font(Theme.Typography.caption)
+        // 2. Score Composition 4-CARE-Domain Donut
+        BubbleCardContainer(title: "Score Composition") {
+            DonutChartView(
+                segments: [
+                    DonutSegment(title: "Calm", color: Theme.Colors.Domains.calm, percentage: 0.25),
+                    DonutSegment(title: "Accepted", color: Theme.Colors.Domains.accepted, percentage: 0.25),
+                    DonutSegment(title: "Resonant", color: Theme.Colors.Domains.resonant, percentage: 0.25),
+                    DonutSegment(title: "Energetic", color: Theme.Colors.Domains.energetic, percentage: 0.25)
+                ]
+            )
+            .frame(maxWidth: .infinity)
         }
     }
-    .padding(24)
-    .background(Theme.Colors.cardSurface)
-    .clipShape(RoundedRectangle(cornerRadius: 18))
+    .padding(20)
+    .background(Theme.Colors.background)
 }
