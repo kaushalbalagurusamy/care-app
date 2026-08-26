@@ -23,31 +23,23 @@ public struct HomeView: View {
                 onProfile: {}
             )
             
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
                     
-                    // Welcome & Greeting
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Welcome Back,")
-                            .font(Theme.Typography.subheadline)
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        
-                        Text("Sarah Mitchell")
-                            .font(Theme.Typography.title)
-                            .foregroundColor(Theme.Colors.textPrimary)
-                    }
-                    .padding(.top, 8)
+                    // Welcome Title (Matching Figma Frame 5:19)
+                    Text("Welcome Back")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(Theme.Colors.textPrimary)
+                        .padding(.top, 4)
                     
-                    // Streak Widget
-                    StreakBadgeView(daysCount: 5)
-                    
-                    // Dashboard Modules List
+                    // 3 Action Cards (Matching Figma 350x196 frames)
                     VStack(spacing: 16) {
                         // Module 01: Education
                         ActionCardView(
                             number: "01",
                             title: "Education",
                             subtitle: "Learn Wellness",
+                            iconSystemName: "book.fill",
                             backgroundImageName: "card_education_bg",
                             action: {
                                 showingEducationAlert = true
@@ -59,6 +51,7 @@ public struct HomeView: View {
                             number: "02",
                             title: "Assessment",
                             subtitle: "Track Mind",
+                            iconSystemName: "heart.fill",
                             backgroundImageName: "card_assessment_bg",
                             action: {
                                 router.navigate(to: .assessmentOverview)
@@ -70,15 +63,21 @@ public struct HomeView: View {
                             number: "03",
                             title: "Exercises",
                             subtitle: "Active Care",
+                            iconSystemName: "bolt.fill",
                             backgroundImageName: "card_exercises_bg",
                             action: {
                                 showingExercisesAlert = true
                             }
                         )
                     }
+                    
+                    // Daily Streak Capsule Pill (Matching Figma Frame 5:47)
+                    StreakBadgeView(daysCount: 5)
+                        .padding(.top, 4)
+                        .padding(.bottom, 24)
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.vertical, 12)
             }
         }
         .background(Theme.Colors.background)

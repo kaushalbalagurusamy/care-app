@@ -2,7 +2,6 @@ import SwiftUI
 
 // MARK: - Exhaustive Type-Safe Application Routes (Matching 10 Figma Frames)
 public enum AppRoute: Hashable {
-    case loading
     case home
     case education
     case exercises
@@ -21,16 +20,13 @@ public enum AppRoute: Hashable {
 @MainActor
 public final class AppRouter {
     public var path: NavigationPath
-    public var currentRoute: AppRoute = .loading
     
-    public init(path: NavigationPath = NavigationPath(), initialRoute: AppRoute = .loading) {
+    public init(path: NavigationPath = NavigationPath()) {
         self.path = path
-        self.currentRoute = initialRoute
     }
     
     /// Navigate forward to a typed destination
     public func navigate(to route: AppRoute) {
-        currentRoute = route
         path.append(route)
     }
     
@@ -43,7 +39,6 @@ public final class AppRouter {
     
     /// Reset navigation stack completely back to root (Home)
     public func popToRoot() {
-        currentRoute = .home
         path = NavigationPath()
     }
 }

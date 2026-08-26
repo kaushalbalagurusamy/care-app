@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Main Application Navigation Container
 struct ContentView: View {
     @State private var router = AppRouter()
+    @State private var isShowingSplash: Bool = true
     
     // Shared State Across Assessment Funnel
     @State private var selectedPeople: [Person] = Array(Person.mockFigmaContacts.prefix(5))
@@ -11,29 +12,29 @@ struct ContentView: View {
     @State private var latestResult: AssessmentResult = AssessmentResult.figmaMockResult
     
     var body: some View {
-        NavigationStack(path: $router.path) {
-            currentRootView
-                .navigationBarBackButtonHidden(true)
-                .toolbar(.hidden, for: .navigationBar)
-                .navigationDestination(for: AppRoute.self) { route in
-                    viewForRoute(route)
-                        .navigationBarBackButtonHidden(true)
-                        .toolbar(.hidden, for: .navigationBar)
-                }
-        }
-        .environment(router)
-    }
-    
-    // MARK: - Root View Mapping
-    @ViewBuilder
-    private var currentRootView: some View {
-        switch router.currentRoute {
-        case .loading:
-            LoadingView(router: router)
-        case .home:
-            HomeView(router: router)
-        default:
-            viewForRoute(router.currentRoute)
+        ZStack {
+            NavigationStack(path: $router.path) {
+                HomeView(router: router)
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar(.hidden, for: .navigationBar)
+                    .navigationDestination(for: AppRoute.self) { route in
+                        viewForRoute(route)
+                            .navigationBarBackButtonHidden(true)
+                            .toolbar(.hidden, for: .navigationBar)
+                    }
+            }
+            .environment(router)
+            
+            // Splash Screen Overlay
+            if isShowingSplash {
+                LoadingView(onFinished: {
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        isShowingSplash = false
+                    }
+                })
+                .transition(.opacity)
+                .zIndex(100)
+            }
         }
     }
     
@@ -41,9 +42,6 @@ struct ContentView: View {
     @ViewBuilder
     private func viewForRoute(_ route: AppRoute) -> some View {
         switch route {
-        case .loading:
-            LoadingView(router: router)
-            
         case .home:
             HomeView(router: router)
             
