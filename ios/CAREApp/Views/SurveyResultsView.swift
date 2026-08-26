@@ -1,0 +1,201 @@
+import SwiftUI
+
+// MARK: - Screen 8: Survey Results Comprehensive Dashboard (Figma Frame 29:4)
+public struct SurveyResultsView: View {
+    public let router: AppRouter
+    public let result: AssessmentResult
+    
+    @State private var activeParticipantIndex: Int = 0
+    
+    public init(router: AppRouter, result: AssessmentResult) {
+        self.router = router
+        self.result = result
+    }
+    
+    private var breakdownItems: [DomainBreakdownItem] {
+        return CAREDomain.allCases.map { domain in
+            let score = Int(result.domainScores[domain]?.earnedPoints ?? 18)
+            let maxScore = Int(result.domainScores[domain]?.maxPossiblePoints ?? 125)
+            
+            let vagalTitle: String
+            let vagalDesc: String
+            switch domain {
+            case .calm:
+                vagalTitle = "Good Vagal Tone"
+                vagalDesc = "Your smart vagus nerve helps calm and relax you. Your relationships help you manage the stress of day-to-day life."
+            case .accepted:
+                vagalTitle = "Belonging Signaling"
+                vagalDesc = "Neural safety pathways activate when you feel recognized, valued, and accepted in your relationships."
+            case .resonant:
+                vagalTitle = "Co-Regulation Capacity"
+                vagalDesc = "Dynamic emotional attunement allows physiological calming and empathy through shared connection."
+            case .energetic:
+                vagalTitle = "Autonomic Vitality"
+                vagalDesc = "Growth-fostering relationships stimulate dopamine, oxytocin, and energized focus."
+            }
+            
+            return DomainBreakdownItem(
+                domain: domain,
+                score: score,
+                maxScore: maxScore,
+                subtitleTitle: domain.subtitle,
+                explanation: domain.explanation,
+                vagalToneTitle: vagalTitle,
+                vagalToneExplanation: vagalDesc
+            )
+        }
+    }
+    
+    public var body: some View {
+        VStack(spacing: 0) {
+            // Header Bar
+            HeaderNavBar(
+                showBackButton: true,
+                showHomeButton: true,
+                showChartButton: true,
+                showProfileButton: true,
+                onBack: { router.pop() },
+                onHome: { router.popToRoot() },
+                onChart: { router.navigate(to: .pastResults) },
+                onProfile: {}
+            )
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    
+                    // Title Section
+                    Text("Survey Results")
+                        .font(Theme.Typography.title)
+                        .foregroundColor(Theme.Colors.textPrimary)
+                        .padding(.top, 8)
+                    
+                    // MARK: 1. Score Composition & Category Breakdown Bubble
+                    BubbleCardContainer(title: "Score Composition") {
+                        VStack(spacing: 20) {
+                            // 4-Domain Donut Chart
+                            DonutChartView(
+                                segments: [
+                                    DonutSegment(title: "Calm", color: Theme.Colors.Domains.calm, percentage: 0.25),
+                                    DonutSegment(title: "Accepted", color: Theme.Colors.Domains.accepted, percentage: 0.25),
+                                    DonutSegment(title: "Resonant", color: Theme.Colors.Domains.resonant, percentage: 0.25),
+                                    DonutSegment(title: "Energetic", color: Theme.Colors.Domains.energetic, percentage: 0.25)
+                                ],
+                                gapDegrees: 8.0
+                            )
+                            .frame(maxWidth: .infinity)
+                            
+                            Divider()
+                                .background(Theme.Colors.dividerSubtle)
+                            
+                            // Category Breakdown Accordion
+                            CategoryBreakdownAccordion(items: breakdownItems)
+                        }
+                    }
+                    
+                    // MARK: 2. Relational Safety Bubble
+                    BubbleCardContainer(
+                        title: "Relational Safety",
+                        showInfoIcon: true,
+                        onInfoTap: { router.navigate(to: .surveyResultsExpanded) }
+                    ) {
+                        VStack(spacing: 20) {
+                            // 3-Tier Donut Chart
+                            DonutChartView(
+                                segments: [
+                                    DonutSegment(
+                                        title: "Safe",
+                                        color: Theme.Colors.Safety.lowRisk,
+                                        percentage: result.safetyDistribution.safePercentage
+                                    ),
+                                    DonutSegment(
+                                        title: "Medium Risk",
+                                        color: Theme.Colors.Safety.moderateRisk,
+                                        percentage: result.safetyDistribution.moderatePercentage
+                                    ),
+                                    DonutSegment(
+                                        title: "High Risk",
+                                        color: Theme.Colors.Safety.highRisk,
+                                        percentage: result.safetyDistribution.highRiskPercentage
+                                    )
+                                ],
+                                gapDegrees: 8.0
+                            )
+                            .frame(maxWidth: .infinity)
+                            
+                            // Legend Rows
+                            VStack(spacing: 8) {
+                                HStack {
+                                    Circle().fill(Theme.Colors.Safety.lowRisk).frame(width: 10, height: 10)
+                                    Text("Safe").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Spacer()
+                                    Text("\(Int(round(result.safetyDistribution.safePercentage * 100)))%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                }
+                                HStack {
+                                    Circle().fill(Theme.Colors.Safety.moderateRisk).frame(width: 10, height: 10)
+                                    Text("Medium Risk").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Spacer()
+                                    Text("\(Int(round(result.safetyDistribution.moderatePercentage * 100)))%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                }
+                                HStack {
+                                    Circle().fill(Theme.Colors.Safety.highRisk).frame(width: 10, height: 10)
+                                    Text("High Risk").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Spacer()
+                                    Text("\(Int(round(result.safetyDistribution.highRiskPercentage * 100)))%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                    }
+                    
+                    // MARK: 3. Results by Individual Bubble
+                    BubbleCardContainer(
+                        title: "Results by Individual",
+                        showInfoIcon: true,
+                        onInfoTap: { router.navigate(to: .surveyResultsExpanded) }
+                    ) {
+                        VStack(spacing: 16) {
+                            if !result.individualResults.isEmpty {
+                                TabView(selection: $activeParticipantIndex) {
+                                    ForEach(0..<result.individualResults.count, id: \.self) { index in
+                                        IndividualResultCard(result: result.individualResults[index])
+                                            .tag(index)
+                                    }
+                                }
+                                .tabViewStyle(.page(indexDisplayMode: .never))
+                                .frame(height: 84)
+                                
+                                PageIndicatorDots(
+                                    totalCount: result.individualResults.count,
+                                    currentIndex: activeParticipantIndex
+                                )
+                            }
+                        }
+                    }
+                    
+                    // MARK: 4. Action Buttons
+                    VStack(spacing: 12) {
+                        PrimaryButton(title: "View Past Results", icon: "chart.bar.fill") {
+                            router.navigate(to: .pastResults)
+                        }
+                        
+                        SecondaryButton(title: "Return to Home", icon: "house.fill") {
+                            router.popToRoot()
+                        }
+                    }
+                    .padding(.top, 8)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+            }
+        }
+        .background(Theme.Colors.background)
+    }
+}
+
+// MARK: - Previews
+#Preview("Survey Results View") {
+    SurveyResultsView(
+        router: AppRouter(),
+        result: AssessmentResult.figmaMockResult
+    )
+}

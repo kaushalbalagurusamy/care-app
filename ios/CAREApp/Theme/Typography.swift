@@ -35,5 +35,9 @@ extension Theme {
         
         /// 9pt-10pt SemiBold - Mini category dots & compact pill badges
         public static let miniBadge: Font = .system(size: 10, weight: .semibold, design: .default)
+        
+        // Convenience aliases
+        public static let title: Font = title1
+        public static let questionText: Font = headline
     }
 }

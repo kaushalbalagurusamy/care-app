@@ -43,4 +43,6 @@ public extension Person {
         Person(name: "David Okafor", initials: "DO", category: .brother, age: 35),
         Person(name: "Rachel Stein", initials: "RS", category: .mother, age: 58)
     ]
+    
+    static let mockRolodex: [Person] = mockFigmaContacts
 }

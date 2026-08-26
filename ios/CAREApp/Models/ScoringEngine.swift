@@ -123,4 +123,12 @@ public struct FlexibleScoringEngine: ScoringEngineProtocol {
             individualResults: individualResults
         )
     }
+    
+    public func calculateResult(for session: AssessmentSessionState, questions: [SurveyQuestion] = SurveyQuestion.mockQuestionBank) -> AssessmentResult {
+        return computeResult(
+            participants: session.participants,
+            recordedAnswers: session.recordedAnswers,
+            questions: questions
+        )
+    }
 }
