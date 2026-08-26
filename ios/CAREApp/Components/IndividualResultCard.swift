@@ -55,3 +55,19 @@ public struct IndividualResultCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 }
+
+// MARK: - Previews
+#Preview("Individual Contact Card") {
+    let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)
+    let participant = AssessmentParticipant(person: person, percentTimeSpent: 0.30)
+    let result = IndividualResult(
+        participant: participant,
+        normalizedScore: 80.0,
+        safetyTier: .healthy,
+        domainBreakdown: [.calm: 18, .accepted: 20, .resonant: 15, .energetic: 22]
+    )
+    
+    IndividualResultCard(result: result)
+        .padding(20)
+        .background(Theme.Colors.surfaceSecondary)
+}

@@ -58,3 +58,14 @@ public struct ScoreBubbleView: View {
         }
     }
 }
+
+// MARK: - Previews
+#Preview("Score Bubble Tiers") {
+    HStack(spacing: 20) {
+        ScoreBubbleView(score: 80, maxScore: 100, title: "Overall")
+        ScoreBubbleView(score: 65, maxScore: 100, title: "Moderate")
+        ScoreBubbleView(score: 45, maxScore: 100, title: "High Risk")
+    }
+    .padding(20)
+    .background(Theme.Colors.surfaceSecondary)
+}

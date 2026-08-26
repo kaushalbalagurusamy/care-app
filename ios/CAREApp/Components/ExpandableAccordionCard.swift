@@ -98,3 +98,24 @@ struct HistoricalScoreColumn: View {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
+
+// MARK: - Previews
+#Preview("Expandable Historical Card") {
+    struct PreviewWrapper: View {
+        @State var expanded = true
+        var body: some View {
+            VStack(spacing: 16) {
+                ExpandableAccordionCard(
+                    title: "Sarah Mitchell",
+                    scoreLabel: "83/100 Safe",
+                    tier: .healthy,
+                    isExpanded: expanded,
+                    onToggle: { expanded.toggle() }
+                )
+            }
+            .padding(20)
+            .background(Theme.Colors.surfaceSecondary)
+        }
+    }
+    return PreviewWrapper()
+}

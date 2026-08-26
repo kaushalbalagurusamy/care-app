@@ -22,3 +22,13 @@ public struct PageIndicatorDots: View {
         .frame(height: 8)
     }
 }
+
+// MARK: - Previews
+#Preview("Page Indicator Dots") {
+    VStack(spacing: 12) {
+        PageIndicatorDots(totalCount: 5, currentIndex: 0)
+        PageIndicatorDots(totalCount: 5, currentIndex: 2)
+        PageIndicatorDots(totalCount: 5, currentIndex: 4)
+    }
+    .padding(20)
+}

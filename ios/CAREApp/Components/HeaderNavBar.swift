@@ -128,3 +128,13 @@ public struct HeaderNavBar: View {
         .background(Theme.Colors.background)
     }
 }
+
+// MARK: - Previews
+#Preview("Header Nav Bar Modes") {
+    VStack(spacing: 24) {
+        HeaderNavBar(mode: .home(userName: "Sarah Mitchell", streakCount: 5))
+        HeaderNavBar(mode: .detail(title: "Survey Instructions", progress: 0.45, onBack: {}))
+        HeaderNavBar(mode: .modal(title: "About Risk Groups", onClose: {}))
+    }
+    .background(Theme.Colors.surfaceSecondary)
+}

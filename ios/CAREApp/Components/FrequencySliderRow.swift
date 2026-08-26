@@ -66,3 +66,21 @@ public struct FrequencySliderRow: View {
         )
     }
 }
+
+// MARK: - Previews
+#Preview("Frequency Sliders") {
+    struct PreviewWrapper: View {
+        @State var pct1: Double = 0.30
+        @State var pct2: Double = 0.25
+        
+        var body: some View {
+            VStack(spacing: 12) {
+                FrequencySliderRow(initials: "SM", name: "Sarah Mitchell", percentage: $pct1)
+                FrequencySliderRow(initials: "JC", name: "James Cooper", percentage: $pct2)
+            }
+            .padding(20)
+            .background(Theme.Colors.surfaceSecondary)
+        }
+    }
+    return PreviewWrapper()
+}

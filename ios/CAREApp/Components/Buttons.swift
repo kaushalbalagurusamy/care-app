@@ -95,3 +95,16 @@ public struct SecondaryButton: View {
         .buttonStyle(.plain)
     }
 }
+
+// MARK: - Previews
+#Preview("Action Buttons Matrix") {
+    VStack(spacing: 16) {
+        PrimaryButton(title: "Begin the Survey", icon: "arrow.right", action: {})
+        PrimaryButton(title: "Next: James Cooper", action: {})
+        PrimaryButton(title: "Loading...", isLoading: true, action: {})
+        PrimaryButton(title: "Disabled Continue", isEnabled: false, action: {})
+        SecondaryButton(title: "Return to Home", icon: "house.fill", action: {})
+    }
+    .padding(20)
+    .background(Theme.Colors.surfaceSecondary)
+}

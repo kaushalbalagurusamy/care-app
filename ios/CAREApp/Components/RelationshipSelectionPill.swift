@@ -77,3 +77,25 @@ public struct RelationshipSelectionPill: View {
         .buttonStyle(.plain)
     }
 }
+
+// MARK: - Previews
+#Preview("Relationship Selection States") {
+    VStack(spacing: 12) {
+        RelationshipSelectionPill(
+            initials: "SM",
+            name: "Sarah Mitchell",
+            subtitle: "Partner, 32",
+            isSelected: true,
+            onToggle: {}
+        )
+        RelationshipSelectionPill(
+            initials: "JC",
+            name: "James Cooper",
+            subtitle: "Friend, 28",
+            isSelected: false,
+            onToggle: {}
+        )
+    }
+    .padding(20)
+    .background(Theme.Colors.surfaceSecondary)
+}

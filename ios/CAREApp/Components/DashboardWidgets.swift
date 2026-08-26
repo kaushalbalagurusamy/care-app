@@ -117,3 +117,15 @@ public struct StreakBadgeView: View {
         )
     }
 }
+
+// MARK: - Previews
+#Preview("Dashboard Widgets") {
+    VStack(spacing: 16) {
+        StreakBadgeView(daysCount: 5)
+        ActionCardView(number: "01", title: "Education", subtitle: "Learn Wellness", backgroundImageName: "card_education_bg", action: {})
+        ActionCardView(number: "02", title: "Assessment", subtitle: "Track Mind", backgroundImageName: "card_assessment_bg", action: {})
+        ActionCardView(number: "03", title: "Exercises", subtitle: "Active Care", backgroundImageName: "card_exercises_bg", action: {})
+    }
+    .padding(20)
+    .background(Theme.Colors.surfaceSecondary)
+}

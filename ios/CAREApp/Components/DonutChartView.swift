@@ -78,3 +78,30 @@ public struct DonutChartView: View {
         .frame(width: 180, height: 180)
     }
 }
+
+// MARK: - Previews
+#Preview("Donut Chart - Relational Safety") {
+    VStack(spacing: 20) {
+        DonutChartView(segments: [
+            DonutSegment(title: "Safe", color: Theme.Colors.Safety.lowRisk, percentage: 0.21),
+            DonutSegment(title: "Medium Risk", color: Theme.Colors.Safety.moderateRisk, percentage: 0.39),
+            DonutSegment(title: "High Risk", color: Theme.Colors.Safety.highRisk, percentage: 0.40)
+        ])
+        
+        // Horizontal Legend
+        HStack(spacing: 16) {
+            Label("21% Safe", systemImage: "circle.fill")
+                .foregroundColor(Theme.Colors.Safety.lowRisk)
+                .font(Theme.Typography.caption)
+            Label("39% Medium", systemImage: "circle.fill")
+                .foregroundColor(Theme.Colors.Safety.moderateRisk)
+                .font(Theme.Typography.caption)
+            Label("40% High", systemImage: "circle.fill")
+                .foregroundColor(Theme.Colors.Safety.highRisk)
+                .font(Theme.Typography.caption)
+        }
+    }
+    .padding(24)
+    .background(Theme.Colors.cardSurface)
+    .clipShape(RoundedRectangle(cornerRadius: 18))
+}
