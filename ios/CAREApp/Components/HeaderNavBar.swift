@@ -110,7 +110,10 @@ public struct HeaderNavBar: View {
         }
         .padding(.horizontal, 20)
         .frame(height: 52)
-        .background(Theme.Colors.background)
+        .background(
+            Theme.Colors.background
+                .ignoresSafeArea(edges: .top)
+        )
     }
 }
 

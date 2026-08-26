@@ -1,26 +1,41 @@
 import SwiftUI
 
-// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Full Width 3D Art & Centered Content)
+// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Direct Original Photos & Proportional Scaling)
 public struct ActionCardView: View {
+    public let imageName: String
     public let title: String
     public let subtitle: String
-    public let iconName: String
-    public let backgroundImageName: String
+    public let maxHeight: CGFloat?
     public let action: () -> Void
     
-    private let cardHeight: CGFloat = 176.0
+    public init(
+        imageName: String,
+        title: String = "",
+        subtitle: String = "",
+        maxHeight: CGFloat? = nil,
+        action: @escaping () -> Void
+    ) {
+        self.imageName = imageName
+        self.title = title
+        self.subtitle = subtitle
+        self.maxHeight = maxHeight
+        self.action = action
+    }
     
+    // Backward-compatible initializer for legacy callers
     public init(
         title: String,
         subtitle: String,
-        iconName: String,
-        backgroundImageName: String,
+        iconName: String = "",
+        backgroundImageName: String = "",
+        maxHeight: CGFloat? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.iconName = iconName
-        self.backgroundImageName = backgroundImageName
+        let resolved = backgroundImageName.replacingOccurrences(of: "_bg", with: "_full")
+        self.imageName = resolved.isEmpty ? "card_assessment_full" : resolved
+        self.maxHeight = maxHeight
         self.action = action
     }
     
@@ -30,55 +45,32 @@ public struct ActionCardView: View {
             generator.impactOccurred()
             action()
         }) {
-            ZStack {
-                // Background 3D Render Art (Exact Figma Image Fill Filling Card)
-                Image(backgroundImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: cardHeight)
-                    .clipped()
-                
-                // Vertically Centered Content Layout
-                HStack(alignment: .center, spacing: 16) {
-                    // Left Column: Frosted Glass Icon Badge (Vertically Centered)
-                    Circle()
-                        .fill(Color.white.opacity(0.20))
-                        .frame(width: 48, height: 48)
-                        .overlay(
-                            Image(iconName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 24, height: 24)
-                        )
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white.opacity(0.35), lineWidth: 1)
-                        )
-                    
-                    Spacer()
-                    
-                    // Right Column: Title & Subtitle (Vertically Centered with Icon)
-                    VStack(alignment: .trailing, spacing: 3) {
-                        Text(title)
-                            .font(Theme.Typography.poppins(.bold, size: 21))
-                            .foregroundColor(.white)
-                        
-                        Text(subtitle)
-                            .font(Theme.Typography.poppins(.medium, size: 12))
-                            .foregroundColor(.white.opacity(0.92))
-                    }
+            Image(imageName)
+                .resizable()
+                .aspectRatio(350.0 / 196.0, contentMode: .fit)
+                .frame(maxWidth: .infinity)
+                .ifLet(maxHeight) { view, height in
+                    view.frame(maxHeight: height)
                 }
-                .padding(.horizontal, 24)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: cardHeight)
-            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
         .buttonStyle(ScaleCardButtonStyle())
         .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .accessibilityLabel(title.isEmpty ? imageName : "\(title), \(subtitle)")
+    }
+}
+
+// MARK: - View Extension for Optional Modifiers
+extension View {
+    @ViewBuilder
+    func ifLet<T, Content: View>(_ value: T?, transform: (Self, T) -> Content) -> some View {
+        if let value = value {
+            transform(self, value)
+        } else {
+            self
+        }
     }
 }
 

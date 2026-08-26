@@ -210,9 +210,9 @@ public struct ComponentShowcaseView: View {
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         StreakBadgeView(daysCount: 5)
-                        ActionCardView(title: "Education", subtitle: "Learn Wellness", iconName: "icon_book_open", backgroundImageName: "card_education_bg", action: {})
-                        ActionCardView(title: "Assessment", subtitle: "Track Mind", iconName: "icon_heart_pulse", backgroundImageName: "card_assessment_bg", action: {})
-                        ActionCardView(title: "Exercises", subtitle: "Active Care", iconName: "icon_activity", backgroundImageName: "card_exercises_bg", action: {})
+                        ActionCardView(imageName: "card_education_full", title: "Education", subtitle: "Learn Wellness", action: {})
+                        ActionCardView(imageName: "card_assessment_full", title: "Assessment", subtitle: "Track Mind", action: {})
+                        ActionCardView(imageName: "card_exercises_full", title: "Exercises", subtitle: "Active Care", action: {})
                     }
                     
                     // MARK: 8. Historical Accordion Cards
