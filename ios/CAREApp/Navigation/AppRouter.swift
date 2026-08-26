@@ -19,9 +19,9 @@ public enum AppRoute: Hashable {
 @Observable
 @MainActor
 public final class AppRouter {
-    public var path: NavigationPath
+    public var path: [AppRoute] = []
     
-    public init(path: NavigationPath = NavigationPath()) {
+    public init(path: [AppRoute] = []) {
         self.path = path
     }
     
@@ -39,6 +39,6 @@ public final class AppRouter {
     
     /// Reset navigation stack completely back to root (Home)
     public func popToRoot() {
-        path = NavigationPath()
+        path.removeAll()
     }
 }

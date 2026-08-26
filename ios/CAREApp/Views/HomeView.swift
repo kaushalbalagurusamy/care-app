@@ -1,10 +1,36 @@
 import SwiftUI
 
+// MARK: - Home Alert Items
+enum HomeAlertItem: Identifiable {
+    case education
+    case exercises
+    
+    var id: String {
+        switch self {
+        case .education: return "education"
+        case .exercises: return "exercises"
+        }
+    }
+    
+    var title: String {
+        switch self {
+        case .education: return "Education Module"
+        case .exercises: return "Exercises Module"
+        }
+    }
+    
+    var message: String {
+        switch self {
+        case .education: return "The interactive wellness education modules are scheduled for the next release."
+        case .exercises: return "Daily relational exercises and co-regulation tools will be available soon."
+        }
+    }
+}
+
 // MARK: - Screen 2: Homepage & Dashboard View (Figma Frame 5:4)
 public struct HomeView: View {
     public let router: AppRouter
-    @State private var showingEducationAlert = false
-    @State private var showingExercisesAlert = false
+    @State private var activeAlert: HomeAlertItem? = nil
     
     public init(router: AppRouter) {
         self.router = router
@@ -42,7 +68,7 @@ public struct HomeView: View {
                             iconSystemName: "book.fill",
                             backgroundImageName: "card_education_bg",
                             action: {
-                                showingEducationAlert = true
+                                activeAlert = .education
                             }
                         )
                         
@@ -66,7 +92,7 @@ public struct HomeView: View {
                             iconSystemName: "bolt.fill",
                             backgroundImageName: "card_exercises_bg",
                             action: {
-                                showingExercisesAlert = true
+                                activeAlert = .exercises
                             }
                         )
                     }
@@ -81,16 +107,19 @@ public struct HomeView: View {
             }
         }
         .background(Theme.Colors.background)
-        .alert("Education Module", isPresented: $showingEducationAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("The interactive wellness education modules are scheduled for the next release.")
-        }
-        .alert("Exercises Module", isPresented: $showingExercisesAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("Daily relational exercises and co-regulation tools will be available soon.")
-        }
+        .alert(
+            activeAlert?.title ?? "",
+            isPresented: Binding(
+                get: { activeAlert != nil },
+                set: { if !$0 { activeAlert = nil } }
+            ),
+            actions: {
+                Button("OK", role: .cancel) { activeAlert = nil }
+            },
+            message: {
+                Text(activeAlert?.message ?? "")
+            }
+        )
     }
 }
 

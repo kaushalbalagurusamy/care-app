@@ -12,8 +12,10 @@ struct ContentView: View {
     @State private var latestResult: AssessmentResult = AssessmentResult.figmaMockResult
     
     var body: some View {
+        @Bindable var r = router
+        
         ZStack {
-            NavigationStack(path: $router.path) {
+            NavigationStack(path: $r.path) {
                 HomeView(router: router)
                     .navigationBarBackButtonHidden(true)
                     .toolbar(.hidden, for: .navigationBar)
