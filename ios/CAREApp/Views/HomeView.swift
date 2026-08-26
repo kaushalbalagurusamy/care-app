@@ -32,8 +32,8 @@ public struct HomeView: View {
     public let router: AppRouter
     @State private var activeAlert: HomeAlertItem? = nil
     
-    // Equal 14pt vertical spacing throughout entire column matching Figma
-    private let uniformSpacing: CGFloat = 14.0
+    // Equal 12pt vertical spacing matching Figma Frame 5:4 layout
+    private let uniformSpacing: CGFloat = 12.0
     
     public init(router: AppRouter) {
         self.router = router
@@ -52,16 +52,16 @@ public struct HomeView: View {
                 onProfile: {}
             )
             
-            // Main Dashboard Body - Fitted with Uniform Spacing
+            // Main Dashboard Body - Fitted with 20pt Edge Clearance
             VStack(alignment: .leading, spacing: uniformSpacing) {
                 
                 // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt)
                 Text("Welcome Back")
                     .font(Theme.Typography.welcomeTitle)
                     .foregroundColor(Theme.Colors.textPrimary)
-                    .padding(.top, 4)
+                    .padding(.top, 2)
                 
-                // 3 Action Cards (Direct Figma Exports)
+                // 3 Action Cards (Direct Figma Exports with 20pt side margin clearance)
                 ActionCardView(
                     imageName: "card_education_full",
                     action: {
@@ -83,11 +83,11 @@ public struct HomeView: View {
                     }
                 )
                 
-                // Daily Streak Capsule Pill with Exactly Equal Spacing (14pt) & Direct Figma Sparkles
+                // Daily Streak Capsule Pill with Exactly Equal Spacing (12pt)
                 StreakBadgeView(daysCount: 5)
                     .padding(.bottom, 6)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 20) // 20pt left & right clearance from screen edges
         }
         .background(Theme.Colors.background)
         .alert(

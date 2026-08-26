@@ -21,9 +21,8 @@ public struct ActionCardView: View {
         }) {
             Image(imageName)
                 .resizable()
-                .aspectRatio(350.0 / 170.0, contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: .infinity)
-                .clipped()
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
