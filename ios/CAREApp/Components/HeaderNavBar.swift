@@ -117,7 +117,7 @@ public struct CircularNavIconButton: View {
                     Group {
                         if isSystemImage {
                             Image(systemName: iconName)
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(Theme.Colors.primary)
                         } else {
                             Image(iconName)
@@ -125,7 +125,7 @@ public struct CircularNavIconButton: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(Theme.Colors.primary)
-                                .frame(width: 22, height: 22)
+                                .frame(width: 36, height: 36)
                         }
                     }
                 )
