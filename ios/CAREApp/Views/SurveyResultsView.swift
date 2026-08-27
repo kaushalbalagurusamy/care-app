@@ -79,9 +79,10 @@ public struct SurveyResultsView: View {
                                     DonutSegment(title: "Resonant", color: Theme.Colors.Domains.resonant, percentage: 0.25),
                                     DonutSegment(title: "Energetic", color: Theme.Colors.Domains.energetic, percentage: 0.25)
                                 ],
-                                diameter: 185,
-                                strokeWidth: 34,
-                                gapDegrees: 8.0
+                                diameter: 190,
+                                strokeWidth: 46,
+                                gapDegrees: 7.0,
+                                cornerRadius: 6.0
                             )
                             .frame(maxWidth: .infinity)
                             .padding(.top, 4)
@@ -126,9 +127,10 @@ public struct SurveyResultsView: View {
                                         percentage: result.safetyDistribution.highRiskPercentage
                                     )
                                 ],
-                                diameter: 185,
-                                strokeWidth: 34,
-                                gapDegrees: 8.0
+                                diameter: 190,
+                                strokeWidth: 46,
+                                gapDegrees: 7.0,
+                                cornerRadius: 6.0
                             )
                             .frame(maxWidth: .infinity)
                             

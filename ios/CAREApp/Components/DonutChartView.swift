@@ -14,16 +14,23 @@ public struct DonutSegment: Identifiable, Hashable {
     }
 }
 
-// MARK: - Head-to-Tail Interlocking Donut Segment Shape (Clockwise Convex Head & Concave Tail)
-public struct HeadToTailDonutSegmentShape: Shape {
+// MARK: - Arc-Rectangular Donut Segment Shape with Soft Fillet Corners
+public struct ArcRectangularDonutSegmentShape: Shape {
     public var startAngle: Angle
     public var endAngle: Angle
     public var innerRadiusRatio: CGFloat // innerRadius / outerRadius (e.g. 0.52)
+    public var cornerRadius: CGFloat     // Fillet radius (e.g. 6.0)
     
-    public init(startAngle: Angle, endAngle: Angle, innerRadiusRatio: CGFloat = 0.52) {
+    public init(
+        startAngle: Angle,
+        endAngle: Angle,
+        innerRadiusRatio: CGFloat = 0.52,
+        cornerRadius: CGFloat = 6.0
+    ) {
         self.startAngle = startAngle
         self.endAngle = endAngle
         self.innerRadiusRatio = innerRadiusRatio
+        self.cornerRadius = cornerRadius
     }
     
     public var animatableData: AnimatablePair<Double, Double> {
@@ -40,80 +47,94 @@ public struct HeadToTailDonutSegmentShape: Shape {
         let center = CGPoint(x: rect.midX, y: rect.midY)
         let outerRadius = min(rect.width, rect.height) / 2.0
         let innerRadius = outerRadius * innerRadiusRatio
-        let midRadius = (outerRadius + innerRadius) / 2.0
-        let capRadius = (outerRadius - innerRadius) / 2.0
+        let radialThickness = outerRadius - innerRadius
         
-        let thetaStart = startAngle.radians
-        let thetaEnd = endAngle.radians
+        let r_c = min(cornerRadius, radialThickness / 3.0)
         
-        guard thetaEnd > thetaStart else { return path }
+        let a1 = startAngle.radians
+        let a2 = endAngle.radians
+        let span = a2 - a1
         
-        // 1. Outer Arc from θ_start to θ_end (Clockwise along outer circle)
+        guard span > 0.01 else { return path }
+        
+        let deltaO = min(r_c / outerRadius, span / 3.0)
+        let deltaI = min(r_c / innerRadius, span / 3.0)
+        
+        let p_o1 = CGPoint(x: center.x + outerRadius * cos(a1 + deltaO), y: center.y + outerRadius * sin(a1 + deltaO))
+        let v2 = CGPoint(x: center.x + outerRadius * cos(a2), y: center.y + outerRadius * sin(a2))
+        let p_r2 = CGPoint(x: center.x + (outerRadius - r_c) * cos(a2), y: center.y + (outerRadius - r_c) * sin(a2))
+        let p_r2_in = CGPoint(x: center.x + (innerRadius + r_c) * cos(a2), y: center.y + (innerRadius + r_c) * sin(a2))
+        let v3 = CGPoint(x: center.x + innerRadius * cos(a2), y: center.y + innerRadius * sin(a2))
+        let p_i2 = CGPoint(x: center.x + innerRadius * cos(a2 - deltaI), y: center.y + innerRadius * sin(a2 - deltaI))
+        let v4 = CGPoint(x: center.x + innerRadius * cos(a1), y: center.y + innerRadius * sin(a1))
+        let p_r1_in = CGPoint(x: center.x + (innerRadius + r_c) * cos(a1), y: center.y + (innerRadius + r_c) * sin(a1))
+        let p_r1_out = CGPoint(x: center.x + (outerRadius - r_c) * cos(a1), y: center.y + (outerRadius - r_c) * sin(a1))
+        let v1 = CGPoint(x: center.x + outerRadius * cos(a1), y: center.y + outerRadius * sin(a1))
+        
+        // 1. Move to Outer Start
+        path.move(to: p_o1)
+        
+        // 2. Outer Arc
         path.addArc(
             center: center,
             radius: outerRadius,
-            startAngle: Angle(radians: thetaStart),
-            endAngle: Angle(radians: thetaEnd),
+            startAngle: Angle(radians: a1 + deltaO),
+            endAngle: Angle(radians: a2 - deltaO),
             clockwise: false
         )
         
-        // 2. Head End (Convex Semi-Circle bulging forward clockwise)
-        let pHead = CGPoint(
-            x: center.x + midRadius * cos(thetaEnd),
-            y: center.y + midRadius * sin(thetaEnd)
-        )
-        path.addArc(
-            center: pHead,
-            radius: capRadius,
-            startAngle: Angle(radians: thetaEnd),
-            endAngle: Angle(radians: thetaEnd + .pi),
-            clockwise: false
-        )
+        // 3. Corner 1 (Outer End Fillet)
+        path.addQuadCurve(to: p_r2, control: v2)
         
-        // 3. Inner Arc from θ_end back to θ_start (Counter-clockwise along inner circle)
+        // 4. Straight Radial Edge
+        path.addLine(to: p_r2_in)
+        
+        // 5. Corner 2 (Inner End Fillet)
+        path.addQuadCurve(to: p_i2, control: v3)
+        
+        // 6. Inner Arc
         path.addArc(
             center: center,
             radius: innerRadius,
-            startAngle: Angle(radians: thetaEnd),
-            endAngle: Angle(radians: thetaStart),
+            startAngle: Angle(radians: a2 - deltaI),
+            endAngle: Angle(radians: a1 + deltaI),
             clockwise: true
         )
         
-        // 4. Tail End (Concave Semi-Circle scooping inward into the segment body)
-        let pTail = CGPoint(
-            x: center.x + midRadius * cos(thetaStart),
-            y: center.y + midRadius * sin(thetaStart)
-        )
-        path.addArc(
-            center: pTail,
-            radius: capRadius,
-            startAngle: Angle(radians: thetaStart + .pi),
-            endAngle: Angle(radians: thetaStart),
-            clockwise: true
-        )
+        // 7. Corner 3 (Inner Start Fillet)
+        path.addQuadCurve(to: p_r1_in, control: v4)
+        
+        // 8. Straight Radial Edge
+        path.addLine(to: p_r1_out)
+        
+        // 9. Corner 4 (Outer Start Fillet)
+        path.addQuadCurve(to: p_o1, control: v1)
         
         path.closeSubpath()
         return path
     }
 }
 
-// MARK: - High-Fidelity Donut Chart with Head-to-Tail Clockwise Flow Geometry (Figma Frame 29:4)
+// MARK: - High-Fidelity Donut Chart with Arc-Rectangular Fillet Geometry
 public struct DonutChartView: View {
     public let segments: [DonutSegment]
     public let diameter: CGFloat
     public let strokeWidth: CGFloat
-    public let gapDegrees: Double // Angular gap between segments (e.g. 7.0°)
+    public let gapDegrees: Double
+    public let cornerRadius: CGFloat
     
     public init(
         segments: [DonutSegment],
-        diameter: CGFloat = 200,
-        strokeWidth: CGFloat = 34,
-        gapDegrees: Double = 8.0
+        diameter: CGFloat = 190,
+        strokeWidth: CGFloat = 46,
+        gapDegrees: Double = 7.0,
+        cornerRadius: CGFloat = 6.0
     ) {
         self.segments = segments
         self.diameter = diameter
         self.strokeWidth = strokeWidth
         self.gapDegrees = gapDegrees
+        self.cornerRadius = cornerRadius
     }
     
     private var innerRadiusRatio: CGFloat {
@@ -138,10 +159,11 @@ public struct DonutChartView: View {
                 let trimmedStartRad = baseStartRad + (gapRad / 2.0)
                 let trimmedEndRad = max(baseEndRad - (gapRad / 2.0), trimmedStartRad)
                 
-                HeadToTailDonutSegmentShape(
+                ArcRectangularDonutSegmentShape(
                     startAngle: Angle(radians: trimmedStartRad),
                     endAngle: Angle(radians: trimmedEndRad),
-                    innerRadiusRatio: innerRadiusRatio
+                    innerRadiusRatio: innerRadiusRatio,
+                    cornerRadius: cornerRadius
                 )
                 .fill(current.color)
             }
