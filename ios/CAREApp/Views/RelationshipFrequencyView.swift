@@ -33,47 +33,54 @@ public struct RelationshipFrequencyView: View {
                 onProfile: {}
             )
             
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 14) {
+                // Title Section
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Choose Frequency")
+                        .font(Theme.Typography.poppins(.bold, size: 28))
+                        .foregroundColor(Theme.Colors.textPrimary)
                     
-                    // Title Section
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Choose Frequency")
-                            .font(Theme.Typography.title)
-                            .foregroundColor(Theme.Colors.textPrimary)
-                        
-                        Text("Drag the borders to estimate the percent time spent in each relationship.")
-                            .font(Theme.Typography.body)
-                            .foregroundColor(Theme.Colors.textSecondary)
-                    }
-                    .padding(.top, 8)
-                    
-                    // 5-Person Vertical Partition Container
-                    VerticalTimeAllocationBubble(allocations: $allocations)
-                    
-                    // Action Button
-                    PrimaryButton(title: "Next") {
-                        // Map allocations back to AssessmentParticipants
-                        var participants: [AssessmentParticipant] = []
-                        for alloc in allocations {
-                            if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
-                                participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                            } else {
-                                // Fallback
-                                let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
-                                participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                            }
-                        }
-                        onProceed(participants)
-                        router.navigate(to: .surveyQuestion)
-                    }
-                    .padding(.top, 8)
+                    Text("Drag the borders to estimate the percent time spent in each relationship.")
+                        .font(Theme.Typography.poppins(.regular, size: 14))
+                        .foregroundColor(Theme.Colors.textSecondary)
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.top, 4)
+                
+                // 5-Person Vertical Partition Container (Takes flexible space in single screen)
+                VerticalTimeAllocationBubble(allocations: $allocations)
+                    .frame(maxHeight: .infinity)
+                
+                // Action Button
+                Button(action: {
+                    // Map allocations back to AssessmentParticipants
+                    var participants: [AssessmentParticipant] = []
+                    for alloc in allocations {
+                        if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
+                            participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                        } else {
+                            // Fallback
+                            let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
+                            participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                        }
+                    }
+                    onProceed(participants)
+                    router.navigate(to: .surveyQuestion)
+                }) {
+                    Text("Next")
+                        .font(Theme.Typography.poppins(.semiBold, size: 17))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(Theme.Colors.primary)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .padding(.bottom, 12)
             }
+            .padding(.horizontal, 20)
         }
         .background(Theme.Colors.background)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             if allocations.isEmpty {
                 setupInitialAllocations()
