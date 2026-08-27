@@ -79,14 +79,14 @@ public struct ActionCardView: View {
                     // Right: 50% Larger Title and Subtitle (Aligned to Vertical Midpoint)
                     VStack(alignment: .trailing, spacing: 3) {
                         Text(title)
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.poppins(.semiBold, size: 28))
                             .foregroundColor(.white)
-                            .shadow(color: Color.black.opacity(0.30), radius: 4, x: 0, y: 2)
+                            .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
                         
                         Text(subtitle)
-                            .font(Theme.Typography.poppins(.medium, size: 16))
+                            .font(Theme.Typography.poppins(.regular, size: 16))
                             .foregroundColor(.white.opacity(0.95))
-                            .shadow(color: Color.black.opacity(0.25), radius: 3, x: 0, y: 1)
+                            .shadow(color: Color.black.opacity(0.20), radius: 3, x: 0, y: 1)
                     }
                 }
                 .padding(.horizontal, 24)
