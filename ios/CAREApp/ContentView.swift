@@ -67,7 +67,7 @@ struct ContentView: View {
                 onProceed: { participants in
                     activeSession = AssessmentSessionState(
                         participants: participants,
-                        totalQuestionsPerPerson: 4
+                        totalQuestionsPerPerson: 20
                     )
                 }
             )
@@ -86,7 +86,7 @@ struct ContentView: View {
                 let defaultParticipants = selectedPeople.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
                 let session = AssessmentSessionState(
                     participants: defaultParticipants,
-                    totalQuestionsPerPerson: 4
+                    totalQuestionsPerPerson: 20
                 )
                 SurveyQuestionView(
                     router: router,

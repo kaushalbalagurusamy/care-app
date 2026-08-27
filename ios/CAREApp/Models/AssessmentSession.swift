@@ -23,7 +23,7 @@ public struct AssessmentSessionState: Hashable {
     
     public init(
         participants: [AssessmentParticipant] = [],
-        totalQuestionsPerPerson: Int = 4,
+        totalQuestionsPerPerson: Int = 20,
         currentParticipantIndex: Int = 0,
         currentQuestionIndex: Int = 0,
         recordedAnswers: [UUID: [String: SurveyOption]] = [:]

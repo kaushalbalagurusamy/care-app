@@ -30,8 +30,20 @@ public struct SurveyQuestionView: View {
     }
     
     private func formattedQuestionPrompt(question: SurveyQuestion, participant: AssessmentParticipant?) -> String {
-        let name = participant?.person.name ?? "this person"
-        let promptText = question.prompt.replacingOccurrences(of: "this person", with: name)
+        guard let name = participant?.person.name else {
+            return "\(session.currentQuestionIndex + 1). \(question.prompt)"
+        }
+        
+        var promptText = question.prompt
+        promptText = promptText.replacingOccurrences(of: "How well do they sense", with: "How well does \(name) sense")
+        promptText = promptText.replacingOccurrences(of: "sense what they are feeling", with: "sense what \(name) is feeling")
+        promptText = promptText.replacingOccurrences(of: "how would they respond", with: "how would \(name) respond")
+        promptText = promptText.replacingOccurrences(of: "a part of their life", with: "a part of \(name)'s life")
+        promptText = promptText.replacingOccurrences(of: "around them", with: "around \(name)")
+        promptText = promptText.replacingOccurrences(of: "with them", with: "with \(name)")
+        promptText = promptText.replacingOccurrences(of: "to them", with: "to \(name)")
+        promptText = promptText.replacingOccurrences(of: "this person", with: name)
+        
         return "\(session.currentQuestionIndex + 1). \(promptText)"
     }
     
@@ -203,7 +215,7 @@ public struct SurveyQuestionView: View {
     ]
     let session = AssessmentSessionState(
         participants: participants,
-        totalQuestionsPerPerson: 4
+        totalQuestionsPerPerson: 20
     )
     
     SurveyQuestionView(
