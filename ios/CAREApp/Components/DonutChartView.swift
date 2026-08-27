@@ -14,18 +14,101 @@ public struct DonutSegment: Identifiable, Hashable {
     }
 }
 
-// MARK: - High-Fidelity Donut Chart with Rounded Stroke Caps & Angular Gaps (Figma Frame 29:4)
+// MARK: - Head-to-Tail Interlocking Donut Segment Shape (Clockwise Convex Head & Concave Tail)
+public struct HeadToTailDonutSegmentShape: Shape {
+    public var startAngle: Angle
+    public var endAngle: Angle
+    public var innerRadiusRatio: CGFloat // innerRadius / outerRadius (e.g. 0.52)
+    
+    public init(startAngle: Angle, endAngle: Angle, innerRadiusRatio: CGFloat = 0.52) {
+        self.startAngle = startAngle
+        self.endAngle = endAngle
+        self.innerRadiusRatio = innerRadiusRatio
+    }
+    
+    public var animatableData: AnimatablePair<Double, Double> {
+        get { AnimatablePair(startAngle.radians, endAngle.radians) }
+        set {
+            startAngle = .radians(newValue.first)
+            endAngle = .radians(newValue.second)
+        }
+    }
+    
+    public func path(in rect: CGRect) -> Path {
+        var path = Path()
+        
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let outerRadius = min(rect.width, rect.height) / 2.0
+        let innerRadius = outerRadius * innerRadiusRatio
+        let midRadius = (outerRadius + innerRadius) / 2.0
+        let capRadius = (outerRadius - innerRadius) / 2.0
+        
+        let thetaStart = startAngle.radians
+        let thetaEnd = endAngle.radians
+        
+        guard thetaEnd > thetaStart else { return path }
+        
+        // 1. Outer Arc from θ_start to θ_end (Clockwise along outer circle)
+        path.addArc(
+            center: center,
+            radius: outerRadius,
+            startAngle: Angle(radians: thetaStart),
+            endAngle: Angle(radians: thetaEnd),
+            clockwise: false
+        )
+        
+        // 2. Head End (Convex Semi-Circle bulging forward clockwise)
+        let pHead = CGPoint(
+            x: center.x + midRadius * cos(thetaEnd),
+            y: center.y + midRadius * sin(thetaEnd)
+        )
+        path.addArc(
+            center: pHead,
+            radius: capRadius,
+            startAngle: Angle(radians: thetaEnd),
+            endAngle: Angle(radians: thetaEnd + .pi),
+            clockwise: false
+        )
+        
+        // 3. Inner Arc from θ_end back to θ_start (Counter-clockwise along inner circle)
+        path.addArc(
+            center: center,
+            radius: innerRadius,
+            startAngle: Angle(radians: thetaEnd),
+            endAngle: Angle(radians: thetaStart),
+            clockwise: true
+        )
+        
+        // 4. Tail End (Concave Semi-Circle scooping inward into the segment body)
+        let pTail = CGPoint(
+            x: center.x + midRadius * cos(thetaStart),
+            y: center.y + midRadius * sin(thetaStart)
+        )
+        path.addArc(
+            center: pTail,
+            radius: capRadius,
+            startAngle: Angle(radians: thetaStart + .pi),
+            endAngle: Angle(radians: thetaStart),
+            clockwise: true
+        )
+        
+        path.closeSubpath()
+        return path
+    }
+}
+
+// MARK: - High-Fidelity Donut Chart with Head-to-Tail Clockwise Flow Geometry (Figma Frame 29:4)
 public struct DonutChartView: View {
     public let segments: [DonutSegment]
     public let diameter: CGFloat
     public let strokeWidth: CGFloat
-    public let gapDegrees: Double // Angular gap between segments (e.g. 6.0°)
+    public let gapDegrees: Double // Angular gap between segments (e.g. 7.0°)
     
     public init(
         segments: [DonutSegment],
         diameter: CGFloat = 200,
-        strokeWidth: CGFloat = 32,
-        gapDegrees: Double = 6.0
+        strokeWidth: CGFloat = 34,
+        gapDegrees: Double = 8.0
     ) {
         self.segments = segments
         self.diameter = diameter
@@ -33,31 +116,34 @@ public struct DonutChartView: View {
         self.gapDegrees = gapDegrees
     }
     
-    public var totalAngularSpanDegrees: Double {
-        let total = segments.reduce(0.0) { $0 + $1.percentage }
-        return total * 360.0
+    private var innerRadiusRatio: CGFloat {
+        let outerRadius = diameter / 2.0
+        let innerRadius = max(outerRadius - strokeWidth, 10)
+        return innerRadius / outerRadius
     }
     
     public var body: some View {
         ZStack {
+            let totalPct = max(segments.reduce(0.0) { $0 + $1.percentage }, 0.001)
+            let gapRad = Angle(degrees: gapDegrees).radians
+            
             ForEach(0..<segments.count, id: \.self) { index in
                 let current = segments[index]
-                let startPercent = segments.prefix(index).reduce(0.0) { $0 + $1.percentage }
-                let endPercent = startPercent + current.percentage
+                let startPct = segments.prefix(index).reduce(0.0) { $0 + $1.percentage } / totalPct
+                let endPct = (segments.prefix(index).reduce(0.0) { $0 + $1.percentage } + current.percentage) / totalPct
                 
-                // Convert gap degrees into fraction of circumference
-                let gapFraction = (gapDegrees / 360.0) / 2.0
-                let trimmedStart = min(startPercent + gapFraction, endPercent)
-                let trimmedEnd = max(endPercent - gapFraction, trimmedStart)
+                let baseStartRad = Angle(degrees: -90 + (startPct * 360)).radians
+                let baseEndRad = Angle(degrees: -90 + (endPct * 360)).radians
                 
-                Circle()
-                    .trim(from: CGFloat(trimmedStart), to: CGFloat(trimmedEnd))
-                    .stroke(
-                        current.color,
-                        style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round)
-                    )
-                    .rotationEffect(.degrees(-90))
-                    .frame(width: diameter - strokeWidth, height: diameter - strokeWidth)
+                let trimmedStartRad = baseStartRad + (gapRad / 2.0)
+                let trimmedEndRad = max(baseEndRad - (gapRad / 2.0), trimmedStartRad)
+                
+                HeadToTailDonutSegmentShape(
+                    startAngle: Angle(radians: trimmedStartRad),
+                    endAngle: Angle(radians: trimmedEndRad),
+                    innerRadiusRatio: innerRadiusRatio
+                )
+                .fill(current.color)
             }
         }
         .frame(width: diameter, height: diameter)
