@@ -53,16 +53,16 @@ public enum Theme {
         public static let textMuted = Color(hex: "#94A3B8")
         public static let textOnAccent = Color.white
         
-        // Safety Status & Risk Palette
+        // Safety Status & Risk Palette (Matching Figma Soft Pastel Tones & Donut Opacities)
         public enum Safety {
-            public static let lowRisk = Color(hex: "#38B969")
-            public static let lowRiskBackground = Color(hex: "#E8F5E9")
+            public static let lowRisk = Color(hex: "#6CBB9E")             // Safe (Soft Green)
+            public static let lowRiskBackground = Color(hex: "#EBF7F2")
             
-            public static let moderateRisk = Color(hex: "#FABF2E")
-            public static let moderateRiskBackground = Color(hex: "#FFF8E1")
+            public static let moderateRisk = Color(hex: "#ECDF96")        // Medium Risk (Soft Yellow)
+            public static let moderateRiskBackground = Color(hex: "#FAF7E8")
             
-            public static let highRisk = Color(hex: "#E84D4D")
-            public static let highRiskBackground = Color(hex: "#FFEBEE")
+            public static let highRisk = Color(hex: "#F3B0BD")            // High Risk (Soft Pink/Coral)
+            public static let highRiskBackground = Color(hex: "#FDEEF1")
             
             public static let neutral = Color(hex: "#64748B")
         }
