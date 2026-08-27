@@ -217,11 +217,11 @@ public struct VerticalTimeAllocationBubble: View {
 #Preview("Vertical Time Allocation Bubble") {
     struct PreviewWrapper: View {
         @State var sampleAllocations = [
-            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.30),
-            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.25),
-            ParticipantAllocation(initials: "LC", firstName: "Linda", percentage: 0.20),
-            ParticipantAllocation(initials: "DO", firstName: "David", percentage: 0.15),
-            ParticipantAllocation(initials: "RS", firstName: "Rachel", percentage: 0.10)
+            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.80),
+            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.05),
+            ParticipantAllocation(initials: "LC", firstName: "Linda", percentage: 0.05),
+            ParticipantAllocation(initials: "DO", firstName: "David", percentage: 0.05),
+            ParticipantAllocation(initials: "RS", firstName: "Rachel", percentage: 0.05)
         ]
         
         var body: some View {

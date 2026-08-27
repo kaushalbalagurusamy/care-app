@@ -91,8 +91,8 @@ public struct RelationshipFrequencyView: View {
     private func setupInitialAllocations() {
         let count = max(selectedPeople.count, 1)
         if count == 5 {
-            // Default 30, 25, 20, 15, 10 (min 5% per person, sum = 1.0)
-            let defaultPcts = [0.30, 0.25, 0.20, 0.15, 0.10]
+            // Default 80%, 5%, 5%, 5%, 5% (sum = 1.0)
+            let defaultPcts = [0.80, 0.05, 0.05, 0.05, 0.05]
             allocations = selectedPeople.enumerated().map { index, person in
                 ParticipantAllocation(
                     id: person.id,
@@ -101,15 +101,25 @@ public struct RelationshipFrequencyView: View {
                     percentage: defaultPcts[index]
                 )
             }
+        } else if count > 1 {
+            // First person starts with majority, others with 5%
+            let othersPct = 0.05 * Double(count - 1)
+            let firstPct = max(1.0 - othersPct, 0.05)
+            allocations = selectedPeople.enumerated().map { index, person in
+                ParticipantAllocation(
+                    id: person.id,
+                    initials: person.initials,
+                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
+                    percentage: index == 0 ? firstPct : 0.05
+                )
+            }
         } else {
-            // Equal distribution
-            let equalPct = (1.0 / Double(count) * 100).rounded() / 100
             allocations = selectedPeople.map { person in
                 ParticipantAllocation(
                     id: person.id,
                     initials: person.initials,
                     firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: equalPct
+                    percentage: 1.0
                 )
             }
         }
