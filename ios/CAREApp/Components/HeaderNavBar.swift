@@ -47,33 +47,11 @@ public struct HeaderNavBar: View {
                 }
                 
                 if showHomeButton {
-                    if showBackButton {
-                        CircularNavIconButton(
-                            iconName: "icon_home",
-                            isSystemImage: false,
-                            action: { onHome?() }
-                        )
-                    } else {
-                        // Figma Frame 5:12 Home Capsule Pill with 50% larger icon
-                        Button(action: { onHome?() }) {
-                            HStack(spacing: 6) {
-                                Image("icon_home")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 24, height: 24)
-                                
-                                Text("Home")
-                                    .font(Theme.Typography.menuLabel)
-                                    .foregroundColor(Theme.Colors.primary)
-                            }
-                            .padding(.horizontal, 12)
-                            .frame(height: 36)
-                            .background(Theme.Colors.surfaceSecondary)
-                            .clipShape(Capsule())
-                            .contentShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
+                    CircularNavIconButton(
+                        iconName: "icon_home",
+                        isSystemImage: false,
+                        action: { onHome?() }
+                    )
                 }
             }
             
@@ -118,7 +96,7 @@ public struct HeaderNavBar: View {
     }
 }
 
-// MARK: - 36x36 Circular Navigation Button with 50% Larger Icons
+// MARK: - 36x36 Standardized Circular Navigation Button
 public struct CircularNavIconButton: View {
     public let iconName: String
     public let isSystemImage: Bool
@@ -139,13 +117,13 @@ public struct CircularNavIconButton: View {
                     Group {
                         if isSystemImage {
                             Image(systemName: iconName)
-                                .font(.system(size: 20, weight: .bold))
+                                .font(.system(size: 18, weight: .semibold))
                                 .foregroundColor(Theme.Colors.primary)
                         } else {
                             Image(iconName)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: 28, height: 28)
+                                .frame(width: 24, height: 24)
                         }
                     }
                 )
