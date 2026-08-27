@@ -25,10 +25,11 @@ public struct VerticalTimeAllocationBubble: View {
     @State private var accumulatedTranslationY: CGFloat = 0.0
     @State private var lastDragTranslationY: CGFloat = 0.0
     
-    private let totalHeight: CGFloat = 560.0
-    private let containerCornerRadius: CGFloat = 28.0
+    private let totalHeight: CGFloat = 600.0
+    private let containerCornerRadius: CGFloat = 20.0
     private let minPercentage: Double = 0.05
     private let stepThresholdPoints: CGFloat = 24.0 // Threshold in points to step 5%
+    private let outlineColor = Color(hex: "#94A2B8")
     
     public init(allocations: Binding<[ParticipantAllocation]>) {
         self._allocations = allocations
@@ -43,41 +44,46 @@ public struct VerticalTimeAllocationBubble: View {
                 .frame(height: totalHeight)
                 .overlay(
                     RoundedRectangle(cornerRadius: containerCornerRadius, style: .continuous)
-                        .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
+                        .stroke(outlineColor, lineWidth: 1.5)
                 )
             
             // Stacked Partition Bands
             VStack(spacing: 0) {
                 ForEach(0..<allocations.count, id: \.self) { index in
                     let item = allocations[index]
-                    let bandHeight = max(totalHeight * CGFloat(item.percentage), 44)
+                    let bandHeight = totalHeight * CGFloat(item.percentage)
+                    let isCompact = (item.percentage <= 0.06)
+                    let avatarSize: CGFloat = isCompact ? 26.0 : (item.percentage <= 0.11 ? 34.0 : 42.0)
+                    let initialsFontSize: CGFloat = isCompact ? 11.0 : (item.percentage <= 0.11 ? 13.0 : 16.0)
+                    let textFontSize: CGFloat = isCompact ? 13.5 : (item.percentage <= 0.11 ? 15.0 : 17.0)
                     
-                    HStack(spacing: 16) {
+                    HStack(spacing: isCompact ? 10 : 14) {
                         // Avatar Circle
                         Circle()
                             .fill(Color.white)
-                            .frame(width: 44, height: 44)
+                            .frame(width: avatarSize, height: avatarSize)
                             .overlay(
                                 Text(item.initials)
-                                    .font(Theme.Typography.headline)
+                                    .font(Theme.Typography.poppins(.bold, size: initialsFontSize))
                                     .foregroundColor(Theme.Colors.primary)
                             )
-                            .shadow(color: Color.black.opacity(0.04), radius: 4, x: 0, y: 2)
+                            .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 1)
                         
                         // First Name
                         Text(item.firstName)
-                            .font(Theme.Typography.headline)
+                            .font(Theme.Typography.poppins(.bold, size: textFontSize))
                             .foregroundColor(Theme.Colors.textPrimary)
+                            .lineLimit(1)
                         
                         Spacer()
                         
                         // Percentage Readout
                         Text("\(Int(round(item.percentage * 100)))%")
-                            .font(Theme.Typography.headline)
+                            .font(Theme.Typography.poppins(.bold, size: textFontSize))
                             .foregroundColor(Theme.Colors.textPrimary)
                             .contentTransition(.numericText())
                     }
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 18)
                     .frame(maxWidth: .infinity)
                     .frame(height: bandHeight)
                     .animation(.spring(response: 0.32, dampingFraction: 0.82), value: allocations)
@@ -88,8 +94,9 @@ public struct VerticalTimeAllocationBubble: View {
                         let handleVisualOffset = isDraggingCurrent ? min(max(accumulatedTranslationY * 0.4, -10), 10) : 0
                         
                         ZStack {
-                            Divider()
-                                .background(Theme.Colors.dividerMedium)
+                            Rectangle()
+                                .fill(outlineColor)
+                                .frame(height: 1.5)
                             
                             // Custom Circular Drag Handle with tactile feedback
                             Image("drag_handle")
@@ -117,7 +124,7 @@ public struct VerticalTimeAllocationBubble: View {
                                         }
                                 )
                         }
-                        .frame(height: 1)
+                        .frame(height: 1.5)
                         .zIndex(10)
                     }
                 }
