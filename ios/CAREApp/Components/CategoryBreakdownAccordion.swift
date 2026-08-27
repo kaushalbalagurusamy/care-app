@@ -64,11 +64,11 @@ public struct CategoryBreakdownAccordion: View {
                             
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(item.domain.title)
-                                    .font(Theme.Typography.cardTitle)
+                                    .font(Theme.Typography.poppins(.bold, size: 16))
                                     .foregroundColor(Theme.Colors.textPrimary)
                                 
                                 Text("\(item.score)/\(item.maxScore)")
-                                    .font(Theme.Typography.caption)
+                                    .font(Theme.Typography.poppins(.medium, size: 13))
                                     .foregroundColor(Theme.Colors.textSecondary)
                             }
                             
@@ -90,18 +90,19 @@ public struct CategoryBreakdownAccordion: View {
                                 .background(Theme.Colors.dividerSubtle)
                             
                             Text(item.subtitleTitle)
-                                .font(Theme.Typography.cardTitle)
+                                .font(Theme.Typography.poppins(.bold, size: 15))
                                 .foregroundColor(Theme.Colors.textPrimary)
                             
                             Text(item.explanation)
-                                .font(Theme.Typography.body)
+                                .font(Theme.Typography.poppins(.regular, size: 13.5))
                                 .foregroundColor(Theme.Colors.textSecondary)
+                                .lineSpacing(3)
                                 .fixedSize(horizontal: false, vertical: true)
                             
                             // Vagal Tone Row with Info Icon
                             HStack {
                                 Text(item.vagalToneTitle)
-                                    .font(Theme.Typography.cardTitle)
+                                    .font(Theme.Typography.poppins(.bold, size: 14.5))
                                     .foregroundColor(Theme.Colors.textPrimary)
                                 
                                 Spacer()
@@ -118,8 +119,9 @@ public struct CategoryBreakdownAccordion: View {
                             .padding(.top, 4)
                             
                             Text(item.vagalToneExplanation)
-                                .font(Theme.Typography.body)
+                                .font(Theme.Typography.poppins(.regular, size: 13.5))
                                 .foregroundColor(Theme.Colors.textSecondary)
+                                .lineSpacing(3)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .padding(.bottom, 16)

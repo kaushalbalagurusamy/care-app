@@ -9,50 +9,48 @@ public struct IndividualResultCard: View {
     }
     
     public var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             // Initials Avatar Circle
             Circle()
-                .fill(Theme.Colors.primary.opacity(0.15))
-                .frame(width: 44, height: 44)
+                .fill(Color(hex: "#EFF5FC"))
+                .frame(width: 46, height: 46)
                 .overlay(
                     Text(result.participant.person.initials)
-                        .font(Theme.Typography.cardTitle)
+                        .font(Theme.Typography.poppins(.bold, size: 16))
                         .foregroundColor(Theme.Colors.primary)
                 )
             
-            // Name & Details
-            VStack(alignment: .leading, spacing: 2) {
+            // Name & Score
+            VStack(alignment: .leading, spacing: 3) {
                 Text(result.participant.person.name)
-                    .font(Theme.Typography.cardTitle)
+                    .font(Theme.Typography.poppins(.bold, size: 16))
                     .foregroundColor(Theme.Colors.textPrimary)
                 
-                Text("\(result.participant.person.category.rawValue), \(result.participant.person.age)")
-                    .font(Theme.Typography.caption)
+                Text("\(Int(result.normalizedScore))/100")
+                    .font(Theme.Typography.poppins(.medium, size: 13.5))
                     .foregroundColor(Theme.Colors.textSecondary)
             }
             
             Spacer()
             
-            // Score & Safety Tier Badge
-            VStack(alignment: .trailing, spacing: 4) {
-                Text("\(Int(result.normalizedScore))/100")
-                    .font(Theme.Typography.cardTitle)
-                    .foregroundColor(Theme.Colors.textPrimary)
-                
-                Text(result.safetyTier.rawValue)
-                    .font(Theme.Typography.miniBadge)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(result.safetyTier.backgroundColor)
-                    .foregroundColor(result.safetyTier.tierColor)
-                    .clipShape(Capsule())
-            }
+            // Safety Tier Pill Badge (Figma Frame 29:4)
+            Text(result.safetyTier.rawValue)
+                .font(Theme.Typography.poppins(.bold, size: 12.5))
+                .foregroundColor(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color(hex: "#38B969"))
+                .clipShape(Capsule())
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .frame(width: 310, height: 78)
-        .background(Theme.Colors.cardSurface)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 14)
+        .frame(maxWidth: .infinity)
+        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Theme.Colors.primary, lineWidth: 1.5)
+        )
     }
 }
 

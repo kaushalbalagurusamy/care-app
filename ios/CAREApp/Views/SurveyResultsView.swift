@@ -48,30 +48,29 @@ public struct SurveyResultsView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Header Bar
+            // Header Bar (Figma Frame 29:4: Home on left, Chart + Profile on right)
             HeaderNavBar(
-                showBackButton: true,
+                showBackButton: false,
                 showHomeButton: true,
                 showChartButton: true,
                 showProfileButton: true,
-                onBack: { router.pop() },
                 onHome: { router.popToRoot() },
                 onChart: { router.navigate(to: .pastResults) },
                 onProfile: {}
             )
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
                     
                     // Title Section
                     Text("Survey Results")
-                        .font(Theme.Typography.title)
+                        .font(Theme.Typography.poppins(.bold, size: 28))
                         .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 8)
+                        .padding(.top, 4)
                     
-                    // MARK: 1. Score Composition & Category Breakdown Bubble
+                    // MARK: 1. Score Composition & Category Breakdown Bubble (Figma Frame 29:4)
                     BubbleCardContainer(title: "Score Composition") {
-                        VStack(spacing: 20) {
+                        VStack(alignment: .leading, spacing: 18) {
                             // 4-Domain Donut Chart
                             DonutChartView(
                                 segments: [
@@ -80,9 +79,18 @@ public struct SurveyResultsView: View {
                                     DonutSegment(title: "Resonant", color: Theme.Colors.Domains.resonant, percentage: 0.25),
                                     DonutSegment(title: "Energetic", color: Theme.Colors.Domains.energetic, percentage: 0.25)
                                 ],
+                                diameter: 185,
+                                strokeWidth: 34,
                                 gapDegrees: 8.0
                             )
                             .frame(maxWidth: .infinity)
+                            .padding(.top, 4)
+                            
+                            // Category Breakdown Header
+                            Text("Category Breakdown")
+                                .font(Theme.Typography.poppins(.bold, size: 18))
+                                .foregroundColor(Theme.Colors.textPrimary)
+                                .padding(.top, 8)
                             
                             Divider()
                                 .background(Theme.Colors.dividerSubtle)
@@ -92,7 +100,7 @@ public struct SurveyResultsView: View {
                         }
                     }
                     
-                    // MARK: 2. Relational Safety Bubble
+                    // MARK: 2. Relational Safety Bubble (Figma Frame 29:4)
                     BubbleCardContainer(
                         title: "Relational Safety",
                         showInfoIcon: true,
@@ -118,42 +126,56 @@ public struct SurveyResultsView: View {
                                         percentage: result.safetyDistribution.highRiskPercentage
                                     )
                                 ],
+                                diameter: 185,
+                                strokeWidth: 34,
                                 gapDegrees: 8.0
                             )
                             .frame(maxWidth: .infinity)
                             
-                            // Legend Rows
-                            VStack(spacing: 8) {
+                            // Legend Rows (Figma Frame 29:4)
+                            VStack(spacing: 10) {
                                 HStack {
                                     Circle().fill(Theme.Colors.Safety.lowRisk).frame(width: 10, height: 10)
-                                    Text("Safe").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Text("Safe")
+                                        .font(Theme.Typography.poppins(.medium, size: 15))
+                                        .foregroundColor(Theme.Colors.textPrimary)
                                     Spacer()
-                                    Text("\(Int(round(result.safetyDistribution.safePercentage * 100)))%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Text("\(Int(round(result.safetyDistribution.safePercentage * 100)))%")
+                                        .font(Theme.Typography.poppins(.bold, size: 15))
+                                        .foregroundColor(Theme.Colors.textPrimary)
                                 }
                                 HStack {
                                     Circle().fill(Theme.Colors.Safety.moderateRisk).frame(width: 10, height: 10)
-                                    Text("Medium Risk").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Text("Medium Risk")
+                                        .font(Theme.Typography.poppins(.medium, size: 15))
+                                        .foregroundColor(Theme.Colors.textPrimary)
                                     Spacer()
-                                    Text("\(Int(round(result.safetyDistribution.moderatePercentage * 100)))%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Text("\(Int(round(result.safetyDistribution.moderatePercentage * 100)))%")
+                                        .font(Theme.Typography.poppins(.bold, size: 15))
+                                        .foregroundColor(Theme.Colors.textPrimary)
                                 }
                                 HStack {
                                     Circle().fill(Theme.Colors.Safety.highRisk).frame(width: 10, height: 10)
-                                    Text("High Risk").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Text("High Risk")
+                                        .font(Theme.Typography.poppins(.medium, size: 15))
+                                        .foregroundColor(Theme.Colors.textPrimary)
                                     Spacer()
-                                    Text("\(Int(round(result.safetyDistribution.highRiskPercentage * 100)))%").font(Theme.Typography.caption).foregroundColor(Theme.Colors.textPrimary)
+                                    Text("\(Int(round(result.safetyDistribution.highRiskPercentage * 100)))%")
+                                        .font(Theme.Typography.poppins(.bold, size: 15))
+                                        .foregroundColor(Theme.Colors.textPrimary)
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 8)
                         }
                     }
                     
-                    // MARK: 3. Results by Individual Bubble
+                    // MARK: 3. Results by Individual Bubble (Figma Frame 29:4)
                     BubbleCardContainer(
                         title: "Results by Individual",
                         showInfoIcon: true,
                         onInfoTap: { router.navigate(to: .surveyResultsExpanded) }
                     ) {
-                        VStack(spacing: 16) {
+                        VStack(spacing: 14) {
                             if !result.individualResults.isEmpty {
                                 TabView(selection: $activeParticipantIndex) {
                                     ForEach(0..<result.individualResults.count, id: \.self) { index in
@@ -162,12 +184,13 @@ public struct SurveyResultsView: View {
                                     }
                                 }
                                 .tabViewStyle(.page(indexDisplayMode: .never))
-                                .frame(height: 84)
+                                .frame(height: 88)
                                 
                                 PageIndicatorDots(
                                     totalCount: result.individualResults.count,
                                     currentIndex: activeParticipantIndex
                                 )
+                                .padding(.top, 4)
                             }
                         }
                     }

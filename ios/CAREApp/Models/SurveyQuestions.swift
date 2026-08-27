@@ -28,13 +28,13 @@ public enum CAREDomain: String, CaseIterable, Codable, Hashable {
     public var explanation: String {
         switch self {
         case .calm:
-            return "Fosters down-regulation of stress response systems, helping you develop neural pathways toward safety and emotional grounding."
+            return "Calmness is related to the functioning of the smart vagus nerve and your social engagement system. When these systems are healthy, they help you to modulate stress levels."
         case .accepted:
-            return "The neurobiological experience of feeling valued, validated, and safely connected within healthy relationship cultures."
+            return "Acceptance reflects feelings of belonging, safety, and mutual respect in your relational network."
         case .resonant:
-            return "Activating mirror neurons to sense and dynamically align with another's emotional experience without losing yourself."
+            return "Resonance captures emotional attunement and mutual empathy without losing your own grounding."
         case .energetic:
-            return "The vitalizing emotional flow and neurochemical boost generated when you participate in growth-fostering, mutual bonds."
+            return "Energy describes the vitality, motivation, and positive arousal derived from growth-fostering social bonds."
         }
     }
     

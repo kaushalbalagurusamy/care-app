@@ -30,7 +30,7 @@ public struct BubbleCardContainer<Content: View>: View {
             if let title = title {
                 HStack(alignment: .center) {
                     Text(title)
-                        .font(Theme.Typography.headline)
+                        .font(Theme.Typography.poppins(.bold, size: 18))
                         .foregroundColor(Theme.Colors.textPrimary)
                     
                     Spacer()
@@ -42,7 +42,7 @@ public struct BubbleCardContainer<Content: View>: View {
                                 .frame(width: 20, height: 20)
                                 .overlay(
                                     Text("i")
-                                        .font(.system(size: 11, weight: .bold, design: .serif))
+                                        .font(.system(size: 12, weight: .bold, design: .serif))
                                         .foregroundColor(Theme.Colors.primary)
                                 )
                         }
