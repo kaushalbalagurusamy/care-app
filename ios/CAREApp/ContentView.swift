@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Main Application Navigation Container
 struct ContentView: View {
     @State private var router = AppRouter()
-    @State private var isShowingSplash: Bool = true
+    @State private var isShowingSplash: Bool = false
     
     // Shared State Across Assessment Funnel
     @State private var selectedPeople: [Person] = Array(Person.mockFigmaContacts.prefix(5))
