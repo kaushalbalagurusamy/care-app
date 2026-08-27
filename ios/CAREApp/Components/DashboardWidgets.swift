@@ -1,41 +1,45 @@
 import SwiftUI
 
-// MARK: - Dashboard Module Action Card (Figma Frame 5:4 — Direct Original Photos & Proportional Scaling)
+// MARK: - Dashboard Module Action Card (No Numbers, Centered Midpoint Icon, 50% Larger Typography)
 public struct ActionCardView: View {
-    public let imageName: String
     public let title: String
     public let subtitle: String
-    public let maxHeight: CGFloat?
+    public let iconName: String
+    public let backgroundImageName: String
     public let action: () -> Void
     
+    public init(
+        title: String,
+        subtitle: String,
+        iconName: String,
+        backgroundImageName: String,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.subtitle = subtitle
+        self.iconName = iconName
+        self.backgroundImageName = backgroundImageName
+        self.action = action
+    }
+    
+    // Backward-compatible initializer
     public init(
         imageName: String,
         title: String = "",
         subtitle: String = "",
-        maxHeight: CGFloat? = nil,
-        action: @escaping () -> Void
-    ) {
-        self.imageName = imageName
-        self.title = title
-        self.subtitle = subtitle
-        self.maxHeight = maxHeight
-        self.action = action
-    }
-    
-    // Backward-compatible initializer for legacy callers
-    public init(
-        title: String,
-        subtitle: String,
-        iconName: String = "",
-        backgroundImageName: String = "",
-        maxHeight: CGFloat? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.subtitle = subtitle
-        let resolved = backgroundImageName.replacingOccurrences(of: "_bg", with: "_full")
-        self.imageName = resolved.isEmpty ? "card_assessment_full" : resolved
-        self.maxHeight = maxHeight
+        let bg = imageName.replacingOccurrences(of: "_full", with: "_bg")
+        self.backgroundImageName = bg
+        if imageName.contains("education") {
+            self.iconName = "icon_book_open"
+        } else if imageName.contains("assessment") {
+            self.iconName = "icon_heart_pulse"
+        } else {
+            self.iconName = "icon_activity"
+        }
         self.action = action
     }
     
@@ -45,20 +49,56 @@ public struct ActionCardView: View {
             generator.impactOccurred()
             action()
         }) {
-            Image(imageName)
-                .resizable()
-                .aspectRatio(350.0 / 196.0, contentMode: .fit)
-                .frame(maxWidth: .infinity)
-                .ifLet(maxHeight) { view, height in
-                    view.frame(maxHeight: height)
+            ZStack {
+                // Background 3D Render Art (Pure art without baked-in 01/02/03 numbers)
+                Image(backgroundImageName)
+                    .resizable()
+                    .aspectRatio(350.0 / 196.0, contentMode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+                
+                // Content Layer - Vertically Centered along button midpoint
+                HStack(alignment: .center, spacing: 16) {
+                    // Left: Frosted Glass Circular Icon Badge (Aligned to Vertical Midpoint)
+                    Circle()
+                        .fill(Color.white.opacity(0.24))
+                        .frame(width: 52, height: 52)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.40), lineWidth: 1.5)
+                        )
+                        .overlay(
+                            Image(iconName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 26, height: 26)
+                        )
+                    
+                    Spacer()
+                    
+                    // Right: 50% Larger Title and Subtitle (Aligned to Vertical Midpoint)
+                    VStack(alignment: .trailing, spacing: 3) {
+                        Text(title)
+                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.black.opacity(0.30), radius: 4, x: 0, y: 2)
+                        
+                        Text(subtitle)
+                            .font(Theme.Typography.poppins(.medium, size: 16))
+                            .foregroundColor(.white.opacity(0.95))
+                            .shadow(color: Color.black.opacity(0.25), radius: 3, x: 0, y: 1)
+                    }
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
-                .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .padding(.horizontal, 24)
+            }
+            .aspectRatio(350.0 / 196.0, contentMode: .fit)
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
         .buttonStyle(ScaleCardButtonStyle())
         .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .accessibilityLabel(title.isEmpty ? imageName : "\(title), \(subtitle)")
+        .accessibilityLabel("\(title), \(subtitle)")
     }
 }
 

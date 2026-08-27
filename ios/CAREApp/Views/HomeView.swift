@@ -58,29 +58,32 @@ public struct HomeView: View {
                     .foregroundColor(Theme.Colors.textPrimary)
                     .padding(.top, 2)
                 
-                // 3 Action Cards (Original Photos) with Uniform Spacing
+                // 3 Action Cards (Clean 3D Art, Midpoint Icons, 50% Larger Titles)
                 ActionCardView(
-                    imageName: "card_education_full",
                     title: "Education",
                     subtitle: "Learn Wellness",
+                    iconName: "icon_book_open",
+                    backgroundImageName: "card_education_bg",
                     action: {
                         activeAlert = .education
                     }
                 )
                 
                 ActionCardView(
-                    imageName: "card_assessment_full",
                     title: "Assessment",
                     subtitle: "Track Mind",
+                    iconName: "icon_heart_pulse",
+                    backgroundImageName: "card_assessment_bg",
                     action: {
                         router.navigate(to: .assessmentOverview)
                     }
                 )
                 
                 ActionCardView(
-                    imageName: "card_exercises_full",
                     title: "Exercises",
                     subtitle: "Active Care",
+                    iconName: "icon_activity",
+                    backgroundImageName: "card_exercises_bg",
                     action: {
                         activeAlert = .exercises
                     }
