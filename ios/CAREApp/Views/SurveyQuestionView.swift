@@ -8,7 +8,7 @@ public struct SurveyQuestionView: View {
     
     @State private var selectedOption: SurveyOption? = nil
     
-    private let questions: [SurveyQuestion] = SurveyQuestion.mockQuestionBank
+    private let questions: [SurveyQuestion] = SurveyQuestion.full20QuestionBank
     
     public init(
         router: AppRouter,
