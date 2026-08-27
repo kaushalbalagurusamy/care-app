@@ -31,71 +31,96 @@ public struct ChooseRelationshipsView: View {
             )
             
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 18) {
                     
                     // Title Section
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Choose Relationships")
-                            .font(Theme.Typography.title)
-                            .foregroundColor(Theme.Colors.textPrimary)
-                        
-                        Text("Select up to 5 people you spend the most time with.")
-                            .font(Theme.Typography.body)
-                            .foregroundColor(Theme.Colors.textSecondary)
-                    }
-                    .padding(.top, 8)
+                    Text("Choose Relationships")
+                        .font(Theme.Typography.poppins(.bold, size: 30))
+                        .foregroundColor(Theme.Colors.textPrimary)
+                        .padding(.top, 8)
                     
-                    // Selection Counter Pill
-                    HStack {
-                        Spacer()
-                        Text("\(selectedPeople.count) of 5 Selected")
-                            .font(Theme.Typography.caption)
-                            .foregroundColor(Theme.Colors.primary)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Theme.Colors.buttonSurfaceMuted)
-                            .clipShape(Capsule())
+                    // "+ Add Person" Outlined Action Button (Figma Frame 17:4)
+                    Button(action: {
+                        // Action to add additional contact
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 15, weight: .bold))
+                            
+                            Text("Add Person")
+                                .font(Theme.Typography.poppins(.semiBold, size: 16))
+                        }
+                        .foregroundColor(Theme.Colors.primary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(Theme.Colors.primary, lineWidth: 1.5)
+                        )
                     }
+                    .buttonStyle(.plain)
                     
-                    // Contact List
+                    // 5 Chosen Relationship Cards (Figma Frame 17:4)
                     VStack(spacing: 12) {
                         ForEach(availablePeople) { person in
-                            let isSelected = selectedPeople.contains(where: { $0.id == person.id })
-                            
-                            RelationshipSelectionPill(
-                                initials: person.initials,
-                                name: person.name,
-                                subtitle: "\(person.category.rawValue), \(person.age)",
-                                isSelected: isSelected,
-                                onToggle: {
-                                    if isSelected {
-                                        selectedPeople.removeAll(where: { $0.id == person.id })
-                                    } else if selectedPeople.count < 5 {
-                                        selectedPeople.append(person)
-                                    }
+                            HStack(spacing: 16) {
+                                // Pure White Circular Initials Badge
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 48, height: 48)
+                                    .overlay(
+                                        Text(person.initials)
+                                            .font(Theme.Typography.poppins(.bold, size: 17))
+                                            .foregroundColor(Theme.Colors.primary)
+                                    )
+                                
+                                // Name and Category/Age
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(person.name)
+                                        .font(Theme.Typography.poppins(.bold, size: 17))
+                                        .foregroundColor(Theme.Colors.textPrimary)
+                                    
+                                    Text("\(person.category.rawValue), \(person.age)")
+                                        .font(Theme.Typography.poppins(.regular, size: 14))
+                                        .foregroundColor(Theme.Colors.textSecondary)
                                 }
-                            )
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 16)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Theme.Colors.cardSurface)
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         }
                     }
                     
-                    // Action Button
-                    PrimaryButton(
-                        title: "Next",
-                        isEnabled: selectedPeople.count >= 1
-                    ) {
+                    // Action Button (Matching Figma Frame 5 "Next")
+                    Button(action: {
                         router.navigate(to: .relationshipFrequency)
+                    }) {
+                        Text("Next")
+                            .font(Theme.Typography.poppins(.semiBold, size: 17))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(Theme.Colors.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     }
+                    .buttonStyle(.plain)
                     .padding(.top, 12)
+                    .padding(.bottom, 24)
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
             }
         }
         .background(Theme.Colors.background)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             if selectedPeople.isEmpty {
-                // Pre-populate with first 5 Figma contacts if empty
-                selectedPeople = Array(Person.mockFigmaContacts.prefix(5))
+                selectedPeople = Person.mockFigmaContacts
             }
         }
     }
