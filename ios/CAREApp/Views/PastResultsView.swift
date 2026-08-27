@@ -260,27 +260,29 @@ public struct CollapsibleCardContainer<Content: View>: View {
     }
 }
 
-// MARK: - Relational Safety Multi-Line Trend Chart (Figma Frame 95:2)
+// MARK: - Relational Safety Multi-Line Trend Chart (Figma Frame 95:2 with Horizontal Scroll)
 public struct RelationalSafetyTrendChart: View {
-    // Dates: 5/16, 5/25, 5/29
-    private let dates = ["5/16", "5/25", "5/29"]
+    // 7 Historical Assessment Dates (3 visible at a time in viewport)
+    private let dates = ["3/15", "4/02", "4/18", "5/02", "5/16", "5/25", "5/29"]
     
     // Y-Axis Labels: 100%, 75%, 50%, 25%, 0%
     private let yLabels = ["100%", "75%", "50%", "25%", "0%"]
     
     // Data series (values 0.0 to 1.0)
-    // Safe (Green): 60% -> 75% -> 85%
-    private let safePoints: [CGFloat] = [0.60, 0.75, 0.85]
-    // Moderate (Yellow): 30% -> 20% -> 10%
-    private let moderatePoints: [CGFloat] = [0.30, 0.20, 0.10]
-    // High Risk (Coral): 10% -> 5% -> 5%
-    private let highRiskPoints: [CGFloat] = [0.10, 0.05, 0.05]
+    // Safe (Green): 35% -> 40% -> 50% -> 55% -> 60% -> 75% -> 85%
+    private let safePoints: [CGFloat] = [0.35, 0.40, 0.50, 0.55, 0.60, 0.75, 0.85]
+    // Moderate (Yellow): 45% -> 40% -> 35% -> 30% -> 30% -> 20% -> 10%
+    private let moderatePoints: [CGFloat] = [0.45, 0.40, 0.35, 0.30, 0.30, 0.20, 0.10]
+    // High Risk (Coral): 20% -> 20% -> 15% -> 15% -> 10% -> 05% -> 05%
+    private let highRiskPoints: [CGFloat] = [0.20, 0.20, 0.15, 0.15, 0.10, 0.05, 0.05]
+    
+    private let chartHeight: CGFloat = 160
     
     public var body: some View {
         VStack(spacing: 14) {
-            // Main Chart Canvas
+            // Main Chart Canvas with Fixed Y-Axis and Horizontally Scrollable Plot
             HStack(alignment: .top, spacing: 8) {
-                // Y-Axis Labels
+                // Fixed Y-Axis Labels
                 VStack(alignment: .trailing, spacing: 0) {
                     ForEach(0..<yLabels.count, id: \.self) { idx in
                         Text(yLabels[idx])
@@ -291,81 +293,74 @@ public struct RelationalSafetyTrendChart: View {
                         }
                     }
                 }
-                .frame(width: 36, height: 160)
+                .frame(width: 36, height: chartHeight)
                 
-                // Chart Plot Area
-                VStack(spacing: 0) {
-                    GeometryReader { geo in
-                        let w = geo.size.width
-                        let h = geo.size.height
-                        
-                        ZStack(alignment: .bottomLeading) {
-                            // Horizontal Grid Lines
-                            VStack(spacing: 0) {
-                                ForEach(0..<5, id: \.self) { i in
-                                    Rectangle()
-                                        .fill(Theme.Colors.dividerSubtle.opacity(0.8))
-                                        .frame(height: 1)
-                                    if i < 4 {
-                                        Spacer()
+                // Horizontally Scrollable Chart Plot Area
+                GeometryReader { geo in
+                    let viewportWidth = geo.size.width
+                    let stepWidth = max(viewportWidth / 3.0, 75) // Exactly 3 dates visible per screen width
+                    let totalWidth = stepWidth * CGFloat(dates.count)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            ZStack(alignment: .bottomLeading) {
+                                // Horizontal Grid Lines spanning entire scroll width
+                                VStack(spacing: 0) {
+                                    ForEach(0..<5, id: \.self) { i in
+                                        Rectangle()
+                                            .fill(Theme.Colors.dividerSubtle.opacity(0.8))
+                                            .frame(height: 1)
+                                        if i < 4 {
+                                            Spacer()
+                                        }
                                     }
                                 }
+                                .frame(width: totalWidth, height: chartHeight)
+                                
+                                // Bottom X-Axis line
+                                Rectangle()
+                                    .fill(Theme.Colors.textSecondary.opacity(0.3))
+                                    .frame(width: totalWidth, height: 1)
+                                    .frame(maxHeight: .infinity, alignment: .bottom)
+                                
+                                // Computed X coordinates for each point column
+                                let xCoords = (0..<dates.count).map { stepWidth * (CGFloat($0) + 0.5) }
+                                
+                                // 1. Safe Line (Green) - Connecting adjacent dots
+                                connectedLinePath(xCoords: xCoords, values: safePoints, height: chartHeight)
+                                    .stroke(Theme.Colors.Safety.lowRisk, lineWidth: 2.5)
+                                
+                                trendPointsView(xCoords: xCoords, values: safePoints, height: chartHeight, color: Theme.Colors.Safety.lowRisk)
+                                
+                                // 2. Moderate Line (Yellow) - Connecting adjacent dots
+                                connectedLinePath(xCoords: xCoords, values: moderatePoints, height: chartHeight)
+                                    .stroke(Theme.Colors.Safety.moderateRisk, lineWidth: 2.5)
+                                
+                                trendPointsView(xCoords: xCoords, values: moderatePoints, height: chartHeight, color: Theme.Colors.Safety.moderateRisk)
+                                
+                                // 3. High Risk Line (Red/Coral) - Connecting adjacent dots
+                                connectedLinePath(xCoords: xCoords, values: highRiskPoints, height: chartHeight)
+                                    .stroke(Theme.Colors.Safety.highRisk, lineWidth: 2.5)
+                                
+                                trendPointsView(xCoords: xCoords, values: highRiskPoints, height: chartHeight, color: Theme.Colors.Safety.highRisk)
                             }
+                            .frame(width: totalWidth, height: chartHeight)
                             
-                            // Y-Axis Left Border
-                            Rectangle()
-                                .fill(Theme.Colors.textSecondary.opacity(0.4))
-                                .frame(width: 1)
-                                .frame(maxHeight: .infinity, alignment: .leading)
-                            
-                            // X-Axis Bottom Border
-                            Rectangle()
-                                .fill(Theme.Colors.textSecondary.opacity(0.4))
-                                .frame(height: 1)
-                                .frame(maxWidth: .infinity, alignment: .bottom)
-                            
-                            // 3 Trend Lines
-                            let xCoords = [w * 0.20, w * 0.55, w * 0.88]
-                            
-                            // 1. Safe Line (Green)
-                            trendLinePath(xCoords: xCoords, values: safePoints, height: h)
-                                .stroke(Theme.Colors.Safety.lowRisk, lineWidth: 2.5)
-                            
-                            trendPointsView(xCoords: xCoords, values: safePoints, height: h, color: Theme.Colors.Safety.lowRisk)
-                            
-                            // 2. Moderate Line (Yellow)
-                            trendLinePath(xCoords: xCoords, values: moderatePoints, height: h)
-                                .stroke(Theme.Colors.Safety.moderateRisk, lineWidth: 2.5)
-                            
-                            trendPointsView(xCoords: xCoords, values: moderatePoints, height: h, color: Theme.Colors.Safety.moderateRisk)
-                            
-                            // 3. High Risk Line (Red/Coral)
-                            trendLinePath(xCoords: xCoords, values: highRiskPoints, height: h)
-                                .stroke(Theme.Colors.Safety.highRisk, lineWidth: 2.5)
-                            
-                            trendPointsView(xCoords: xCoords, values: highRiskPoints, height: h, color: Theme.Colors.Safety.highRisk)
+                            // X-Axis Date Labels aligned with each point column
+                            HStack(spacing: 0) {
+                                ForEach(0..<dates.count, id: \.self) { idx in
+                                    Text(dates[idx])
+                                        .font(Theme.Typography.poppins(.regular, size: 11))
+                                        .foregroundColor(Theme.Colors.textSecondary)
+                                        .frame(width: stepWidth, alignment: .center)
+                                }
+                            }
+                            .frame(width: totalWidth)
+                            .padding(.top, 6)
                         }
                     }
-                    .frame(height: 160)
-                    
-                    // X-Axis Labels
-                    HStack {
-                        Spacer().frame(width: 30)
-                        Text("5/16")
-                            .font(Theme.Typography.poppins(.regular, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        Spacer()
-                        Text("5/25")
-                            .font(Theme.Typography.poppins(.regular, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        Spacer()
-                        Text("5/29")
-                            .font(Theme.Typography.poppins(.regular, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        Spacer().frame(width: 15)
-                    }
-                    .padding(.top, 6)
                 }
+                .frame(height: chartHeight + 24)
             }
             
             // Legend Row (Figma Frame 95:2)
@@ -407,7 +402,8 @@ public struct RelationalSafetyTrendChart: View {
         }
     }
     
-    private func trendLinePath(xCoords: [CGFloat], values: [CGFloat], height: CGFloat) -> Path {
+    /// Straight line segments connecting adjacent points directly
+    private func connectedLinePath(xCoords: [CGFloat], values: [CGFloat], height: CGFloat) -> Path {
         var path = Path()
         guard xCoords.count == values.count, !xCoords.isEmpty else { return path }
         
@@ -434,19 +430,29 @@ public struct RelationalSafetyTrendChart: View {
     }
 }
 
-// MARK: - Individual Score 3-Tier Colored Band Chart (Figma Frame 95:2)
+// MARK: - Individual Score 3-Tier Colored Band Chart (Figma Frame 95:2 with Horizontal Scroll & Connected Adjacent Dots)
 public struct IndividualScoreBandChart: View {
     // Y-Axis: 100, 67, 33, 0
     private let yLabels = ["100", "67", "33", "0"]
     
-    // Scores: 31 (5/16), 59 (5/25), 83 (5/29)
-    private let scores: [CGFloat] = [31, 59, 83]
-    private let dates = ["5/16", "5/25", "5/29"]
+    // 7 Historical Assessment Scores & Dates (3 visible at a time in viewport)
+    public var dates: [String] = ["3/15", "4/02", "4/18", "5/02", "5/16", "5/25", "5/29"]
+    public var scores: [CGFloat] = [22, 31, 44, 52, 59, 74, 83]
+    
+    private let chartHeight: CGFloat = 160
+    
+    public init(
+        dates: [String] = ["3/15", "4/02", "4/18", "5/02", "5/16", "5/25", "5/29"],
+        scores: [CGFloat] = [22, 31, 44, 52, 59, 74, 83]
+    ) {
+        self.dates = dates
+        self.scores = scores
+    }
     
     public var body: some View {
         VStack(spacing: 14) {
             HStack(alignment: .top, spacing: 8) {
-                // Y-Axis Labels
+                // Fixed Y-Axis Labels
                 VStack(alignment: .trailing, spacing: 0) {
                     ForEach(0..<yLabels.count, id: \.self) { idx in
                         Text(yLabels[idx])
@@ -457,101 +463,97 @@ public struct IndividualScoreBandChart: View {
                         }
                     }
                 }
-                .frame(width: 26, height: 160)
+                .frame(width: 26, height: chartHeight)
                 
-                // Band Chart Plot Area
-                VStack(spacing: 0) {
-                    GeometryReader { geo in
-                        let w = geo.size.width
-                        let h = geo.size.height
-                        
-                        ZStack(alignment: .bottomLeading) {
-                            // 3 Horizontal Colored Background Bands (Figma Frame 95:2)
-                            VStack(spacing: 0) {
-                                // Top Band: Safe (#D1F2D9 / Light Green)
-                                Rectangle()
-                                    .fill(Color(red: 0.82, green: 0.94, blue: 0.85))
-                                    .frame(height: h / 3.0)
-                                
-                                // Middle Band: Moderate (#FDF0D0 / Light Amber)
-                                Rectangle()
-                                    .fill(Color(red: 0.99, green: 0.94, blue: 0.82))
-                                    .frame(height: h / 3.0)
-                                
-                                // Bottom Band: High Risk (#FCDAD7 / Light Pink)
-                                Rectangle()
-                                    .fill(Color(red: 0.98, green: 0.85, blue: 0.84))
-                                    .frame(height: h / 3.0)
-                            }
-                            
-                            // Y-Axis and Horizontal Dividers
-                            VStack(spacing: 0) {
-                                Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
-                                Spacer()
-                                Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
-                                Spacer()
-                                Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
-                                Spacer()
-                                Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
-                            }
-                            
-                            Rectangle()
-                                .fill(Theme.Colors.textSecondary.opacity(0.4))
-                                .frame(width: 1)
-                                .frame(maxHeight: .infinity, alignment: .leading)
-                            
-                            // Score Line connecting 31 -> 59 -> 83
-                            let xCoords = [w * 0.22, w * 0.55, w * 0.86]
-                            
-                            scoreLinePath(xCoords: xCoords, scores: scores, height: h)
-                                .stroke(Color(red: 0.22, green: 0.55, blue: 0.78), lineWidth: 2.5)
-                            
-                            // Data Point Markers & Value Callout Labels
-                            ForEach(0..<scores.count, id: \.self) { idx in
-                                let px = xCoords[idx]
-                                let py = h * (1.0 - (scores[idx] / 100.0))
-                                
-                                VStack(spacing: 2) {
-                                    Text("\(Int(scores[idx]))")
-                                        .font(Theme.Typography.poppins(.bold, size: 12))
-                                        .foregroundColor(Theme.Colors.textPrimary)
+                // Horizontally Scrollable Band Chart Plot Area
+                GeometryReader { geo in
+                    let viewportWidth = geo.size.width
+                    let stepWidth = max(viewportWidth / 3.0, 75) // Exactly 3 points visible per screen width
+                    let totalWidth = stepWidth * CGFloat(dates.count)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            ZStack(alignment: .bottomLeading) {
+                                // 3 Horizontal Colored Background Bands spanning entire scroll width
+                                VStack(spacing: 0) {
+                                    // Top Band: Safe (#D1F2D9 / Light Green)
+                                    Rectangle()
+                                        .fill(Color(red: 0.82, green: 0.94, blue: 0.85))
+                                        .frame(height: chartHeight / 3.0)
                                     
-                                    Circle()
-                                        .fill(Color.white)
-                                        .frame(width: 8, height: 8)
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color(red: 0.22, green: 0.55, blue: 0.78), lineWidth: 2)
-                                        )
+                                    // Middle Band: Moderate (#FDF0D0 / Light Amber)
+                                    Rectangle()
+                                        .fill(Color(red: 0.99, green: 0.94, blue: 0.82))
+                                        .frame(height: chartHeight / 3.0)
+                                    
+                                    // Bottom Band: High Risk (#FCDAD7 / Light Pink)
+                                    Rectangle()
+                                        .fill(Color(red: 0.98, green: 0.85, blue: 0.84))
+                                        .frame(height: chartHeight / 3.0)
                                 }
-                                .position(x: px, y: py - 6)
+                                .frame(width: totalWidth, height: chartHeight)
+                                
+                                // Horizontal Dividers across bands
+                                VStack(spacing: 0) {
+                                    Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
+                                    Spacer()
+                                    Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
+                                    Spacer()
+                                    Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
+                                    Spacer()
+                                    Rectangle().fill(Theme.Colors.textSecondary.opacity(0.3)).frame(height: 1)
+                                }
+                                .frame(width: totalWidth, height: chartHeight)
+                                
+                                // Computed X coordinates for each point column
+                                let xCoords = (0..<dates.count).map { stepWidth * (CGFloat($0) + 0.5) }
+                                
+                                // Straight line segments connecting adjacent dots directly
+                                connectedScoreLinePath(xCoords: xCoords, scores: scores, height: chartHeight)
+                                    .stroke(Color(red: 0.22, green: 0.55, blue: 0.78), lineWidth: 2.5)
+                                
+                                // Data Point Markers & Numeric Value Callouts
+                                ForEach(0..<scores.count, id: \.self) { idx in
+                                    let px = xCoords[idx]
+                                    let py = chartHeight * (1.0 - (scores[idx] / 100.0))
+                                    
+                                    VStack(spacing: 2) {
+                                        Text("\(Int(scores[idx]))")
+                                            .font(Theme.Typography.poppins(.bold, size: 12))
+                                            .foregroundColor(Theme.Colors.textPrimary)
+                                        
+                                        Circle()
+                                            .fill(Color.white)
+                                            .frame(width: 8, height: 8)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color(red: 0.22, green: 0.55, blue: 0.78), lineWidth: 2)
+                                            )
+                                    }
+                                    .position(x: px, y: py - 6)
+                                }
                             }
+                            .frame(width: totalWidth, height: chartHeight)
+                            .clipShape(Rectangle())
+                            
+                            // X-Axis Date Labels aligned with each point column
+                            HStack(spacing: 0) {
+                                ForEach(0..<dates.count, id: \.self) { idx in
+                                    Text(dates[idx])
+                                        .font(Theme.Typography.poppins(.regular, size: 11))
+                                        .foregroundColor(Theme.Colors.textSecondary)
+                                        .frame(width: stepWidth, alignment: .center)
+                                }
+                            }
+                            .frame(width: totalWidth)
+                            .padding(.top, 6)
                         }
                     }
-                    .frame(height: 160)
-                    .clipShape(Rectangle())
-                    
-                    // X-Axis Labels
-                    HStack {
-                        Spacer().frame(width: 30)
-                        Text("5/16")
-                            .font(Theme.Typography.poppins(.regular, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        Spacer()
-                        Text("5/25")
-                            .font(Theme.Typography.poppins(.regular, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        Spacer()
-                        Text("5/29")
-                            .font(Theme.Typography.poppins(.regular, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        Spacer().frame(width: 15)
-                    }
-                    .padding(.top, 6)
                 }
+                .frame(height: chartHeight + 24)
             }
             
-            // Legend Row
+            // Legend Row (Figma Frame 95:2)
             HStack(spacing: 14) {
                 HStack(spacing: 6) {
                     RoundedRectangle(cornerRadius: 3)
@@ -590,7 +592,8 @@ public struct IndividualScoreBandChart: View {
         }
     }
     
-    private func scoreLinePath(xCoords: [CGFloat], scores: [CGFloat], height: CGFloat) -> Path {
+    /// Straight line segments connecting adjacent dots directly
+    private func connectedScoreLinePath(xCoords: [CGFloat], scores: [CGFloat], height: CGFloat) -> Path {
         var path = Path()
         guard xCoords.count == scores.count, !xCoords.isEmpty else { return path }
         
