@@ -23,100 +23,132 @@ public struct SurveyOverviewView: View {
             )
             
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 22) {
                     
                     // Title Section
                     Text("Survey Instructions")
-                        .font(Theme.Typography.title)
+                        .font(Theme.Typography.poppins(.bold, size: 30))
                         .foregroundColor(Theme.Colors.textPrimary)
                         .padding(.top, 8)
                     
-                    // Instructions Bubble Container
-                    BubbleCardContainer(title: "How to Answer Accurately") {
-                        VStack(alignment: .leading, spacing: 20) {
-                            
-                            // DO Section
-                            VStack(alignment: .leading, spacing: 12) {
-                                Label("DO", systemImage: "checkmark.circle.fill")
-                                    .font(Theme.Typography.cardTitle)
-                                    .foregroundColor(Theme.Colors.Safety.lowRisk)
-                                
-                                InstructionBullet(
-                                    icon: "checkmark",
-                                    color: Theme.Colors.Safety.lowRisk,
-                                    text: "Answer based on your recent interactions over the past 30 days."
-                                )
-                                InstructionBullet(
-                                    icon: "checkmark",
-                                    color: Theme.Colors.Safety.lowRisk,
-                                    text: "Reflect on your autonomic response and how you physically feel around each person."
-                                )
-                                InstructionBullet(
-                                    icon: "checkmark",
-                                    color: Theme.Colors.Safety.lowRisk,
-                                    text: "Be honest with yourself—there are no right or wrong answers."
-                                )
-                            }
-                            
-                            Divider()
-                                .background(Theme.Colors.dividerSubtle)
-                            
-                            // DON'T Section
-                            VStack(alignment: .leading, spacing: 12) {
-                                Label("DON'T", systemImage: "xmark.circle.fill")
-                                    .font(Theme.Typography.cardTitle)
-                                    .foregroundColor(Theme.Colors.Safety.highRisk)
-                                
-                                InstructionBullet(
-                                    icon: "xmark",
-                                    color: Theme.Colors.Safety.highRisk,
-                                    text: "Don't base answers on who you wish the person was or ideal scenarios."
-                                )
-                                InstructionBullet(
-                                    icon: "xmark",
-                                    color: Theme.Colors.Safety.highRisk,
-                                    text: "Don't overthink individual items—go with your initial bodily instinct."
-                                )
-                                InstructionBullet(
-                                    icon: "xmark",
-                                    color: Theme.Colors.Safety.highRisk,
-                                    text: "Don't complete the survey in the immediate aftermath of an acute disagreement."
-                                )
-                            }
-                        }
+                    // DO Section
+                    VStack(alignment: .leading, spacing: 18) {
+                        Text("Do:")
+                            .font(Theme.Typography.poppins(.bold, size: 22))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                        
+                        InstructionItemRow(
+                            iconName: "checkmark",
+                            iconColor: Color(hex: "#2EAA55"),
+                            iconBgColor: Color(hex: "#E8F8EF"),
+                            title: "Complete while regulated:",
+                            description: "Choose a time when you feel calm and balanced, avoiding acute emotional distress."
+                        )
+                        
+                        InstructionItemRow(
+                            iconName: "checkmark",
+                            iconColor: Color(hex: "#2EAA55"),
+                            iconBgColor: Color(hex: "#E8F8EF"),
+                            title: "Choose 5 relationships:",
+                            description: "Select the five relationships that occupy the most of your time (both mental and physical), regardless of connection quality."
+                        )
+                        
+                        InstructionItemRow(
+                            iconName: "checkmark",
+                            iconColor: Color(hex: "#2EAA55"),
+                            iconBgColor: Color(hex: "#E8F8EF"),
+                            title: "Reflect bodily and mentally:",
+                            description: "Imagine recent interactions with each person, noting your physiological and mental responses as you answer."
+                        )
                     }
                     
-                    // Action Button
-                    PrimaryButton(title: "Choose Relationships", icon: "arrow.right") {
-                        router.navigate(to: .chooseRelationships)
+                    // DON'T Section
+                    VStack(alignment: .leading, spacing: 18) {
+                        Text("Don't:")
+                            .font(Theme.Typography.poppins(.bold, size: 22))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                            .padding(.top, 4)
+                        
+                        InstructionItemRow(
+                            iconName: "xmark",
+                            iconColor: Color(hex: "#E04848"),
+                            iconBgColor: Color(hex: "#FDEAEB"),
+                            title: "Include minor children:",
+                            description: "Exclude any children under 20 years old."
+                        )
+                        
+                        InstructionItemRow(
+                            iconName: "xmark",
+                            iconColor: Color(hex: "#E04848"),
+                            iconBgColor: Color(hex: "#FDEAEB"),
+                            title: "Default to closest connections:",
+                            description: "Avoid listing your favorite or closest relationships unless they are genuinely the ones where you spend the most time."
+                        )
+                        
+                        InstructionItemRow(
+                            iconName: "xmark",
+                            iconColor: Color(hex: "#E04848"),
+                            iconBgColor: Color(hex: "#FDEAEB"),
+                            title: "Overanalyze:",
+                            description: "Complete the assessment instinctively without overthinking your answers."
+                        )
                     }
-                    .padding(.top, 8)
+                    
+                    // Action Button (Matching Figma Frame 4 "Next")
+                    Button(action: {
+                        router.navigate(to: .chooseRelationships)
+                    }) {
+                        Text("Next")
+                            .font(Theme.Typography.poppins(.semiBold, size: 17))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(Theme.Colors.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 12)
+                    .padding(.bottom, 24)
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
             }
         }
         .background(Theme.Colors.background)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
-// MARK: - Instruction Bullet Row
-struct InstructionBullet: View {
-    let icon: String
-    let color: Color
-    let text: String
+// MARK: - Instruction Item Row (Figma Frame 13:4)
+struct InstructionItemRow: View {
+    let iconName: String
+    let iconColor: Color
+    let iconBgColor: Color
+    let title: String
+    let description: String
     
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(color)
-                .frame(width: 18, height: 18)
+        HStack(alignment: .top, spacing: 14) {
+            Circle()
+                .fill(iconBgColor)
+                .frame(width: 26, height: 26)
+                .overlay(
+                    Image(systemName: iconName)
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(iconColor)
+                )
+                .padding(.top, 1)
             
-            Text(text)
-                .font(Theme.Typography.body)
-                .foregroundColor(Theme.Colors.textSecondary)
-                .fixedSize(horizontal: false, vertical: true)
+            (
+                Text("\(title) ")
+                    .font(Theme.Typography.poppins(.bold, size: 15))
+                    .foregroundColor(Theme.Colors.textPrimary)
+                +
+                Text(description)
+                    .font(Theme.Typography.poppins(.regular, size: 15))
+                    .foregroundColor(Theme.Colors.textSecondary)
+            )
+            .lineSpacing(4)
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
