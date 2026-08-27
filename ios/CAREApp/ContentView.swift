@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Main Application Navigation Container
 struct ContentView: View {
-    @State private var router = AppRouter(path: [.surveyResults, .surveyResultsExpanded])
+    @State private var router = AppRouter(path: [.surveyResults, .pastResults])
     @State private var isShowingSplash: Bool = false
     
     // Shared State Across Assessment Funnel
