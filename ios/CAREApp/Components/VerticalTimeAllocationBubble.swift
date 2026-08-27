@@ -25,7 +25,7 @@ public struct VerticalTimeAllocationBubble: View {
     @State private var initialPercentages: [Double] = []
     
     private let containerCornerRadius: CGFloat = 20.0
-    private let minPercentage: Double = 0.15
+    private let minPercentage: Double = 0.05
     private let outlineColor = Color(hex: "#94A2B8")
     
     public init(allocations: Binding<[ParticipantAllocation]>) {
@@ -53,21 +53,21 @@ public struct VerticalTimeAllocationBubble: View {
                         let item = allocations[index]
                         let bandHeight = totalHeight * CGFloat(item.percentage)
                         
-                        HStack(spacing: 14) {
-                            // Fixed Avatar Circle (No resizing with 15% min)
+                        HStack(spacing: 10) {
+                            // Uniform Avatar Circle (Constant across all percentages)
                             Circle()
                                 .fill(Color.white)
-                                .frame(width: 42, height: 42)
+                                .frame(width: 28, height: 28)
                                 .overlay(
                                     Text(item.initials)
-                                        .font(Theme.Typography.poppins(.bold, size: 16))
+                                        .font(Theme.Typography.poppins(.bold, size: 11.5))
                                         .foregroundColor(Theme.Colors.primary)
                                 )
-                                .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 1)
+                                .shadow(color: Color.black.opacity(0.04), radius: 2, x: 0, y: 1)
                             
                             // First Name
                             Text(item.firstName)
-                                .font(Theme.Typography.poppins(.bold, size: 17))
+                                .font(Theme.Typography.poppins(.semiBold, size: 14.5))
                                 .foregroundColor(Theme.Colors.textPrimary)
                                 .lineLimit(1)
                             
@@ -75,11 +75,11 @@ public struct VerticalTimeAllocationBubble: View {
                             
                             // Percentage Readout
                             Text("\(Int(round(item.percentage * 100)))%")
-                                .font(Theme.Typography.poppins(.bold, size: 17))
+                                .font(Theme.Typography.poppins(.bold, size: 14.5))
                                 .foregroundColor(Theme.Colors.textPrimary)
                                 .contentTransition(.numericText())
                         }
-                        .padding(.horizontal, 18)
+                        .padding(.horizontal, 16)
                         .frame(maxWidth: .infinity)
                         .frame(height: bandHeight)
                         
@@ -184,7 +184,7 @@ public struct VerticalTimeAllocationBubble: View {
         var snappedUpper = (rawUpperPct / 0.05).rounded() * 0.05
         var snappedLower = ((pairPct - snappedUpper) * 20.0).rounded() / 20.0
         
-        // Enforce 15% minimum
+        // Enforce 5% minimum
         if snappedUpper < minPercentage {
             snappedUpper = minPercentage
             snappedLower = ((pairPct - minPercentage) * 20.0).rounded() / 20.0

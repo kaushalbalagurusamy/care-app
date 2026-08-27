@@ -91,8 +91,8 @@ public struct RelationshipFrequencyView: View {
     private func setupInitialAllocations() {
         let count = max(selectedPeople.count, 1)
         if count == 5 {
-            // Default 30, 25, 15, 15, 15 (min 15% per person, sum = 1.0)
-            let defaultPcts = [0.30, 0.25, 0.15, 0.15, 0.15]
+            // Default 30, 25, 20, 15, 10 (min 5% per person, sum = 1.0)
+            let defaultPcts = [0.30, 0.25, 0.20, 0.15, 0.10]
             allocations = selectedPeople.enumerated().map { index, person in
                 ParticipantAllocation(
                     id: person.id,
