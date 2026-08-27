@@ -216,14 +216,15 @@ public struct ComponentShowcaseView: View {
                     }
                     
                     // MARK: 8. Historical Accordion Cards
-                    BubbleCardContainer(title: "Past Results Trend") {
-                        ExpandableAccordionCard(
-                            title: "Sarah Mitchell",
-                            scoreLabel: "83/100 Safe",
-                            tier: .healthy,
-                            isExpanded: isAccordionExpanded,
-                            onToggle: { isAccordionExpanded.toggle() }
-                        )
+                    CollapsibleCardContainer(
+                        title: "Past Results Trend",
+                        isExpanded: isAccordionExpanded,
+                        onToggle: { isAccordionExpanded.toggle() }
+                    ) {
+                        Text("83/100 Safe - Sarah Mitchell")
+                            .font(Theme.Typography.poppins(.medium, size: 14))
+                            .foregroundColor(Theme.Colors.Safety.lowRisk)
+                            .padding(.top, 8)
                     }
                 }
                 .padding(.horizontal, 20)

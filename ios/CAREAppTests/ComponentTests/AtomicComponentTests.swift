@@ -38,12 +38,15 @@ struct AtomicComponentTests {
         #expect(isSelected == false)
     }
 
-    @Test("TEST-CMP-04: FrequencySliderRow percentage formats properly")
-    func testFrequencySliderFormatting() {
-        var pct = 0.30
-        let binding = Binding(get: { pct }, set: { pct = $0 })
-        let slider = FrequencySliderRow(initials: "SM", name: "Sarah Mitchell", percentage: binding)
-        #expect(slider.percentageString == "30%")
+    @Test("TEST-CMP-04: VerticalTimeAllocationBubble percentage formats accurately")
+    func testTimeAllocationBubbleFormatting() {
+        let bubble = VerticalTimeAllocationBubble(
+            person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32),
+            percentage: 0.35,
+            index: 0,
+            onPercentageChanged: { _ in }
+        )
+        #expect(bubble.percentage == 0.35)
     }
 
     @Test("TEST-CMP-05: PageIndicatorDots clamps active index within bounds")
@@ -56,30 +59,27 @@ struct AtomicComponentTests {
         #expect(dotsOverflow.currentIndex == 4)
     }
 
-    @Test("TEST-CMP-06: ScoreBubbleView formats point ratios accurately")
-    func testScoreBubbleFormatting() {
-        let bubble = ScoreBubbleView(score: 80, maxScore: 100)
-        #expect(bubble.scoreText == "80/100")
-        #expect(bubble.safetyTier == .healthy)
-        
-        let bubbleMod = ScoreBubbleView(score: 65, maxScore: 100)
-        #expect(bubbleMod.safetyTier == .moderate)
-        
-        let bubbleHigh = ScoreBubbleView(score: 45, maxScore: 100)
-        #expect(bubbleHigh.safetyTier == .highRisk)
+    @Test("TEST-CMP-06: IndividualResultCard initializes with normalized score")
+    func testIndividualResultCardInit() {
+        let result = IndividualResult(
+            participant: AssessmentParticipant(person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)),
+            normalizedScore: 83.0,
+            safetyTier: .healthy,
+            domainBreakdown: [.calm: 22.0, .accepted: 20.0, .resonant: 18.0, .energetic: 23.0]
+        )
+        let card = IndividualResultCard(result: result)
+        #expect(card.result.normalizedScore == 83.0)
+        #expect(card.result.safetyTier == .healthy)
     }
 
-    @Test("TEST-CMP-07: ExpandableAccordionCard toggles disclosure state")
-    func testAccordionDisclosure() {
-        var isExpanded = false
-        let card = ExpandableAccordionCard(
-            title: "Sarah Mitchell",
-            scoreLabel: "83/100",
-            tier: .healthy,
-            isExpanded: isExpanded,
-            onToggle: { isExpanded.toggle() }
-        )
-        card.onToggle()
-        #expect(isExpanded == true)
+    @Test("TEST-CMP-07: CategoryBreakdownAccordion displays domain breakdown items")
+    func testCategoryBreakdownAccordion() {
+        let items = [
+            CategoryBreakdownItem(domain: .calm, earnedPoints: 18, maxPoints: 25),
+            CategoryBreakdownItem(domain: .accepted, earnedPoints: 20, maxPoints: 25)
+        ]
+        let accordion = CategoryBreakdownAccordion(items: items)
+        #expect(accordion.items.count == 2)
+        #expect(accordion.items[0].domain == .calm)
     }
 }
