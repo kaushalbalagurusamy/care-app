@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Screen 9: Relational Risk Groups Deep Dive Modal (Figma Frame 58:3)
+// MARK: - Screen 9: Relational Risk Groups Deep Dive (Figma Frame 58:3)
 public struct SurveyResultsExpandedView: View {
     public let router: AppRouter
     
@@ -10,129 +10,128 @@ public struct SurveyResultsExpandedView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Modal Header with Dismiss X
-            HStack {
-                Spacer()
-                
-                Text("About Risk Groups")
-                    .font(Theme.Typography.headline)
-                    .foregroundColor(Theme.Colors.textPrimary)
-                
-                Spacer()
-                
-                Button(action: { router.pop() }) {
-                    Circle()
-                        .fill(Theme.Colors.surfaceSecondary)
-                        .frame(width: 36, height: 36)
-                        .overlay(
-                            Image(systemName: "xmark")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(Theme.Colors.textSecondary)
-                        )
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 20)
-            .frame(height: 56)
-            .background(Theme.Colors.background)
+            // Standardized Header Bar with Modular AppIcons
+            HeaderNavBar(
+                showBackButton: true,
+                showHomeButton: true,
+                showChartButton: true,
+                showProfileButton: true,
+                onBack: { router.pop() },
+                onHome: { router.popToRoot() },
+                onChart: { router.navigate(to: .pastResults) },
+                onProfile: {}
+            )
             
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 14) {
                     
-                    // Title Section
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Understanding Relational Risk Groups")
-                            .font(Theme.Typography.title)
+                    // Title Header with Info Icon (Figma Frame 58:3)
+                    HStack(spacing: 10) {
+                        Image(systemName: "info.circle")
+                            .font(.system(size: 22, weight: .regular))
+                            .foregroundColor(Theme.Colors.primary)
+                        
+                        Text("About Relational Risk Groups")
+                            .font(Theme.Typography.poppins(.bold, size: 20))
                             .foregroundColor(Theme.Colors.textPrimary)
-                        
-                        Text("Your network's safety distribution directly impacts autonomic nervous system regulation and mental stamina.")
-                            .font(Theme.Typography.body)
-                            .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 8)
+                    .padding(.top, 2)
                     
-                    // 3 Risk Tier Deep-Dive Cards
-                    VStack(spacing: 16) {
+                    // MARK: 3 Relational Risk Tier Cards (Figma Frame 58:3)
+                    VStack(spacing: 12) {
                         
-                        // Tier 1: Safe Network
-                        RiskTierExplanationCard(
-                            tierName: "Safe Network",
-                            scoreRange: "75 - 100",
-                            tierColor: Theme.Colors.Safety.lowRisk,
-                            tierBg: Theme.Colors.Safety.lowRiskBackground,
-                            description: "Relationships in this tier serve as restorative anchors for your smart vagus nerve. Interactions promote co-regulation, emotional grounding, and reduced baseline cortisol levels."
+                        // 1. Safe Tier
+                        RelationalRiskTierCard(
+                            badgeTitle: "Safe",
+                            badgeColor: Theme.Colors.Safety.lowRisk,
+                            scoreRange: "75 or above",
+                            explanation: "This score indicates a sturdy, supportive connection. It is a safe space for trying out new relational skills and discussing concrete ways to support one another."
                         )
                         
-                        // Tier 2: Moderate Risk
-                        RiskTierExplanationCard(
-                            tierName: "Moderate Risk",
-                            scoreRange: "60 - 74",
-                            tierColor: Theme.Colors.Safety.moderateRisk,
-                            tierBg: Theme.Colors.Safety.moderateRiskBackground,
-                            description: "Relationships characterized by intermittent attunement or unspoken expectations. Proactive communication and mutual boundary check-ins prevent these bonds from drifting into relational strain."
+                        // 2. Moderate Risk Tier
+                        RelationalRiskTierCard(
+                            badgeTitle: "Moderate Risk",
+                            badgeColor: Theme.Colors.Safety.moderateRisk,
+                            scoreRange: "60 to 75",
+                            explanation: "This score suggests moderate safety with room for improvement. While not the first place to turn for vulnerability, you can practice skills here as you gain confidence, and eventually invite the other person to work on deepening your connection."
                         )
                         
-                        // Tier 3: High Risk
-                        RiskTierExplanationCard(
-                            tierName: "High Risk",
-                            scoreRange: "0 - 59",
-                            tierColor: Theme.Colors.Safety.highRisk,
-                            tierBg: Theme.Colors.Safety.highRiskBackground,
-                            description: "Bonds that trigger frequent sympathetic arousal (fight/flight) or dorsal shutdown. Prioritize clear energetic boundaries, post-interaction recovery, and intentional relational recalibration."
+                        // 3. High Risk Tier
+                        RelationalRiskTierCard(
+                            badgeTitle: "High Risk",
+                            badgeColor: Theme.Colors.Safety.highRisk,
+                            scoreRange: "Less than 60",
+                            explanation: "This score indicates significant relational problems that cannot tolerate much vulnerability or conflict. Do not attempt new skills here. If the relationship is frankly abusive, please immediately seek help from a professional (like a counselor, physician, or domestic violence specialist) to explore extrication."
                         )
                     }
                     
-                    // Action Button
-                    PrimaryButton(title: "Dismiss") {
+                    // MARK: Bottom Action Button (Figma Frame 58:3)
+                    PrimaryButton(title: "Back to Results") {
                         router.pop()
                     }
-                    .padding(.top, 12)
+                    .padding(.top, 6)
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.vertical, 12)
             }
         }
         .background(Theme.Colors.background)
     }
 }
 
-// MARK: - Risk Tier Explanation Card
-struct RiskTierExplanationCard: View {
-    let tierName: String
-    let scoreRange: String
-    let tierColor: Color
-    let tierBg: Color
-    let description: String
+// MARK: - Relational Risk Tier Card (Figma Frame 58:3)
+public struct RelationalRiskTierCard: View {
+    public let badgeTitle: String
+    public let badgeColor: Color
+    public let scoreRange: String
+    public let explanation: String
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(tierName)
-                    .font(Theme.Typography.headline)
+    public init(
+        badgeTitle: String,
+        badgeColor: Color,
+        scoreRange: String,
+        explanation: String
+    ) {
+        self.badgeTitle = badgeTitle
+        self.badgeColor = badgeColor
+        self.scoreRange = scoreRange
+        self.explanation = explanation
+    }
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Badge & Score Range Header
+            HStack(spacing: 12) {
+                Text(badgeTitle)
+                    .font(Theme.Typography.poppins(.bold, size: 13))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 5)
+                    .background(badgeColor)
+                    .clipShape(Capsule())
+                
+                Text(scoreRange)
+                    .font(Theme.Typography.poppins(.bold, size: 15.5))
                     .foregroundColor(Theme.Colors.textPrimary)
                 
                 Spacer()
-                
-                Text(scoreRange)
-                    .font(Theme.Typography.caption)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(tierBg)
-                    .foregroundColor(tierColor)
-                    .clipShape(Capsule())
             }
             
-            Text(description)
-                .font(Theme.Typography.body)
+            // Explanation Body
+            Text(explanation)
+                .font(Theme.Typography.poppins(.regular, size: 13.5))
                 .foregroundColor(Theme.Colors.textSecondary)
+                .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(20)
-        .background(Theme.Colors.cardSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .padding(.horizontal, 18)
+        .padding(.vertical, 15)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(tierColor.opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Theme.Colors.dividerSubtle, lineWidth: 1)
         )
     }
 }
