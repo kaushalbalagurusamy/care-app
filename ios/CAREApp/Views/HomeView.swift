@@ -37,72 +37,63 @@ public struct HomeView: View {
     }
     
     public var body: some View {
-        GeometryReader { geo in
-            let screenHeight = geo.size.height
-            let verticalSpacing = computeSpacing(for: screenHeight)
-            let cardMaxHeight = computeCardHeight(availableHeight: screenHeight, spacing: verticalSpacing)
+        VStack(spacing: 0) {
+            // Modular Compact Header Bar (Flush with Top)
+            HeaderNavBar(
+                showBackButton: false,
+                showHomeButton: true,
+                showChartButton: true,
+                showProfileButton: true,
+                onHome: {},
+                onChart: { router.navigate(to: .pastResults) },
+                onProfile: {}
+            )
             
-            VStack(spacing: 0) {
-                // Modular Compact Header Bar (Flush with Top)
-                HeaderNavBar(
-                    showBackButton: false,
-                    showHomeButton: true,
-                    showChartButton: true,
-                    showProfileButton: true,
-                    onHome: {},
-                    onChart: { router.navigate(to: .pastResults) },
-                    onProfile: {}
+            // Main Dashboard Body - Filling Full Vertical Height with Uniform Spacing
+            VStack(alignment: .leading, spacing: 14) {
+                
+                // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt)
+                Text("Welcome Back")
+                    .font(Theme.Typography.welcomeTitle)
+                    .foregroundColor(Theme.Colors.textPrimary)
+                    .padding(.top, 2)
+                
+                // 3 Action Cards (Original Photos) with Uniform Spacing
+                ActionCardView(
+                    imageName: "card_education_full",
+                    title: "Education",
+                    subtitle: "Learn Wellness",
+                    action: {
+                        activeAlert = .education
+                    }
                 )
                 
-                // Main Dashboard Body - Proportionally Scaled to Fit Whole Screen
-                VStack(alignment: .leading, spacing: verticalSpacing) {
-                    
-                    // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt)
-                    Text("Welcome Back")
-                        .font(Theme.Typography.welcomeTitle)
-                        .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 2)
-                    
-                    // 3 Action Cards with Original Figma Photos & Proportional Scaling
-                    ActionCardView(
-                        imageName: "card_education_full",
-                        title: "Education",
-                        subtitle: "Learn Wellness",
-                        maxHeight: cardMaxHeight,
-                        action: {
-                            activeAlert = .education
-                        }
-                    )
-                    
-                    ActionCardView(
-                        imageName: "card_assessment_full",
-                        title: "Assessment",
-                        subtitle: "Track Mind",
-                        maxHeight: cardMaxHeight,
-                        action: {
-                            router.navigate(to: .assessmentOverview)
-                        }
-                    )
-                    
-                    ActionCardView(
-                        imageName: "card_exercises_full",
-                        title: "Exercises",
-                        subtitle: "Active Care",
-                        maxHeight: cardMaxHeight,
-                        action: {
-                            activeAlert = .exercises
-                        }
-                    )
-                    
-                    // Daily Streak Capsule Pill Scaled with Viewport
-                    StreakBadgeView(daysCount: 5)
-                        .padding(.bottom, 4)
-                }
-                .padding(.horizontal, 20)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                ActionCardView(
+                    imageName: "card_assessment_full",
+                    title: "Assessment",
+                    subtitle: "Track Mind",
+                    action: {
+                        router.navigate(to: .assessmentOverview)
+                    }
+                )
+                
+                ActionCardView(
+                    imageName: "card_exercises_full",
+                    title: "Exercises",
+                    subtitle: "Active Care",
+                    action: {
+                        activeAlert = .exercises
+                    }
+                )
+                
+                // Daily Streak Capsule Pill Anchored at Bottom with Same Uniform Spacing
+                StreakBadgeView(daysCount: 5)
+                    .padding(.bottom, 2)
             }
-            .frame(width: geo.size.width, height: geo.size.height)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())
         .alert(
             activeAlert?.title ?? "",
@@ -117,23 +108,6 @@ public struct HomeView: View {
                 Text(activeAlert?.message ?? "")
             }
         )
-    }
-    
-    private func computeSpacing(for height: CGFloat) -> CGFloat {
-        if height > 750 {
-            return 12.0
-        } else if height > 650 {
-            return 10.0
-        } else {
-            return 8.0
-        }
-    }
-    
-    private func computeCardHeight(availableHeight: CGFloat, spacing: CGFloat) -> CGFloat {
-        let overhead: CGFloat = 52.0 + 30.0 + 42.0 + (spacing * 4.0) + 8.0
-        let remaining = max(availableHeight - overhead, 0)
-        let perCard = remaining / 3.0
-        return min(perCard, 196.0)
     }
 }
 
