@@ -8,11 +8,22 @@ public struct IndividualResultCard: View {
         self.result = result
     }
     
+    private var badgeColor: Color {
+        switch result.safetyTier {
+        case .healthy:
+            return Color(hex: "#38B969")
+        case .moderate:
+            return Color(hex: "#FABF2E")
+        case .highRisk:
+            return Color(hex: "#E84D4D")
+        }
+    }
+    
     public var body: some View {
         HStack(spacing: 14) {
-            // Initials Avatar Circle
+            // Initials Avatar Circle (White background in Figma Frame 29:4)
             Circle()
-                .fill(Color(hex: "#EFF5FC"))
+                .fill(Color.white)
                 .frame(width: 46, height: 46)
                 .overlay(
                     Text(result.participant.person.initials)
@@ -39,15 +50,13 @@ public struct IndividualResultCard: View {
                 .foregroundColor(.white)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 6)
-                .background(Color(hex: "#38B969"))
+                .background(badgeColor)
                 .clipShape(Capsule())
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(
+        .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .stroke(Theme.Colors.primary, lineWidth: 1.5)
         )

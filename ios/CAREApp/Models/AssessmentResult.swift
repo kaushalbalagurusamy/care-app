@@ -129,14 +129,25 @@ public struct AssessmentResult: Identifiable, Hashable, Codable {
 // MARK: - Mock Initial Result (Matching Figma Screen 8)
 public extension AssessmentResult {
     static let figmaMockResult: AssessmentResult = {
-        let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)
-        let participant = AssessmentParticipant(person: person, percentTimeSpent: 0.30)
-        let individual = IndividualResult(
-            participant: participant,
-            normalizedScore: 80.0,
-            safetyTier: .healthy,
-            domainBreakdown: [.calm: 18, .accepted: 20, .resonant: 15, .energetic: 22]
-        )
+        let contacts = Person.mockFigmaContacts
+        let mockData: [(Int, Double, SafetyTier, [CAREDomain: Double])] = [
+            (0, 80.0, .healthy, [.calm: 18, .accepted: 20, .resonant: 15, .energetic: 22]),
+            (1, 68.0, .moderate, [.calm: 16, .accepted: 18, .resonant: 14, .energetic: 19]),
+            (2, 45.0, .highRisk, [.calm: 10, .accepted: 12, .resonant: 11, .energetic: 12]),
+            (3, 85.0, .healthy, [.calm: 20, .accepted: 22, .resonant: 18, .energetic: 25]),
+            (4, 76.0, .healthy, [.calm: 17, .accepted: 19, .resonant: 16, .energetic: 24])
+        ]
+        
+        let individualResults: [IndividualResult] = mockData.compactMap { (index, score, tier, breakdown) in
+            guard index < contacts.count else { return nil }
+            let p = AssessmentParticipant(person: contacts[index], percentTimeSpent: index == 0 ? 0.80 : 0.05)
+            return IndividualResult(
+                participant: p,
+                normalizedScore: score,
+                safetyTier: tier,
+                domainBreakdown: breakdown
+            )
+        }
         
         let domains: [CAREDomain: DomainScoreBreakdown] = [
             .calm: DomainScoreBreakdown(domain: .calm, earnedPoints: 18, maxPossiblePoints: 125, vagalToneStatus: "Good Vagal Tone"),
@@ -148,7 +159,7 @@ public extension AssessmentResult {
         return AssessmentResult(
             domainScores: domains,
             safetyDistribution: RelationalSafetyDistribution(safePercentage: 0.21, moderatePercentage: 0.39, highRiskPercentage: 0.40),
-            individualResults: [individual]
+            individualResults: individualResults
         )
     }()
 }

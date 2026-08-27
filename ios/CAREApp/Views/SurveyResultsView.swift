@@ -188,7 +188,12 @@ public struct SurveyResultsView: View {
                                 
                                 PageIndicatorDots(
                                     totalCount: result.individualResults.count,
-                                    currentIndex: activeParticipantIndex
+                                    currentIndex: activeParticipantIndex,
+                                    onSelectIndex: { index in
+                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                                            activeParticipantIndex = index
+                                        }
+                                    }
                                 )
                                 .padding(.top, 4)
                             }

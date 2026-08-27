@@ -4,22 +4,29 @@ import SwiftUI
 public struct PageIndicatorDots: View {
     public let totalCount: Int
     public let currentIndex: Int
+    public var onSelectIndex: ((Int) -> Void)?
     
-    public init(totalCount: Int, currentIndex: Int) {
+    public init(totalCount: Int, currentIndex: Int, onSelectIndex: ((Int) -> Void)? = nil) {
         self.totalCount = totalCount
         self.currentIndex = min(max(currentIndex, 0), max(totalCount - 1, 0))
+        self.onSelectIndex = onSelectIndex
     }
     
     public var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             ForEach(0..<totalCount, id: \.self) { index in
-                Circle()
-                    .fill(index == currentIndex ? Theme.Colors.primary : Theme.Colors.dividerMedium)
-                    .frame(width: 8, height: 8)
-                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentIndex)
+                Button(action: {
+                    onSelectIndex?(index)
+                }) {
+                    Circle()
+                        .fill(index == currentIndex ? Theme.Colors.primary : Color(hex: "#CBD5E1"))
+                        .frame(width: index == currentIndex ? 7.5 : 6.5, height: index == currentIndex ? 7.5 : 6.5)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentIndex)
+                }
+                .buttonStyle(.plain)
             }
         }
-        .frame(height: 8)
+        .frame(height: 10)
     }
 }
 
