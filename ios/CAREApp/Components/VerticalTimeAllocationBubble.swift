@@ -20,14 +20,13 @@ public struct ParticipantAllocation: Identifiable, Equatable {
 public struct VerticalTimeAllocationBubble: View {
     @Binding public var allocations: [ParticipantAllocation]
     
-    // State tracking active drag threshold per divider
-    @State private var activeDividerIndex: Int? = nil
-    @State private var accumulatedTranslationY: CGFloat = 0.0
-    @State private var lastDragTranslationY: CGFloat = 0.0
+    // State tracking active drag per divider
+    @State private var dragDividerIndex: Int? = nil
+    @State private var dragStartUpperPct: Double = 0.0
+    @State private var dragStartLowerPct: Double = 0.0
     
     private let containerCornerRadius: CGFloat = 20.0
-    private let minPercentage: Double = 0.10
-    private let stepThresholdPoints: CGFloat = 20.0 // Threshold in points to step 5%
+    private let minPercentage: Double = 0.15
     private let outlineColor = Color(hex: "#94A2B8")
     
     public init(allocations: Binding<[ParticipantAllocation]>) {
@@ -54,26 +53,22 @@ public struct VerticalTimeAllocationBubble: View {
                     ForEach(0..<allocations.count, id: \.self) { index in
                         let item = allocations[index]
                         let bandHeight = totalHeight * CGFloat(item.percentage)
-                        let isCompact = (item.percentage <= 0.12)
-                        let avatarSize: CGFloat = isCompact ? 32.0 : (item.percentage <= 0.20 ? 38.0 : 42.0)
-                        let initialsFontSize: CGFloat = isCompact ? 13.0 : (item.percentage <= 0.20 ? 15.0 : 16.0)
-                        let textFontSize: CGFloat = isCompact ? 14.5 : (item.percentage <= 0.20 ? 16.0 : 17.0)
                         
-                        HStack(spacing: isCompact ? 12 : 14) {
-                            // Avatar Circle
+                        HStack(spacing: 14) {
+                            // Fixed Avatar Circle (No resizing with 15% min)
                             Circle()
                                 .fill(Color.white)
-                                .frame(width: avatarSize, height: avatarSize)
+                                .frame(width: 42, height: 42)
                                 .overlay(
                                     Text(item.initials)
-                                        .font(Theme.Typography.poppins(.bold, size: initialsFontSize))
+                                        .font(Theme.Typography.poppins(.bold, size: 16))
                                         .foregroundColor(Theme.Colors.primary)
                                 )
                                 .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 1)
                             
                             // First Name
                             Text(item.firstName)
-                                .font(Theme.Typography.poppins(.bold, size: textFontSize))
+                                .font(Theme.Typography.poppins(.bold, size: 17))
                                 .foregroundColor(Theme.Colors.textPrimary)
                                 .lineLimit(1)
                             
@@ -81,19 +76,17 @@ public struct VerticalTimeAllocationBubble: View {
                             
                             // Percentage Readout
                             Text("\(Int(round(item.percentage * 100)))%")
-                                .font(Theme.Typography.poppins(.bold, size: textFontSize))
+                                .font(Theme.Typography.poppins(.bold, size: 17))
                                 .foregroundColor(Theme.Colors.textPrimary)
                                 .contentTransition(.numericText())
                         }
                         .padding(.horizontal, 18)
                         .frame(maxWidth: .infinity)
                         .frame(height: bandHeight)
-                        .animation(.spring(response: 0.32, dampingFraction: 0.82), value: allocations)
                         
                         // Divider & Draggable Handle between rows
                         if index < allocations.count - 1 {
-                            let isDraggingCurrent = (activeDividerIndex == index)
-                            let handleVisualOffset = isDraggingCurrent ? min(max(accumulatedTranslationY * 0.4, -10), 10) : 0
+                            let isDraggingCurrent = (dragDividerIndex == index)
                             
                             ZStack {
                                 Rectangle()
@@ -108,21 +101,24 @@ public struct VerticalTimeAllocationBubble: View {
                                     .background(Color.white)
                                     .clipShape(Circle())
                                     .shadow(color: Color.black.opacity(isDraggingCurrent ? 0.20 : 0.10), radius: isDraggingCurrent ? 6 : 3, x: 0, y: 2)
-                                    .scaleEffect(isDraggingCurrent ? 1.12 : 1.0)
-                                    .offset(y: handleVisualOffset)
+                                    .scaleEffect(isDraggingCurrent ? 1.15 : 1.0)
                                     .animation(.spring(response: 0.2, dampingFraction: 0.75), value: isDraggingCurrent)
-                                    .contentShape(Rectangle().inset(by: -15)) // generous hit test area
+                                    .contentShape(Rectangle().inset(by: -18)) // generous hit test area
                                     .gesture(
-                                        DragGesture(minimumDistance: 2)
+                                        DragGesture(minimumDistance: 1)
                                             .onChanged { value in
-                                                handleThresholdDrag(dividerIndex: index, currentTranslationY: value.translation.height)
+                                                handleFreeDrag(
+                                                    dividerIndex: index,
+                                                    translationY: value.translation.height,
+                                                    totalHeight: totalHeight
+                                                )
                                             }
-                                            .onEnded { _ in
-                                                withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
-                                                    activeDividerIndex = nil
-                                                    accumulatedTranslationY = 0.0
-                                                    lastDragTranslationY = 0.0
-                                                }
+                                            .onEnded { value in
+                                                handleDragEnd(
+                                                    dividerIndex: index,
+                                                    translationY: value.translation.height,
+                                                    totalHeight: totalHeight
+                                                )
                                             }
                                     )
                             }
@@ -137,64 +133,64 @@ public struct VerticalTimeAllocationBubble: View {
         }
     }
     
-    // MARK: - Smooth Threshold-Based Stepping Physics
-    private func handleThresholdDrag(dividerIndex: Int, currentTranslationY: CGFloat) {
-        if activeDividerIndex != dividerIndex {
-            activeDividerIndex = dividerIndex
-            lastDragTranslationY = currentTranslationY
-            accumulatedTranslationY = 0.0
+    // MARK: - Free Fluid Dragging (1:1 Continuous Movement)
+    private func handleFreeDrag(dividerIndex: Int, translationY: CGFloat, totalHeight: CGFloat) {
+        guard totalHeight > 0, dividerIndex < allocations.count - 1 else { return }
+        
+        if dragDividerIndex != dividerIndex {
+            dragDividerIndex = dividerIndex
+            dragStartUpperPct = allocations[dividerIndex].percentage
+            dragStartLowerPct = allocations[dividerIndex + 1].percentage
         }
         
-        let delta = currentTranslationY - lastDragTranslationY
-        lastDragTranslationY = currentTranslationY
-        accumulatedTranslationY += delta
+        let deltaPct = Double(translationY / totalHeight)
+        let totalPairPct = dragStartUpperPct + dragStartLowerPct
         
-        // Downward drag past threshold -> Upper gains 5%, Lower loses 5%
-        if accumulatedTranslationY >= stepThresholdPoints {
-            let steps = Int(accumulatedTranslationY / stepThresholdPoints)
-            if applyStep(dividerIndex: dividerIndex, stepDirection: 1, stepCount: steps) {
-                accumulatedTranslationY -= CGFloat(steps) * stepThresholdPoints
-                triggerHapticTick()
-            } else {
-                // Clamped at limit
-                accumulatedTranslationY = min(accumulatedTranslationY, stepThresholdPoints * 0.6)
-            }
+        var proposedUpper = dragStartUpperPct + deltaPct
+        var proposedLower = dragStartLowerPct - deltaPct
+        
+        // Clamp to minimum 15% (0.15)
+        if proposedUpper < minPercentage {
+            proposedUpper = minPercentage
+            proposedLower = totalPairPct - minPercentage
+        } else if proposedLower < minPercentage {
+            proposedLower = minPercentage
+            proposedUpper = totalPairPct - minPercentage
         }
-        // Upward drag past negative threshold -> Upper loses 5%, Lower gains 5%
-        else if accumulatedTranslationY <= -stepThresholdPoints {
-            let steps = Int(abs(accumulatedTranslationY) / stepThresholdPoints)
-            if applyStep(dividerIndex: dividerIndex, stepDirection: -1, stepCount: steps) {
-                accumulatedTranslationY += CGFloat(steps) * stepThresholdPoints
-                triggerHapticTick()
-            } else {
-                // Clamped at limit
-                accumulatedTranslationY = max(accumulatedTranslationY, -stepThresholdPoints * 0.6)
-            }
-        }
+        
+        allocations[dividerIndex].percentage = proposedUpper
+        allocations[dividerIndex + 1].percentage = proposedLower
     }
     
-    // MARK: - Apply Discrete 5% Step
-    private func applyStep(dividerIndex: Int, stepDirection: Int, stepCount: Int) -> Bool {
-        guard dividerIndex < allocations.count - 1 else { return false }
+    // MARK: - Snap to Closest 5% Interval on Release
+    private func handleDragEnd(dividerIndex: Int, translationY: CGFloat, totalHeight: CGFloat) {
+        guard totalHeight > 0, dividerIndex < allocations.count - 1 else { return }
         
-        let deltaPercentage = Double(stepDirection * stepCount) * 0.05
-        let currentUpper = allocations[dividerIndex].percentage
-        let currentLower = allocations[dividerIndex + 1].percentage
+        let rawDeltaPct = Double(translationY / totalHeight)
+        let totalPairPct = dragStartUpperPct + dragStartLowerPct
         
-        let proposedUpper = (currentUpper + deltaPercentage)
-        let proposedLower = (currentLower - deltaPercentage)
+        // Step delta to closest 5% (0.05) increment
+        let steppedDelta = (rawDeltaPct / 0.05).rounded() * 0.05
         
-        // Prevent either participant from going below the 10% minimum
-        guard proposedUpper >= (minPercentage - 0.001),
-              proposedLower >= (minPercentage - 0.001) else {
-            return false
+        var snappedUpper = ((dragStartUpperPct + steppedDelta) * 20.0).rounded() / 20.0
+        var snappedLower = ((dragStartLowerPct - steppedDelta) * 20.0).rounded() / 20.0
+        
+        // Clamp to minimum 15% (0.15)
+        if snappedUpper < minPercentage {
+            snappedUpper = minPercentage
+            snappedLower = ((totalPairPct - minPercentage) * 20.0).rounded() / 20.0
+        } else if snappedLower < minPercentage {
+            snappedLower = minPercentage
+            snappedUpper = ((totalPairPct - minPercentage) * 20.0).rounded() / 20.0
         }
         
-        withAnimation(.spring(response: 0.28, dampingFraction: 0.85)) {
-            allocations[dividerIndex].percentage = (proposedUpper * 100).rounded() / 100
-            allocations[dividerIndex + 1].percentage = (proposedLower * 100).rounded() / 100
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
+            allocations[dividerIndex].percentage = (snappedUpper * 100).rounded() / 100
+            allocations[dividerIndex + 1].percentage = (snappedLower * 100).rounded() / 100
+            dragDividerIndex = nil
         }
-        return true
+        
+        triggerHapticTick()
     }
     
     private func triggerHapticTick() {
