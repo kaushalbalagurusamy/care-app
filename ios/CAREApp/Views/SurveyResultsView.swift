@@ -199,14 +199,13 @@ public struct SurveyResultsView: View {
                             }
                         }
                     }
-                    
                     // MARK: 4. Action Buttons
                     VStack(spacing: 12) {
-                        PrimaryButton(title: "View Past Results", icon: "chart.bar.fill") {
+                        PrimaryButton(title: "View Past Results", appIcon: .chart) {
                             router.navigate(to: .pastResults)
                         }
                         
-                        SecondaryButton(title: "Return to Home", icon: "house.fill") {
+                        SecondaryButton(title: "Return to Home", appIcon: .home) {
                             router.popToRoot()
                         }
                     }

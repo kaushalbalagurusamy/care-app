@@ -4,6 +4,7 @@ import SwiftUI
 public struct PrimaryButton: View {
     public let title: String
     public let icon: String?
+    public let appIcon: AppIcon?
     public let isEnabled: Bool
     public let isLoading: Bool
     public let action: () -> Void
@@ -13,12 +14,14 @@ public struct PrimaryButton: View {
     public init(
         title: String,
         icon: String? = nil,
+        appIcon: AppIcon? = nil,
         isEnabled: Bool = true,
         isLoading: Bool = false,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.icon = icon
+        self.appIcon = appIcon
         self.isEnabled = isEnabled
         self.isLoading = isLoading
         self.action = action
@@ -37,7 +40,9 @@ public struct PrimaryButton: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 } else {
-                    if let icon = icon {
+                    if let appIcon = appIcon {
+                        appIcon.view(size: 16, weight: .semibold, color: .white)
+                    } else if let icon = icon {
                         Image(systemName: icon)
                             .font(.system(size: 16, weight: .semibold))
                     }
@@ -62,6 +67,7 @@ public struct PrimaryButton: View {
 public struct SecondaryButton: View {
     public let title: String
     public let icon: String?
+    public let appIcon: AppIcon?
     public let action: () -> Void
     
     public var minHeight: CGFloat { 56.0 }
@@ -69,10 +75,12 @@ public struct SecondaryButton: View {
     public init(
         title: String,
         icon: String? = nil,
+        appIcon: AppIcon? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.icon = icon
+        self.appIcon = appIcon
         self.action = action
     }
     
@@ -83,7 +91,9 @@ public struct SecondaryButton: View {
             action()
         }) {
             HStack(spacing: 8) {
-                if let icon = icon {
+                if let appIcon = appIcon {
+                    appIcon.view(size: 16, weight: .semibold, color: Theme.Colors.primary)
+                } else if let icon = icon {
                     Image(systemName: icon)
                         .font(.system(size: 16, weight: .semibold))
                 }

@@ -40,16 +40,14 @@ public struct HeaderNavBar: View {
             HStack(spacing: 8) {
                 if showBackButton {
                     CircularNavIconButton(
-                        iconName: "chevron.left",
-                        isSystemImage: true,
+                        icon: .back,
                         action: { onBack?() }
                     )
                 }
                 
                 if showHomeButton {
                     CircularNavIconButton(
-                        iconName: "icon_home",
-                        isSystemImage: false,
+                        icon: .home,
                         action: { onHome?() }
                     )
                 }
@@ -71,16 +69,14 @@ public struct HeaderNavBar: View {
             HStack(spacing: 8) {
                 if showChartButton {
                     CircularNavIconButton(
-                        iconName: "icon_chart",
-                        isSystemImage: false,
+                        icon: .chart,
                         action: { onChart?() }
                     )
                 }
                 
                 if showProfileButton {
                     CircularNavIconButton(
-                        iconName: "icon_profile",
-                        isSystemImage: false,
+                        icon: .profile,
                         action: { onProfile?() }
                     )
                 }
@@ -98,13 +94,27 @@ public struct HeaderNavBar: View {
 
 // MARK: - 36x36 Standardized Circular Navigation Button
 public struct CircularNavIconButton: View {
-    public let iconName: String
-    public let isSystemImage: Bool
+    public let icon: AppIcon
     public let action: () -> Void
     
+    public init(icon: AppIcon, action: @escaping () -> Void) {
+        self.icon = icon
+        self.action = action
+    }
+    
+    // Backwards compatibility initializer
     public init(iconName: String, isSystemImage: Bool = false, action: @escaping () -> Void) {
-        self.iconName = iconName
-        self.isSystemImage = isSystemImage
+        if iconName.contains("home") {
+            self.icon = .home
+        } else if iconName.contains("chart") {
+            self.icon = .chart
+        } else if iconName.contains("profile") || iconName.contains("person") {
+            self.icon = .profile
+        } else if iconName.contains("chevron") || iconName.contains("back") {
+            self.icon = .back
+        } else {
+            self.icon = .custom(systemName: iconName)
+        }
         self.action = action
     }
     
@@ -114,20 +124,7 @@ public struct CircularNavIconButton: View {
                 .fill(Theme.Colors.surfaceSecondary)
                 .frame(width: 36, height: 36)
                 .overlay(
-                    Group {
-                        if isSystemImage {
-                            Image(systemName: iconName)
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(Theme.Colors.primary)
-                        } else {
-                            Image(iconName)
-                                .renderingMode(.template)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(Theme.Colors.primary)
-                                .frame(width: 36, height: 36)
-                        }
-                    }
+                    icon.view(size: 15.5, weight: .semibold, color: Theme.Colors.primary)
                 )
                 .contentShape(Circle())
         }

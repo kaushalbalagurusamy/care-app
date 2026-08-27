@@ -53,13 +53,14 @@ public struct IndividualResultCard: View {
                 .background(badgeColor)
                 .clipShape(Capsule())
         }
-        .padding(.horizontal, 18)
+        .padding(.horizontal, 16)
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Theme.Colors.primary, lineWidth: 1.5)
+                .strokeBorder(Theme.Colors.primary, lineWidth: 1.5)
         )
+        .padding(.horizontal, 2)
     }
 }
 
