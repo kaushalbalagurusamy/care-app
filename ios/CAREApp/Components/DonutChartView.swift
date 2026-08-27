@@ -14,22 +14,25 @@ public struct DonutSegment: Identifiable, Hashable {
     }
 }
 
-// MARK: - Arc-Rectangular Donut Segment Shape with Soft Fillet Corners
-public struct ArcRectangularDonutSegmentShape: Shape {
+// MARK: - Arc-Rectangular Donut Segment Shape with Constant-Width Parallel Slits & Soft Fillet Corners
+public struct ParallelSlitDonutSegmentShape: Shape {
     public var startAngle: Angle
     public var endAngle: Angle
     public var innerRadiusRatio: CGFloat // innerRadius / outerRadius (e.g. 0.52)
-    public var cornerRadius: CGFloat     // Fillet radius (e.g. 6.0)
+    public var gapWidth: CGFloat         // Constant slit gap width in points (e.g. 8.0)
+    public var cornerRadius: CGFloat     // 50% softer fillet radius (e.g. 9.0)
     
     public init(
         startAngle: Angle,
         endAngle: Angle,
         innerRadiusRatio: CGFloat = 0.52,
-        cornerRadius: CGFloat = 6.0
+        gapWidth: CGFloat = 8.0,
+        cornerRadius: CGFloat = 9.0
     ) {
         self.startAngle = startAngle
         self.endAngle = endAngle
         self.innerRadiusRatio = innerRadiusRatio
+        self.gapWidth = gapWidth
         self.cornerRadius = cornerRadius
     }
     
@@ -49,91 +52,135 @@ public struct ArcRectangularDonutSegmentShape: Shape {
         let innerRadius = outerRadius * innerRadiusRatio
         let radialThickness = outerRadius - innerRadius
         
-        let r_c = min(cornerRadius, radialThickness / 3.0)
+        let halfGap = gapWidth / 2.0
         
-        let a1 = startAngle.radians
-        let a2 = endAngle.radians
-        let span = a2 - a1
+        // Exact trigonometric offset so the gap between adjacent slices is a constant width (2 * halfGap)
+        let deltaO_gap = asin(min(halfGap / outerRadius, 0.99))
+        let deltaI_gap = asin(min(halfGap / innerRadius, 0.99))
         
-        guard span > 0.01 else { return path }
+        let t1 = startAngle.radians
+        let t2 = endAngle.radians
         
-        let deltaO = min(r_c / outerRadius, span / 3.0)
-        let deltaI = min(r_c / innerRadius, span / 3.0)
+        let outerStart = t1 + deltaO_gap
+        let outerEnd = t2 - deltaO_gap
+        let innerStart = t1 + deltaI_gap
+        let innerEnd = t2 - deltaI_gap
         
-        let p_o1 = CGPoint(x: center.x + outerRadius * cos(a1 + deltaO), y: center.y + outerRadius * sin(a1 + deltaO))
-        let v2 = CGPoint(x: center.x + outerRadius * cos(a2), y: center.y + outerRadius * sin(a2))
-        let p_r2 = CGPoint(x: center.x + (outerRadius - r_c) * cos(a2), y: center.y + (outerRadius - r_c) * sin(a2))
-        let p_r2_in = CGPoint(x: center.x + (innerRadius + r_c) * cos(a2), y: center.y + (innerRadius + r_c) * sin(a2))
-        let v3 = CGPoint(x: center.x + innerRadius * cos(a2), y: center.y + innerRadius * sin(a2))
-        let p_i2 = CGPoint(x: center.x + innerRadius * cos(a2 - deltaI), y: center.y + innerRadius * sin(a2 - deltaI))
-        let v4 = CGPoint(x: center.x + innerRadius * cos(a1), y: center.y + innerRadius * sin(a1))
-        let p_r1_in = CGPoint(x: center.x + (innerRadius + r_c) * cos(a1), y: center.y + (innerRadius + r_c) * sin(a1))
-        let p_r1_out = CGPoint(x: center.x + (outerRadius - r_c) * cos(a1), y: center.y + (outerRadius - r_c) * sin(a1))
-        let v1 = CGPoint(x: center.x + outerRadius * cos(a1), y: center.y + outerRadius * sin(a1))
+        guard outerEnd > outerStart, innerEnd > innerStart else { return path }
         
-        // 1. Move to Outer Start
-        path.move(to: p_o1)
+        // Soft fillet corner radius (50% softer, clamped safely)
+        let r_c = min(cornerRadius, radialThickness / 2.5)
         
-        // 2. Outer Arc
+        let deltaO_fillet = min(r_c / outerRadius, (outerEnd - outerStart) / 2.5)
+        let deltaI_fillet = min(r_c / innerRadius, (innerEnd - innerStart) / 2.5)
+        
+        // 4 Corner Vertices (where the parallel straight edges meet the outer and inner circles)
+        let v_outer_start = CGPoint(x: center.x + outerRadius * cos(outerStart), y: center.y + outerRadius * sin(outerStart))
+        let v_outer_end = CGPoint(x: center.x + outerRadius * cos(outerEnd), y: center.y + outerRadius * sin(outerEnd))
+        let v_inner_end = CGPoint(x: center.x + innerRadius * cos(innerEnd), y: center.y + innerRadius * sin(innerEnd))
+        let v_inner_start = CGPoint(x: center.x + innerRadius * cos(innerStart), y: center.y + innerRadius * sin(innerStart))
+        
+        // Arc start and end endpoints (inset by fillet angle)
+        let p_outer_arc_start = CGPoint(x: center.x + outerRadius * cos(outerStart + deltaO_fillet), y: center.y + outerRadius * sin(outerStart + deltaO_fillet))
+        let p_outer_arc_end = CGPoint(x: center.x + outerRadius * cos(outerEnd - deltaO_fillet), y: center.y + outerRadius * sin(outerEnd - deltaO_fillet))
+        
+        let p_inner_arc_end = CGPoint(x: center.x + innerRadius * cos(innerEnd - deltaI_fillet), y: center.y + innerRadius * sin(innerEnd - deltaI_fillet))
+        let p_inner_arc_start = CGPoint(x: center.x + innerRadius * cos(innerStart + deltaI_fillet), y: center.y + innerRadius * sin(innerStart + deltaI_fillet))
+        
+        // Straight leading edge (outerEnd -> innerEnd) unit direction
+        let v_lead = CGPoint(x: v_inner_end.x - v_outer_end.x, y: v_inner_end.y - v_outer_end.y)
+        let lead_len = sqrt(v_lead.x * v_lead.x + v_lead.y * v_lead.y)
+        let u_lead = lead_len > 0 ? CGPoint(x: v_lead.x / lead_len, y: v_lead.y / lead_len) : CGPoint.zero
+        
+        let p_lead_start = CGPoint(x: v_outer_end.x + u_lead.x * r_c, y: v_outer_end.y + u_lead.y * r_c)
+        let p_lead_end = CGPoint(x: v_inner_end.x - u_lead.x * r_c, y: v_inner_end.y - u_lead.y * r_c)
+        
+        // Straight trailing edge (innerStart -> outerStart) unit direction
+        let v_trail = CGPoint(x: v_outer_start.x - v_inner_start.x, y: v_outer_start.y - v_inner_start.y)
+        let trail_len = sqrt(v_trail.x * v_trail.x + v_trail.y * v_trail.y)
+        let u_trail = trail_len > 0 ? CGPoint(x: v_trail.x / trail_len, y: v_trail.y / trail_len) : CGPoint.zero
+        
+        let p_trail_start = CGPoint(x: v_inner_start.x + u_trail.x * r_c, y: v_inner_start.y + u_trail.y * r_c)
+        let p_trail_end = CGPoint(x: v_outer_start.x - u_trail.x * r_c, y: v_outer_start.y - u_trail.y * r_c)
+        
+        // Path construction
+        path.move(to: p_outer_arc_start)
+        
+        // 1. Outer Circular Arc
         path.addArc(
             center: center,
             radius: outerRadius,
-            startAngle: Angle(radians: a1 + deltaO),
-            endAngle: Angle(radians: a2 - deltaO),
+            startAngle: Angle(radians: outerStart + deltaO_fillet),
+            endAngle: Angle(radians: outerEnd - deltaO_fillet),
             clockwise: false
         )
         
-        // 3. Corner 1 (Outer End Fillet)
-        path.addQuadCurve(to: p_r2, control: v2)
+        // 2. Corner 1 (Outer End Fillet)
+        path.addQuadCurve(to: p_lead_start, control: v_outer_end)
         
-        // 4. Straight Radial Edge
-        path.addLine(to: p_r2_in)
+        // 3. Leading Straight Edge (Strictly parallel to dividing ray t2)
+        path.addLine(to: p_lead_end)
         
-        // 5. Corner 2 (Inner End Fillet)
-        path.addQuadCurve(to: p_i2, control: v3)
+        // 4. Corner 2 (Inner End Fillet)
+        path.addQuadCurve(to: p_inner_arc_end, control: v_inner_end)
         
-        // 6. Inner Arc
+        // 5. Inner Circular Arc
         path.addArc(
             center: center,
             radius: innerRadius,
-            startAngle: Angle(radians: a2 - deltaI),
-            endAngle: Angle(radians: a1 + deltaI),
+            startAngle: Angle(radians: innerEnd - deltaI_fillet),
+            endAngle: Angle(radians: innerStart + deltaI_fillet),
             clockwise: true
         )
         
-        // 7. Corner 3 (Inner Start Fillet)
-        path.addQuadCurve(to: p_r1_in, control: v4)
+        // 6. Corner 3 (Inner Start Fillet)
+        path.addQuadCurve(to: p_trail_start, control: v_inner_start)
         
-        // 8. Straight Radial Edge
-        path.addLine(to: p_r1_out)
+        // 7. Trailing Straight Edge (Strictly parallel to dividing ray t1)
+        path.addLine(to: p_trail_end)
         
-        // 9. Corner 4 (Outer Start Fillet)
-        path.addQuadCurve(to: p_o1, control: v1)
+        // 8. Corner 4 (Outer Start Fillet)
+        path.addQuadCurve(to: p_outer_arc_start, control: v_outer_start)
         
         path.closeSubpath()
         return path
     }
 }
 
-// MARK: - High-Fidelity Donut Chart with Arc-Rectangular Fillet Geometry
+// MARK: - High-Fidelity Donut Chart with Parallel-Slit Geometry & Soft Fillets
 public struct DonutChartView: View {
     public let segments: [DonutSegment]
     public let diameter: CGFloat
     public let strokeWidth: CGFloat
-    public let gapDegrees: Double
+    public let gapWidth: CGFloat
     public let cornerRadius: CGFloat
     
     public init(
         segments: [DonutSegment],
         diameter: CGFloat = 190,
         strokeWidth: CGFloat = 46,
-        gapDegrees: Double = 7.0,
-        cornerRadius: CGFloat = 6.0
+        gapWidth: CGFloat = 8.0,
+        cornerRadius: CGFloat = 9.0
     ) {
         self.segments = segments
         self.diameter = diameter
         self.strokeWidth = strokeWidth
-        self.gapDegrees = gapDegrees
+        self.gapWidth = gapWidth
+        self.cornerRadius = cornerRadius
+    }
+    
+    // Backwards compatibility initializer
+    public init(
+        segments: [DonutSegment],
+        diameter: CGFloat = 190,
+        strokeWidth: CGFloat = 46,
+        gapDegrees: Double,
+        cornerRadius: CGFloat = 9.0
+    ) {
+        self.segments = segments
+        self.diameter = diameter
+        self.strokeWidth = strokeWidth
+        self.gapWidth = 8.0
         self.cornerRadius = cornerRadius
     }
     
@@ -146,23 +193,20 @@ public struct DonutChartView: View {
     public var body: some View {
         ZStack {
             let totalPct = max(segments.reduce(0.0) { $0 + $1.percentage }, 0.001)
-            let gapRad = Angle(degrees: gapDegrees).radians
             
             ForEach(0..<segments.count, id: \.self) { index in
                 let current = segments[index]
                 let startPct = segments.prefix(index).reduce(0.0) { $0 + $1.percentage } / totalPct
                 let endPct = (segments.prefix(index).reduce(0.0) { $0 + $1.percentage } + current.percentage) / totalPct
                 
-                let baseStartRad = Angle(degrees: -90 + (startPct * 360)).radians
-                let baseEndRad = Angle(degrees: -90 + (endPct * 360)).radians
+                let baseStartAngle = Angle(degrees: -90 + (startPct * 360))
+                let baseEndAngle = Angle(degrees: -90 + (endPct * 360))
                 
-                let trimmedStartRad = baseStartRad + (gapRad / 2.0)
-                let trimmedEndRad = max(baseEndRad - (gapRad / 2.0), trimmedStartRad)
-                
-                ArcRectangularDonutSegmentShape(
-                    startAngle: Angle(radians: trimmedStartRad),
-                    endAngle: Angle(radians: trimmedEndRad),
+                ParallelSlitDonutSegmentShape(
+                    startAngle: baseStartAngle,
+                    endAngle: baseEndAngle,
                     innerRadiusRatio: innerRadiusRatio,
+                    gapWidth: gapWidth,
                     cornerRadius: cornerRadius
                 )
                 .fill(current.color)

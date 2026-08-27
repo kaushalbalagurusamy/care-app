@@ -12,6 +12,22 @@ public struct SurveyResultsView: View {
         self.result = result
     }
     
+    private var scoreCompositionSegments: [DonutSegment] {
+        let totalEarned = CAREDomain.allCases.reduce(0.0) { sum, domain in
+            sum + (result.domainScores[domain]?.earnedPoints ?? 0.0)
+        }
+        let safeTotal = totalEarned > 0 ? totalEarned : 1.0
+        
+        return CAREDomain.allCases.map { domain in
+            let earned = result.domainScores[domain]?.earnedPoints ?? 0.0
+            return DonutSegment(
+                title: domain.rawValue,
+                color: domain.themeColor,
+                percentage: earned / safeTotal
+            )
+        }
+    }
+    
     private var breakdownItems: [DomainBreakdownItem] {
         return CAREDomain.allCases.map { domain in
             let score = Int(result.domainScores[domain]?.earnedPoints ?? 18)
@@ -71,18 +87,13 @@ public struct SurveyResultsView: View {
                     // MARK: 1. Score Composition & Category Breakdown Bubble (Figma Frame 29:4)
                     BubbleCardContainer(title: "Score Composition") {
                         VStack(alignment: .leading, spacing: 18) {
-                            // 4-Domain Donut Chart
+                            // 4-Domain Donut Chart (Dynamic % of Total Earned CARE Points)
                             DonutChartView(
-                                segments: [
-                                    DonutSegment(title: "Calm", color: Theme.Colors.Domains.calm, percentage: 0.25),
-                                    DonutSegment(title: "Accepted", color: Theme.Colors.Domains.accepted, percentage: 0.25),
-                                    DonutSegment(title: "Resonant", color: Theme.Colors.Domains.resonant, percentage: 0.25),
-                                    DonutSegment(title: "Energetic", color: Theme.Colors.Domains.energetic, percentage: 0.25)
-                                ],
+                                segments: scoreCompositionSegments,
                                 diameter: 190,
                                 strokeWidth: 46,
-                                gapDegrees: 7.0,
-                                cornerRadius: 6.0
+                                gapWidth: 8.0,
+                                cornerRadius: 9.0
                             )
                             .frame(maxWidth: .infinity)
                             .padding(.top, 4)
@@ -129,8 +140,8 @@ public struct SurveyResultsView: View {
                                 ],
                                 diameter: 190,
                                 strokeWidth: 46,
-                                gapDegrees: 7.0,
-                                cornerRadius: 6.0
+                                gapWidth: 8.0,
+                                cornerRadius: 9.0
                             )
                             .frame(maxWidth: .infinity)
                             
