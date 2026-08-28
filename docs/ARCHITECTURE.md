@@ -61,3 +61,17 @@ This document details the system architecture, component responsibilities, and d
 * **XcodeBuildMCP**: Enables programmatic compilation, test execution, and simulator management.
 * **Proxyman MCP**: Intercepts and inspects live HTTP/HTTPS traffic between the iOS app and backend for instant API debugging.
 * **TokRepo Skills**: Provides automated code reviews, HIG design auditing, and Swift 6 concurrency compliance checks.
+
+---
+
+## 3. Architectural Decision Records (ADRs)
+
+Key architectural decisions are documented in [`docs/adr/`](file:///docs/adr/):
+* **ADR 0001**: Monorepo Dual-Stack Structure (`native iOS` + `FastAPI backend`)
+* **ADR 0002**: FastAPI + NeMo Guardrails + pgvector Backend Architecture
+* **ADR 0003**: Native SwiftUI Mobile Client Architecture
+* **ADR 0004**: MCP Integration & Agentic Workflows
+* **ADR 0005**: Figma Design System to Native SwiftUI Import (Phases 1–5)
+* **ADR 0006**: Autonomous Observability Governance & TDD Loop
+* **ADR 0007**: User Accounts, Authentication, Repository Pattern & Cloud Persistence
+

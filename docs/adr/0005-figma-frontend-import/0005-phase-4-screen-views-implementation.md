@@ -1,26 +1,26 @@
 # ADR 0005.4: Phase 4 — Screen Views Implementation (10 Figma Frames)
 
-* **Status**: Accepted
-* **Date**: 2026-08-26
+* **Status**: Completed / Verified
+* **Date**: 2026-08-26 (Updated 2026-08-28)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
 
 ## 1. Architectural Context & Scope
 
-The 10 frames from Figma represent the complete functional user interface. Each screen must be constructed as a modular, readable SwiftUI view that consumes domain models and atomic components without bloating into giant files.
+The 10 frames from Figma represent the complete functional user interface. Each screen is constructed as a modular, readable SwiftUI view that consumes domain models and atomic components without bloating into giant files.
 
-### Architectural Deliverables (10 Screen Views)
-1. **`LoadingView.swift` (`Loading Screen` — Frame `3:2`)**: Splash branding screen with centered logo, animated scaling, and transition into home.
-2. **`HomeView.swift` (`homepage` — Frame `5:4`)**: Dashboard with welcome card, streak tracking banner, assessment quick-start buttons, and secondary destination routes (`.education`, `.exercises`).
-3. **`AssessmentOverviewView.swift` (`assessment-overview` — Frame `11:4`)**: Informational assessment intro explaining process duration, confidentiality, and evaluation factors.
-4. **`SurveyOverviewView.swift` (`survey-overview` — Frame `13:4`)**: Pre-questionnaire onboarding screen displaying full Do's and Don'ts rules.
-5. **`ChooseRelationshipsView.swift` (`choose-relationships` — Frame `17:4`)**: Grid of selectable relationships enforcing exactly 5 selections before continuing.
-6. **`RelationshipFrequencyView.swift` (`relationship-frequency` — Frame `41:4`)**: Contact frequency calibration screen featuring interactive percentage sliders summing to 100%.
-7. **`SurveyQuestionView.swift` (`survey-question` — Frame `25:4`)**: Multi-step questionnaire viewport displaying animated question transitions, selectable answer choices, and dynamic `"Next: {Person Name}"` button progressions.
-8. **`SurveyResultsView.swift` (`survey-results` — Frame `29:4`)**: Primary comprehensive outcome dashboard: dynamic radial score gauge, relational safety distributions, category breakdowns, and swipeable `TabView` individual result carousel with page dots.
-9. **`SurveyResultsExpandedView.swift` (`survey-results-expanded` — Frame `58:3`)**: Deep-dive static reference sheet breaking down clinical safety factors and risk tiers ($\ge 75$, $60-75$, $< 60$).
-10. **`PastResultsView.swift` (`past-results` — Frame `95:2`)**: Historical timeline tracking past assessments with date filtering and accordion summary cards.
+### Architectural Deliverables & Completion Checklist (10 Screen Views)
+- [x] **`LoadingView.swift` (`Loading Screen` — Frame `3:2`)**: Splash branding screen with centered logo, animated scaling, and transition into home.
+- [x] **`HomeView.swift` (`homepage` — Frame `5:4`)**: Dashboard with welcome card, streak tracking banner, assessment quick-start buttons, and secondary destination routes (`.education`, `.exercises`).
+- [x] **`AssessmentOverviewView.swift` (`assessment-overview` — Frame `11:4`)**: Informational assessment intro explaining process duration, confidentiality, and evaluation factors.
+- [x] **`SurveyOverviewView.swift` (`survey-overview` — Frame `13:4`)**: Pre-questionnaire onboarding screen displaying full Do's and Don'ts rules.
+- [x] **`ChooseRelationshipsView.swift` (`choose-relationships` — Frame `17:4`)**: Grid of selectable relationships enforcing 1 to 5 selections before continuing.
+- [x] **`RelationshipFrequencyView.swift` (`relationship-frequency` — Frame `41:4`)**: Contact frequency calibration screen featuring interactive `VerticalTimeAllocationBubble` sliders summing to 100%.
+- [x] **`SurveyQuestionView.swift` (`survey-question` — Frame `25:4`)**: Multi-step questionnaire viewport displaying animated question transitions, selectable answer choices, strict answer validation, and dynamic `"Next: {Person Name}"` button progressions.
+- [x] **`SurveyResultsView.swift` (`survey-results` — Frame `29:4`)**: Primary comprehensive outcome dashboard: parallel-slit dynamic donut score gauges, relational safety distributions, category breakdowns, and swipeable `TabView` individual result carousel with page dots.
+- [x] **`SurveyResultsExpandedView.swift` (`survey-results-expanded` — Frame `58:3`)**: Deep-dive static reference sheet breaking down clinical safety factors and risk tiers ($\ge 75$, $60-75$, $< 60$).
+- [x] **`PastResultsView.swift` (`past-results` — Frame `95:2`)**: Historical timeline tracking past assessments with 4 collapsible accordions, horizontal 3-point visible scrolling viewport, and adjacent connected dots.
 
 ---
 

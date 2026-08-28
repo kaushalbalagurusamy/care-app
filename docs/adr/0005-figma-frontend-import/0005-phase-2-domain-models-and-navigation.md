@@ -1,7 +1,7 @@
 # ADR 0005.2: Phase 2 — Domain Data Models, Navigation State & Pluggable Scoring Architecture
 
-* **Status**: Accepted
-* **Date**: 2026-08-26
+* **Status**: Completed / Verified
+* **Date**: 2026-08-26 (Updated 2026-08-28)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -13,20 +13,19 @@ The Figma user journey spans 10 interactive states across assessment setup, part
 To maintain clean separation of concerns and allow seamless future refinement of clinical scoring formulas, the architecture enforces:
 1. **Decoupled Identity vs. Session State**: Separation of the user's permanent address book (`Person`) from transient assessment configurations (`AssessmentParticipant`).
 2. **Multi-Domain Flexible Question Mapping**: Each question can map to **one or more** C.A.R.E. categories with custom domain weights.
-3. **Pluggable Strategy-Pattern Scoring Engine**: Scoring algorithms and domain point maximums (e.g. $125\text{ pt}$ max or dynamic scales) are decoupled from view logic and injected via a configurable strategy.
+3. **Pluggable Strategy-Pattern Scoring Engine**: Scoring algorithms and domain point maximums ($125\text{ pt}$ max or dynamic scales) are decoupled from view logic and injected via a configurable strategy.
 4. **Deterministic Multi-Person Navigation State Machine**: Orchestrated via a Swift 6 `@Observable` `AppRouter`.
+5. **Strict Answer Validation Guard**: `AssessmentSessionState.advance()` strictly blocks progression unless an answer is recorded for the active question (`hasAnswerForCurrentQuestion == true`).
 
 ---
 
-### Architectural Deliverables & Data Models
-
-#### A. Master Identity & Relationship Rolodex (`Models/Person.swift`)
-* `RelationshipCategory`: Enum (`.partner`, `.family`, `.friend`, `.coworker`, `.custom`).
-* `Person`: Identifiable, Hashable entity (`id: UUID`, `name: String`, `initials: String`, `category: RelationshipCategory`, `age: Int`).
-
-#### B. Transient Assessment Session & Participant Calibration (`Models/AssessmentSession.swift`)
-* `AssessmentParticipant`: Session wrapper containing `person: Person` and `percentTimeSpent: Double` ($0.0 \dots 1.0$).
-* `ContactFrequencyTier`: Enum (`.daily`, `.weekly`, `.monthly`, `.rarely`).
+### Architectural Deliverables & Completion Checklist
+- [x] **Master Identity Rolodex (`Models/Person.swift`)**: `Person` entity and `RelationshipCategory` enum (`.partner`, `.family`, `.friend`, `.coworker`).
+- [x] **Assessment Session State Machine (`Models/AssessmentSession.swift`)**: `AssessmentSessionState` managing multi-person stepping, `canAdvance` validation guard, monotonic progress ratios, and dynamic boundary button titles (`"Next: {Name}"` $\to$ `"Complete Assessment"`).
+- [x] **Clinical Multi-Domain Questions (`Models/SurveyQuestions.swift`)**: Full 20-question clinical bank (`full20QuestionBank`) with Likert options and domain weight mappings across Calm, Accepted, Resonant, Energetic.
+- [x] **Scoring Engine Strategy (`Models/ScoringEngine.swift`)**: `FlexibleScoringEngine` implementing `ScoringEngineProtocol`, supporting configurable cutoffs ($\ge 75$, $60-74$, $< 60$) and frequency-weighted safety distributions.
+- [x] **Result Aggregation Entities (`Models/AssessmentResult.swift`)**: `AssessmentResult`, `IndividualResult`, `DomainScoreBreakdown`, and `RelationalSafetyDistribution`.
+- [x] **Navigation State Machine (`Navigation/AppRouter.swift`)**: Swift 6 `@Observable` `@MainActor` `AppRouter` managing `NavigationPath`.
 
 #### C. Pluggable Multi-Domain Questions & Answers (`Models/SurveyQuestions.swift`)
 * `CAREDomain`: Enum (`.calm`, `.accepted`, `.resonant`, `.energetic`) vending letter, title, color token, and neurobiology copy.

@@ -1,7 +1,7 @@
 # ADR 0005.3: Phase 3 — Reusable Atomic UI Components & Design System
 
-* **Status**: Accepted
-* **Date**: 2026-08-26
+* **Status**: Completed / Verified
+* **Date**: 2026-08-26 (Updated 2026-08-28)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -10,57 +10,20 @@
 
 Across the 10 Figma frames, recurring atomic and composite components form the design system under `ios/CAREApp/Components/`. These components are constructed with pixel-exact metrics extracted directly from the Figma document (`4uqL8l0VygkDoFQeXP7VeL`), decoupled, independently previewable, and validated for touch target compliance ($\ge 44\text{pt}$), dynamic type scaling, and interactive state isolation.
 
-### Architectural Deliverables (10 Reusable Components)
+### Architectural Deliverables & Completion Checklist
 
-#### 1. `HeaderNavBar` (`Components/HeaderNavBar.swift`)
-* Top navigation bar ($350\text{pt} \times 64\text{pt}$, background `#FFFFFF`):
-  * **`.home(title: String, streakCount: Int)`**: User avatar, greeting title, and streak pill.
-  * **`.detail(title: String, progress: Double?, onBack: () -> Void)`**: Back button (`36x36` circle fill `#F0F5FD`), screen title, and optional animated progress bar.
-  * **`.modal(title: String, onClose: () -> Void)`**: Title with dismissal button.
+- [x] **Modular `HeaderNavBar` (`Components/HeaderNavBar.swift`)**: Unified top bar supporting `.back`, `.home`, `.chart`, `.profile`, and `.close` actions across all 10 screen frames.
+- [x] **`DonutChartView` & `ParallelSlitDonutSegmentShape` (`Components/DonutChartView.swift`)**: Arc-rectangular donut geometry with parallel slit boundaries ($0.5\text{ gap}$), $50\%$ softer rounded corners, and proportional segment division.
+- [x] **`IndividualResultCard` (`Components/IndividualResultCard.swift`)**: Swipeable participant card ($310\text{pt} \times 78\text{pt}$, corner `18pt`, fill `#EFF5FC`) with avatar, score status badge (`80/100 Safe`), and 4 mini C.A.R.E. domain score progress bars.
+- [x] **`PageIndicatorDots` (`Components/PageIndicatorDots.swift`)**: Horizontal swipe indicator dots with clamped bounds for 5-participant carousels.
+- [x] **`PrimaryButton` & `SecondaryButton` (`Components/Buttons.swift`)**: Apple HIG $\ge 44\text{pt}$ compliant action buttons.
+- [x] **`RelationshipSelectionPill` (`Components/RelationshipSelectionPill.swift`)**: Contact selection pills on Screen 5 with avatar, subtitle, and checkmark indicator.
+- [x] **`VerticalTimeAllocationBubble` (`Components/VerticalTimeAllocationBubble.swift`)**: Screen 6 fluid vertical slider bubbles with interactive gesture drag knobs and live percentage allocations.
+- [x] **`CategoryBreakdownAccordion` (`Components/CategoryBreakdownAccordion.swift`)**: Screen 8 domain breakdown accordion displaying earned score ratios, clinical descriptions, and polyvagal tone status.
+- [x] **`DashboardWidgets` (`Components/DashboardWidgets.swift`)**: Home action cards (`ActionCardView`) with frosted icons and 3D background art, plus `DailyStreakWidget`.
+- [x] **`BubbleCardContainer` & `CollapsibleCardContainer`**: Modular card wrappers for results and past assessment accordions.
 
-#### 2. `DonutChartView` & `DonutSegmentShape` (`Components/DonutChartView.swift`)
-* Dynamic radial multi-segment chart ($200\text{pt} \times 200\text{pt}$) for Relational Safety (21% Safe `#38B969`, 39% Moderate `#FABF2E`, 40% High Risk `#E84D4D`).
-* Accepts `[DonutSegment(color: Color, percentage: Double)]` and renders proportional angular arcs with rounded stroke caps, center cutout, and legend labels.
-
-#### 3. `ScoreBubbleView` (`Components/ScoreBubbleView.swift`)
-* Circular score badge displaying points (e.g. `80/100` or `18/125`).
-* Dynamic concentric gradient rings mapped to `SafetyTier` or `CAREDomain` theme colors.
-
-#### 4. `IndividualResultCard` (`Components/IndividualResultCard.swift`)
-* Swipeable contact card ($310\text{pt} \times 78\text{pt}$, corner `18pt`, fill `#EFF5FC`) on Screen 8:
-  * Person avatar circle with initials (`SM`).
-  * Name, relation type (`Partner, 32`), and score status badge (`80/100 Safe` `#38B969`).
-  * 4 mini progress bars for Calm, Accepted, Resonant, Energetic domain scores.
-
-#### 5. `PageIndicatorDots` (`Components/PageIndicatorDots.swift`)
-* Horizontal indicator showing active carousel position (`currentIndex` / `totalCount`).
-* Active dot renders at $8\text{pt} \times 8\text{pt}$ (`#246BB8`); inactive dots render at $8\text{pt} \times 8\text{pt}$ (`#CCD6E0`).
-
-#### 6. `PrimaryButton` & `SecondaryButton` (`Components/Buttons.swift`)
-* **`PrimaryButton`**: $350\text{pt} \times 56\text{pt}$, corner `18pt`, fill `#246BB8`, text `#FFFFFF` SemiBold 16pt.
-* **`SecondaryButton`**: $350\text{pt} \times 56\text{pt}$, corner `18pt`, fill `#FFFFFF`, border 1px `#CCD6E0`, text `#246BB8`.
-* Invariant: Both enforce $\ge 44\text{pt}$ HIG touch target compliance.
-
-#### 7. `RelationshipSelectionPill` (`Components/RelationshipSelectionPill.swift`)
-* Selectable contact card ($350\text{pt} \times 72\text{pt}$, corner `16pt`) on Screen 5:
-  * Contact initials avatar badge ($44\text{pt}$ circle, fill `#EBF2FA`).
-  * Person name (`Sarah Mitchell`) and category description (`Partner, 32`).
-  * Checkmark circle indicator with active border (`#246BB8`) and background tint (`#EBF2FA`).
-
-#### 8. `FrequencySliderRow` (`Components/FrequencySliderRow.swift`)
-* Interactive percentage partition card ($350\text{pt}$, corner `28pt`, fill `#F0F5FD`) for Screen 6:
-  * Contact initials badge and name label.
-  * Continuous slider bound to `$percentage` (clamped `0.0 - 1.0`).
-  * Live percentage readout label (e.g. `30%`).
-
-#### 9. `ActionCardView` & `StreakBadgeView` (`Components/DashboardWidgets.swift`)
-* **`ActionCardView`**: Dashboard cards (`350x96`, corner `16pt`, fill `#EFF5FC`) with number badges (`01`, `02`, `03`) and background illustrations from `Assets.xcassets`.
-* **`StreakBadgeView`**: `"Daily Streak: 5 Days Active"` widget with flame icon.
-
-#### 10. `ExpandableAccordionCard` (`Components/ExpandableAccordionCard.swift`)
-* Collapsible card ($350\text{pt}$, corner `18pt`, fill `#EFF5FC`) for Screen 10 (`past-results`):
-  * Header with title, score badge, and animated disclosure chevron (`chevron.down`).
-  * Expanded body displaying historical trend scores across dates (`5/16`, `5/25`, `5/29`).
+*(Note: Prototype components `FrequencySliderRow`, `ScoreBubbleView`, and `ExpandableAccordionCard` were superseded by these modular components and cleaned up from the codebase).*
 
 ---
 

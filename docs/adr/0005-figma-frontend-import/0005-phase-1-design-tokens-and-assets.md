@@ -1,20 +1,21 @@
 # ADR 0005.1: Phase 1 — Design Tokens, Typography & Asset Extraction
 
-* **Status**: Accepted
-* **Date**: 2026-08-26
+* **Status**: Completed / Verified
+* **Date**: 2026-08-26 (Updated 2026-08-28)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
 
 ## 1. Architectural Context & Scope
 
-To achieve 1:1 visual fidelity with the Figma design (`4uqL8l0VygkDoFQeXP7VeL`), the native SwiftUI app must systematically define global design tokens under `ios/CAREApp/Theme/` and asset catalogs in `ios/CAREApp/Assets.xcassets/` rather than scattering hardcoded values across views.
+To achieve 1:1 visual fidelity with the Figma design (`4uqL8l0VygkDoFQeXP7VeL`), the native SwiftUI app systematically defines global design tokens under `ios/CAREApp/Theme/` and asset catalogs in `ios/CAREApp/Assets.xcassets/` rather than scattering hardcoded values across views.
 
-### Architectural Deliverables
-1. **Color Tokens (`Theme/Colors.swift`)**: Semantic surface, background, border, safety status (Low, Medium, High risk), and brand gradient definitions.
-2. **Typography Tokens (`Theme/Typography.swift`)**: Dynamic Type–compatible standard typography scale (`largeTitle`, `title1`, `headline`, `body`, `caption`).
-3. **Spacing Tokens (`Theme/Spacing.swift`)**: 8-point base grid system (`4pt` to `32pt`) and corner radius constants (`cardRadius: 16pt`, `pillRadius: 24pt`).
-4. **Asset Catalog (`Assets.xcassets`)**: Vector SVG assets (`Logo Image`, streak icon, navigation chevrons, safety status icons).
+### Architectural Deliverables & Completion Checklist
+- [x] **Color Tokens (`Theme/Colors.swift`)**: Semantic surface, background, border, safety status (`lowRisk`, `moderateRisk`, `highRisk`), and brand gradient definitions. Includes resilient hex color parser supporting 3, 6, and 8 digit hex codes.
+- [x] **Typography Tokens (`Theme/Typography.swift`)**: Dynamic Type–compatible Poppins font definitions and standard typography scale (`largeTitle`, `title1`, `headline`, `body`, `caption`).
+- [x] **Spacing Tokens (`Theme/Spacing.swift`)**: 8-point base grid system (`4pt` to `48pt`) and corner radius constants (`cardRadius: 16pt`, `pillRadius: 24pt`).
+- [x] **Asset Catalog (`Assets.xcassets`)**: High-resolution 3D background art for action cards (`card_assessment_bg`, `card_education_bg`, `card_exercises_bg`) and app branding (`care_logo`).
+- [x] **Vector Icon System (`Components/AppIcon.swift`)**: Modular vector icons (`.back`, `.home`, `.chart`, `.profile`, `.close`) rendering crisp vector paths without raster bitmap dependencies.
 
 ---
 
