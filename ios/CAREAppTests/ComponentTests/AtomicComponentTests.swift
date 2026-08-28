@@ -75,11 +75,28 @@ struct AtomicComponentTests {
     @Test("TEST-CMP-07: CategoryBreakdownAccordion displays domain breakdown items")
     func testCategoryBreakdownAccordion() {
         let items = [
-            CategoryBreakdownItem(domain: .calm, earnedPoints: 18, maxPoints: 25),
-            CategoryBreakdownItem(domain: .accepted, earnedPoints: 20, maxPoints: 25)
+            DomainBreakdownItem(
+                domain: .calm,
+                score: 18,
+                maxScore: 25,
+                subtitleTitle: "C is for Calm",
+                explanation: "Calmness is related to the smart vagus nerve.",
+                vagalToneTitle: "Good Vagal Tone",
+                vagalToneExplanation: "Strong regulatory baseline."
+            ),
+            DomainBreakdownItem(
+                domain: .accepted,
+                score: 20,
+                maxScore: 25,
+                subtitleTitle: "A is for Accepted",
+                explanation: "Acceptance reflects feelings of belonging.",
+                vagalToneTitle: "Solid Resonance",
+                vagalToneExplanation: "Safe relational connection."
+            )
         ]
         let accordion = CategoryBreakdownAccordion(items: items)
         #expect(accordion.items.count == 2)
         #expect(accordion.items[0].domain == .calm)
+        #expect(accordion.items[0].score == 18)
     }
 }

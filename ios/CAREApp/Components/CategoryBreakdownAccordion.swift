@@ -31,6 +31,8 @@ public struct DomainBreakdownItem: Identifiable, Hashable, Equatable {
     }
 }
 
+public typealias CategoryBreakdownItem = DomainBreakdownItem
+
 // MARK: - Category Breakdown Accordion View (Figma Frame 29:4 "Category Breakdown")
 public struct CategoryBreakdownAccordion: View {
     public let items: [DomainBreakdownItem]
