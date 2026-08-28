@@ -52,10 +52,17 @@ public struct AssessmentSessionState: Hashable {
         return isLastParticipant && isLastQuestionForCurrentPerson && hasAnswerForCurrentQuestion
     }
     
+    public var currentQuestionId: String {
+        return "q_\(currentQuestionIndex + 1)"
+    }
+    
     public var hasAnswerForCurrentQuestion: Bool {
         guard let pId = currentParticipant?.id else { return false }
-        let currentQuestionId = "q_\(currentQuestionIndex + 1)"
         return recordedAnswers[pId]?[currentQuestionId] != nil
+    }
+    
+    public var canAdvance: Bool {
+        return hasAnswerForCurrentQuestion
     }
     
     public var currentButtonTitle: String {
@@ -87,6 +94,11 @@ public struct AssessmentSessionState: Hashable {
     }
     
     public mutating func advance() -> Bool {
+        // Enforce strict validation: cannot advance without recording an answer for the current question
+        guard hasAnswerForCurrentQuestion else {
+            return false
+        }
+        
         if isLastQuestionForCurrentPerson {
             if !isLastParticipant {
                 currentParticipantIndex += 1
