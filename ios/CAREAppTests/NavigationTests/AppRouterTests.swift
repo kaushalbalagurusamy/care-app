@@ -16,7 +16,7 @@ struct AppRouterTests {
         router.navigate(to: .surveyOverview)
         router.navigate(to: .chooseRelationships)
         router.navigate(to: .relationshipFrequency)
-        router.navigate(to: .surveyQuestion(participantIndex: 0, questionIndex: 0))
+        router.navigate(to: .surveyQuestion)
         router.navigate(to: .surveyResults)
         router.navigate(to: .surveyResultsExpanded)
         

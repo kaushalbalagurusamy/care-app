@@ -379,4 +379,8 @@ public extension SurveyQuestion {
     static var mockQuestionBank: [SurveyQuestion] {
         return full20QuestionBank
     }
+    
+    static var standard5PointLikertOptions: [SurveyOption] {
+        return full20QuestionBank[0].options
+    }
 }

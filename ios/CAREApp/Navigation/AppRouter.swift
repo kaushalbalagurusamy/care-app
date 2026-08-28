@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Exhaustive Type-Safe Application Routes (Matching 10 Figma Frames)
 public enum AppRoute: Hashable {
+    case loading
     case home
     case education
     case exercises
@@ -20,6 +21,10 @@ public enum AppRoute: Hashable {
 @MainActor
 public final class AppRouter {
     public var path: [AppRoute] = []
+    
+    public var currentRoute: AppRoute {
+        return path.last ?? .loading
+    }
     
     public init(path: [AppRoute] = []) {
         self.path = path

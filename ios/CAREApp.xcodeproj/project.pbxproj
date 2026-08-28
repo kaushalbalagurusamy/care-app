@@ -7,11 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66000011BUILDFILE000011 /* CAREAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66000010FILEREF00000010 /* CAREAppUITests.swift */; };
+		55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000001FILEREF00000001 /* DesignTokensTests.swift */; };
+		55000002BUILDFILE000002 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000002FILEREF00000002 /* AppRouterTests.swift */; };
+		55000003BUILDFILE000003 /* AssessmentSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000003FILEREF00000003 /* AssessmentSessionTests.swift */; };
+		55000004BUILDFILE000004 /* DomainModelAndScoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */; };
+		55000005BUILDFILE000005 /* ScreenViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000005FILEREF00000005 /* ScreenViewTests.swift */; };
+		55000006BUILDFILE000006 /* AtomicComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000006FILEREF00000006 /* AtomicComponentTests.swift */; };
 		F184D45DB8322540EF97625E /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0D6E7E8806D2B42B9B5C1D2 /* Poppins-Bold.ttf */; };
 		F1A3760CDF65F04D5E93719B /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0A5B772320A6C4E6A928B37 /* Poppins-SemiBold.ttf */; };
 		F12DC97856792A4E11931FCF /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F07F1C2515BE0B4FDD93D62A /* Poppins-Medium.ttf */; };
 		F1F44F44E6796B492886E195 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0C23BB999EEFF45BE949DEA /* Poppins-Regular.ttf */; };
-		33A2EA2973E3DF864C00000001 /* ScreenViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BB524945953201800000001 /* ScreenViewTests.swift */; };
 		228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EAD93550F185461E00000001 /* BubbleCardContainer.swift */; };
 		22000001APPICON00000001 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000002APPICON00000001 /* AppIcon.swift */; };
 		2251B440743818A38200000001 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B95E93EAC5E189A400000001 /* Buttons.swift */; };
@@ -50,11 +56,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		66000010FILEREF00000010 /* CAREAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAREAppUITests.swift"; sourceTree = "<group>"; };
+		66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CAREAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		55000001FILEREF00000001 /* DesignTokensTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeTests/DesignTokensTests.swift"; sourceTree = "<group>"; };
+		55000002FILEREF00000002 /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationTests/AppRouterTests.swift"; sourceTree = "<group>"; };
+		55000003FILEREF00000003 /* AssessmentSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelTests/AssessmentSessionTests.swift"; sourceTree = "<group>"; };
+		55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelTests/DomainModelAndScoringTests.swift"; sourceTree = "<group>"; };
+		55000005FILEREF00000005 /* ScreenViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScreenTests/ScreenViewTests.swift"; sourceTree = "<group>"; };
+		55000006FILEREF00000006 /* AtomicComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentTests/AtomicComponentTests.swift"; sourceTree = "<group>"; };
+		44000007CAREAPPTESTS0007 /* CAREAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CAREAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D6E7E8806D2B42B9B5C1D2 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		F0A5B772320A6C4E6A928B37 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		F07F1C2515BE0B4FDD93D62A /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		F0C23BB999EEFF45BE949DEA /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		335BB524945953201800000001 /* ScreenViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScreenViewTests.swift"; sourceTree = "<group>"; };
 		22EAD93550F185461E00000001 /* BubbleCardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BubbleCardContainer.swift"; sourceTree = "<group>"; };
 		22000002APPICON00000001 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIcon.swift"; sourceTree = "<group>"; };
 		22B95E93EAC5E189A400000001 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Buttons.swift"; sourceTree = "<group>"; };
@@ -93,7 +107,51 @@
 		110000062C12345600000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXContainerItemProxy section */
+		66000009CAREAPPUITESTS09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1100000F2C12345600000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1100000B2C12345600000001;
+			remoteInfo = CAREApp;
+		};
+		44000009CAREAPPTESTS0009 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1100000F2C12345600000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1100000B2C12345600000001;
+			remoteInfo = CAREApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		66000008CAREAPPUITESTS08 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1100000B2C12345600000001 /* CAREApp */;
+			targetProxy = 66000009CAREAPPUITESTS09 /* PBXContainerItemProxy */;
+		};
+		44000008CAREAPPTESTS0008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1100000B2C12345600000001 /* CAREApp */;
+			targetProxy = 44000009CAREAPPTESTS0009 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		66000006CAREAPPUITESTS06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		44000006CAREAPPTESTS0006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		110000072C12345600000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -104,12 +162,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3392049E0DF898690900000001 /* ScreenTests */ = {
+		66000012UITESTSGROUP0012 /* CAREAppUITests */ = {
 			isa = PBXGroup;
 			children = (
-				335BB524945953201800000001 /* ScreenViewTests.swift */,
+				66000010FILEREF00000010 /* CAREAppUITests.swift */,
 			);
-			path = ScreenTests;
+			path = CAREAppUITests;
+			sourceTree = "<group>";
+		};
+		55000000TESTSGROUP00000 /* CAREAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				55000001FILEREF00000001 /* DesignTokensTests.swift */,
+				55000002FILEREF00000002 /* AppRouterTests.swift */,
+				55000003FILEREF00000003 /* AssessmentSessionTests.swift */,
+				55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */,
+				55000005FILEREF00000005 /* ScreenViewTests.swift */,
+				55000006FILEREF00000006 /* AtomicComponentTests.swift */,
+			);
+			path = CAREAppTests;
 			sourceTree = "<group>";
 		};
 		22C34CE04453256C0700000001 /* Components */ = {
@@ -183,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				110000092C12345600000001 /* CAREApp */,
+				55000000TESTSGROUP00000 /* CAREAppTests */,
+				66000012UITESTSGROUP0012 /* CAREAppUITests */,
 				1100000A2C12345600000001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -210,6 +283,8 @@
 			isa = PBXGroup;
 			children = (
 				110000002C12345600000001 /* CAREApp.app */,
+				44000007CAREAPPTESTS0007 /* CAREAppTests.xctest */,
+				66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -217,6 +292,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		66000001CAREAPPUITESTS01 /* CAREAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66000002CAREAPPUITESTS02 /* Build configuration list for PBXNativeTarget "CAREAppUITests" */;
+			buildPhases = (
+				66000005CAREAPPUITESTS05 /* Sources */,
+				66000006CAREAPPUITESTS06 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66000008CAREAPPUITESTS08 /* PBXTargetDependency */,
+			);
+			name = CAREAppUITests;
+			productName = CAREAppUITests;
+			productReference = 66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		44000001CAREAPPTESTS0001 /* CAREAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 44000002CAREAPPTESTS0002 /* Build configuration list for PBXNativeTarget "CAREAppTests" */;
+			buildPhases = (
+				44000005CAREAPPTESTS0005 /* Sources */,
+				44000006CAREAPPTESTS0006 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				44000008CAREAPPTESTS0008 /* PBXTargetDependency */,
+			);
+			name = CAREAppTests;
+			productName = CAREAppTests;
+			productReference = 44000007CAREAPPTESTS0007 /* CAREAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		1100000B2C12345600000001 /* CAREApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1100000E2C12345600000001 /* Build configuration list for PBXNativeTarget "CAREApp" */;
@@ -263,6 +372,8 @@
 			projectRoot = "";
 			targets = (
 				1100000B2C12345600000001 /* CAREApp */,
+				44000001CAREAPPTESTS0001 /* CAREAppTests */,
+				66000001CAREAPPUITESTS01 /* CAREAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -283,6 +394,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		66000005CAREAPPUITESTS05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66000011BUILDFILE000011 /* CAREAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		44000005CAREAPPTESTS0005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */,
+				55000002BUILDFILE000002 /* AppRouterTests.swift in Sources */,
+				55000003BUILDFILE000003 /* AssessmentSessionTests.swift in Sources */,
+				55000004BUILDFILE000004 /* DomainModelAndScoringTests.swift in Sources */,
+				55000005BUILDFILE000005 /* ScreenViewTests.swift in Sources */,
+				55000006BUILDFILE000006 /* AtomicComponentTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1100000C2C12345600000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -327,6 +459,76 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		66000003CAREAPPUITESTS03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CAREApp;
+			};
+			name = Debug;
+		};
+		66000004CAREAPPUITESTS04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CAREApp;
+			};
+			name = Release;
+		};
+		44000003CAREAPPTESTS0003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CAREApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CAREApp";
+			};
+			name = Debug;
+		};
+		44000004CAREAPPTESTS0004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CAREApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CAREApp";
+			};
+			name = Release;
+		};
 		110000102C12345600000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -499,6 +701,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		66000002CAREAPPUITESTS02 /* Build configuration list for PBXNativeTarget "CAREAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66000003CAREAPPUITESTS03 /* Debug */,
+				66000004CAREAPPUITESTS04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		44000002CAREAPPTESTS0002 /* Build configuration list for PBXNativeTarget "CAREAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				44000003CAREAPPTESTS0003 /* Debug */,
+				44000004CAREAPPTESTS0004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1100000E2C12345600000001 /* Build configuration list for PBXNativeTarget "CAREApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

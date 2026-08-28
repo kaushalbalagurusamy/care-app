@@ -155,6 +155,10 @@ public struct DonutChartView: View {
     public let gapWidth: CGFloat
     public let cornerRadius: CGFloat
     
+    public var totalAngularSpanDegrees: Double {
+        return segments.reduce(0.0) { $0 + $1.percentage } * 360.0
+    }
+    
     public init(
         segments: [DonutSegment],
         diameter: CGFloat = 190,

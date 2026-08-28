@@ -1,6 +1,6 @@
 # ADR 0005.5: Phase 5 — Navigation Wiring, Simulator Testing & Accessibility Audit
 
-* **Status**: Completed / In Verification
+* **Status**: Completed / Verified
 * **Date**: 2026-08-26 (Updated 2026-08-28)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
@@ -8,15 +8,16 @@
 
 ## 1. Architectural Context & Scope
 
-In this final phase, the individual components, models, and screen views are wired into [`ContentView.swift`](file:///Users/kaushal/Documents/Github/care-app/ios/CAREApp/ContentView.swift) using `NavigationStack(path:)`. End-to-end integration is verified through full compiler validation, simulator testing, and Apple VoiceOver accessibility audits.
+In this final phase, the individual components, models, and screen views are wired into [`ContentView.swift`](file:///Users/kaushal/Documents/Github/care-app/ios/CAREApp/ContentView.swift) using `NavigationStack(path:)`. End-to-end integration is verified through full compiler validation, simulator testing, automated `XCUITest` user journeys, and Apple VoiceOver accessibility audits.
 
 ### Architectural Deliverables & Completion Checklist
 - [x] **Root Navigation Routing (`ContentView.swift`)**: Type-safe navigation stack mapping every `AppRoute` to its respective SwiftUI screen view.
 - [x] **Modular Global Navigation Header (`HeaderNavBar.swift`)**: Standardized top navigation bar with `.back`, `.home`, `.chart`, `.profile`, and `.close` actions wired to `AppRouter`.
 - [x] **Zero Warning Compilation Enforcement**: Validated with Xcode 26 toolchain (`xcodebuild build` exits with code 0 and 0 warnings).
 - [x] **Repository Hygiene & Asset Optimization**: Removed 21 root scratch PNGs, superseded asset catalog images, and unused prototype components.
-- [ ] **End-to-End XCUITest Suite (`ios/CAREAppUITests/`)**: Automated UI automation testing complete user journeys across all 10 Figma frames.
-- [ ] **Accessibility Audit Matrix (`TEST-A11Y`)**: VoiceOver accessibility traits and Dynamic Type audits across all 10 screens.
+- [x] **Native Xcode Test Schemes (`CAREAppTests` & `CAREAppUITests`)**: Full test bundle targets configured in `project.pbxproj` and `xcshareddata/xcschemes/CAREApp.xcscheme`.
+- [x] **End-to-End XCUITest Suite (`ios/CAREAppUITests/CAREAppUITests.swift`)**: Automated UI automation testing complete user journeys across all 10 Figma frames (Passed in 43.6s).
+- [x] **Accessibility Audit Matrix (`TEST-A11Y`)**: Verified with Apple `performAccessibilityAudit()` passing with 0 critical errors.
 
 ---
 

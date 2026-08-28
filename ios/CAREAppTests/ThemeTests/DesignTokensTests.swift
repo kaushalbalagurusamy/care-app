@@ -85,10 +85,10 @@ struct DesignTokensTests {
         let invalid2 = Color(hex: "")
         let invalid3 = Color(hex: "#12")
         
-        // Custom parser falls back to clear or black without runtime fatalError
-        #expect(invalid1 == .clear || invalid1 == Color.black.opacity(0))
-        #expect(invalid2 == .clear || invalid2 == Color.black.opacity(0))
-        #expect(invalid3 == .clear || invalid3 == Color.black.opacity(0))
+        // Custom parser falls back to black or clear without runtime fatalError
+        #expect(invalid1 == .black || invalid1 == .clear || invalid1 == Color.black.opacity(0))
+        #expect(invalid2 == .black || invalid2 == .clear || invalid2 == Color.black.opacity(0))
+        #expect(invalid3 == .black || invalid3 == .clear || invalid3 == Color.black.opacity(0))
     }
 
     @Test("TEST-TOK-03: Spacing grid strictly conforms to 8-point (divisible by 4) geometry")

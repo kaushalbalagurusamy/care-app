@@ -40,13 +40,14 @@ struct AtomicComponentTests {
 
     @Test("TEST-CMP-04: VerticalTimeAllocationBubble percentage formats accurately")
     func testTimeAllocationBubbleFormatting() {
-        let bubble = VerticalTimeAllocationBubble(
-            person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32),
-            percentage: 0.35,
-            index: 0,
-            onPercentageChanged: { _ in }
-        )
-        #expect(bubble.percentage == 0.35)
+        var allocations = [
+            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.35),
+            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.65)
+        ]
+        let binding = Binding(get: { allocations }, set: { allocations = $0 })
+        _ = VerticalTimeAllocationBubble(allocations: binding)
+        #expect(allocations[0].percentage == 0.35)
+        #expect(abs(allocations.reduce(0.0) { $0 + $1.percentage } - 1.0) < 0.001)
     }
 
     @Test("TEST-CMP-05: PageIndicatorDots clamps active index within bounds")

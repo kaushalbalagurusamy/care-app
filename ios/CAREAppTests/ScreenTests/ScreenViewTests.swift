@@ -38,7 +38,7 @@ struct ScreenViewTests {
         var selectedIds = Set<UUID>()
         
         #expect(selectedIds.isEmpty)
-        #expect(selectedIds.count >= 1 == false)
+        #expect(selectedIds.count == 0)
         
         // Select 3 people
         for p in availablePeople.prefix(3) {

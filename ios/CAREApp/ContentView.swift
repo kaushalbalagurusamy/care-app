@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Main Application Navigation Container
 struct ContentView: View {
-    @State private var router = AppRouter(path: [.surveyResults, .pastResults])
+    @State private var router = AppRouter()
     @State private var isShowingSplash: Bool = false
     
     // Shared State Across Assessment Funnel
@@ -44,6 +44,11 @@ struct ContentView: View {
     @ViewBuilder
     private func viewForRoute(_ route: AppRoute) -> some View {
         switch route {
+        case .loading:
+            LoadingView(onFinished: {
+                router.popToRoot()
+            })
+            
         case .home:
             HomeView(router: router)
             
