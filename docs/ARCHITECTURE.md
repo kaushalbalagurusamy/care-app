@@ -73,5 +73,5 @@ Key architectural decisions are documented in [`docs/adr/`](file:///docs/adr/):
 * **ADR 0004**: MCP Integration & Agentic Workflows
 * **ADR 0005**: Figma Design System to Native SwiftUI Import (Phases 1–5)
 * **ADR 0006**: Autonomous Observability Governance & TDD Loop
-* **ADR 0007**: Local-First Encrypted Storage, User Data Management & Notification Architecture
+* **ADR 0007**: Local-First Encrypted Storage, iCloud Sync & Notification Architecture
 
