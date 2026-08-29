@@ -87,6 +87,7 @@ Refer to the [`docs/adr/`](file:///docs/adr/) folder for all binding design choi
   * [`0005-phase-5-navigation-wiring-and-audit.md`](file:///docs/adr/0005-figma-frontend-import/0005-phase-5-navigation-wiring-and-audit.md) — Phase 5: Navigation Wiring, Testing & A11y Audit
 * [`docs/adr/0006-autonomous-observability-governance-and-tdd-loop.md`](file:///docs/adr/0006-autonomous-observability-governance-and-tdd-loop.md) — Autonomous Execution Governance, Observability & TDD Loop
 * [`docs/adr/0007-user-accounts-auth-and-cloud-persistence.md`](file:///docs/adr/0007-user-accounts-auth-and-cloud-persistence.md) — Local-First Encrypted Storage, iCloud Sync & Notification Architecture
+* [`docs/adr/0008-biometric-auth-and-app-lock.md`](file:///docs/adr/0008-biometric-auth-and-app-lock.md) — Biometric Authentication (Face ID / Touch ID) & App Lock Architecture
 
 ---
 

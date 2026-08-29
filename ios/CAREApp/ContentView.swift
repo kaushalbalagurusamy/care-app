@@ -12,6 +12,8 @@ struct ContentView: View {
     @State private var activeSession: AssessmentSessionState? = nil
     @State private var latestResult: AssessmentResult = AssessmentResult.figmaMockResult
     
+    @Environment(\.scenePhase) private var scenePhase
+    
     var body: some View {
         @Bindable var r = router
         
@@ -39,6 +41,17 @@ struct ContentView: View {
                 .transition(.opacity)
                 .zIndex(100)
             }
+            
+            // App Lock & Multitasking Privacy Shield Overlay
+            if appEnvironment.appLockManager.isLocked || appEnvironment.appLockManager.isShieldActive {
+                AppLockView()
+                    .environment(appEnvironment)
+                    .transition(.opacity)
+                    .zIndex(200)
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            appEnvironment.appLockManager.handleScenePhaseChange(newPhase)
         }
     }
     

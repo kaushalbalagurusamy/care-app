@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77000041BIOAUTH000000002 /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000040BIOAUTH000000001 /* BiometricAuthService.swift */; };
+		77000043LOCKMGR000000002 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000042LOCKMGR000000001 /* AppLockManager.swift */; };
+		77000045LOCKVIEW000000002 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000044LOCKVIEW000000001 /* AppLockView.swift */; };
+		77000047BIOTESTS000000002 /* BiometricAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000046BIOTESTS000000001 /* BiometricAuthTests.swift */; };
 		77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */; };
 		77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000030NOTIFSVC000000001 /* NotificationService.swift */; };
 		77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */; };
@@ -72,6 +76,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		77000040BIOAUTH000000001 /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BiometricAuthService.swift"; sourceTree = "<group>"; };
+		77000042LOCKMGR000000001 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockManager.swift"; sourceTree = "<group>"; };
+		77000044LOCKVIEW000000001 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockView.swift"; sourceTree = "<group>"; };
+		77000046BIOTESTS000000001 /* BiometricAuthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityTests/BiometricAuthTests.swift"; sourceTree = "<group>"; };
 		77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageBenchmarkTests.swift"; sourceTree = "<group>"; };
 		77000030NOTIFSVC000000001 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationService.swift"; sourceTree = "<group>"; };
 		77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/NotificationServiceTests.swift"; sourceTree = "<group>"; };
@@ -197,6 +205,7 @@
 		77000032SERVICESGROUP0001 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				77000040BIOAUTH000000001 /* BiometricAuthService.swift */,
 				77000030NOTIFSVC000000001 /* NotificationService.swift */,
 			);
 			path = Services;
@@ -242,6 +251,7 @@
 		55000000TESTSGROUP00000 /* CAREAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				77000046BIOTESTS000000001 /* BiometricAuthTests.swift */,
 				77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */,
 				77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */,
 				77000028MGMTTESTS0000001 /* StorageManagementTests.swift */,
@@ -292,6 +302,7 @@
 		22E691E766F2D4FA8400000001 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				77000042LOCKMGR000000001 /* AppLockManager.swift */,
 				22A019EEC864B773B400000001 /* AppRouter.swift */,
 				77000001APPENV0000000001 /* AppEnvironment.swift */,
 			);
@@ -312,6 +323,7 @@
 		22B3FF000EAD123ECB00000001 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				77000044LOCKVIEW000000001 /* AppLockView.swift */,
 				77000026STRVIEW000000001 /* StorageSettingsView.swift */,
 				22265D2334E8121DE500000001 /* AssessmentOverviewView.swift */,
 				22984347F253ED4B4300000001 /* ChooseRelationshipsView.swift */,
@@ -486,6 +498,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000047BIOTESTS000000002 /* BiometricAuthTests.swift in Sources */,
 				77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */,
 				77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */,
 				77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */,
@@ -504,6 +517,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000041BIOAUTH000000002 /* BiometricAuthService.swift in Sources */,
+				77000043LOCKMGR000000002 /* AppLockManager.swift in Sources */,
+				77000045LOCKVIEW000000002 /* AppLockView.swift in Sources */,
 				77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */,
 				77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */,
 				77000013STRCONT00000002 /* StoredContact.swift in Sources */,
@@ -635,6 +651,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Unlock CARE App to securely access your relational safety assessments and contacts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -663,6 +680,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Unlock CARE App to securely access your relational safety assessments and contacts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
