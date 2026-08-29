@@ -1,7 +1,7 @@
 # ADR 0007.2: Phase 2 — SwiftData CloudKit Storage Engine & Capacity Limits
 
-* **Status**: Proposed
-* **Date**: 2026-08-28
+* **Status**: Completed / Verified
+* **Date**: 2026-08-28 (Updated 2026-08-29)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -10,19 +10,21 @@
 
 Phase 2 builds the local persistence engine using SwiftData with Apple Private CloudKit synchronization. It defines the persistent model schema, enforces hardware encryption (`NSFileProtectionComplete`), and implements strict 50-item bounded capacity limits.
 
-### Architectural Deliverables
-1. **CloudKit-Compliant Persistent Models (`Models/Persistence/`)**:
-   * `StoredContact`: Stores contact name, initials, category, age, creation date.
-   * `StoredAssessmentSession`: Stores overall scores, C.A.R.E. domain scores, and relational safety distribution percentages.
-   * `StoredParticipantResult`: Stores participant-level scores and C.A.R.E. breakdown values.
-2. **Encrypted `ModelContainer` Setup**:
-   * Initialized with `NSFileProtectionComplete` (hardware AES-256-GCM/XTS encryption).
-   * Configured with `ModelConfiguration(cloudKitDatabase: .private)` targeting `iCloud.com.careapp.CAREApp`.
-3. **`LocalDeviceRepository` Implementation**:
-   * Production repository executing SwiftData CRUD queries with bounded capacity checks.
-4. **Bounded Capacity Limit Guards**:
-   * Rolodex ceiling: Maximum 50 contacts.
-   * Assessment history ceiling: Maximum 50 completed assessments.
+### Architectural Deliverables & Completion Checklist
+- [x] **CloudKit-Compliant Persistent Models (`Models/Persistence/`)**:
+  - `StoredContact.swift`: Stores contact name, initials, category, age, creation date with CloudKit defaults.
+  - `StoredAssessmentSession.swift`: Stores overall scores, C.A.R.E. domain scores, and relational safety distribution percentages.
+  - `StoredParticipantResult.swift`: Stores participant-level scores and C.A.R.E. breakdown values.
+- [x] **Encrypted `ModelContainer` Setup (`Storage/StorageContainer.swift`)**:
+  - Initialized with `NSFileProtectionComplete` (hardware AES-256-GCM/XTS encryption).
+  - Configured with `ModelConfiguration(cloudKitDatabase: .private)` targeting `iCloud.com.careapp.CAREApp`.
+- [x] **`LocalDeviceRepository` Implementation (`Repositories/LocalDeviceRepository.swift`)**:
+  - Production repository executing SwiftData CRUD queries with bounded capacity checks.
+- [x] **Bounded Capacity Limit Guards**:
+  - Rolodex ceiling: Maximum 50 contacts (`StorageLimitError.contactLimitExceeded`).
+  - Assessment history ceiling: Maximum 50 completed assessments with automated oldest-record pruning.
+- [x] **Automated Test Verification (`StorageEngineTests.swift`)**:
+  - 6 unit & benchmark test assertions (`TEST-STO-01` through `TEST-STO-06`) passing with 100% success rate.
 
 ---
 
@@ -101,6 +103,6 @@ public final class StoredAssessmentSession {
 ---
 
 ## 4. Acceptance Criteria
-- [ ] SwiftData schema complies with CloudKit rules (optional relationships, default values).
-- [ ] 50-item bounded limits strictly prevent memory and storage bloat.
-- [ ] Passes all 6 test assertions (`TEST-STO-01` through `TEST-STO-06`).
+- [x] SwiftData schema complies with CloudKit rules (optional relationships, default values).
+- [x] 50-item bounded limits strictly prevent memory and storage bloat.
+- [x] Passes all 6 test assertions (`TEST-STO-01` through `TEST-STO-06`).
