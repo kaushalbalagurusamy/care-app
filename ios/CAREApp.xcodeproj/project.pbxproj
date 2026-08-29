@@ -7,19 +7,183 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */; };
+		77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000030NOTIFSVC000000001 /* NotificationService.swift */; };
+		77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */; };
+		77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000026STRVIEW000000001 /* StorageSettingsView.swift */; };
+		77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000028MGMTTESTS0000001 /* StorageManagementTests.swift */; };
+		77000013STRCONT00000002 /* StoredContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000012STRCONT00000001 /* StoredContact.swift */; };
+		77000015STRSESS00000002 /* StoredAssessmentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000014STRSESS00000001 /* StoredAssessmentSession.swift */; };
+		77000017STRPART00000002 /* StoredParticipantResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000016STRPART00000001 /* StoredParticipantResult.swift */; };
+		77000020STRCONTAIN00002 /* StorageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000019STRCONTAIN00001 /* StorageContainer.swift */; };
+		77000023LOCALREPO0000002 /* LocalDeviceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000022LOCALREPO0000001 /* LocalDeviceRepository.swift */; };
+		77000025STGTESTS0000002 /* StorageEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000024STGTESTS0000001 /* StorageEngineTests.swift */; };
+		77000002APPENV0000000002 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000001APPENV0000000001 /* AppEnvironment.swift */; };
+		77000004CONTPROTO0000002 /* ContactsRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */; };
+		77000006ASSEPROTO0000002 /* AssessmentRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */; };
+		77000008MOCKREPO0000002 /* MockRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000007MOCKREPO0000001 /* MockRepositories.swift */; };
+		77000011REPTESTS0000002 /* RepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000010REPTESTS0000001 /* RepositoryTests.swift */; };
+		66000011BUILDFILE000011 /* CAREAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66000010FILEREF00000010 /* CAREAppUITests.swift */; };
+		55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000001FILEREF00000001 /* DesignTokensTests.swift */; };
+		55000002BUILDFILE000002 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000002FILEREF00000002 /* AppRouterTests.swift */; };
+		55000003BUILDFILE000003 /* AssessmentSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000003FILEREF00000003 /* AssessmentSessionTests.swift */; };
+		55000004BUILDFILE000004 /* DomainModelAndScoringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */; };
+		55000005BUILDFILE000005 /* ScreenViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000005FILEREF00000005 /* ScreenViewTests.swift */; };
+		55000006BUILDFILE000006 /* AtomicComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000006FILEREF00000006 /* AtomicComponentTests.swift */; };
+		F184D45DB8322540EF97625E /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0D6E7E8806D2B42B9B5C1D2 /* Poppins-Bold.ttf */; };
+		F1A3760CDF65F04D5E93719B /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0A5B772320A6C4E6A928B37 /* Poppins-SemiBold.ttf */; };
+		F12DC97856792A4E11931FCF /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F07F1C2515BE0B4FDD93D62A /* Poppins-Medium.ttf */; };
+		F1F44F44E6796B492886E195 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0C23BB999EEFF45BE949DEA /* Poppins-Regular.ttf */; };
+		228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EAD93550F185461E00000001 /* BubbleCardContainer.swift */; };
+		22000001APPICON00000001 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000002APPICON00000001 /* AppIcon.swift */; };
+		2251B440743818A38200000001 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B95E93EAC5E189A400000001 /* Buttons.swift */; };
+		2252EF2EBEA151A37C00000001 /* CategoryBreakdownAccordion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */; };
+		220E58E1947B852B5F00000001 /* ComponentShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */; };
+		22B47F7780AEE3625A00000001 /* DashboardWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */; };
+		220009ECE37648D77400000001 /* DonutChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FC2506040EED036900000001 /* DonutChartView.swift */; };
+		225BC99A425D9CAFF400000001 /* HeaderNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CFA62694C5AAA59C00000001 /* HeaderNavBar.swift */; };
+		225F9097015B7C3B8600000001 /* IndividualResultCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228A9293743DE1148800000001 /* IndividualResultCard.swift */; };
+		223D9A20E74E538D2600000001 /* PageIndicatorDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */; };
+		221D6030DEF7570BC100000001 /* RelationshipSelectionPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */; };
+		22C11FEDCC2F7E0E2700000001 /* VerticalTimeAllocationBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD762A6677B28F7A00000001 /* VerticalTimeAllocationBubble.swift */; };
+		2269159600FD31FB4E00000001 /* AssessmentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290D08DA15E5AC1FF00000001 /* AssessmentResult.swift */; };
+		22327D400337F7363500000001 /* AssessmentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAE153CDA6EB03CB00000001 /* AssessmentSession.swift */; };
+		22ECA7C1FB873B4CDF00000001 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228B338976089F40B600000001 /* Person.swift */; };
+		2242E03FD738D012A000000001 /* ScoringEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226416CE132657AD1D00000001 /* ScoringEngine.swift */; };
+		22EDA9A2A6FAD93D5600000001 /* SurveyQuestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ED9C3F68111ABF5D00000001 /* SurveyQuestions.swift */; };
+		2234815191082B1DC300000001 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A019EEC864B773B400000001 /* AppRouter.swift */; };
+		229E6F3A761CEC8EED00000001 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22984AFBCED47F677A00000001 /* Colors.swift */; };
+		226EDCD33D35BD753C00000001 /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2229DBCEF2E9EBDFC100000001 /* Spacing.swift */; };
+		2245FF9BEFB62F9C0700000001 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2255C1EA7EDC6DC3DE00000001 /* Theme.swift */; };
+		226492BB72B8F5BF8F00000001 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22853C36C8606976F400000001 /* Typography.swift */; };
+		229CA043C774D2467E00000001 /* AssessmentOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22265D2334E8121DE500000001 /* AssessmentOverviewView.swift */; };
+		2209E4EC45332AB67400000001 /* ChooseRelationshipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22984347F253ED4B4300000001 /* ChooseRelationshipsView.swift */; };
+		224425D428F6C6A1C800000001 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A15E5C0F000F17200000001 /* HomeView.swift */; };
+		22657F0C592710F5F000000001 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6315EDE189F7D8A00000001 /* LoadingView.swift */; };
+		22C33AD2048813759500000001 /* PastResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229C000FF98DA36CAA00000001 /* PastResultsView.swift */; };
+		229BF7FC0E36DCCA9000000001 /* RelationshipFrequencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F15C34A148831CB00000001 /* RelationshipFrequencyView.swift */; };
+		22C5AA9DCBB418F4ED00000001 /* SurveyOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2245B8ED5174D50D5E00000001 /* SurveyOverviewView.swift */; };
+		223664562A39185CF200000001 /* SurveyQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22860B5C0750C1CA4C00000001 /* SurveyQuestionView.swift */; };
+		22805D60F10BD2E25D00000001 /* SurveyResultsExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220087ED35151F643C00000001 /* SurveyResultsExpandedView.swift */; };
+		225FCA897071EA857700000001 /* SurveyResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2279E25F3CD322252D00000001 /* SurveyResultsView.swift */; };
 		110000012C12345600000001 /* CAREApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000022C12345600000001 /* CAREApp.swift */; };
 		110000032C12345600000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000042C12345600000001 /* ContentView.swift */; };
 		110000052C12345600000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 110000062C12345600000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageBenchmarkTests.swift"; sourceTree = "<group>"; };
+		77000030NOTIFSVC000000001 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationService.swift"; sourceTree = "<group>"; };
+		77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/NotificationServiceTests.swift"; sourceTree = "<group>"; };
+		77000026STRVIEW000000001 /* StorageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageSettingsView.swift"; sourceTree = "<group>"; };
+		77000028MGMTTESTS0000001 /* StorageManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageManagementTests.swift"; sourceTree = "<group>"; };
+		77000012STRCONT00000001 /* StoredContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredContact.swift"; sourceTree = "<group>"; };
+		77000014STRSESS00000001 /* StoredAssessmentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredAssessmentSession.swift"; sourceTree = "<group>"; };
+		77000016STRPART00000001 /* StoredParticipantResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredParticipantResult.swift"; sourceTree = "<group>"; };
+		77000019STRCONTAIN00001 /* StorageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageContainer.swift"; sourceTree = "<group>"; };
+		77000022LOCALREPO0000001 /* LocalDeviceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDeviceRepository.swift"; sourceTree = "<group>"; };
+		77000024STGTESTS0000001 /* StorageEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageEngineTests.swift"; sourceTree = "<group>"; };
+		77000001APPENV0000000001 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppEnvironment.swift"; sourceTree = "<group>"; };
+		77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactsRepositoryProtocol.swift"; sourceTree = "<group>"; };
+		77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentRepositoryProtocol.swift"; sourceTree = "<group>"; };
+		77000007MOCKREPO0000001 /* MockRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MockRepositories.swift"; sourceTree = "<group>"; };
+		77000010REPTESTS0000001 /* RepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/RepositoryTests.swift"; sourceTree = "<group>"; };
+		66000010FILEREF00000010 /* CAREAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAREAppUITests.swift"; sourceTree = "<group>"; };
+		66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CAREAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		55000001FILEREF00000001 /* DesignTokensTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeTests/DesignTokensTests.swift"; sourceTree = "<group>"; };
+		55000002FILEREF00000002 /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationTests/AppRouterTests.swift"; sourceTree = "<group>"; };
+		55000003FILEREF00000003 /* AssessmentSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelTests/AssessmentSessionTests.swift"; sourceTree = "<group>"; };
+		55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelTests/DomainModelAndScoringTests.swift"; sourceTree = "<group>"; };
+		55000005FILEREF00000005 /* ScreenViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScreenTests/ScreenViewTests.swift"; sourceTree = "<group>"; };
+		55000006FILEREF00000006 /* AtomicComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentTests/AtomicComponentTests.swift"; sourceTree = "<group>"; };
+		44000007CAREAPPTESTS0007 /* CAREAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CAREAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0D6E7E8806D2B42B9B5C1D2 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		F0A5B772320A6C4E6A928B37 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
+		F07F1C2515BE0B4FDD93D62A /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		F0C23BB999EEFF45BE949DEA /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		22EAD93550F185461E00000001 /* BubbleCardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BubbleCardContainer.swift"; sourceTree = "<group>"; };
+		22000002APPICON00000001 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIcon.swift"; sourceTree = "<group>"; };
+		22B95E93EAC5E189A400000001 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Buttons.swift"; sourceTree = "<group>"; };
+		224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryBreakdownAccordion.swift"; sourceTree = "<group>"; };
+		223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentShowcaseView.swift"; sourceTree = "<group>"; };
+		22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashboardWidgets.swift"; sourceTree = "<group>"; };
+		22FC2506040EED036900000001 /* DonutChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DonutChartView.swift"; sourceTree = "<group>"; };
+		22CFA62694C5AAA59C00000001 /* HeaderNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HeaderNavBar.swift"; sourceTree = "<group>"; };
+		228A9293743DE1148800000001 /* IndividualResultCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IndividualResultCard.swift"; sourceTree = "<group>"; };
+		2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PageIndicatorDots.swift"; sourceTree = "<group>"; };
+		2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelationshipSelectionPill.swift"; sourceTree = "<group>"; };
+		22AD762A6677B28F7A00000001 /* VerticalTimeAllocationBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerticalTimeAllocationBubble.swift"; sourceTree = "<group>"; };
+		2290D08DA15E5AC1FF00000001 /* AssessmentResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentResult.swift"; sourceTree = "<group>"; };
+		22AAE153CDA6EB03CB00000001 /* AssessmentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentSession.swift"; sourceTree = "<group>"; };
+		228B338976089F40B600000001 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Person.swift"; sourceTree = "<group>"; };
+		226416CE132657AD1D00000001 /* ScoringEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScoringEngine.swift"; sourceTree = "<group>"; };
+		22ED9C3F68111ABF5D00000001 /* SurveyQuestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SurveyQuestions.swift"; sourceTree = "<group>"; };
+		22A019EEC864B773B400000001 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppRouter.swift"; sourceTree = "<group>"; };
+		22984AFBCED47F677A00000001 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Colors.swift"; sourceTree = "<group>"; };
+		2229DBCEF2E9EBDFC100000001 /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spacing.swift"; sourceTree = "<group>"; };
+		2255C1EA7EDC6DC3DE00000001 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Theme.swift"; sourceTree = "<group>"; };
+		22853C36C8606976F400000001 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography.swift"; sourceTree = "<group>"; };
+		22265D2334E8121DE500000001 /* AssessmentOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentOverviewView.swift"; sourceTree = "<group>"; };
+		22984347F253ED4B4300000001 /* ChooseRelationshipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChooseRelationshipsView.swift"; sourceTree = "<group>"; };
+		220A15E5C0F000F17200000001 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeView.swift"; sourceTree = "<group>"; };
+		22C6315EDE189F7D8A00000001 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadingView.swift"; sourceTree = "<group>"; };
+		229C000FF98DA36CAA00000001 /* PastResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PastResultsView.swift"; sourceTree = "<group>"; };
+		223F15C34A148831CB00000001 /* RelationshipFrequencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RelationshipFrequencyView.swift"; sourceTree = "<group>"; };
+		2245B8ED5174D50D5E00000001 /* SurveyOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SurveyOverviewView.swift"; sourceTree = "<group>"; };
+		22860B5C0750C1CA4C00000001 /* SurveyQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SurveyQuestionView.swift"; sourceTree = "<group>"; };
+		220087ED35151F643C00000001 /* SurveyResultsExpandedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SurveyResultsExpandedView.swift"; sourceTree = "<group>"; };
+		2279E25F3CD322252D00000001 /* SurveyResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SurveyResultsView.swift"; sourceTree = "<group>"; };
 		110000002C12345600000001 /* CAREApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CAREApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		110000022C12345600000001 /* CAREApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CAREApp.swift; sourceTree = "<group>"; };
 		110000042C12345600000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		110000062C12345600000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXContainerItemProxy section */
+		66000009CAREAPPUITESTS09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1100000F2C12345600000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1100000B2C12345600000001;
+			remoteInfo = CAREApp;
+		};
+		44000009CAREAPPTESTS0009 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1100000F2C12345600000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1100000B2C12345600000001;
+			remoteInfo = CAREApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		66000008CAREAPPUITESTS08 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1100000B2C12345600000001 /* CAREApp */;
+			targetProxy = 66000009CAREAPPUITESTS09 /* PBXContainerItemProxy */;
+		};
+		44000008CAREAPPTESTS0008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1100000B2C12345600000001 /* CAREApp */;
+			targetProxy = 44000009CAREAPPTESTS0009 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		66000006CAREAPPUITESTS06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		44000006CAREAPPTESTS0006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		110000072C12345600000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -30,10 +194,145 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		77000032SERVICESGROUP0001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				77000030NOTIFSVC000000001 /* NotificationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		77000021STORAGEGROUP001 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				77000019STRCONTAIN00001 /* StorageContainer.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		77000018PERSISTGROUP001 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				77000012STRCONT00000001 /* StoredContact.swift */,
+				77000014STRSESS00000001 /* StoredAssessmentSession.swift */,
+				77000016STRPART00000001 /* StoredParticipantResult.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		77000009REPOSGROUP00001 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				77000022LOCALREPO0000001 /* LocalDeviceRepository.swift */,
+				77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */,
+				77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */,
+				77000007MOCKREPO0000001 /* MockRepositories.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		66000012UITESTSGROUP0012 /* CAREAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				66000010FILEREF00000010 /* CAREAppUITests.swift */,
+			);
+			path = CAREAppUITests;
+			sourceTree = "<group>";
+		};
+		55000000TESTSGROUP00000 /* CAREAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */,
+				77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */,
+				77000028MGMTTESTS0000001 /* StorageManagementTests.swift */,
+				77000024STGTESTS0000001 /* StorageEngineTests.swift */,
+				77000010REPTESTS0000001 /* RepositoryTests.swift */,
+				55000001FILEREF00000001 /* DesignTokensTests.swift */,
+				55000002FILEREF00000002 /* AppRouterTests.swift */,
+				55000003FILEREF00000003 /* AssessmentSessionTests.swift */,
+				55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */,
+				55000005FILEREF00000005 /* ScreenViewTests.swift */,
+				55000006FILEREF00000006 /* AtomicComponentTests.swift */,
+			);
+			path = CAREAppTests;
+			sourceTree = "<group>";
+		};
+		22C34CE04453256C0700000001 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				22000002APPICON00000001 /* AppIcon.swift */,
+				22EAD93550F185461E00000001 /* BubbleCardContainer.swift */,
+				22B95E93EAC5E189A400000001 /* Buttons.swift */,
+				224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */,
+				223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */,
+				22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */,
+				22FC2506040EED036900000001 /* DonutChartView.swift */,
+				22CFA62694C5AAA59C00000001 /* HeaderNavBar.swift */,
+				228A9293743DE1148800000001 /* IndividualResultCard.swift */,
+				2259936F34CC7E6F4D00000001 /* PageIndicatorDots.swift */,
+				2244600C93DA0787D800000001 /* RelationshipSelectionPill.swift */,
+				22AD762A6677B28F7A00000001 /* VerticalTimeAllocationBubble.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		22AAC7DC5DCD23638D00000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				77000018PERSISTGROUP001 /* Persistence */,
+				2290D08DA15E5AC1FF00000001 /* AssessmentResult.swift */,
+				22AAE153CDA6EB03CB00000001 /* AssessmentSession.swift */,
+				228B338976089F40B600000001 /* Person.swift */,
+				226416CE132657AD1D00000001 /* ScoringEngine.swift */,
+				22ED9C3F68111ABF5D00000001 /* SurveyQuestions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		22E691E766F2D4FA8400000001 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				22A019EEC864B773B400000001 /* AppRouter.swift */,
+				77000001APPENV0000000001 /* AppEnvironment.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		22D506512BEB5A249600000001 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				22984AFBCED47F677A00000001 /* Colors.swift */,
+				2229DBCEF2E9EBDFC100000001 /* Spacing.swift */,
+				2255C1EA7EDC6DC3DE00000001 /* Theme.swift */,
+				22853C36C8606976F400000001 /* Typography.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		22B3FF000EAD123ECB00000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				77000026STRVIEW000000001 /* StorageSettingsView.swift */,
+				22265D2334E8121DE500000001 /* AssessmentOverviewView.swift */,
+				22984347F253ED4B4300000001 /* ChooseRelationshipsView.swift */,
+				220A15E5C0F000F17200000001 /* HomeView.swift */,
+				22C6315EDE189F7D8A00000001 /* LoadingView.swift */,
+				229C000FF98DA36CAA00000001 /* PastResultsView.swift */,
+				223F15C34A148831CB00000001 /* RelationshipFrequencyView.swift */,
+				2245B8ED5174D50D5E00000001 /* SurveyOverviewView.swift */,
+				22860B5C0750C1CA4C00000001 /* SurveyQuestionView.swift */,
+				220087ED35151F643C00000001 /* SurveyResultsExpandedView.swift */,
+				2279E25F3CD322252D00000001 /* SurveyResultsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		110000082C12345600000001 = {
 			isa = PBXGroup;
 			children = (
 				110000092C12345600000001 /* CAREApp */,
+				55000000TESTSGROUP00000 /* CAREAppTests */,
+				66000012UITESTSGROUP0012 /* CAREAppUITests */,
 				1100000A2C12345600000001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,10 +340,22 @@
 		110000092C12345600000001 /* CAREApp */ = {
 			isa = PBXGroup;
 			children = (
+				77000032SERVICESGROUP0001 /* Services */,
+				77000021STORAGEGROUP001 /* Storage */,
+				77000009REPOSGROUP00001 /* Repositories */,
 				110000022C12345600000001 /* CAREApp.swift */,
 				110000042C12345600000001 /* ContentView.swift */,
 				110000062C12345600000001 /* Assets.xcassets */,
-			);
+				22C34CE04453256C0700000001 /* Components */,
+				22AAC7DC5DCD23638D00000001 /* Models */,
+				22E691E766F2D4FA8400000001 /* Navigation */,
+				22D506512BEB5A249600000001 /* Theme */,
+				22B3FF000EAD123ECB00000001 /* Views */,
+			
+				F0D6E7E8806D2B42B9B5C1D2 /* Poppins-Bold.ttf */,
+				F0A5B772320A6C4E6A928B37 /* Poppins-SemiBold.ttf */,
+				F07F1C2515BE0B4FDD93D62A /* Poppins-Medium.ttf */,
+				F0C23BB999EEFF45BE949DEA /* Poppins-Regular.ttf */,);
 			path = CAREApp;
 			sourceTree = "<group>";
 		};
@@ -52,6 +363,8 @@
 			isa = PBXGroup;
 			children = (
 				110000002C12345600000001 /* CAREApp.app */,
+				44000007CAREAPPTESTS0007 /* CAREAppTests.xctest */,
+				66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,6 +372,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		66000001CAREAPPUITESTS01 /* CAREAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66000002CAREAPPUITESTS02 /* Build configuration list for PBXNativeTarget "CAREAppUITests" */;
+			buildPhases = (
+				66000005CAREAPPUITESTS05 /* Sources */,
+				66000006CAREAPPUITESTS06 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66000008CAREAPPUITESTS08 /* PBXTargetDependency */,
+			);
+			name = CAREAppUITests;
+			productName = CAREAppUITests;
+			productReference = 66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		44000001CAREAPPTESTS0001 /* CAREAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 44000002CAREAPPTESTS0002 /* Build configuration list for PBXNativeTarget "CAREAppTests" */;
+			buildPhases = (
+				44000005CAREAPPTESTS0005 /* Sources */,
+				44000006CAREAPPTESTS0006 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				44000008CAREAPPTESTS0008 /* PBXTargetDependency */,
+			);
+			name = CAREAppTests;
+			productName = CAREAppTests;
+			productReference = 44000007CAREAPPTESTS0007 /* CAREAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		1100000B2C12345600000001 /* CAREApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1100000E2C12345600000001 /* Build configuration list for PBXNativeTarget "CAREApp" */;
@@ -105,6 +452,8 @@
 			projectRoot = "";
 			targets = (
 				1100000B2C12345600000001 /* CAREApp */,
+				44000001CAREAPPTESTS0001 /* CAREAppTests */,
+				66000001CAREAPPUITESTS01 /* CAREAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -115,24 +464,167 @@
 			buildActionMask = 2147483647;
 			files = (
 				110000052C12345600000001 /* Assets.xcassets in Resources */,
-			);
+			
+				F184D45DB8322540EF97625E /* Poppins-Bold.ttf in Resources */,
+				F1A3760CDF65F04D5E93719B /* Poppins-SemiBold.ttf in Resources */,
+				F12DC97856792A4E11931FCF /* Poppins-Medium.ttf in Resources */,
+				F1F44F44E6796B492886E195 /* Poppins-Regular.ttf in Resources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		66000005CAREAPPUITESTS05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66000011BUILDFILE000011 /* CAREAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		44000005CAREAPPTESTS0005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */,
+				77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */,
+				77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */,
+				77000025STGTESTS0000002 /* StorageEngineTests.swift in Sources */,
+				77000011REPTESTS0000002 /* RepositoryTests.swift in Sources */,
+				55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */,
+				55000002BUILDFILE000002 /* AppRouterTests.swift in Sources */,
+				55000003BUILDFILE000003 /* AssessmentSessionTests.swift in Sources */,
+				55000004BUILDFILE000004 /* DomainModelAndScoringTests.swift in Sources */,
+				55000005BUILDFILE000005 /* ScreenViewTests.swift in Sources */,
+				55000006BUILDFILE000006 /* AtomicComponentTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1100000C2C12345600000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */,
+				77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */,
+				77000013STRCONT00000002 /* StoredContact.swift in Sources */,
+				77000015STRSESS00000002 /* StoredAssessmentSession.swift in Sources */,
+				77000017STRPART00000002 /* StoredParticipantResult.swift in Sources */,
+				77000020STRCONTAIN00002 /* StorageContainer.swift in Sources */,
+				77000023LOCALREPO0000002 /* LocalDeviceRepository.swift in Sources */,
+				77000002APPENV0000000002 /* AppEnvironment.swift in Sources */,
+				77000004CONTPROTO0000002 /* ContactsRepositoryProtocol.swift in Sources */,
+				77000006ASSEPROTO0000002 /* AssessmentRepositoryProtocol.swift in Sources */,
+				77000008MOCKREPO0000002 /* MockRepositories.swift in Sources */,
+				22000001APPICON00000001 /* AppIcon.swift in Sources */,
 				110000012C12345600000001 /* CAREApp.swift in Sources */,
 				110000032C12345600000001 /* ContentView.swift in Sources */,
+				228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */,
+				2251B440743818A38200000001 /* Buttons.swift in Sources */,
+				2252EF2EBEA151A37C00000001 /* CategoryBreakdownAccordion.swift in Sources */,
+				220E58E1947B852B5F00000001 /* ComponentShowcaseView.swift in Sources */,
+				22B47F7780AEE3625A00000001 /* DashboardWidgets.swift in Sources */,
+				220009ECE37648D77400000001 /* DonutChartView.swift in Sources */,
+				225BC99A425D9CAFF400000001 /* HeaderNavBar.swift in Sources */,
+				225F9097015B7C3B8600000001 /* IndividualResultCard.swift in Sources */,
+				223D9A20E74E538D2600000001 /* PageIndicatorDots.swift in Sources */,
+				221D6030DEF7570BC100000001 /* RelationshipSelectionPill.swift in Sources */,
+				22C11FEDCC2F7E0E2700000001 /* VerticalTimeAllocationBubble.swift in Sources */,
+				2269159600FD31FB4E00000001 /* AssessmentResult.swift in Sources */,
+				22327D400337F7363500000001 /* AssessmentSession.swift in Sources */,
+				22ECA7C1FB873B4CDF00000001 /* Person.swift in Sources */,
+				2242E03FD738D012A000000001 /* ScoringEngine.swift in Sources */,
+				22EDA9A2A6FAD93D5600000001 /* SurveyQuestions.swift in Sources */,
+				2234815191082B1DC300000001 /* AppRouter.swift in Sources */,
+				229E6F3A761CEC8EED00000001 /* Colors.swift in Sources */,
+				226EDCD33D35BD753C00000001 /* Spacing.swift in Sources */,
+				2245FF9BEFB62F9C0700000001 /* Theme.swift in Sources */,
+				226492BB72B8F5BF8F00000001 /* Typography.swift in Sources */,
+				229CA043C774D2467E00000001 /* AssessmentOverviewView.swift in Sources */,
+				2209E4EC45332AB67400000001 /* ChooseRelationshipsView.swift in Sources */,
+				224425D428F6C6A1C800000001 /* HomeView.swift in Sources */,
+				22657F0C592710F5F000000001 /* LoadingView.swift in Sources */,
+				22C33AD2048813759500000001 /* PastResultsView.swift in Sources */,
+				229BF7FC0E36DCCA9000000001 /* RelationshipFrequencyView.swift in Sources */,
+				22C5AA9DCBB418F4ED00000001 /* SurveyOverviewView.swift in Sources */,
+				223664562A39185CF200000001 /* SurveyQuestionView.swift in Sources */,
+				22805D60F10BD2E25D00000001 /* SurveyResultsExpandedView.swift in Sources */,
+				225FCA897071EA857700000001 /* SurveyResultsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		66000003CAREAPPUITESTS03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CAREApp;
+			};
+			name = Debug;
+		};
+		66000004CAREAPPUITESTS04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CAREApp;
+			};
+			name = Release;
+		};
+		44000003CAREAPPTESTS0003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CAREApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CAREApp";
+			};
+			name = Debug;
+		};
+		44000004CAREAPPTESTS0004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.careapp.CAREAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CAREApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CAREApp";
+			};
+			name = Release;
+		};
 		110000102C12345600000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -305,6 +797,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		66000002CAREAPPUITESTS02 /* Build configuration list for PBXNativeTarget "CAREAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66000003CAREAPPUITESTS03 /* Debug */,
+				66000004CAREAPPUITESTS04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		44000002CAREAPPTESTS0002 /* Build configuration list for PBXNativeTarget "CAREAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				44000003CAREAPPTESTS0003 /* Debug */,
+				44000004CAREAPPTESTS0004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1100000E2C12345600000001 /* Build configuration list for PBXNativeTarget "CAREApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
