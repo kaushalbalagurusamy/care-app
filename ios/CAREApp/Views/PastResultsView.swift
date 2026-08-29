@@ -15,9 +15,8 @@ public struct PastResultsView: View {
     @State private var expandedDomain: CAREDomain? = nil
     @State private var expandedIndividual: String? = "Sarah Mitchell"
     
-    // Live Historical Sessions & Storage Sheet
+    // Live Historical Sessions
     @State private var savedHistory: [AssessmentResult] = []
-    @State private var isShowingStorageSettings: Bool = false
     
     private let individuals = [
         "Sarah Mitchell",
@@ -34,16 +33,7 @@ public struct PastResultsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Standardized Modular Header Bar
-            HeaderNavBar(
-                showBackButton: true,
-                showHomeButton: true,
-                showChartButton: true,
-                showProfileButton: true,
-                onBack: { router.pop() },
-                onHome: { router.popToRoot() },
-                onChart: {},
-                onProfile: { isShowingStorageSettings = true }
-            )
+            HeaderNavBar()
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
@@ -197,9 +187,6 @@ public struct PastResultsView: View {
         .background(Theme.Colors.background)
         .task {
             savedHistory = (try? await appEnvironment.assessmentRepo.fetchAssessmentHistory()) ?? []
-        }
-        .sheet(isPresented: $isShowingStorageSettings) {
-            StorageSettingsView()
         }
     }
     

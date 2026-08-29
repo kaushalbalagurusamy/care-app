@@ -2,6 +2,9 @@ import SwiftUI
 
 // MARK: - Reusable High-Fidelity Header Navigation Bar (Figma Frames 5:4, 11:4, 13:4, 29:4, 41:4)
 public struct HeaderNavBar: View {
+    @Environment(AppRouter.self) private var router: AppRouter?
+    @State private var isShowingStorageSettings: Bool = false
+    
     public let showBackButton: Bool
     public let showHomeButton: Bool
     public let showChartButton: Bool
@@ -41,14 +44,26 @@ public struct HeaderNavBar: View {
                 if showBackButton {
                     CircularNavIconButton(
                         icon: .back,
-                        action: { onBack?() }
+                        action: {
+                            if let onBack = onBack {
+                                onBack()
+                            } else {
+                                router?.pop()
+                            }
+                        }
                     )
                 }
                 
                 if showHomeButton {
                     CircularNavIconButton(
                         icon: .home,
-                        action: { onHome?() }
+                        action: {
+                            if let onHome = onHome {
+                                onHome()
+                            } else {
+                                router?.popToRoot()
+                            }
+                        }
                     )
                 }
             }
@@ -70,14 +85,28 @@ public struct HeaderNavBar: View {
                 if showChartButton {
                     CircularNavIconButton(
                         icon: .chart,
-                        action: { onChart?() }
+                        action: {
+                            if let onChart = onChart {
+                                onChart()
+                            } else {
+                                if router?.currentRoute != .pastResults {
+                                    router?.navigate(to: .pastResults)
+                                }
+                            }
+                        }
                     )
                 }
                 
                 if showProfileButton {
                     CircularNavIconButton(
                         icon: .profile,
-                        action: { onProfile?() }
+                        action: {
+                            if let onProfile = onProfile {
+                                onProfile()
+                            } else {
+                                isShowingStorageSettings = true
+                            }
+                        }
                     )
                 }
             }
@@ -89,6 +118,9 @@ public struct HeaderNavBar: View {
             Theme.Colors.background
                 .ignoresSafeArea(edges: .top)
         )
+        .sheet(isPresented: $isShowingStorageSettings) {
+            StorageSettingsView()
+        }
     }
 }
 

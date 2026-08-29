@@ -11,16 +11,7 @@ public struct AssessmentOverviewView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Header Bar
-            HeaderNavBar(
-                showBackButton: true,
-                showHomeButton: true,
-                showChartButton: true,
-                showProfileButton: true,
-                onBack: { router.pop() },
-                onHome: { router.popToRoot() },
-                onChart: { router.navigate(to: .pastResults) },
-                onProfile: {}
-            )
+            HeaderNavBar()
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {

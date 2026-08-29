@@ -65,15 +65,7 @@ public struct SurveyResultsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Header Bar (Figma Frame 29:4: Home on left, Chart + Profile on right)
-            HeaderNavBar(
-                showBackButton: false,
-                showHomeButton: true,
-                showChartButton: true,
-                showProfileButton: true,
-                onHome: { router.popToRoot() },
-                onChart: { router.navigate(to: .pastResults) },
-                onProfile: {}
-            )
+            HeaderNavBar(showBackButton: false)
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {

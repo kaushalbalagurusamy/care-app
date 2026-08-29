@@ -39,15 +39,7 @@ public struct HomeView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Modular Compact Header Bar (Flush with Top)
-            HeaderNavBar(
-                showBackButton: false,
-                showHomeButton: true,
-                showChartButton: true,
-                showProfileButton: true,
-                onHome: {},
-                onChart: { router.navigate(to: .pastResults) },
-                onProfile: {}
-            )
+            HeaderNavBar(showBackButton: false)
             
             // Main Dashboard Body - Filling Full Vertical Height with Uniform Spacing
             VStack(alignment: .leading, spacing: 14) {

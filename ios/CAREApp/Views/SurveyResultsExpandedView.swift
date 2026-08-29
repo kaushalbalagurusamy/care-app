@@ -11,16 +11,7 @@ public struct SurveyResultsExpandedView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Standardized Header Bar with Modular AppIcons
-            HeaderNavBar(
-                showBackButton: true,
-                showHomeButton: true,
-                showChartButton: true,
-                showProfileButton: true,
-                onBack: { router.pop() },
-                onHome: { router.popToRoot() },
-                onChart: { router.navigate(to: .pastResults) },
-                onProfile: {}
-            )
+            HeaderNavBar()
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 14) {
