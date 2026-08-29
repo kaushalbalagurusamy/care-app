@@ -4,8 +4,13 @@ import SwiftUI
 public struct ChooseRelationshipsView: View {
     public let router: AppRouter
     @Binding public var selectedPeople: [Person]
+    @Environment(AppEnvironment.self) private var appEnvironment
     
-    private let availablePeople: [Person] = Person.mockRolodex
+    @State private var availablePeople: [Person] = Person.mockRolodex
+    @State private var isShowingAddPersonSheet: Bool = false
+    @State private var newPersonName: String = ""
+    @State private var newPersonCategory: RelationshipCategory = .friend
+    @State private var newPersonAge: Int = 30
     
     public init(router: AppRouter, selectedPeople: Binding<[Person]>) {
         self.router = router
@@ -41,7 +46,7 @@ public struct ChooseRelationshipsView: View {
                     
                     // "+ Add Person" Outlined Action Button (Figma Frame 17:4)
                     Button(action: {
-                        // Action to add additional contact
+                        isShowingAddPersonSheet = true
                     }) {
                         HStack(spacing: 8) {
                             Image(systemName: "plus")
@@ -62,7 +67,7 @@ public struct ChooseRelationshipsView: View {
                     }
                     .buttonStyle(.plain)
                     
-                    // 5 Chosen Relationship Cards (Figma Frame 17:4)
+                    // Chosen Relationship Cards (Figma Frame 17:4)
                     VStack(spacing: 12) {
                         ForEach(availablePeople) { person in
                             HStack(spacing: 16) {
@@ -118,10 +123,61 @@ public struct ChooseRelationshipsView: View {
         }
         .background(Theme.Colors.background)
         .toolbar(.hidden, for: .navigationBar)
-        .onAppear {
-            if selectedPeople.isEmpty {
-                selectedPeople = Person.mockFigmaContacts
+        .task {
+            if let loaded = try? await appEnvironment.contactsRepo.fetchContacts(), !loaded.isEmpty {
+                availablePeople = loaded
             }
+            if selectedPeople.isEmpty {
+                selectedPeople = Array(availablePeople.prefix(5))
+            }
+        }
+        .sheet(isPresented: $isShowingAddPersonSheet) {
+            NavigationStack {
+                Form {
+                    Section("Contact Information") {
+                        TextField("Full Name", text: $newPersonName)
+                        Picker("Relationship", selection: $newPersonCategory) {
+                            ForEach(RelationshipCategory.allCases, id: \.self) { cat in
+                                Text(cat.rawValue).tag(cat)
+                            }
+                        }
+                        Stepper("Age: \(newPersonAge)", value: $newPersonAge, in: 1...120)
+                    }
+                }
+                .navigationTitle("Add Relationship")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { isShowingAddPersonSheet = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            guard !newPersonName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            let initials = newPersonName.split(separator: " ")
+                                .compactMap { $0.first }
+                                .map { String($0) }
+                                .joined()
+                                .uppercased()
+                            let person = Person(
+                                name: newPersonName,
+                                initials: initials.isEmpty ? "CO" : String(initials.prefix(2)),
+                                category: newPersonCategory,
+                                age: newPersonAge
+                            )
+                            Task {
+                                _ = try? await appEnvironment.contactsRepo.createContact(person)
+                                if let refreshed = try? await appEnvironment.contactsRepo.fetchContacts() {
+                                    availablePeople = refreshed
+                                }
+                            }
+                            newPersonName = ""
+                            isShowingAddPersonSheet = false
+                        }
+                        .disabled(newPersonName.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                }
+            }
+            .presentationDetents([.medium])
         }
     }
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000026STRVIEW000000001 /* StorageSettingsView.swift */; };
+		77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000028MGMTTESTS0000001 /* StorageManagementTests.swift */; };
 		77000013STRCONT00000002 /* StoredContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000012STRCONT00000001 /* StoredContact.swift */; };
 		77000015STRSESS00000002 /* StoredAssessmentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000014STRSESS00000001 /* StoredAssessmentSession.swift */; };
 		77000017STRPART00000002 /* StoredParticipantResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000016STRPART00000001 /* StoredParticipantResult.swift */; };
@@ -67,6 +69,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		77000026STRVIEW000000001 /* StorageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageSettingsView.swift"; sourceTree = "<group>"; };
+		77000028MGMTTESTS0000001 /* StorageManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageManagementTests.swift"; sourceTree = "<group>"; };
 		77000012STRCONT00000001 /* StoredContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredContact.swift"; sourceTree = "<group>"; };
 		77000014STRSESS00000001 /* StoredAssessmentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredAssessmentSession.swift"; sourceTree = "<group>"; };
 		77000016STRPART00000001 /* StoredParticipantResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredParticipantResult.swift"; sourceTree = "<group>"; };
@@ -224,6 +228,7 @@
 		55000000TESTSGROUP00000 /* CAREAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				77000028MGMTTESTS0000001 /* StorageManagementTests.swift */,
 				77000024STGTESTS0000001 /* StorageEngineTests.swift */,
 				77000010REPTESTS0000001 /* RepositoryTests.swift */,
 				55000001FILEREF00000001 /* DesignTokensTests.swift */,
@@ -291,6 +296,7 @@
 		22B3FF000EAD123ECB00000001 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				77000026STRVIEW000000001 /* StorageSettingsView.swift */,
 				22265D2334E8121DE500000001 /* AssessmentOverviewView.swift */,
 				22984347F253ED4B4300000001 /* ChooseRelationshipsView.swift */,
 				220A15E5C0F000F17200000001 /* HomeView.swift */,
@@ -463,6 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */,
 				77000025STGTESTS0000002 /* StorageEngineTests.swift in Sources */,
 				77000011REPTESTS0000002 /* RepositoryTests.swift in Sources */,
 				55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */,
@@ -478,6 +485,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */,
 				77000013STRCONT00000002 /* StoredContact.swift in Sources */,
 				77000015STRSESS00000002 /* StoredAssessmentSession.swift in Sources */,
 				77000017STRPART00000002 /* StoredParticipantResult.swift in Sources */,

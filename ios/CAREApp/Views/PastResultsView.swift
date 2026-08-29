@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Screen 10: Historical Past Results & Relational Trends (Figma Frame 95:2)
 public struct PastResultsView: View {
     public let router: AppRouter
+    @Environment(AppEnvironment.self) private var appEnvironment
     
     // Accordion Expansion States matching Figma Frame 95:2
     @State private var isTotalScoresExpanded: Bool = false
@@ -13,6 +14,10 @@ public struct PastResultsView: View {
     // Sub-item Expansion States
     @State private var expandedDomain: CAREDomain? = nil
     @State private var expandedIndividual: String? = "Sarah Mitchell"
+    
+    // Live Historical Sessions & Storage Sheet
+    @State private var savedHistory: [AssessmentResult] = []
+    @State private var isShowingStorageSettings: Bool = false
     
     private let individuals = [
         "Sarah Mitchell",
@@ -37,7 +42,7 @@ public struct PastResultsView: View {
                 onBack: { router.pop() },
                 onHome: { router.popToRoot() },
                 onChart: {},
-                onProfile: {}
+                onProfile: { isShowingStorageSettings = true }
             )
             
             ScrollView(showsIndicators: false) {
@@ -60,9 +65,37 @@ public struct PastResultsView: View {
                         }
                     ) {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Overall assessment scores across historical evaluations.")
-                                .font(Theme.Typography.poppins(.regular, size: 14))
-                                .foregroundColor(Theme.Colors.textSecondary)
+                            if savedHistory.isEmpty {
+                                Text("No recorded past assessment sessions yet. Complete your first assessment to view historical trends.")
+                                    .font(Theme.Typography.poppins(.regular, size: 14))
+                                    .foregroundColor(Theme.Colors.textSecondary)
+                            } else {
+                                ForEach(savedHistory) { session in
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(session.timestamp.formatted(date: .abbreviated, time: .shortened))
+                                                .font(Theme.Typography.poppins(.medium, size: 14))
+                                                .foregroundColor(Theme.Colors.textPrimary)
+                                            Text("Relational Safety: \(Int(session.safetyDistribution.safePercentage * 100))% Safe")
+                                                .font(Theme.Typography.poppins(.regular, size: 12))
+                                                .foregroundColor(Theme.Colors.textSecondary)
+                                        }
+                                        Spacer()
+                                        Button(action: {
+                                            Task {
+                                                try? await appEnvironment.assessmentRepo.deleteAssessmentResult(id: session.id)
+                                                savedHistory = (try? await appEnvironment.assessmentRepo.fetchAssessmentHistory()) ?? []
+                                            }
+                                        }) {
+                                            Image(systemName: "trash")
+                                                .font(.system(size: 14))
+                                                .foregroundColor(Theme.Colors.Safety.highRisk.opacity(0.8))
+                                                .frame(minWidth: 44, minHeight: 44)
+                                        }
+                                    }
+                                    Divider().background(Theme.Colors.dividerSubtle)
+                                }
+                            }
                         }
                         .padding(.top, 4)
                     }
@@ -162,6 +195,12 @@ public struct PastResultsView: View {
             }
         }
         .background(Theme.Colors.background)
+        .task {
+            savedHistory = (try? await appEnvironment.assessmentRepo.fetchAssessmentHistory()) ?? []
+        }
+        .sheet(isPresented: $isShowingStorageSettings) {
+            StorageSettingsView()
+        }
     }
     
     // MARK: - C.A.R.E. Domain Sub-Accordion Row

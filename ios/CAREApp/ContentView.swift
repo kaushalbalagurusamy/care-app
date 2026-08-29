@@ -86,6 +86,9 @@ struct ContentView: View {
                     session: session,
                     onComplete: { result in
                         latestResult = result
+                        Task {
+                            try? await appEnvironment.assessmentRepo.saveAssessmentResult(result)
+                        }
                     }
                 )
             } else {
@@ -100,6 +103,9 @@ struct ContentView: View {
                     session: session,
                     onComplete: { result in
                         latestResult = result
+                        Task {
+                            try? await appEnvironment.assessmentRepo.saveAssessmentResult(result)
+                        }
                     }
                 )
             }
