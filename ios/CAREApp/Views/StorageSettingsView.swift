@@ -9,6 +9,7 @@ public struct StorageSettingsView: View {
     @State private var contactCount: Int = 0
     @State private var approximateStorageKB: Int = 30
     @State private var isRemindersEnabled: Bool = false
+    @State private var isAppLockToggle: Bool = false
     @State private var isShowingPurgeConfirmation: Bool = false
     @State private var isShowingResetContactsConfirmation: Bool = false
     
@@ -28,10 +29,13 @@ public struct StorageSettingsView: View {
                         // Section 2: Bi-Weekly Local Reminders
                         notificationsCard
                         
-                        // Section 3: Privacy & Sync Info
+                        // Section 3: App Security & Biometric Lock
+                        appSecurityCard
+                        
+                        // Section 4: Privacy & Sync Info
                         privacyInfoCard
                         
-                        // Section 4: Data Management & Erasure Actions
+                        // Section 5: Data Management & Erasure Actions
                         dataManagementCard
                     }
                     .padding(.horizontal, Theme.Spacing.large)
@@ -177,6 +181,52 @@ public struct StorageSettingsView: View {
         )
     }
     
+    // MARK: - App Security & Biometric Lock Card
+    private var appSecurityCard: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+            HStack {
+                Image(systemName: "lock.fill")
+                    .foregroundColor(Theme.Colors.primary)
+                Text("App Security & Lock")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundColor(Theme.Colors.textPrimary)
+            }
+            
+            Divider()
+            
+            Toggle(isOn: $isAppLockToggle) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Require \(appEnvironment.appLockManager.biometricService.biometricType.rawValue)")
+                        .font(Theme.Typography.subheadline)
+                        .foregroundColor(Theme.Colors.textPrimary)
+                    Text("Lock immediately when app enters background")
+                        .font(Theme.Typography.caption)
+                        .foregroundColor(Theme.Colors.textSecondary)
+                }
+            }
+            .tint(Theme.Colors.primary)
+            .onChange(of: isAppLockToggle) { _, newValue in
+                guard newValue != appEnvironment.appLockManager.isAppLockEnabled else { return }
+                Task {
+                    do {
+                        let success = try await appEnvironment.appLockManager.setAppLockEnabled(newValue)
+                        if !success {
+                            isAppLockToggle = appEnvironment.appLockManager.isAppLockEnabled
+                        }
+                    } catch {
+                        isAppLockToggle = appEnvironment.appLockManager.isAppLockEnabled
+                    }
+                }
+            }
+        }
+        .padding(Theme.Spacing.large)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Theme.Colors.cardSurface)
+                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
+    }
+    
     // MARK: - Privacy Info Card
     private var privacyInfoCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
@@ -207,9 +257,9 @@ public struct StorageSettingsView: View {
     private var dataManagementCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
             HStack {
-                Image(systemName: "trash.fill")
+                Image(systemName: "externaldrive.fill.badge.xmark")
                     .foregroundColor(Theme.Colors.Safety.highRisk)
-                Text("Data Erasure & Reset")
+                Text("Data Management & Erasure")
                     .font(Theme.Typography.cardTitle)
                     .foregroundColor(Theme.Colors.textPrimary)
             }
@@ -228,6 +278,8 @@ public struct StorageSettingsView: View {
                 .foregroundColor(Theme.Colors.Safety.highRisk)
                 .frame(minHeight: 44)
             }
+            
+            Divider()
             
             Button(action: {
                 isShowingResetContactsConfirmation = true
@@ -274,6 +326,7 @@ public struct StorageSettingsView: View {
         assessmentCount = history
         contactCount = contacts
         isRemindersEnabled = scheduled
+        isAppLockToggle = appEnvironment.appLockManager.isAppLockEnabled
         approximateStorageKB = max(30, (history * 3) + (contacts * 1) + 20)
     }
 }
