@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77000002APPENV0000000002 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000001APPENV0000000001 /* AppEnvironment.swift */; };
+		77000004CONTPROTO0000002 /* ContactsRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */; };
+		77000006ASSEPROTO0000002 /* AssessmentRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */; };
+		77000008MOCKREPO0000002 /* MockRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000007MOCKREPO0000001 /* MockRepositories.swift */; };
+		77000011REPTESTS0000002 /* RepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000010REPTESTS0000001 /* RepositoryTests.swift */; };
 		66000011BUILDFILE000011 /* CAREAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66000010FILEREF00000010 /* CAREAppUITests.swift */; };
 		55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000001FILEREF00000001 /* DesignTokensTests.swift */; };
 		55000002BUILDFILE000002 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55000002FILEREF00000002 /* AppRouterTests.swift */; };
@@ -56,6 +61,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		77000001APPENV0000000001 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppEnvironment.swift"; sourceTree = "<group>"; };
+		77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactsRepositoryProtocol.swift"; sourceTree = "<group>"; };
+		77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssessmentRepositoryProtocol.swift"; sourceTree = "<group>"; };
+		77000007MOCKREPO0000001 /* MockRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MockRepositories.swift"; sourceTree = "<group>"; };
+		77000010REPTESTS0000001 /* RepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/RepositoryTests.swift"; sourceTree = "<group>"; };
 		66000010FILEREF00000010 /* CAREAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAREAppUITests.swift"; sourceTree = "<group>"; };
 		66000007CAREAPPUITESTS07 /* CAREAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CAREAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		55000001FILEREF00000001 /* DesignTokensTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeTests/DesignTokensTests.swift"; sourceTree = "<group>"; };
@@ -162,6 +172,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		77000009REPOSGROUP00001 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */,
+				77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */,
+				77000007MOCKREPO0000001 /* MockRepositories.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
 		66000012UITESTSGROUP0012 /* CAREAppUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +193,7 @@
 		55000000TESTSGROUP00000 /* CAREAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				77000010REPTESTS0000001 /* RepositoryTests.swift */,
 				55000001FILEREF00000001 /* DesignTokensTests.swift */,
 				55000002FILEREF00000002 /* AppRouterTests.swift */,
 				55000003FILEREF00000003 /* AssessmentSessionTests.swift */,
@@ -218,6 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				22A019EEC864B773B400000001 /* AppRouter.swift */,
+				77000001APPENV0000000001 /* AppEnvironment.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -263,6 +285,7 @@
 		110000092C12345600000001 /* CAREApp */ = {
 			isa = PBXGroup;
 			children = (
+				77000009REPOSGROUP00001 /* Repositories */,
 				110000022C12345600000001 /* CAREApp.swift */,
 				110000042C12345600000001 /* ContentView.swift */,
 				110000062C12345600000001 /* Assets.xcassets */,
@@ -406,6 +429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000011REPTESTS0000002 /* RepositoryTests.swift in Sources */,
 				55000001BUILDFILE000001 /* DesignTokensTests.swift in Sources */,
 				55000002BUILDFILE000002 /* AppRouterTests.swift in Sources */,
 				55000003BUILDFILE000003 /* AssessmentSessionTests.swift in Sources */,
@@ -419,6 +443,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000002APPENV0000000002 /* AppEnvironment.swift in Sources */,
+				77000004CONTPROTO0000002 /* ContactsRepositoryProtocol.swift in Sources */,
+				77000006ASSEPROTO0000002 /* AssessmentRepositoryProtocol.swift in Sources */,
+				77000008MOCKREPO0000002 /* MockRepositories.swift in Sources */,
 				22000001APPICON00000001 /* AppIcon.swift in Sources */,
 				110000012C12345600000001 /* CAREApp.swift in Sources */,
 				110000032C12345600000001 /* ContentView.swift in Sources */,
