@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000030NOTIFSVC000000001 /* NotificationService.swift */; };
+		77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */; };
 		77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000026STRVIEW000000001 /* StorageSettingsView.swift */; };
 		77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000028MGMTTESTS0000001 /* StorageManagementTests.swift */; };
 		77000013STRCONT00000002 /* StoredContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000012STRCONT00000001 /* StoredContact.swift */; };
@@ -69,6 +71,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		77000030NOTIFSVC000000001 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationService.swift"; sourceTree = "<group>"; };
+		77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/NotificationServiceTests.swift"; sourceTree = "<group>"; };
 		77000026STRVIEW000000001 /* StorageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageSettingsView.swift"; sourceTree = "<group>"; };
 		77000028MGMTTESTS0000001 /* StorageManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageManagementTests.swift"; sourceTree = "<group>"; };
 		77000012STRCONT00000001 /* StoredContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoredContact.swift"; sourceTree = "<group>"; };
@@ -188,6 +192,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		77000032SERVICESGROUP0001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				77000030NOTIFSVC000000001 /* NotificationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		77000021STORAGEGROUP001 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +240,7 @@
 		55000000TESTSGROUP00000 /* CAREAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */,
 				77000028MGMTTESTS0000001 /* StorageManagementTests.swift */,
 				77000024STGTESTS0000001 /* StorageEngineTests.swift */,
 				77000010REPTESTS0000001 /* RepositoryTests.swift */,
@@ -324,6 +337,7 @@
 		110000092C12345600000001 /* CAREApp */ = {
 			isa = PBXGroup;
 			children = (
+				77000032SERVICESGROUP0001 /* Services */,
 				77000021STORAGEGROUP001 /* Storage */,
 				77000009REPOSGROUP00001 /* Repositories */,
 				110000022C12345600000001 /* CAREApp.swift */,
@@ -469,6 +483,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */,
 				77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */,
 				77000025STGTESTS0000002 /* StorageEngineTests.swift in Sources */,
 				77000011REPTESTS0000002 /* RepositoryTests.swift in Sources */,
@@ -485,6 +500,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */,
 				77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */,
 				77000013STRCONT00000002 /* StoredContact.swift in Sources */,
 				77000015STRSESS00000002 /* StoredAssessmentSession.swift in Sources */,

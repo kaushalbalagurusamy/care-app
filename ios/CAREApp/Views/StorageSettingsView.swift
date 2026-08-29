@@ -8,6 +8,7 @@ public struct StorageSettingsView: View {
     @State private var assessmentCount: Int = 0
     @State private var contactCount: Int = 0
     @State private var approximateStorageKB: Int = 30
+    @State private var isRemindersEnabled: Bool = false
     @State private var isShowingPurgeConfirmation: Bool = false
     @State private var isShowingResetContactsConfirmation: Bool = false
     
@@ -24,10 +25,13 @@ public struct StorageSettingsView: View {
                         // Section 1: Storage & Capacity Metrics
                         storageMetricsCard
                         
-                        // Section 2: Privacy & Sync Info
+                        // Section 2: Bi-Weekly Local Reminders
+                        notificationsCard
+                        
+                        // Section 3: Privacy & Sync Info
                         privacyInfoCard
                         
-                        // Section 3: Data Management & Erasure Actions
+                        // Section 4: Data Management & Erasure Actions
                         dataManagementCard
                     }
                     .padding(.horizontal, Theme.Spacing.large)
@@ -116,6 +120,53 @@ public struct StorageSettingsView: View {
                     value: "\(contactCount) / 50 max",
                     icon: "person.2.fill"
                 )
+            }
+        }
+        .padding(Theme.Spacing.large)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Theme.Colors.cardSurface)
+                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+        )
+    }
+    
+    // MARK: - Bi-Weekly Local Notifications Card
+    private var notificationsCard: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
+            HStack {
+                Image(systemName: "bell.badge.fill")
+                    .foregroundColor(Theme.Colors.primary)
+                Text("Check-In Reminders")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundColor(Theme.Colors.textPrimary)
+            }
+            
+            Divider()
+            
+            Toggle(isOn: $isRemindersEnabled) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Bi-Weekly Assessment")
+                        .font(Theme.Typography.subheadline)
+                        .foregroundColor(Theme.Colors.textPrimary)
+                    Text("Every 2nd Sunday at 7:00 PM")
+                        .font(Theme.Typography.caption)
+                        .foregroundColor(Theme.Colors.textSecondary)
+                }
+            }
+            .tint(Theme.Colors.primary)
+            .onChange(of: isRemindersEnabled) { _, newValue in
+                Task {
+                    if newValue {
+                        let granted = try? await appEnvironment.notificationScheduler.requestAuthorization()
+                        if granted == true {
+                            try? await appEnvironment.notificationScheduler.scheduleBiWeeklyReminder(preferredHour: 19, preferredWeekday: 1)
+                        } else {
+                            isRemindersEnabled = false
+                        }
+                    } else {
+                        try? await appEnvironment.notificationScheduler.cancelReminders()
+                    }
+                }
             }
         }
         .padding(Theme.Spacing.large)
@@ -219,8 +270,10 @@ public struct StorageSettingsView: View {
     private func refreshStorageMetrics() async {
         let history = (try? await appEnvironment.assessmentRepo.fetchHistoryCount()) ?? 0
         let contacts = (try? await appEnvironment.contactsRepo.fetchContactCount()) ?? 0
+        let scheduled = (try? await appEnvironment.notificationScheduler.isReminderScheduled()) ?? false
         assessmentCount = history
         contactCount = contacts
+        isRemindersEnabled = scheduled
         approximateStorageKB = max(30, (history * 3) + (contacts * 1) + 20)
     }
 }
