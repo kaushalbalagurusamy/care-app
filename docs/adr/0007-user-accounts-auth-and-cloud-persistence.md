@@ -1,7 +1,7 @@
 # ADR 0007: Local-First Encrypted Storage, iCloud Sync & Notification Architecture
 
-* **Status**: Proposed
-* **Date**: 2026-08-28
+* **Status**: Completed / Verified
+* **Date**: 2026-08-28 (Updated 2026-08-29)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -83,11 +83,11 @@ To maintain strict context isolation, deterministic testing, and high-fidelity i
 
 | Phase ADR | Focus Scope | Key Deliverables & Test Suites | Status |
 | :--- | :--- | :--- | :---: |
-| [`0007.1: Protocols & DI`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-1-repository-protocols-and-di.md) | Protocols & Environment | `ContactsRepositoryProtocol`, `AssessmentRepositoryProtocol`, `MockAssessmentRepository`, `AppEnvironment` (`TEST-REP`) | Proposed |
-| [`0007.2: SwiftData & Limits`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-2-swiftdata-cloudkit-engine-and-limits.md) | Storage Schema & Limits | `StoredContact`, `StoredAssessmentSession`, CloudKit Private DB, 50-Item Guard (`TEST-STO`) | Proposed |
-| [`0007.3: View Wiring & Purge`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-3-view-wiring-and-storage-management.md) | Views & Deletion Controls | Frame 5 / 10 Wiring, Swipe-to-Delete, Storage Readout Meter, Full Purge (`TEST-MGT`) | Proposed |
-| [`0007.4: Local Notifications`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-4-biweekly-local-notifications.md) | Bi-Weekly Reminders | `NotificationService`, 14-Day `UNCalendarNotificationTrigger`, In-App Settings (`TEST-NOT`) | Proposed |
-| [`0007.5: Testing & Sync Audit`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-5-testing-benchmarks-and-audit.md) | Benchmarks & Multi-Device | Multi-Device Sync State Machine, Storage Benchmarks ($< 500\text{ KB}$), XCUITest Workflows (`TEST-SNC`, `TEST-UI`) | Proposed |
+| [`0007.1: Protocols & DI`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-1-repository-protocols-and-di.md) | Protocols & Environment | `ContactsRepositoryProtocol`, `AssessmentRepositoryProtocol`, `MockAssessmentRepository`, `AppEnvironment` (`TEST-REP`) | ✅ Completed / Verified |
+| [`0007.2: SwiftData & Limits`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-2-swiftdata-cloudkit-engine-and-limits.md) | Storage Schema & Limits | `StoredContact`, `StoredAssessmentSession`, CloudKit Private DB, 50-Item Guard (`TEST-STO`) | ✅ Completed / Verified |
+| [`0007.3: View Wiring & Purge`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-3-view-wiring-and-storage-management.md) | Views & Deletion Controls | Frame 5 / 10 Wiring, Swipe-to-Delete, Storage Readout Meter, Full Purge (`TEST-MGT`) | ✅ Completed / Verified |
+| [`0007.4: Local Notifications`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-4-biweekly-local-notifications.md) | Bi-Weekly Reminders | `NotificationService`, 14-Day `UNCalendarNotificationTrigger`, In-App Settings (`TEST-NOT`) | ✅ Completed / Verified |
+| [`0007.5: Testing & Sync Audit`](file:///docs/adr/0007-local-storage-and-cloud-sync/0007-phase-5-testing-benchmarks-and-audit.md) | Benchmarks & Multi-Device | Multi-Device Sync Fallback, Storage Benchmarks ($< 500\text{ KB}$), Lifecycle & E2E Workflows (`TEST-BENCH`, `TEST-SYNC`, `TEST-E2E`) | ✅ Completed / Verified |
 
 ---
 

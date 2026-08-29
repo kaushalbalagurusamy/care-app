@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */; };
 		77000031NOTIFSVC000000002 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000030NOTIFSVC000000001 /* NotificationService.swift */; };
 		77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */; };
 		77000027STRVIEW000000002 /* StorageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000026STRVIEW000000001 /* StorageSettingsView.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/StorageBenchmarkTests.swift"; sourceTree = "<group>"; };
 		77000030NOTIFSVC000000001 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationService.swift"; sourceTree = "<group>"; };
 		77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageTests/NotificationServiceTests.swift"; sourceTree = "<group>"; };
 		77000026STRVIEW000000001 /* StorageSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StorageSettingsView.swift"; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 		55000000TESTSGROUP00000 /* CAREAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				77000035BENCHTESTS0000001 /* StorageBenchmarkTests.swift */,
 				77000033NOTIFTESTS0000001 /* NotificationServiceTests.swift */,
 				77000028MGMTTESTS0000001 /* StorageManagementTests.swift */,
 				77000024STGTESTS0000001 /* StorageEngineTests.swift */,
@@ -483,6 +486,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */,
 				77000034NOTIFTESTS0000002 /* NotificationServiceTests.swift in Sources */,
 				77000029MGMTTESTS0000002 /* StorageManagementTests.swift in Sources */,
 				77000025STGTESTS0000002 /* StorageEngineTests.swift in Sources */,
