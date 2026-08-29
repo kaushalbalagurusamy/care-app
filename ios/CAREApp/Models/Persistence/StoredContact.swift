@@ -7,7 +7,8 @@ public final class StoredContact {
     public var id: UUID = UUID()
     public var name: String = ""
     public var initials: String = ""
-    public var categoryRaw: String = "partner"
+    public var categoryRaw: String = "Partner"
+    public var customCategoryName: String? = nil
     public var age: Int = 30
     public var createdAt: Date = Date()
     
@@ -15,7 +16,8 @@ public final class StoredContact {
         id: UUID = UUID(),
         name: String = "",
         initials: String = "",
-        categoryRaw: String = "partner",
+        categoryRaw: String = "Partner",
+        customCategoryName: String? = nil,
         age: Int = 30,
         createdAt: Date = Date()
     ) {
@@ -23,6 +25,7 @@ public final class StoredContact {
         self.name = name
         self.initials = initials
         self.categoryRaw = categoryRaw
+        self.customCategoryName = customCategoryName
         self.age = age
         self.createdAt = createdAt
     }
@@ -33,6 +36,7 @@ public final class StoredContact {
             name: person.name,
             initials: person.initials,
             categoryRaw: person.category.rawValue,
+            customCategoryName: person.customCategoryName,
             age: person.age
         )
     }
@@ -44,6 +48,7 @@ public final class StoredContact {
             name: name,
             initials: initials,
             category: category,
+            customCategoryName: customCategoryName,
             age: age
         )
     }

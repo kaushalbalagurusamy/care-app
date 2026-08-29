@@ -7,7 +7,8 @@ public final class StoredParticipantResult {
     public var id: UUID = UUID()
     public var personName: String = ""
     public var initials: String = ""
-    public var categoryRaw: String = "partner"
+    public var categoryRaw: String = "Partner"
+    public var customCategoryName: String? = nil
     public var age: Int = 30
     public var percentTimeSpent: Double = 0.20
     public var individualScore: Double = 0.0
@@ -21,7 +22,8 @@ public final class StoredParticipantResult {
         id: UUID = UUID(),
         personName: String = "",
         initials: String = "",
-        categoryRaw: String = "partner",
+        categoryRaw: String = "Partner",
+        customCategoryName: String? = nil,
         age: Int = 30,
         percentTimeSpent: Double = 0.20,
         individualScore: Double = 0.0,
@@ -35,6 +37,7 @@ public final class StoredParticipantResult {
         self.personName = personName
         self.initials = initials
         self.categoryRaw = categoryRaw
+        self.customCategoryName = customCategoryName
         self.age = age
         self.percentTimeSpent = percentTimeSpent
         self.individualScore = individualScore
@@ -51,6 +54,7 @@ public final class StoredParticipantResult {
             personName: result.participant.person.name,
             initials: result.participant.person.initials,
             categoryRaw: result.participant.person.category.rawValue,
+            customCategoryName: result.participant.person.customCategoryName,
             age: result.participant.person.age,
             percentTimeSpent: result.participant.percentTimeSpent,
             individualScore: result.normalizedScore,
@@ -64,7 +68,14 @@ public final class StoredParticipantResult {
     
     public func toDomain() -> IndividualResult {
         let category = RelationshipCategory(rawValue: categoryRaw) ?? .partner
-        let person = Person(id: id, name: personName, initials: initials, category: category, age: age)
+        let person = Person(
+            id: id,
+            name: personName,
+            initials: initials,
+            category: category,
+            customCategoryName: customCategoryName,
+            age: age
+        )
         let participant = AssessmentParticipant(person: person, percentTimeSpent: percentTimeSpent)
         let tier: SafetyTier = {
             switch safetyTierRaw {

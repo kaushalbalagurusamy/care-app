@@ -8,9 +8,11 @@ public struct ChooseRelationshipsView: View {
     
     @State private var availablePeople: [Person] = Person.mockRolodex
     @State private var isShowingAddPersonSheet: Bool = false
-    @State private var newPersonName: String = ""
-    @State private var newPersonCategory: RelationshipCategory = .friend
-    @State private var newPersonAge: Int = 30
+    @State private var newPersonFirstName: String = ""
+    @State private var newPersonLastName: String = ""
+    @State private var newPersonCategory: RelationshipCategory = .partner
+    @State private var customCategoryText: String = ""
+    @State private var newPersonAgeText: String = "30"
     
     public init(router: AppRouter, selectedPeople: Binding<[Person]>) {
         self.router = router
@@ -19,6 +21,24 @@ public struct ChooseRelationshipsView: View {
     
     private var isSelectionFull: Bool {
         selectedPeople.count >= 5
+    }
+    
+    private var isAddPersonFormValid: Bool {
+        let trimmedFirst = newPersonFirstName.trimmingCharacters(in: .whitespaces)
+        guard !trimmedFirst.isEmpty else { return false }
+        if newPersonCategory == .custom {
+            return !customCategoryText.trimmingCharacters(in: .whitespaces).isEmpty
+        }
+        return true
+    }
+    
+    private func resetAddPersonForm() {
+        newPersonFirstName = ""
+        newPersonLastName = ""
+        newPersonCategory = .partner
+        customCategoryText = ""
+        newPersonAgeText = "30"
+        isShowingAddPersonSheet = false
     }
     
     public var body: some View {
@@ -126,49 +146,72 @@ public struct ChooseRelationshipsView: View {
             NavigationStack {
                 Form {
                     Section("Contact Information") {
-                        TextField("Full Name", text: $newPersonName)
+                        TextField("First Name", text: $newPersonFirstName)
+                            .textContentType(.givenName)
+                            .autocorrectionDisabled()
+                        
+                        TextField("Last Name", text: $newPersonLastName)
+                            .textContentType(.familyName)
+                            .autocorrectionDisabled()
+                        
                         Picker("Relationship", selection: $newPersonCategory) {
                             ForEach(RelationshipCategory.allCases, id: \.self) { cat in
                                 Text(cat.rawValue).tag(cat)
                             }
                         }
-                        Stepper("Age: \(newPersonAge)", value: $newPersonAge, in: 1...120)
+                        
+                        if newPersonCategory == .custom {
+                            TextField("Custom Relationship (e.g. Mentor)", text: $customCategoryText)
+                                .autocorrectionDisabled()
+                        }
+                        
+                        TextField("Age", text: $newPersonAgeText)
+                            .keyboardType(.numberPad)
                     }
                 }
                 .navigationTitle("Add Relationship")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { isShowingAddPersonSheet = false }
+                        Button("Cancel") {
+                            resetAddPersonForm()
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Save") {
-                            guard !newPersonName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            let initials = newPersonName.split(separator: " ")
-                                .compactMap { $0.first }
-                                .map { String($0) }
-                                .joined()
-                                .uppercased()
+                            let trimmedFirst = newPersonFirstName.trimmingCharacters(in: .whitespaces)
+                            let trimmedLast = newPersonLastName.trimmingCharacters(in: .whitespaces)
+                            guard !trimmedFirst.isEmpty else { return }
+                            
+                            let fullName = trimmedLast.isEmpty ? trimmedFirst : "\(trimmedFirst) \(trimmedLast)"
+                            let firstInitial = trimmedFirst.first.map { String($0) } ?? ""
+                            let lastInitial = trimmedLast.first.map { String($0) } ?? ""
+                            let initials = (firstInitial + lastInitial).uppercased()
+                            
+                            let customName = (newPersonCategory == .custom) ? customCategoryText.trimmingCharacters(in: .whitespaces) : nil
+                            let age = Int(newPersonAgeText.filter { $0.isNumber }) ?? 30
+                            
                             let person = Person(
-                                name: newPersonName,
-                                initials: initials.isEmpty ? "CO" : String(initials.prefix(2)),
+                                name: fullName,
+                                initials: initials.isEmpty ? "CO" : initials,
                                 category: newPersonCategory,
-                                age: newPersonAge
+                                customCategoryName: customName,
+                                age: age
                             )
+                            
                             Task {
                                 _ = try? await appEnvironment.contactsRepo.createContact(person)
                                 if let refreshed = try? await appEnvironment.contactsRepo.fetchContacts() {
                                     availablePeople = refreshed
                                 }
                             }
-                            newPersonName = ""
-                            isShowingAddPersonSheet = false
+                            resetAddPersonForm()
                         }
-                        .disabled(newPersonName.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .disabled(!isAddPersonFormValid)
                     }
                 }
             }
-            .presentationDetents([.medium])
+            .presentationDetents([.medium, .large])
         }
     }
 }

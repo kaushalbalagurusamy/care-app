@@ -69,7 +69,7 @@ struct StorageEngineTests {
         let emptyContact = StoredContact()
         #expect(emptyContact.name.isEmpty)
         #expect(emptyContact.initials.isEmpty)
-        #expect(emptyContact.categoryRaw == "partner")
+        #expect(emptyContact.categoryRaw.lowercased() == "partner")
         
         let emptySession = StoredAssessmentSession()
         #expect(emptySession.totalScore == 0.0)
