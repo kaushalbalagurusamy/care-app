@@ -5,3 +5,6 @@ asyncpg
 pgvector
 google-genai
 nemoguardrails
+httpx
+pytest
+pytest-asyncio
