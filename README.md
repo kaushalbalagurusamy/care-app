@@ -1,6 +1,6 @@
-# CARE App — Relational Neuroscience & AI Architecture
+# CARE App — Relational Neuroscience Assessment & Education Platform
 
-CARE App is a dual-stack mobile and AI platform developed for **Dr. Amy Banks, MD** (author of *Wired to Connect* and pioneer of Relational-Cultural Theory relational neuroscience) and engineered for the **Relational-Cultural Theory (RCT) 50th Anniversary Conference** in October.
+CARE App is an interactive assessment and education platform developed for **Dr. Amy Banks, MD** (author of *Wired to Connect* and pioneer of Relational-Cultural Theory relational neuroscience) and engineered for the **Relational-Cultural Theory (RCT) 50th Anniversary Conference** in October, delivering relational neuroscience evaluations and training to thousands of students.
 
 The platform integrates the **C.A.R.E.** neurological framework (**C**alm - Smart Vagus Nerve, **A**ccept - Dorsal Anterior Cingulate Cortex, **R**esonate - Mirror Neuron System, **E**nergize - Dopamine Reward Pathway) within a 100% native iOS/iPadOS SwiftUI application paired with an asynchronous Python FastAPI backend powered by Nvidia NeMo Guardrails, PostgreSQL `pgvector`, and Google Gemini.
 
