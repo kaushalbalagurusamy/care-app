@@ -1,0 +1,14 @@
+.git
+.github
+.DS_Store
+ios/
+docs/
+*.md
+.editorconfig
+LICENSE
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/

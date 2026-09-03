@@ -1,5 +1,8 @@
 # CARE App — Relational Neuroscience Assessment & Education Platform
 
+[![CI](https://github.com/kaushalbalagurusamy/care-app/actions/workflows/ci.yml/badge.svg)](https://github.com/kaushalbalagurusamy/care-app/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 CARE App is an interactive assessment and education platform developed for **Dr. Amy Banks, MD** (author of *Wired to Connect* and pioneer of Relational-Cultural Theory relational neuroscience) and engineered for the **Relational-Cultural Theory (RCT) 50th Anniversary Conference** in October, delivering relational neuroscience evaluations and training to thousands of students.
 
 The platform integrates the **C.A.R.E.** neurological framework (**C**alm - Smart Vagus Nerve, **A**ccept - Dorsal Anterior Cingulate Cortex, **R**esonate - Mirror Neuron System, **E**nergize - Dopamine Reward Pathway) within a 100% native iOS/iPadOS SwiftUI application paired with an asynchronous Python FastAPI backend powered by Nvidia NeMo Guardrails, PostgreSQL `pgvector`, and Google Gemini.
@@ -14,12 +17,14 @@ care-app/
 │   ├── CAREApp/              # Application source files (CAREApp.swift, ContentView.swift)
 │   └── CAREApp.xcodeproj/    # Xcode project workspace configuration
 ├── backend/                  # Asynchronous Python FastAPI + NeMo Guardrails + pgvector
+│   ├── Dockerfile            # Multi-stage Python 3.11-slim container runtime
 │   ├── main.py               # Core ASGI application entrypoint & health endpoints
 │   ├── requirements.txt      # Python dependencies (fastapi, uvicorn, asyncpg, pgvector, etc.)
 │   └── venv/                 # Python 3.13 virtual environment (managed by uv)
 ├── docs/                     # System architecture & decision records
 │   ├── ARCHITECTURE.md       # High-level architecture overview & data flow
 │   └── adr/                  # Architectural Decision Records (ADRs 0001 - 0008)
+├── docker-compose.yml        # Orchestrator: FastAPI API + PostgreSQL 16 pgvector
 ├── .mcp.json                 # Project-level Model Context Protocol (MCP) configuration
 └── AGENTS.md                 # Single source of truth for AI agents operating in workspace
 ```
@@ -88,14 +93,22 @@ care-app/
 * **Node.js v20+** / `npx`
 * **PostgreSQL 16** with `pgvector` extension
 
-### 1. Running the FastAPI Backend
+### 1. Running the Backend & pgvector Database
 
+#### Option A: Docker Compose (Recommended)
+Spins up the FastAPI backend and a pre-configured PostgreSQL 16 + `pgvector` container with a single command:
+```bash
+docker compose up --build
+```
+Health Check: `curl http://localhost:8000/health`
+
+#### Option B: Local Python Environment
 ```bash
 cd backend
-source venv/bin/activate
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
-
 Health Check: `curl http://localhost:8000/health`
 
 ### 2. Building & Launching the Native iOS Client
