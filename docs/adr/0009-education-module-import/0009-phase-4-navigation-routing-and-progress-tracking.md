@@ -13,7 +13,7 @@ Phase 4 wires the Education screens into the app's root navigation stack, connec
 ### Architectural Deliverables
 1. **`AppRoute` Navigation Cases (`Navigation/AppRouter.swift`)**:
    * `.education`: Navigates to `EducationTopicsView`.
-   * `.educationDetail(EducationTopic)`: Navigates to `TopicDetailView(topic:)`.
+   * `.educationDetail(topic: EducationTopic)`: Navigates to `TopicDetailView(topic:)`.
 2. **Homepage Dashboard Entry Card (`Views/HomeView.swift`)**:
    * Wire the existing **"Education / Relational Theory"** dashboard widget to push `.education` onto the navigation stack.
 3. **`EducationProgressRepositoryProtocol` (`Repositories/EducationProgressRepositoryProtocol.swift`)**:
@@ -26,16 +26,19 @@ Phase 4 wires the Education screens into the app's root navigation stack, connec
 
 | Test ID | Test Type | Target Scope | Preconditions (Arrange) | Execution (Act) | Acceptance Criteria & Invariants (Assert) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`TEST-EDN-01`** | Nav | Home to Education Hub Route | AppRouter at root | `router.navigate(to: .education)` | `router.path` contains `.education` route. |
-| **`TEST-EDN-02`** | Nav | Education Hub to Topic Detail | AppRouter at `.education` | `router.navigate(to: .educationDetail(topic))` | `router.path` contains detail route with target topic. |
-| **`TEST-EDN-03`** | Nav | Deep Link & Pop to Root | Deep inside detail view | `router.popToRoot()` | Resets path to root `HomeView` with 0 memory leaks. |
-| **`TEST-EDN-04`** | Nav | HeaderNavBar Chart & Profile | Inside Education screen | Tap Chart / Profile | Correctly opens Past Results or Storage Settings modal. |
-| **`TEST-EDP-01`** | Progress | Mark Topic Complete | Topic unread | `repo.markTopicCompleted(topicId)` | Repository reflects completed status and emits update. |
-| **`TEST-EDP-02`** | Progress | Persistence & Reset | 3 topics completed | `repo.resetProgress()` | All progress cleared to unread state. |
+| **`TEST-EDN-01`** | Nav / Routing | Home Dashboard $\to$ Education Hub | AppRouter at `.home` | Tap "Education" dashboard action card | `router.path.count == 1` and active route equals `.education`. |
+| **`TEST-EDN-02`** | Nav / Routing | Education Hub $\to$ Topic Detail | AppRouter at `.education` | Tap Topic 0 (RCT) | `router.path.count == 2` and active route equals `.educationDetail(topic: rctTopic)`. |
+| **`TEST-EDN-03`** | Nav / NavigationBar | Standardized Top Bar Actions | Inside `TopicDetailView` | Tap Back, Home, Chart, Profile | Back pops 1 level; Home pops to root; Chart navigates to Past Results; Profile opens Storage Settings modal. |
+| **`TEST-EDP-01`** | Progress / Persistence | Mark Topic as Read | Unread topic in `EducationProgressRepository` | Call `markTopicCompleted(slug:)` | Topic is marked completed; persistent store is updated; Hub displays green checkmark badge. |
+| **`TEST-EDP-02`** | Progress / Erasure | Right-to-Erasure Full Purge | 6 completed topics stored | Call `resetProgress()` or trigger Storage Clear All | All topic completion states reset to unread (`completedCount == 0`). |
 
 ---
 
-## 3. Acceptance Criteria
-- [ ] HomeView dashboard "Education" button navigates directly to `EducationTopicsView`.
-- [ ] Topic cards navigate seamlessly to respective detail screens and pop back cleanly.
-- [ ] Passes all 6 navigation and progress test assertions.
+## 3. SDD Verification Loop Harness
+```bash
+xcodebuild test \
+  -project ios/CAREApp.xcodeproj \
+  -scheme CAREApp \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+  -only-testing:CAREAppTests/EducationNavigationTests
+```

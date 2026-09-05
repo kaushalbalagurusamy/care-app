@@ -24,11 +24,16 @@ Phase 5 executes the full testing verification suite, conducts an automated Appl
 
 | Test ID | Test Type | Target Scope | Preconditions (Arrange) | Execution (Act) | Acceptance Criteria & Invariants (Assert) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`TEST-EDUI-01`** | UI Automation | Complete Education Hub Journey | Launch app on simulator | Tap Education widget $\to$ Select RCT topic $\to$ Scroll through 5 Good Things | All sections render; scroll view is responsive; no crashes occur. |
-| **`TEST-EDUI-02`** | UI Automation | VoiceOver Accessibility Audit | App on Education screens | Run `performAccessibilityAudit()` | Passes with 0 contrast or missing accessibility label violations. |
+| **`TEST-EDUI-01`** | UI Automation | E2E Reader User Journey | App booted on iPhone 16 Pro simulator | Home $\to$ Tap Education $\to$ Select RCT $\to$ Scroll to 5 Good Things $\to$ Tap Complete | Verifies element existence at each step; completes journey in $< 15\text{s}$; returns to Hub with checkmark. |
+| **`TEST-EDUI-02`** | UI Automation | VoiceOver Accessibility Audit | App on Education Hub & Detail screens | Call `app.performAccessibilityAudit()` (iOS 17+) | **0 accessibility violations** (passes all contrast, element description, and touch target rules). |
 
 ---
 
-## 3. Acceptance Criteria
-- [ ] 0 compiler warnings or deprecations.
-- [ ] 100% of the planned 26 unit, component, screen, and UI tests pass.
+## 3. SDD Verification Loop Harness
+```bash
+xcodebuild test \
+  -project ios/CAREApp.xcodeproj \
+  -scheme CAREApp \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+  -only-testing:CAREAppUITests/testEducationModuleJourney
+```

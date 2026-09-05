@@ -29,17 +29,21 @@ Phase 3 implements the full screen views corresponding to all 7 Figma frames on 
 
 | Test ID | Test Type | Target Scope | Preconditions (Arrange) | Execution (Act) | Acceptance Criteria & Invariants (Assert) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`TEST-EDS-01`** | Screen | `EducationTopicsView` Render | Render Hub screen | Inspect view tree | Header nav, hero title, and all 6 topic cards exist. |
-| **`TEST-EDS-02`** | Screen | RCT Detail View Tree | Render RCT topic | Inspect view tree | Renders Overview, 4 Founders, 5 Good Things, and Footer button. |
-| **`TEST-EDS-03`** | Screen | Relational Neuroscience Detail | Render Neuroscience topic | Inspect view tree | 4 C.A.R.E. neural pathways and anatomical mappings render. |
-| **`TEST-EDS-04`** | Screen | Neuroplasticity Detail | Render Neuroplasticity topic | Inspect view tree | Synaptic wiring lessons and callout cards render. |
-| **`TEST-EDS-05`** | Screen | Brain in Healthy Relationships Detail | Render Brain in Healthy Relationships | Inspect view tree | Biochemical response sections render accurately. |
-| **`TEST-EDS-06`** | Screen | Power-Over vs Power-With Detail | Render Power dynamics topic | Inspect view tree | Empowerment comparison cards render accurately. |
-| **`TEST-EDS-07`** | Screen | Impact of Relationships Detail | Render Impact topic | Inspect view tree | Physiological health & wellness sections render accurately. |
+| **`TEST-EDS-01`** | Screen / Hierarchy | `EducationTopicsView` (Hub Frame `122:4`) | AppRouter injected, 6 topics loaded | Inspect SwiftUI view hierarchy | Contains `HeaderNavBar`, Hero title "Education", and 6 `EducationTopicCard` views in a `LazyVStack` with 16pt spacing. |
+| **`TEST-EDS-02`** | Screen / Hierarchy | RCT Detail (`156:4`, 1950pt Height) | Load `.relationalCulturalTheory` topic | Render `TopicDetailView` | Contains Overview card, 4 `FounderCard` items, 5 `FiveGoodThingsCard` items, and a "Complete Topic" primary button. |
+| **`TEST-EDS-03`** | Screen / Hierarchy | Neuroscience Detail (`146:5`, 1459pt Height) | Load `.relationalNeuroscience` topic | Render `TopicDetailView` | Contains 4 `NeurobiologyPathwayCard` views representing C, A, R, and E pathways. |
+| **`TEST-EDS-04`** | Screen / Template | Neuroplasticity (`176:2`) | Load `.neuroplasticity` topic | Render `TopicDetailView` | Renders synaptic rewiring narrative, exercise suggestions, and Key Takeaways. |
+| **`TEST-EDS-05`** | Screen / Template | Brain in Healthy Relationships (`176:70`) | Load `.brainHealthyRelationships` topic | Render `TopicDetailView` | Renders oxytocin and autonomic nervous system regulation sections. |
+| **`TEST-EDS-06`** | Screen / Template | Power-Over vs. Power-With (`176:138`) | Load `.powerOverVsPowerWith` topic | Render `TopicDetailView` | Renders comparison grid highlighting control vs. mutual empowerment. |
+| **`TEST-EDS-07`** | Screen / Template | Impact of Relationships (`176:206`) | Load `.impactOfRelationships` topic | Render `TopicDetailView` | Renders cardiovascular health, immune function, and longevity evidence. |
 
 ---
 
-## 3. Acceptance Criteria
-- [ ] 1:1 geometry, typography, and color match for all 7 Figma frames.
-- [ ] Fluid vertical scrolling on iPhone 16 Pro and iPad form factors.
-- [ ] Passes all 7 screen test assertions (`TEST-EDS-01` through `TEST-EDS-07`).
+## 3. SDD Verification Loop Harness
+```bash
+xcodebuild test \
+  -project ios/CAREApp.xcodeproj \
+  -scheme CAREApp \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+  -only-testing:CAREAppTests/EducationScreenTests
+```
