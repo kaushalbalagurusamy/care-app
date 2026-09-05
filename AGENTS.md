@@ -88,6 +88,12 @@ Refer to the [`docs/adr/`](file:///docs/adr/) folder for all binding design choi
 * [`docs/adr/0006-autonomous-observability-governance-and-tdd-loop.md`](file:///docs/adr/0006-autonomous-observability-governance-and-tdd-loop.md) — Autonomous Execution Governance, Observability & TDD Loop
 * [`docs/adr/0007-user-accounts-auth-and-cloud-persistence.md`](file:///docs/adr/0007-user-accounts-auth-and-cloud-persistence.md) — Local-First Encrypted Storage, iCloud Sync & Notification Architecture
 * [`docs/adr/0008-biometric-auth-and-app-lock.md`](file:///docs/adr/0008-biometric-auth-and-app-lock.md) — Biometric Authentication (Face ID / Touch ID) & App Lock Architecture
+* [`docs/adr/0009-education-module-frontend-import.md`](file:///docs/adr/0009-education-module-frontend-import.md) — Psychoeducation & Clinical Neuroscience Module Import Architecture
+  * [`0009-phase-1-education-domain-models-and-data-manifest.md`](file:///docs/adr/0009-education-module-import/0009-phase-1-education-domain-models-and-data-manifest.md) — Phase 1: Education Content Data Models & Bundled Manifest
+  * [`0009-phase-2-reusable-education-components.md`](file:///docs/adr/0009-education-module-import/0009-phase-2-reusable-education-components.md) — Phase 2: Reusable Psychoeducation UI Components
+  * [`0009-phase-3-education-screen-views.md`](file:///docs/adr/0009-education-module-import/0009-phase-3-education-screen-views.md) — Phase 3: Education Screen Views Implementation (7 Frames)
+  * [`0009-phase-4-navigation-routing-and-progress-tracking.md`](file:///docs/adr/0009-education-module-import/0009-phase-4-navigation-routing-and-progress-tracking.md) — Phase 4: Navigation Routing, Dashboard Entry & Progress Tracking
+  * [`0009-phase-5-testing-accessibility-and-verification.md`](file:///docs/adr/0009-education-module-import/0009-phase-5-testing-accessibility-and-verification.md) — Phase 5: Testing, Accessibility Audit & Verification
 
 ---
 
