@@ -43,4 +43,28 @@ public enum AppIcon {
                 .foregroundColor(color)
         }
     }
+    
+    public var identifier: String {
+        switch self {
+        case .home: return "AppIcon_home"
+        case .chart: return "AppIcon_chart"
+        case .profile: return "AppIcon_profile"
+        case .back: return "AppIcon_back"
+        case .info: return "AppIcon_info"
+        case .checkmark: return "AppIcon_checkmark"
+        case .custom(let name): return "AppIcon_\(name)"
+        }
+    }
+    
+    public var accessibilityLabel: String {
+        switch self {
+        case .home: return "Home"
+        case .chart: return "Past Results"
+        case .profile: return "Settings"
+        case .back: return "Back"
+        case .info: return "Information"
+        case .checkmark: return "Completed"
+        case .custom(let name): return name.replacingOccurrences(of: ".", with: " ").capitalized
+        }
+    }
 }

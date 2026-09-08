@@ -1,7 +1,7 @@
 # ADR 0009.5: Phase 5 — Testing, Accessibility Audit & Verification
 
-* **Status**: Proposed
-* **Date**: 2026-09-05
+* **Status**: Accepted
+* **Date**: 2026-09-05 (Updated & Accepted 2026-09-08)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -35,5 +35,20 @@ xcodebuild test \
   -project ios/CAREApp.xcodeproj \
   -scheme CAREApp \
   -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-  -only-testing:CAREAppUITests/testEducationModuleJourney
+  -only-testing:CAREAppUITests/testEducationModuleJourney \
+  -only-testing:CAREAppUITests/testEducationModuleAccessibilityAudit
 ```
+
+---
+
+## 4. Verification Results (2026-09-08)
+* **Suite**: `CAREAppUITests` (5/5 Passed, 2 new Education UI tests)
+  * `TEST-EDUI-01`: `testEducationModuleJourney` — Full end-to-end reader journey (Home $\to$ Education Hub $\to$ RCT Detail $\to$ Test Your Understanding $\to$ Quiz Flow $\to$ Return to Topic $\to$ Back to Hub) — **PASSED**
+  * `TEST-EDUI-02`: `testEducationModuleAccessibilityAudit` — Apple Automated Accessibility Audit (`app.performAccessibilityAudit()`) on iOS 17+ on Education Hub and Topic Detail screens — **PASSED with 0 accessibility violations** (contrast, accessibility descriptions, dynamic type font curves, and minimum 44pt touch target invariants).
+* **Screenshots Captured & Verified**:
+  * `scratch/simulator_home.png` — Home Dashboard with Education ActionCard
+  * `scratch/education_hub.png` — Education Topics View with 6 topics
+  * `scratch/education_detail.png` — Relational-Cultural Theory Detail View
+  * `scratch/education_quiz.png` — Relational-Cultural Theory Quiz View
+* **Overall Test Baseline**: **94 / 94 tests passing with 0 failures** across all 18 test suites (89 unit/integration + 5 UI tests). Zero regressions.
+

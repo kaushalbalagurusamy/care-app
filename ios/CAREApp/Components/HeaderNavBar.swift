@@ -162,6 +162,9 @@ public struct CircularNavIconButton: View {
         }
         .buttonStyle(.plain)
         .contentShape(Circle())
+        .accessibilityIdentifier(icon.identifier)
+        .accessibilityLabel(icon.accessibilityLabel)
+        .accessibilityAddTraits(.isButton)
     }
 }
 
