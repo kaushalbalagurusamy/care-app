@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Topic Detail View (Figma Frames 12–17: Polymorphic Template)
 public struct TopicDetailView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     
     public let topic: EducationTopic
     public let onTakeQuiz: (() -> Void)?
@@ -70,6 +71,9 @@ public struct TopicDetailView: View {
         .careAppBackground()
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .task {
+            try? await appEnvironment?.educationRepo.markTopicCompleted(slug: topic.slug)
+        }
     }
     
     // MARK: - Section Payload Renderer

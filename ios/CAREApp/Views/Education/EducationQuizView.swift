@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Education Quiz View (Figma Frame 18: 201:4)
 public struct EducationQuizView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     
     public let topic: EducationTopic
     public let onReturn: (() -> Void)?
@@ -171,6 +172,11 @@ public struct EducationQuizView: View {
             hasSubmitted = true
         }
         let passed = (letter == topic.quiz.correctOptionLetter)
+        if let appEnvironment = appEnvironment {
+            Task {
+                try? await appEnvironment.educationRepo.recordQuizResult(slug: topic.slug, passed: passed)
+            }
+        }
         onCompleteQuiz?(passed)
     }
 }

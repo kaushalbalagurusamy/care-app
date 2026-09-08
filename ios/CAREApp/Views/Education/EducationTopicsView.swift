@@ -3,12 +3,15 @@ import SwiftUI
 // MARK: - Education Topics Hub View (Figma Frame 11: 122:4)
 public struct EducationTopicsView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     
     public let topics: [EducationTopic]
     public let completedTopicSlugs: Set<EducationTopicSlug>
     public let onSelectTopic: ((EducationTopic) -> Void)?
     public let onBack: (() -> Void)?
     public let onHome: (() -> Void)?
+    
+    @State private var persistedCompletedSlugs: Set<EducationTopicSlug> = []
     
     public init(
         topics: [EducationTopic]? = nil,
@@ -26,6 +29,10 @@ public struct EducationTopicsView: View {
         self.onSelectTopic = onSelectTopic
         self.onBack = onBack
         self.onHome = onHome
+    }
+    
+    private var effectiveCompletedSlugs: Set<EducationTopicSlug> {
+        completedTopicSlugs.union(persistedCompletedSlugs)
     }
     
     public var body: some View {
@@ -59,7 +66,7 @@ public struct EducationTopicsView: View {
                     // Topics Cards List
                     LazyVStack(spacing: 14) {
                         ForEach(topics) { topic in
-                            let isCompleted = completedTopicSlugs.contains(topic.slug)
+                            let isCompleted = effectiveCompletedSlugs.contains(topic.slug)
                             EducationTopicCard(
                                 topic: topic,
                                 isCompleted: isCompleted,
@@ -82,6 +89,16 @@ public struct EducationTopicsView: View {
         .careAppBackground()
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .task {
+            await loadProgress()
+        }
+    }
+    
+    private func loadProgress() async {
+        guard let appEnvironment = appEnvironment else { return }
+        if let map = try? await appEnvironment.educationRepo.fetchAllProgress() {
+            persistedCompletedSlugs = Set(map.values.filter { $0.isCompleted }.map { $0.slug })
+        }
     }
 }
 

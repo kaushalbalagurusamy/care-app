@@ -21,6 +21,9 @@
 		77000073EDUDETAILVW00002 /* TopicDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000072EDUDETAILVW00001 /* TopicDetailView.swift */; };
 		77000075EDUQUIZVW0000002 /* EducationQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000074EDUQUIZVW0000001 /* EducationQuizView.swift */; };
 		77000077EDUSCRNTEST00002 /* EducationScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000076EDUSCRNTEST00001 /* EducationScreenTests.swift */; };
+		77000081EDUPROGREP00002 /* EducationProgressRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000080EDUPROGREP00001 /* EducationProgressRepositoryProtocol.swift */; };
+		77000083EDUNAVTEST00002 /* EducationNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000082EDUNAVTEST00001 /* EducationNavigationTests.swift */; };
+		77000085EDUPRGTEST00002 /* EducationProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000084EDUPRGTEST00001 /* EducationProgressTests.swift */; };
 		77000041BIOAUTH000000002 /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000040BIOAUTH000000001 /* BiometricAuthService.swift */; };
 		77000043LOCKMGR000000002 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000042LOCKMGR000000001 /* AppLockManager.swift */; };
 		77000045LOCKVIEW000000002 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000044LOCKVIEW000000001 /* AppLockView.swift */; };
@@ -104,6 +107,9 @@
 		77000072EDUDETAILVW00001 /* TopicDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TopicDetailView.swift"; sourceTree = "<group>"; };
 		77000074EDUQUIZVW0000001 /* EducationQuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationQuizView.swift"; sourceTree = "<group>"; };
 		77000076EDUSCRNTEST00001 /* EducationScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationScreenTests.swift"; sourceTree = "<group>"; };
+		77000080EDUPROGREP00001 /* EducationProgressRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationProgressRepositoryProtocol.swift"; sourceTree = "<group>"; };
+		77000082EDUNAVTEST00001 /* EducationNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationNavigationTests.swift"; sourceTree = "<group>"; };
+		77000084EDUPRGTEST00001 /* EducationProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationProgressTests.swift"; sourceTree = "<group>"; };
 		77000040BIOAUTH000000001 /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BiometricAuthService.swift"; sourceTree = "<group>"; };
 		77000042LOCKMGR000000001 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockManager.swift"; sourceTree = "<group>"; };
 		77000044LOCKVIEW000000001 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockView.swift"; sourceTree = "<group>"; };
@@ -265,6 +271,8 @@
 				77000054EDUMODTEST000001 /* EducationModelTests.swift */,
 				7700006CEDUCOMPTEST0001 /* EducationComponentTests.swift */,
 				77000076EDUSCRNTEST00001 /* EducationScreenTests.swift */,
+				77000082EDUNAVTEST00001 /* EducationNavigationTests.swift */,
+				77000084EDUPRGTEST00001 /* EducationProgressTests.swift */,
 			);
 			path = EducationTests;
 			sourceTree = "<group>";
@@ -303,6 +311,7 @@
 				77000003CONTPROTO0000001 /* ContactsRepositoryProtocol.swift */,
 				77000005ASSEPROTO0000001 /* AssessmentRepositoryProtocol.swift */,
 				77000007MOCKREPO0000001 /* MockRepositories.swift */,
+				77000080EDUPROGREP00001 /* EducationProgressRepositoryProtocol.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -581,6 +590,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000083EDUNAVTEST00002 /* EducationNavigationTests.swift in Sources */,
+				77000085EDUPRGTEST00002 /* EducationProgressTests.swift in Sources */,
 				77000077EDUSCRNTEST00002 /* EducationScreenTests.swift in Sources */,
 				7700006DEDUCOMPTEST0002 /* EducationComponentTests.swift in Sources */,
 				77000055EDUMODTEST000002 /* EducationModelTests.swift in Sources */,
@@ -606,6 +617,7 @@
 				77000071EDUTOPICSVW00002 /* EducationTopicsView.swift in Sources */,
 				77000073EDUDETAILVW00002 /* TopicDetailView.swift in Sources */,
 				77000075EDUQUIZVW0000002 /* EducationQuizView.swift in Sources */,
+				77000081EDUPROGREP00002 /* EducationProgressRepositoryProtocol.swift in Sources */,
 				77000061EDUTOPCARD00002 /* EducationTopicCard.swift in Sources */,
 				77000063EDUFNDRCARD0002 /* FounderCard.swift in Sources */,
 				77000065EDUFGTMCARD0002 /* FiveGoodThingsCard.swift in Sources */,

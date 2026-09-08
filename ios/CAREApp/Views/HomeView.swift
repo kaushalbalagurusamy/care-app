@@ -2,26 +2,22 @@ import SwiftUI
 
 // MARK: - Home Alert Items
 enum HomeAlertItem: Identifiable {
-    case education
     case exercises
     
     var id: String {
         switch self {
-        case .education: return "education"
         case .exercises: return "exercises"
         }
     }
     
     var title: String {
         switch self {
-        case .education: return "Education Module"
         case .exercises: return "Exercises Module"
         }
     }
     
     var message: String {
         switch self {
-        case .education: return "The interactive wellness education modules are scheduled for the next release."
         case .exercises: return "Daily relational exercises and co-regulation tools will be available soon."
         }
     }
@@ -57,7 +53,7 @@ public struct HomeView: View {
                     iconName: "icon_book_open",
                     backgroundImageName: "card_education_bg",
                     action: {
-                        activeAlert = .education
+                        router.navigate(to: .education)
                     }
                 )
                 

@@ -1,7 +1,7 @@
 # ADR 0009.4: Phase 4 — Navigation Routing, Dashboard Entry & Progress Tracking
 
-* **Status**: Proposed
-* **Date**: 2026-09-05
+* **Status**: Accepted
+* **Date**: 2026-09-05 (Updated & Accepted 2026-09-08)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -20,6 +20,7 @@ Phase 4 wires the Education screens into the app's root navigation stack, connec
 3. **`EducationProgressRepositoryProtocol` (`Repositories/EducationProgressRepositoryProtocol.swift`)**:
    * Tracks completed reading topics and passed quizzes in local storage so users can see visual checkmarks on topics they have finished.
    * `MockEducationProgressRepository` for deterministic preview and unit tests.
+   * `LocalEducationProgressRepository` for UserDefaults-backed persistence.
 
 ---
 
@@ -44,5 +45,20 @@ xcodebuild test \
   -project ios/CAREApp.xcodeproj \
   -scheme CAREApp \
   -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-  -only-testing:CAREAppTests/EducationNavigationTests
+  -only-testing:CAREAppTests/EducationNavigationTests \
+  -only-testing:CAREAppTests/EducationProgressTests
 ```
+
+---
+
+## 4. Verification Results (2026-09-08)
+* **Suite 1**: `EducationNavigationTests` (4/4 Passed)
+  * `TEST-EDN-01`: Home Dashboard to Education Hub navigation — **PASSED**
+  * `TEST-EDN-02`: Education Hub to Topic Detail navigation — **PASSED**
+  * `TEST-EDN-03`: Standardized Top Bar Actions operate router seamlessly — **PASSED**
+  * `TEST-EDN-04`: Topic Detail to Quiz and return button flow — **PASSED**
+* **Suite 2**: `EducationProgressTests` (3/3 Passed)
+  * `TEST-EDP-01`: Mark topic as completed updates repository and count — **PASSED**
+  * `TEST-EDP-02`: Right-to-Erasure full purge resets all progress — **PASSED**
+  * `TEST-EDP-03`: Record quiz success updates quizPassed and completed state — **PASSED**
+* **Project Total**: **92 / 92 tests passing** (89 unit/integration + 3 UI). Zero regressions across all 18 test suites.

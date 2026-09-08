@@ -64,6 +64,7 @@ public struct StorageSettingsView: View {
                 Button("Delete All History", role: .destructive) {
                     Task {
                         try? await appEnvironment.assessmentRepo.clearAllHistory()
+                        try? await appEnvironment.educationRepo.resetProgress()
                         await refreshStorageMetrics()
                     }
                 }
