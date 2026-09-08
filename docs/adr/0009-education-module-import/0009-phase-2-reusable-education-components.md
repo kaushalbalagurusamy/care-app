@@ -1,7 +1,7 @@
 # ADR 0009.2: Phase 2 — Reusable Psychoeducation UI Components
 
-* **Status**: Proposed
-* **Date**: 2026-09-05
+* **Status**: Accepted
+* **Date**: 2026-09-08
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -25,6 +25,9 @@ Phase 2 builds modular, reusable atomic components extracted from Figma nodes `1
 6. **`QuizOptionCard` (`Components/Education/QuizOptionCard.swift`)**:
    * Multiple-choice answer pill extracted from Node `201:36`.
    * Displays circular letter badge ("A", "B", "C", "D"), explanation copy, and interactive feedback styling (unselected, selected, correct `#5D9C59`, incorrect `#E07A5F`).
+
+> [!IMPORTANT]
+> **Top Bar Component Policy**: The raw `header-nav` vector group present in the Figma Page 2 nodes is explicitly bypassed. The Education module directly reuses the app-wide standardized [`HeaderNavBar`](file:///Users/kaushal/Documents/Github/care-app/ios/CAREApp/Components/HeaderNavBar.swift) (featuring normalized optical keyline icons, 44pt touch targets, and environment routing). Zero new top bar components are created.
 
 ---
 
@@ -91,3 +94,11 @@ xcodebuild test \
   -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
   -only-testing:CAREAppTests/EducationComponentTests
 ```
+
+### Verification Outcome (2026-09-08)
+* **Target Device**: iPhone 16 Pro (Simulator, iOS 17+)
+* **Component Test Suite**: 6 / 6 tests passing (0 failures, 0 regressions)
+* **Global Test Suite**: 77 / 77 tests passing across 15 suites
+* **Apple HIG Compliance**: All interactive touch targets strictly conform to $\ge 44\text{pt}$ minimum.
+* **Accessibility**: VoiceOver elements configured with semantic labels, hints, and traits.
+

@@ -10,6 +10,13 @@
 		77000051EDUTOPIC00000002 /* EducationTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000050EDUTOPIC00000001 /* EducationTopic.swift */; };
 		77000053EDUMANIFEST00002 /* EducationManifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 77000052EDUMANIFEST00001 /* EducationManifest.json */; };
 		77000055EDUMODTEST000002 /* EducationModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000054EDUMODTEST000001 /* EducationModelTests.swift */; };
+		77000061EDUTOPCARD00002 /* EducationTopicCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000060EDUTOPCARD00001 /* EducationTopicCard.swift */; };
+		77000063EDUFNDRCARD0002 /* FounderCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000062EDUFNDRCARD0001 /* FounderCard.swift */; };
+		77000065EDUFGTMCARD0002 /* FiveGoodThingsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000064EDUFGTMCARD0001 /* FiveGoodThingsCard.swift */; };
+		77000067EDUNPWYCARD0002 /* NeurobiologyPathwayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000066EDUNPWYCARD0001 /* NeurobiologyPathwayCard.swift */; };
+		77000069EDUKTKWCARD0002 /* KeyTakeawaysCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000068EDUKTKWCARD0001 /* KeyTakeawaysCard.swift */; };
+		7700006BEDUQOPTCARD0002 /* QuizOptionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7700006AEDUQOPTCARD0001 /* QuizOptionCard.swift */; };
+		7700006DEDUCOMPTEST0002 /* EducationComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7700006CEDUCOMPTEST0001 /* EducationComponentTests.swift */; };
 		77000041BIOAUTH000000002 /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000040BIOAUTH000000001 /* BiometricAuthService.swift */; };
 		77000043LOCKMGR000000002 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000042LOCKMGR000000001 /* AppLockManager.swift */; };
 		77000045LOCKVIEW000000002 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000044LOCKVIEW000000001 /* AppLockView.swift */; };
@@ -82,6 +89,13 @@
 		77000050EDUTOPIC00000001 /* EducationTopic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationTopic.swift"; sourceTree = "<group>"; };
 		77000052EDUMANIFEST00001 /* EducationManifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EducationManifest.json"; sourceTree = "<group>"; };
 		77000054EDUMODTEST000001 /* EducationModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationModelTests.swift"; sourceTree = "<group>"; };
+		77000060EDUTOPCARD00001 /* EducationTopicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationTopicCard.swift"; sourceTree = "<group>"; };
+		77000062EDUFNDRCARD0001 /* FounderCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FounderCard.swift"; sourceTree = "<group>"; };
+		77000064EDUFGTMCARD0001 /* FiveGoodThingsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FiveGoodThingsCard.swift"; sourceTree = "<group>"; };
+		77000066EDUNPWYCARD0001 /* NeurobiologyPathwayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NeurobiologyPathwayCard.swift"; sourceTree = "<group>"; };
+		77000068EDUKTKWCARD0001 /* KeyTakeawaysCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyTakeawaysCard.swift"; sourceTree = "<group>"; };
+		7700006AEDUQOPTCARD0001 /* QuizOptionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuizOptionCard.swift"; sourceTree = "<group>"; };
+		7700006CEDUCOMPTEST0001 /* EducationComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationComponentTests.swift"; sourceTree = "<group>"; };
 		77000040BIOAUTH000000001 /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BiometricAuthService.swift"; sourceTree = "<group>"; };
 		77000042LOCKMGR000000001 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockManager.swift"; sourceTree = "<group>"; };
 		77000044LOCKVIEW000000001 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockView.swift"; sourceTree = "<group>"; };
@@ -216,6 +230,19 @@
 			path = Education;
 			sourceTree = "<group>";
 		};
+		7700006EEDUCOMPGRP00001 /* Education */ = {
+			isa = PBXGroup;
+			children = (
+				77000060EDUTOPCARD00001 /* EducationTopicCard.swift */,
+				77000062EDUFNDRCARD0001 /* FounderCard.swift */,
+				77000064EDUFGTMCARD0001 /* FiveGoodThingsCard.swift */,
+				77000066EDUNPWYCARD0001 /* NeurobiologyPathwayCard.swift */,
+				77000068EDUKTKWCARD0001 /* KeyTakeawaysCard.swift */,
+				7700006AEDUQOPTCARD0001 /* QuizOptionCard.swift */,
+			);
+			path = Education;
+			sourceTree = "<group>";
+		};
 		77000057RESGROUP00000001 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				77000054EDUMODTEST000001 /* EducationModelTests.swift */,
+				7700006CEDUCOMPTEST0001 /* EducationComponentTests.swift */,
 			);
 			path = EducationTests;
 			sourceTree = "<group>";
@@ -301,6 +329,7 @@
 		22C34CE04453256C0700000001 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				7700006EEDUCOMPGRP00001 /* Education */,
 				22000002APPICON00000001 /* AppIcon.swift */,
 				22EAD93550F185461E00000001 /* BubbleCardContainer.swift */,
 				22B95E93EAC5E189A400000001 /* Buttons.swift */,
@@ -532,6 +561,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7700006DEDUCOMPTEST0002 /* EducationComponentTests.swift in Sources */,
 				77000055EDUMODTEST000002 /* EducationModelTests.swift in Sources */,
 				77000047BIOTESTS000000002 /* BiometricAuthTests.swift in Sources */,
 				77000036BENCHTESTS0000002 /* StorageBenchmarkTests.swift in Sources */,
@@ -552,6 +582,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000061EDUTOPCARD00002 /* EducationTopicCard.swift in Sources */,
+				77000063EDUFNDRCARD0002 /* FounderCard.swift in Sources */,
+				77000065EDUFGTMCARD0002 /* FiveGoodThingsCard.swift in Sources */,
+				77000067EDUNPWYCARD0002 /* NeurobiologyPathwayCard.swift in Sources */,
+				77000069EDUKTKWCARD0002 /* KeyTakeawaysCard.swift in Sources */,
+				7700006BEDUQOPTCARD0002 /* QuizOptionCard.swift in Sources */,
 				77000051EDUTOPIC00000002 /* EducationTopic.swift in Sources */,
 				77000041BIOAUTH000000002 /* BiometricAuthService.swift in Sources */,
 				77000043LOCKMGR000000002 /* AppLockManager.swift in Sources */,
