@@ -14,6 +14,8 @@ public enum AppRoute: Hashable {
     case surveyResults
     case surveyResultsExpanded
     case pastResults
+    case educationDetail(topic: EducationTopic)
+    case educationQuiz(topic: EducationTopic)
 }
 
 // MARK: - Swift 6 Observable Application Router

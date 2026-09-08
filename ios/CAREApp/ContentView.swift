@@ -135,7 +135,16 @@ struct ContentView: View {
         case .pastResults:
             PastResultsView(router: router)
             
-        case .education, .exercises:
+        case .education:
+            EducationTopicsView()
+            
+        case .educationDetail(let topic):
+            TopicDetailView(topic: topic)
+            
+        case .educationQuiz(let topic):
+            EducationQuizView(topic: topic)
+            
+        case .exercises:
             HomeView(router: router)
         }
     }
