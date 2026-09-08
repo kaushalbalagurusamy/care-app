@@ -106,16 +106,30 @@ final class CAREAppUITests: XCTestCase {
         let hubScreenshot = XCUIScreen.main.screenshot()
         try? hubScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_hub.png"))
         
+        // 3a. Tap Relational Neuroscience to verify button without emoji/chevron
+        let neuroCard = app.staticTexts["Relational Neuroscience"]
+        if neuroCard.waitForExistence(timeout: 4.0) {
+            neuroCard.tap()
+            _ = app.staticTexts["Relational Neuroscience"].waitForExistence(timeout: 4.0)
+            let neuroScreenshot = XCUIScreen.main.screenshot()
+            try? neuroScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_neuroscience.png"))
+            let backBtn = app.buttons["AppIcon_back"]
+            if backBtn.waitForExistence(timeout: 3.0) {
+                backBtn.tap()
+            }
+        }
+        
         // 4. Tap Relational-Cultural Theory Topic Card
         let rctCard = app.staticTexts["Relational-Cultural Theory"]
         XCTAssertTrue(rctCard.waitForExistence(timeout: 4.0))
         rctCard.tap()
         
-        // 5. Verify RCT Topic Detail View
+        // 5. Verify RCT Topic Detail View and Founders Grid
         let detailTitle = app.staticTexts["Relational-Cultural Theory"]
         XCTAssertTrue(detailTitle.waitForExistence(timeout: 4.0))
+        app.swipeUp()
         let detailScreenshot = XCUIScreen.main.screenshot()
-        try? detailScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_detail.png"))
+        try? detailScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_founders.png"))
         
         // 6. Scroll down to and tap "Test Your Understanding"
         let quizBtn = app.buttons["Test Your Understanding"]

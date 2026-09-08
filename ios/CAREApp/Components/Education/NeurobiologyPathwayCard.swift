@@ -73,26 +73,18 @@ public struct NeurobiologyPathwayCard: View {
                     }
                 }
             }) {
-                HStack(spacing: 8) {
-                    Image(systemName: "figure.mind.and.body")
-                        .font(.system(size: 14, weight: .semibold))
-                    
-                    Text(isExerciseExpanded ? "Hide Exercises" : "Strengthening Exercises")
-                        .font(Theme.Typography.poppins(.semiBold, size: 14))
-                    
-                    Image(systemName: isExerciseExpanded ? "chevron.up" : "chevron.down")
-                        .font(.system(size: 11, weight: .bold))
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .foregroundColor(Theme.Colors.primary)
-                .background(Color.white)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(Theme.Colors.primary, lineWidth: 1.2)
-                )
-                .contentShape(Capsule())
+                Text("Strengthening Exercises")
+                    .font(Theme.Typography.poppins(.semiBold, size: 14))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                    .foregroundColor(Theme.Colors.primary)
+                    .background(Color.white)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Theme.Colors.primary, lineWidth: 1.2)
+                    )
+                    .contentShape(Capsule())
             }
             .buttonStyle(.plain)
             
