@@ -202,7 +202,80 @@ public struct EducationTopic: Identifiable, Codable, Hashable, Sendable {
     public let iconAsset: String
     public let estimatedReadMinutes: Int
     public let sections: [EducationSectionPayload]
-    public let quiz: QuizQuestion
+    public let quizBank: [QuizQuestion]
+    
+    public var quiz: QuizQuestion {
+        quizBank.first ?? QuizQuestion(
+            id: "\(slug.rawValue)-fallback",
+            prompt: "Knowledge check for \(title)",
+            options: [
+                QuizOption(letter: "A", text: "Option A"),
+                QuizOption(letter: "B", text: "Option B"),
+                QuizOption(letter: "C", text: "Option C"),
+                QuizOption(letter: "D", text: "Option D")
+            ],
+            correctOptionLetter: "A",
+            rationale: "Rationale pending"
+        )
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, slug, title, subtitle, iconAsset, estimatedReadMinutes, sections, quizBank, quiz
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.slug = try container.decode(EducationTopicSlug.self, forKey: .slug)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.subtitle = try container.decode(String.self, forKey: .subtitle)
+        self.iconAsset = try container.decode(String.self, forKey: .iconAsset)
+        self.estimatedReadMinutes = try container.decode(Int.self, forKey: .estimatedReadMinutes)
+        self.sections = try container.decode([EducationSectionPayload].self, forKey: .sections)
+        
+        if let bank = try container.decodeIfPresent([QuizQuestion].self, forKey: .quizBank), !bank.isEmpty {
+            self.quizBank = bank
+        } else if let single = try container.decodeIfPresent(QuizQuestion.self, forKey: .quiz) {
+            self.quizBank = [single]
+        } else {
+            self.quizBank = []
+        }
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(slug, forKey: .slug)
+        try container.encode(title, forKey: .title)
+        try container.encode(subtitle, forKey: .subtitle)
+        try container.encode(iconAsset, forKey: .iconAsset)
+        try container.encode(estimatedReadMinutes, forKey: .estimatedReadMinutes)
+        try container.encode(sections, forKey: .sections)
+        try container.encode(quizBank, forKey: .quizBank)
+        if let first = quizBank.first {
+            try container.encode(first, forKey: .quiz)
+        }
+    }
+    
+    public init(
+        id: String,
+        slug: EducationTopicSlug,
+        title: String,
+        subtitle: String,
+        iconAsset: String,
+        estimatedReadMinutes: Int,
+        sections: [EducationSectionPayload],
+        quizBank: [QuizQuestion]
+    ) {
+        self.id = id
+        self.slug = slug
+        self.title = title
+        self.subtitle = subtitle
+        self.iconAsset = iconAsset
+        self.estimatedReadMinutes = estimatedReadMinutes
+        self.sections = sections
+        self.quizBank = quizBank
+    }
     
     public init(
         id: String,
@@ -221,7 +294,7 @@ public struct EducationTopic: Identifiable, Codable, Hashable, Sendable {
         self.iconAsset = iconAsset
         self.estimatedReadMinutes = estimatedReadMinutes
         self.sections = sections
-        self.quiz = quiz
+        self.quizBank = [quiz]
     }
 }
 

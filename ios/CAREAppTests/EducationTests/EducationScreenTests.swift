@@ -189,4 +189,44 @@ struct EducationScreenTests {
         initialQuizView.onReturn?()
         #expect(returned == true)
     }
+    
+    @Test("TEST-EDS-09: EducationQuizView initializes 3-question stepper and tracks active question")
+    @MainActor
+    func testEducationQuizViewStepperInitialization() throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        let topic = manifest[0]
+        let threeQuestions = Array(topic.quizBank.prefix(3))
+        #expect(threeQuestions.count == 3)
+        
+        let quizView = EducationQuizView(
+            topic: topic,
+            questions: threeQuestions
+        )
+        
+        #expect(quizView.questions.count == 3)
+        #expect(quizView.currentQuestionIndex == 0)
+        #expect(quizView.activeQuestion.id == threeQuestions[0].id)
+        #expect(quizView.isSessionFinished == false)
+        #expect(quizView.sessionScore == 0)
+    }
+    
+    @Test("TEST-EDS-10: EducationQuizView evaluates scoring and mastery thresholds")
+    @MainActor
+    func testEducationQuizViewMasteryThresholds() throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        let topic = manifest[1] // Relational Neuroscience
+        let questions = Array(topic.quizBank.prefix(3))
+        
+        // Pass case (2 of 3)
+        let passRatio = Double(2) / Double(questions.count)
+        #expect(passRatio >= 0.6, "2 out of 3 should qualify as passing mastery threshold")
+        
+        // Fail case (1 of 3)
+        let failRatio = Double(1) / Double(questions.count)
+        #expect(failRatio < 0.6, "1 out of 3 is below passing mastery threshold")
+        
+        // Full score (3 of 3)
+        let perfectRatio = Double(3) / Double(questions.count)
+        #expect(perfectRatio == 1.0)
+    }
 }

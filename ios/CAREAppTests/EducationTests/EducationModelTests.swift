@@ -116,4 +116,39 @@ struct EducationModelTests {
             #expect(optionLetters == ["A", "B", "C", "D"], "Quiz options must be labeled A, B, C, D in order for \(topic.slug)")
         }
     }
+    
+    @Test("TEST-EDM-06: 60-question clinical quiz bank has 10 valid questions per topic")
+    func testSixtyQuestionQuizBankIntegrity() throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        #expect(manifest.count == 6)
+        
+        var totalQuestions = 0
+        var allQuestionIds = Set<String>()
+        
+        for topic in manifest {
+            let bank = topic.quizBank
+            #expect(bank.count == 10, "Topic \(topic.slug) must have exactly 10 questions in quizBank (actual: \(bank.count))")
+            totalQuestions += bank.count
+            
+            for (idx, q) in bank.enumerated() {
+                #expect(!q.id.isEmpty, "Question at index \(idx) in \(topic.slug) has empty id")
+                #expect(!allQuestionIds.contains(q.id), "Duplicate question id detected: \(q.id)")
+                allQuestionIds.insert(q.id)
+                
+                #expect(!q.prompt.isEmpty, "Question \(q.id) has empty prompt")
+                #expect(q.options.count == 4, "Question \(q.id) must have 4 options")
+                #expect(["A", "B", "C", "D"].contains(q.correctOptionLetter), "Question \(q.id) has invalid correct letter \(q.correctOptionLetter)")
+                #expect(!q.rationale.isEmpty, "Question \(q.id) has empty rationale")
+                
+                let letters = q.options.map(\.letter)
+                #expect(letters == ["A", "B", "C", "D"], "Question \(q.id) options must be A, B, C, D in order")
+                for opt in q.options {
+                    #expect(!opt.text.isEmpty, "Question \(q.id) option \(opt.letter) text cannot be empty")
+                }
+            }
+        }
+        
+        #expect(totalQuestions == 60, "Global question bank must contain exactly 60 questions")
+        #expect(allQuestionIds.count == 60, "All 60 questions must have unique IDs")
+    }
 }

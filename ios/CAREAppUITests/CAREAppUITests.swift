@@ -132,16 +132,39 @@ final class CAREAppUITests: XCTestCase {
             let quizScreenshot = XCUIScreen.main.screenshot()
             try? quizScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_quiz.png"))
             
-            // Tap Option B
+            // Tap Option B on Question 1
             let optionB = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option B'")).firstMatch
             if optionB.waitForExistence(timeout: 3.0) {
                 optionB.tap()
             }
             
-            // Tap Return to Topic
+            // Advance through 3-question stepper
+            let nextBtn = app.buttons["Next Question"]
+            if nextBtn.waitForExistence(timeout: 2.0) {
+                nextBtn.tap()
+                
+                // Question 2
+                let opt2 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
+                if opt2.waitForExistence(timeout: 2.0) { opt2.tap() }
+                let nextBtn2 = app.buttons["Next Question"]
+                if nextBtn2.waitForExistence(timeout: 2.0) { nextBtn2.tap() }
+                
+                // Question 3
+                let opt3 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
+                if opt3.waitForExistence(timeout: 2.0) { opt3.tap() }
+                let viewResultsBtn = app.buttons["View Results"]
+                if viewResultsBtn.waitForExistence(timeout: 2.0) { viewResultsBtn.tap() }
+            }
+            
+            // Tap Return to Topic from Results or Cancel
             let returnBtn = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Return to'")).firstMatch
             if returnBtn.waitForExistence(timeout: 3.0) {
                 returnBtn.tap()
+            } else {
+                let backBtn = app.buttons["AppIcon_back"]
+                if backBtn.waitForExistence(timeout: 3.0) {
+                    backBtn.tap()
+                }
             }
         }
         

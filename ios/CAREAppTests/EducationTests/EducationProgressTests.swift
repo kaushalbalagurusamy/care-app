@@ -87,4 +87,119 @@ struct EducationProgressTests {
         #expect(failedRecord.quizPassed == false)
         #expect(failedRecord.quizPassedAt == nil)
     }
+    
+    @Test("TEST-EDP-04: Pseudorandom 3-question sampling and used-pool tracking")
+    func testQuizCyclingSamplingAndTracking() async throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        let rct = manifest.first(where: { $0.slug == .relationalCulturalTheory })!
+        let repo = MockEducationProgressRepository()
+        
+        // Draw 1: 3 questions from 10
+        let session1 = try await repo.fetchNextQuizSession(for: rct, count: 3)
+        #expect(session1.questions.count == 3)
+        #expect(session1.wasPoolReset == false)
+        #expect(session1.remainingInPoolAfterSession == 7)
+        
+        let record1 = try await repo.fetchProgress(for: .relationalCulturalTheory)
+        #expect(record1.usedQuestionIds.count == 3)
+        
+        // Draw 2: next 3 questions
+        let session2 = try await repo.fetchNextQuizSession(for: rct, count: 3)
+        #expect(session2.questions.count == 3)
+        #expect(session2.wasPoolReset == false)
+        #expect(session2.remainingInPoolAfterSession == 4)
+        
+        let record2 = try await repo.fetchProgress(for: .relationalCulturalTheory)
+        #expect(record2.usedQuestionIds.count == 6)
+        
+        // Check that session 1 and session 2 questions are mutually exclusive
+        let ids1 = Set(session1.questions.map(\.id))
+        let ids2 = Set(session2.questions.map(\.id))
+        #expect(ids1.intersection(ids2).isEmpty, "Questions in consecutive draws must be disjoint until pool reset")
+    }
+    
+    @Test("TEST-EDP-05: Pool exhaustion triggers automatic freshness reset and returns new sample")
+    func testPoolExhaustionFreshnessReset() async throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        let neuro = manifest.first(where: { $0.slug == .relationalNeuroscience })!
+        let repo = MockEducationProgressRepository()
+        
+        // 3 draws of 3 questions = 9 used, 1 remaining
+        _ = try await repo.fetchNextQuizSession(for: neuro, count: 3)
+        _ = try await repo.fetchNextQuizSession(for: neuro, count: 3)
+        let session3 = try await repo.fetchNextQuizSession(for: neuro, count: 3)
+        #expect(session3.remainingInPoolAfterSession == 1)
+        
+        let record3 = try await repo.fetchProgress(for: .relationalNeuroscience)
+        #expect(record3.usedQuestionIds.count == 9)
+        
+        // Draw 4: requested 3 but only 1 remains -> auto-reset!
+        let session4 = try await repo.fetchNextQuizSession(for: neuro, count: 3)
+        #expect(session4.wasPoolReset == true, "Pool must trigger freshness reset on exhaustion")
+        #expect(session4.questions.count == 3)
+        #expect(session4.remainingInPoolAfterSession == 7)
+        
+        let record4 = try await repo.fetchProgress(for: .relationalNeuroscience)
+        #expect(record4.usedQuestionIds.count == 3)
+    }
+    
+    @Test("TEST-EDP-06: Explicit resetQuizPool clears used questions without wiping completion or best score")
+    func testManualPoolReset() async throws {
+        let repo = MockEducationProgressRepository()
+        
+        try await repo.markTopicCompleted(slug: .neuroplasticity)
+        try await repo.recordQuizSessionResult(
+            slug: .neuroplasticity,
+            questionIds: ["np-q21", "np-q22", "np-q23"],
+            score: 3,
+            totalQuestions: 3
+        )
+        
+        let beforeReset = try await repo.fetchProgress(for: .neuroplasticity)
+        #expect(beforeReset.isCompleted == true)
+        #expect(beforeReset.quizPassed == true)
+        #expect(beforeReset.bestScore == 3)
+        
+        try await repo.resetQuizPool(for: .neuroplasticity)
+        
+        let afterReset = try await repo.fetchProgress(for: .neuroplasticity)
+        #expect(afterReset.usedQuestionIds.isEmpty)
+        #expect(afterReset.isCompleted == true)
+        #expect(afterReset.quizPassed == true)
+        #expect(afterReset.bestScore == 3)
+    }
+    
+    @Test("TEST-EDP-07: recordQuizSessionResult tracks attempts, bestScore, lastScore and marks quizPassed")
+    func testRecordQuizSessionResult() async throws {
+        let repo = MockEducationProgressRepository()
+        
+        // Round 1: Failed (1/3)
+        try await repo.recordQuizSessionResult(
+            slug: .brainHealthyRelationships,
+            questionIds: ["bhr-q31", "bhr-q32", "bhr-q33"],
+            score: 1,
+            totalQuestions: 3
+        )
+        
+        let record1 = try await repo.fetchProgress(for: .brainHealthyRelationships)
+        #expect(record1.quizAttemptsCount == 1)
+        #expect(record1.lastScore == 1)
+        #expect(record1.bestScore == 1)
+        #expect(record1.quizPassed == false)
+        
+        // Round 2: Passed (3/3)
+        try await repo.recordQuizSessionResult(
+            slug: .brainHealthyRelationships,
+            questionIds: ["bhr-q34", "bhr-q35", "bhr-q36"],
+            score: 3,
+            totalQuestions: 3
+        )
+        
+        let record2 = try await repo.fetchProgress(for: .brainHealthyRelationships)
+        #expect(record2.quizAttemptsCount == 2)
+        #expect(record2.lastScore == 3)
+        #expect(record2.bestScore == 3)
+        #expect(record2.quizPassed == true)
+        #expect(record2.isCompleted == true)
+    }
 }
