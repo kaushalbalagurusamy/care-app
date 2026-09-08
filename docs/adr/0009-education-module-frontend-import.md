@@ -1,7 +1,7 @@
 # ADR 0009: Psychoeducation & Clinical Neuroscience Module Import Architecture
 
-* **Status**: Proposed
-* **Date**: 2026-09-05
+* **Status**: Accepted
+* **Date**: 2026-09-05 (Completed & Accepted 2026-09-08)
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
 ---
@@ -47,11 +47,12 @@ Execution is partitioned into 5 self-contained, context-bounded sub-ADRs:
 
 | Sub-ADR | Focus Scope | Key Deliverables & Test Suites | Status |
 | :--- | :--- | :--- | :---: |
-| [`0009.1: Data Models & Manifest`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-1-education-domain-models-and-data-manifest.md) | Models & Content Engine | `EducationTopic`, `FounderProfile`, `FiveGoodThingsItem`, `QuizQuestion`, `EducationManifest.json` (`EducationModelTests`) | **Completed / Verified (5/5 Passing)** |
-| [`0009.2: Atomic Components`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-2-reusable-education-components.md) | Reusable UI Components | `EducationTopicCard`, `FounderCard`, `FiveGoodThingsCard`, `NeurobiologyPathwayCard`, `KeyTakeawaysCard`, `QuizOptionCard` (`EducationComponentTests`) | Proposed |
-| [`0009.3: Screen Views`](file:///docs/adr/0009-education-module-import/0009-phase-3-education-screen-views.md) | 8 Figma Frames | `EducationTopicsView`, `TopicDetailView` (dynamic template for 6 lessons), `EducationQuizView` (`EducationScreenTests`) | Proposed |
-| [`0009.4: Navigation & Progress`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-4-navigation-routing-and-progress-tracking.md) | Routing & Reading State | `AppRoute.education`, `AppRoute.educationDetail(topic)`, `AppRoute.educationQuiz(topic)`, `EducationProgressRepositoryProtocol` (`EducationNavigationTests`, `EducationProgressTests`) | Proposed |
-| [`0009.5: Verification & A11y`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-5-testing-accessibility-and-verification.md) | E2E Tests & Accessibility | Full VoiceOver audit, Dynamic Type scaling, `XCUITest` Education user journeys (`CAREAppUITests`) | Proposed |
+| [`0009.1: Data Models & Manifest`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-1-education-domain-models-and-data-manifest.md) | Models & Content Engine | `EducationTopic`, `FounderProfile`, `FiveGoodThingsItem`, `QuizQuestion`, `EducationManifest.json` (`EducationModelTests`) | **Accepted (5/5 Passing)** |
+| [`0009.2: Atomic Components`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-2-reusable-education-components.md) | Reusable UI Components | `EducationTopicCard`, `FounderCard`, `FiveGoodThingsCard`, `NeurobiologyPathwayCard`, `KeyTakeawaysCard`, `QuizOptionCard` (`EducationComponentTests`) | **Accepted (6/6 Passing)** |
+| [`0009.3: Screen Views`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-3-education-screen-views.md) | 8 Figma Frames | `EducationTopicsView`, `TopicDetailView` (dynamic template for 6 lessons), `EducationQuizView` (`EducationScreenTests`) | **Accepted (8/8 Passing)** |
+| [`0009.4: Navigation & Progress`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-4-navigation-routing-and-progress-tracking.md) | Routing & Reading State | `AppRoute.education`, `AppRoute.educationDetail(topic)`, `AppRoute.educationQuiz(topic)`, `EducationProgressRepositoryProtocol` (`EducationNavigationTests`, `EducationProgressTests`) | **Accepted (7/7 Passing)** |
+| [`0009.5: Verification & A11y`](file:///Users/kaushal/Documents/Github/care-app/docs/adr/0009-education-module-import/0009-phase-5-testing-accessibility-and-verification.md) | E2E Tests & Accessibility | Full VoiceOver audit, Dynamic Type scaling, `XCUITest` Education user journeys (`CAREAppUITests`) | **Accepted (2/2 UI Passing, 0 A11y Violations)** |
+
 
 ---
 
