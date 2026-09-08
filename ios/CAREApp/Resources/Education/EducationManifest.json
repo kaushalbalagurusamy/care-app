@@ -1,0 +1,289 @@
+[
+  {
+    "id": "edu-topic-rct",
+    "slug": "relational-cultural-theory",
+    "title": "Relational-Cultural Theory",
+    "subtitle": "Understanding how growth-fostering relationships heal.",
+    "iconAsset": "icon_rct_book",
+    "estimatedReadMinutes": 5,
+    "sections": [
+      {
+        "type": "textOverview",
+        "heading": "Overview",
+        "body": "Relational-Cultural Theory (RCT) posits that human growth occurs within the context of connection, rather than through movement toward independence and separation. Traditional Western models of psychology have long valorized autonomy and self-sufficiency, often pathologizing our intrinsic need for human connection. RCT reclaims connection as the central organizing axis of human development, vitality, and emotional well-being."
+      },
+      {
+        "type": "foundersGrid",
+        "founders": [
+          {
+            "id": "founder-jean-baker-miller",
+            "name": "Jean Baker Miller, MD",
+            "titleAndDegrees": "Psychiatrist & Author",
+            "biography": "The pioneering psychiatrist and author of Toward a New Psychology of Women who challenged patriarchal psychological paradigms and laid the foundational cornerstone for Relational-Cultural Theory.",
+            "imageAsset": "avatar_jean_baker_miller"
+          },
+          {
+            "id": "founder-judith-jordan",
+            "name": "Judith V. Jordan, PhD",
+            "titleAndDegrees": "Founding Scholar & Director",
+            "biography": "The founding scholar of RCT and Director of the Jean Baker Miller Training Institute, widely known for her groundbreaking work on mutual empathy, relational awareness, and chronic relational trauma.",
+            "imageAsset": "avatar_judith_jordan"
+          },
+          {
+            "id": "founder-janet-surrey",
+            "name": "Janet Surrey, PhD",
+            "titleAndDegrees": "Clinical Psychologist & Author",
+            "biography": "The psychologist, author, and founding scholar known for her synthesis of mindfulness, relational dialogue, and the transformative power of relational courage and shared presence.",
+            "imageAsset": "avatar_janet_surrey"
+          },
+          {
+            "id": "founder-irene-stiver",
+            "name": "Irene Stiver, PhD",
+            "titleAndDegrees": "Director of Psychology",
+            "biography": "The distinguished clinical psychologist and former Director of Psychology at McLean Hospital who illuminated how chronic disconnection drives psychological suffering and defense mechanisms.",
+            "imageAsset": "avatar_irene_stiver"
+          }
+        ]
+      },
+      {
+        "type": "fiveGoodThings",
+        "items": [
+          {
+            "id": "fgt-1",
+            "index": 1,
+            "title": "Zest",
+            "neuroDescription": "Zest is the surge of emotional energy, vitality, and enthusiasm that spontaneously arises when we feel genuinely seen, acknowledged, and valued in a supportive relationship."
+          },
+          {
+            "id": "fgt-2",
+            "index": 2,
+            "title": "Sense of Worth",
+            "neuroDescription": "Sense of worth is the deep realization that one is valued, respected, and worthy of care, directly challenging internalized feelings of chronic shame and isolation."
+          },
+          {
+            "id": "fgt-3",
+            "index": 3,
+            "title": "Clarity",
+            "neuroDescription": "Clarity is an expanded understanding of oneself, the other person, and the relational dynamic, cutting through confusion, defensiveness, and relational blind spots."
+          },
+          {
+            "id": "fgt-4",
+            "index": 4,
+            "title": "Creativity",
+            "neuroDescription": "Creativity is the spark of open expression, original thinking, and constructive collaboration that naturally unlocks when psychological safety removes fear of judgment."
+          },
+          {
+            "id": "fgt-5",
+            "index": 5,
+            "title": "Desire for More Connection",
+            "neuroDescription": "Experiencing a growth-fostering relationship creates a natural desire to connect more deeply with the partner and extend meaningful empathy outward into broader social networks."
+          }
+        ]
+      },
+      {
+        "type": "textOverview",
+        "heading": "Mutual Empathy",
+        "body": "Mutual empathy is a reciprocal, two-way process where both individuals are emotionally moved, impacted, and transformed by each other's vulnerability. Unlike one-sided sympathy, mutual empathy validates our shared humanity and rewires the nervous system for safety."
+      }
+    ],
+    "quiz": {
+      "id": "quiz-rct",
+      "prompt": "What is the primary tenet of Relational-Cultural Theory regarding human development?",
+      "options": [
+        { "letter": "A", "text": "Human maturity is achieved through complete separation and emotional autonomy." },
+        { "letter": "B", "text": "Growth and emotional vitality occur primarily in the context of authentic connection." },
+        { "letter": "C", "text": "Relational dependencies should be systematically phased out in early adulthood." },
+        { "letter": "D", "text": "Autonomy must always take precedence over mutual vulnerability." }
+      ],
+      "correctOptionLetter": "B",
+      "rationale": "Relational-Cultural Theory directly refutes traditional autonomous paradigms, proving that human growth, healing, and nervous system regulation occur through mutual connection rather than isolation."
+    }
+  },
+  {
+    "id": "edu-topic-neuroscience",
+    "slug": "relational-neuroscience",
+    "title": "Relational Neuroscience",
+    "subtitle": "How our brains are hardwired for social connection.",
+    "iconAsset": "icon_relational_neuroscience",
+    "estimatedReadMinutes": 6,
+    "sections": [
+      {
+        "type": "neuralPathwayMapping",
+        "pathways": [
+          {
+            "id": "pathway-calm",
+            "domain": "calm",
+            "name": "Smart Vagus Nerve",
+            "brainRegion": "Ventral Vagal Complex",
+            "function": "By dampening the body's acute stress response and signaling safety down through the visceral organs, the Smart Vagus Nerve allows the body to shift out of fight-or-flight posture into a state of physiological calm, promoting restorative rest and open relational engagement.",
+            "exerciseSuggestion": "Practice rhythmic, slow diaphragmatic breathing while making soft, sustained eye contact with a trusted connection."
+          },
+          {
+            "id": "pathway-accepted",
+            "domain": "accepted",
+            "name": "Dorsal Anterior Cingulate Cortex",
+            "brainRegion": "DACC / Insula",
+            "function": "Functioning as the brain's social pain alarm, this region processes social rejection and ostracism using the exact same neurochemical pathways as acute physical injury, signaling vital warnings when our need for belonging is threatened.",
+            "exerciseSuggestion": "Name and validate moments of relational sting without judgment, seeking comforting verbal reassurance."
+          },
+          {
+            "id": "pathway-resonant",
+            "domain": "resonant",
+            "name": "Mirror Neuron System",
+            "brainRegion": "Premotor Cortex & Inferior Parietal Lobule",
+            "function": "Acting as our internal resonance engine, this network mirrors the emotions, vocal cadences, and subtle facial micro-expressions of others in real time, granting us the neurological capacity to intuitively feel and share another person's emotional state.",
+            "exerciseSuggestion": "Engage in active non-verbal listening, attuning carefully to your partner's body language and emotional tone."
+          },
+          {
+            "id": "pathway-energetic",
+            "domain": "energetic",
+            "name": "Dopamine Reward System",
+            "brainRegion": "VTA & Nucleus Accumbens",
+            "function": "Fueled by the release of dopamine during warm, responsive interactions, this neural circuit rewards healthy connection with emotional vitality, optimism, and an intrinsic desire to deepen social bonds.",
+            "exerciseSuggestion": "Celebrate small relational wins, shared laughter, and spontaneous moments of delight together."
+          }
+        ]
+      }
+    ],
+    "quiz": {
+      "id": "quiz-neuroscience",
+      "prompt": "What is the primary neurobiological function of the Smart Vagus Nerve during safe social interactions?",
+      "options": [
+        { "letter": "A", "text": "It amplifies sympathetic arousal to prepare the body for defensive action." },
+        { "letter": "B", "text": "It dampens the acute stress response and signals safety down through the body." },
+        { "letter": "C", "text": "It triggers the release of cortisol to heighten cognitive awareness during conflict." },
+        { "letter": "D", "text": "It directly activates the social pain center in the brain when isolation occurs." }
+      ],
+      "correctOptionLetter": "B",
+      "rationale": "The smart vagus nerve tames the body's acute stress responses and signals safety down through the body, shifting it out of chronic isolation and into a calm posture that allows for authentic engagement."
+    }
+  },
+  {
+    "id": "edu-topic-neuroplasticity",
+    "slug": "neuroplasticity",
+    "title": "Neuroplasticity",
+    "subtitle": "Rewiring the brain's pathways through healthy bonds.",
+    "iconAsset": "icon_neuroplasticity",
+    "estimatedReadMinutes": 4,
+    "sections": [
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_neuroplasticity_1",
+        "body": "Neuroplasticity reveals that the human brain remains remarkably malleable throughout our entire lives, continuously physically restructuring itself in response to our lived experiences. When we repeatedly experience chronic relational stress, isolation, or trauma, our brain fortifies neural pathways wired for hypervigilance and self-preservation. Conversely, engaging in safe, authentic, and growth-fostering relationships actively stimulates the birth of new neural connections. By repeatedly stepping into places of mutual trust and vulnerability, we systematically strengthen the neurobiological circuits that support calm, regulation, and open engagement. This biological flexibility means that relational injuries are not permanent life sentences, but rather pathways waiting to be reshaped."
+      },
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_neuroplasticity_2",
+        "body": "As we practice relational courage and open up to supportive connections, the brain gradually rewires its default setting from defensive self-protection to relaxed belonging. Over time, these newly forged neural highways make it easier and more natural to respond to life with emotional resilience rather than fear. Ultimately, neuroplasticity provides the scientific proof that healing happens in relationship, allowing us to physically transform our brains through the power of human connection."
+      }
+    ],
+    "quiz": {
+      "id": "quiz-neuroplasticity",
+      "prompt": "How does neuroplasticity impact recovery from past relational trauma and chronic isolation?",
+      "options": [
+        { "letter": "A", "text": "Relational neural pathways are fixed in childhood and cannot be physically altered in adulthood." },
+        { "letter": "B", "text": "Safe, growth-fostering connections stimulate new neural wiring that overwrites defensive threat habits." },
+        { "letter": "C", "text": "Recovery occurs solely through cognitive suppression without affecting synaptic structures." },
+        { "letter": "D", "text": "Only pharmaceutical interventions can alter the neurological pathways associated with social pain." }
+      ],
+      "correctOptionLetter": "B",
+      "rationale": "Neuroplasticity proves that the brain physically remodels its synaptic connections throughout life; repeated experiences of relational safety construct new regulatory neural pathways that replace survival-driven vigilance."
+    }
+  },
+  {
+    "id": "edu-topic-brain-healthy",
+    "slug": "brain-healthy-relationships",
+    "title": "The Brain in Healthy Relationships",
+    "subtitle": "The biochemical response to safety and trust.",
+    "iconAsset": "icon_brain_healthy",
+    "estimatedReadMinutes": 4,
+    "sections": [
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_dancing",
+        "body": "When we enter a healthy, growth-fostering relationship, our brain undergoes a profound cascade of neurochemical regulation. Mutual responsiveness stimulates the release of oxytocin, often called the 'bonding neuropeptide,' which acts as a powerful brake on amygdala hyperactivity. In parallel, authentic social connection triggers balanced dopamine secretion, infusing our daily experiences with vitality, optimism, and spontaneous relational zest. Rather than operating in defensive scarcity, the neurochemistry of trust unlocks higher-order executive functioning in the prefrontal cortex, expanding our capacity for empathy, emotional nuance, and collaborative problem-solving."
+      },
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_cat",
+        "body": "Oxytocin and endorphins flood our neural pathways, dampening acute stress responses and downregulating systemic cortisol. Simultaneously, vagal tone is elevated, slowing heart rate variability and creating an embodied sense of internal calm and biological grounding. This biochemical baseline of safety allows our autonomic nervous system to disarm its hyper-arousal triggers, shifting biological energy from survival defenses into cellular repair, deep restorative rest, and meaningful relational exploration. Safe connection is not merely an emotional luxury; it is a foundational biological requirement for neural equilibrium."
+      }
+    ],
+    "quiz": {
+      "id": "quiz-brain-healthy",
+      "prompt": "Which biochemical cascade is primarily triggered when experiencing authentic relational safety?",
+      "options": [
+        { "letter": "A", "text": "Elevated cortisol and adrenaline suppressing prefrontal executive function." },
+        { "letter": "B", "text": "Oxytocin and balanced dopamine release downregulating amygdala hyperactivity." },
+        { "letter": "C", "text": "Spike in glutamate inducing acute hypervigilance and social withdrawal." },
+        { "letter": "D", "text": "Depletion of endorphins accompanied by rapid sympathetic acceleration." }
+      ],
+      "correctOptionLetter": "B",
+      "rationale": "Relational safety stimulates oxytocin and dopamine, which dampen amygdala threat responses, lower cortisol, and free prefrontal networks for calm and collaborative problem solving."
+    }
+  },
+  {
+    "id": "edu-topic-power-dynamics",
+    "slug": "power-over-vs-power-with",
+    "title": "Power-Over vs. Power-With",
+    "subtitle": "Shifting from control to mutual empowerment.",
+    "iconAsset": "icon_power_dynamics",
+    "estimatedReadMinutes": 4,
+    "sections": [
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_power_over",
+        "body": "Traditional societal frameworks often rely on 'power-over' dynamics—hierarchical structures where one individual or group asserts dominance, control, or superiority over another. In relational contexts, power-over dynamics inevitably trigger chronic shame, hypervigilance, and defensive withdrawal, as the subordinate party is forced to suppress their authentic reality to preserve physical or emotional safety. The nervous system interprets ongoing subordination as chronic social threat, activating the Dorsal Anterior Cingulate Cortex (DACC) and locking the body into perpetual stress responses. Power-over relationships erode trust and stunt mutual development by prioritizing dominance over authentic connection."
+      },
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_power_with",
+        "body": "Operating in a 'power-with' paradigm creates the neurobiological conditions necessary for true mutual empowerment. In this relational model, influence is shared symmetrically, both individuals actively listen and validate each other's perspectives, and vulnerability is welcomed as a collective strength rather than a liability. By disarming hierarchical control, power-with dynamics activate the Smart Vagus Nerve and Mirror Neuron System, fostering mutual empathy, psychological safety, and reciprocal creative growth. True relational leadership is not measured by the ability to direct others, but by the capacity to co-create an environment where everyone flourishes."
+      }
+    ],
+    "quiz": {
+      "id": "quiz-power-dynamics",
+      "prompt": "What differentiates a 'power-with' dynamic from a traditional 'power-over' hierarchy?",
+      "options": [
+        { "letter": "A", "text": "Power-with relies on unilateral authority while minimizing emotional feedback." },
+        { "letter": "B", "text": "Power-with shares influence symmetrically, fostering mutual empathy and collective safety." },
+        { "letter": "C", "text": "Power-with enforces strict compliance through covert rather than overt dominance." },
+        { "letter": "D", "text": "Power-with eliminates personal boundaries in favor of total relational compromise." }
+      ],
+      "correctOptionLetter": "B",
+      "rationale": "A 'power-with' model replaces hierarchical control with reciprocal listening, shared influence, and mutual vulnerability, stimulating regulatory nervous system pathways for both partners."
+    }
+  },
+  {
+    "id": "edu-topic-impact",
+    "slug": "impact-of-relationships",
+    "title": "The Impact of Relationships",
+    "subtitle": "How social connection shapes physiological health.",
+    "iconAsset": "icon_impact_relationships",
+    "estimatedReadMinutes": 4,
+    "sections": [
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_impact_1",
+        "body": "Human beings are neurobiologically wired for connection, making our relational health a central determinant of our overall physical longevity and physiological resilience. Landmark epidemiological studies consistently demonstrate that chronic social isolation and loneliness carry health risks comparable to smoking 15 cigarettes a day, significantly exceeding the risks associated with obesity and physical inactivity. When we lack dependable, growth-fostering relationships, the body interprets chronic disconnection as existential danger, maintaining sustained sympathetic activation, elevated arterial blood pressure, and chronic systemic inflammation."
+      },
+      {
+        "type": "illustrationParagraph",
+        "imageAsset": "img_impact_2",
+        "body": "These positive relational interactions actively shape gene expression, optimize immune function, and significantly lower the incidence of cardiovascular disease. When we are anchored in secure, mutually empathetic relationships, our body naturally produces higher levels of anti-inflammatory cytokines, accelerates wound healing, and strengthens telomere integrity, effectively slowing cellular aging. Far from being a separate emotional realm, our relationships are continually woven into the microscopic biological fabric of our health, proving that social connection is as essential to human survival as nutrition, clean water, and restorative sleep."
+      }
+    ],
+    "quiz": {
+      "id": "quiz-impact",
+      "prompt": "What does medical and epidemiological research demonstrate regarding chronic social disconnection?",
+      "options": [
+        { "letter": "A", "text": "Social isolation has negligible impact on cardiovascular biomarkers compared to diet." },
+        { "letter": "B", "text": "Chronic isolation triggers sustained systemic inflammation and health risks comparable to smoking." },
+        { "letter": "C", "text": "Relational loneliness only impacts cognitive mood without altering cellular or genetic expression." },
+        { "letter": "D", "text": "The physiological toll of disconnection is fully mitigated by physical fitness." }
+      ],
+      "correctOptionLetter": "B",
+      "rationale": "Epidemiological research confirms that chronic isolation maintains high sympathetic activation and chronic inflammation, presenting cardiovascular and mortality risks comparable to smoking 15 cigarettes daily."
+    }
+  }
+]

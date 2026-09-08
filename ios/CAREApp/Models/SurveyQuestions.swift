@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 // MARK: - C.A.R.E. Domain Categories Enum
-public enum CAREDomain: String, CaseIterable, Codable, Hashable {
+public enum CAREDomain: String, CaseIterable, Codable, Hashable, Sendable {
     case calm = "calm"
     case accepted = "accepted"
     case resonant = "resonant"

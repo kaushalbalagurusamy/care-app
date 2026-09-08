@@ -22,6 +22,9 @@ Phase 2 builds modular, reusable atomic components extracted from Figma nodes `1
    * Color-coded C.A.R.E. domain banner (Calm, Accepted, Resonant, Energetic) with anatomical brain region callout (Smart Vagus, DACC, Mirror Neurons, Dopamine).
 5. **`KeyTakeawaysCard` (`Components/Education/KeyTakeawaysCard.swift`)**:
    * Bulleted action insights container with sparkle icon badge.
+6. **`QuizOptionCard` (`Components/Education/QuizOptionCard.swift`)**:
+   * Multiple-choice answer pill extracted from Node `201:36`.
+   * Displays circular letter badge ("A", "B", "C", "D"), explanation copy, and interactive feedback styling (unselected, selected, correct `#5D9C59`, incorrect `#E07A5F`).
 
 ---
 
@@ -34,6 +37,8 @@ Phase 2 builds modular, reusable atomic components extracted from Figma nodes `1
 | **`TEST-EDC-03`** | Component / Invariant | `FiveGoodThingsCard` Numbering | Pass items with index 1..5 | Render cards | Number badge displays `"1"` through `"5"`; badge color uses `Theme.Colors.primary`; body text has minimum contrast ratio $\ge 4.5:1$. |
 | **`TEST-EDC-04`** | Component / Color | `NeurobiologyPathwayCard` | Pass 4 C.A.R.E. domains | Check border/fill tokens | Correctly maps `.calm` $\to$ `#5D9C59`, `.accepted` $\to$ `#E7B10A`, `.resonant` $\to$ `#E07A5F`, `.energetic` $\to$ `#8B5CF6`. |
 | **`TEST-EDC-05`** | Component / Structure | `KeyTakeawaysCard` | Pass 3 takeaway bullet strings | Render card | Renders a Sparkle icon header; renders exactly 3 bullet items with custom check/bullet SF Symbols. |
+| **`TEST-EDC-06`** | Component / State | `QuizOptionCard` States | Option with letter "B" | Test unselected, selected, correct, and incorrect states | Touch target $\ge 44\text{pt}$; border and background color match semantic state; displays letter badge and option text cleanly. |
+
 
 ---
 

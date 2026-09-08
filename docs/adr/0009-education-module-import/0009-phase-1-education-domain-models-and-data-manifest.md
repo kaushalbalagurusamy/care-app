@@ -1,6 +1,6 @@
 # ADR 0009.1: Phase 1 — Education Content Data Models & Bundled Manifest
 
-* **Status**: Proposed
+* **Status**: Completed / Verified (5/5 Tests Passing)
 * **Date**: 2026-09-05
 * **Deciders**: Lead AI Systems Architect & Mobile Engineering Team
 
@@ -41,11 +41,26 @@ public struct FiveGoodThingsItem: Identifiable, Codable, Hashable, Sendable {
     public let neuroDescription: String
 }
 
+public struct QuizOption: Identifiable, Codable, Hashable, Sendable {
+    public var id: String { letter }
+    public let letter: String // "A", "B", "C", "D"
+    public let text: String
+}
+
+public struct QuizQuestion: Identifiable, Codable, Hashable, Sendable {
+    public let id: String
+    public let prompt: String
+    public let options: [QuizOption]
+    public let correctOptionLetter: String // e.g. "B"
+    public let rationale: String
+}
+
 public enum EducationSectionPayload: Codable, Hashable, Sendable {
     case textOverview(heading: String, body: String)
     case foundersGrid(founders: [FounderProfile])
     case fiveGoodThings(items: [FiveGoodThingsItem])
     case neuralPathwayMapping(pathways: [NeuralPathwayItem])
+    case illustrationParagraph(imageAsset: String, body: String)
     case comparisonTable(rows: [ComparisonRowItem])
     case keyTakeaways(points: [String])
 }
@@ -58,6 +73,7 @@ public struct EducationTopic: Identifiable, Codable, Hashable, Sendable {
     public let iconAsset: String
     public let estimatedReadMinutes: Int
     public let sections: [EducationSectionPayload]
+    public let quiz: QuizQuestion
 }
 ```
 
@@ -73,6 +89,8 @@ public struct EducationTopic: Identifiable, Codable, Hashable, Sendable {
 | **`TEST-EDM-02`** | Unit / Invariant | RCT Founders & 5 Good Things | Decoded RCT Topic (`.relationalCulturalTheory`) | Inspect sections for `.foundersGrid` and `.fiveGoodThings` | Exactly 4 founders (Dr. Jean Baker Miller, Dr. Judith Jordan, Dr. Janet Surrey, Dr. Irene Stiver) and 5 Good Things (indexes 1–5 in sequential order). |
 | **`TEST-EDM-03`** | Unit / Invariant | 4 C.A.R.E. Neural Pathways | Decoded Neuroscience Topic (`.relationalNeuroscience`) | Inspect `.neuralPathwayMapping` section | Contains all 4 C.A.R.E. pathways: Calm (Smart Vagus), Accepted (DACC), Resonant (Mirror Neurons), Energetic (Dopamine). |
 | **`TEST-EDM-04`** | Unit / Safety | Swift 6 Concurrency | `EducationTopic` & submodels | Pass across `@Sendable` async boundary | Conforms to `Sendable`, `Hashable`, `Identifiable` with zero data races. |
+| **`TEST-EDM-05`** | Unit / Invariant | Knowledge Check Quizzes | Decoded manifest topics | Inspect `topic.quiz` across all 6 topics | All 6 topics have a valid quiz with exactly 4 options (A, B, C, D), valid `correctOptionLetter`, non-empty prompt, and non-empty clinical rationale. |
+
 
 ---
 
@@ -147,6 +165,20 @@ struct EducationModelTests {
         }
         let title = await task.value
         #expect(!title.isEmpty)
+    }
+    
+    @Test("TEST-EDM-05: All topics have a valid knowledge check quiz with 4 options and valid answer")
+    func testQuizIntegrity() throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        #expect(manifest.count == 6)
+        
+        for topic in manifest {
+            let quiz = topic.quiz
+            #expect(!quiz.prompt.isEmpty, "Quiz prompt cannot be empty for \(topic.slug)")
+            #expect(quiz.options.count == 4, "Quiz must have exactly 4 options for \(topic.slug)")
+            #expect(["A", "B", "C", "D"].contains(quiz.correctOptionLetter), "Correct option letter must be A, B, C, or D")
+            #expect(!quiz.rationale.isEmpty, "Rationale cannot be empty for \(topic.slug)")
+        }
     }
 }
 ```

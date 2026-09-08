@@ -8,11 +8,11 @@
 
 ## 1. Architectural Scope & Deliverables
 
-Phase 5 executes the full testing verification suite, conducts an automated Apple VoiceOver accessibility audit across all 7 Education frames, and verifies end-to-end user navigation journeys via `XCUITest`.
+Phase 5 executes the full testing verification suite, conducts an automated Apple VoiceOver accessibility audit across all 8 Education frames, and verifies end-to-end user navigation journeys via `XCUITest`.
 
 ### Architectural Deliverables
 * **`CAREAppUITests` Extension**: Adds `testEducationModuleJourney` verifying the user flow:
-  `HomeView` $\to$ `EducationTopicsView` $\to$ `TopicDetailView(RCT)` $\to$ `Complete Topic` $\to$ `Back to Hub`.
+  `HomeView` $\to$ `EducationTopicsView` $\to$ `TopicDetailView(RCT)` $\to$ `Test Your Understanding` $\to$ `EducationQuizView` $\to$ `Return to Topic` $\to$ `Back to Hub`.
 * **Accessibility (A11y) Matrix**:
   * VoiceOver labels and accessibility traits on all topic cards and actionable buttons.
   * Minimum 44pt × 44pt touch targets on all interactive components.
