@@ -75,6 +75,40 @@ final class CAREAppUITests: XCTestCase {
             // Verify Past Results header is visible
             let pastResultsTitle = app.staticTexts["Past Results"]
             XCTAssertTrue(pastResultsTitle.waitForExistence(timeout: 3.0))
+            
+            // Capture Top View (C.A.R.E. Results 4-Line Graph & Relational Safety)
+            Thread.sleep(forTimeInterval: 0.5)
+            let topShot = XCUIScreen.main.screenshot()
+            try? topShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_top.png"))
+            
+            // Scroll down to Results by Individual
+            app.swipeUp()
+            Thread.sleep(forTimeInterval: 0.5)
+            let bottomShot = XCUIScreen.main.screenshot()
+            try? bottomShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_bottom.png"))
+            
+            // Tap a different individual chip (James)
+            let jamesChip = app.buttons.matching(NSPredicate(format: "label CONTAINS 'James'")).firstMatch
+            if jamesChip.waitForExistence(timeout: 2.0) {
+                jamesChip.tap()
+            }
+            
+            // Test Search Bar with typo "emly"
+            let searchField = app.textFields["Search individuals..."]
+            if searchField.waitForExistence(timeout: 2.0) {
+                searchField.tap()
+                searchField.typeText("emly")
+                Thread.sleep(forTimeInterval: 0.5)
+                
+                let searchShot = XCUIScreen.main.screenshot()
+                try? searchShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_fuzzy_search.png"))
+            }
+            
+            // Return to Home
+            let homeBtn = app.buttons["AppIcon_home"]
+            if homeBtn.waitForExistence(timeout: 2.0) {
+                homeBtn.tap()
+            }
         }
     }
 

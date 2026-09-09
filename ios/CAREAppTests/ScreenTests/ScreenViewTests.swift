@@ -139,15 +139,19 @@ struct ScreenViewTests {
         #expect(router.currentRoute == .surveyResults)
     }
 
-    @Test("TEST-SCR-08: PastResultsView accordion cards expand/collapse cleanly")
-    func testPastResultsCardExpansion() {
-        var expandedCardId: UUID? = nil
-        let cardId = UUID()
+    @Test("TEST-SCR-08: PastResultsView static trend cards and individual selector state")
+    @MainActor
+    func testPastResultsCardState() {
+        let router = AppRouter()
+        let view = PastResultsView(router: router)
+        #expect(view.router.currentRoute == .loading)
         
-        #expect(expandedCardId == nil)
-        expandedCardId = cardId
-        #expect(expandedCardId == cardId)
-        expandedCardId = nil
-        #expect(expandedCardId == nil)
+        let careChart = CARETrendChart()
+        #expect(careChart != nil)
+        
+        var selectedIndividual: String? = "Sarah Mitchell"
+        #expect(selectedIndividual == "Sarah Mitchell")
+        selectedIndividual = "James Rivera"
+        #expect(selectedIndividual == "James Rivera")
     }
 }

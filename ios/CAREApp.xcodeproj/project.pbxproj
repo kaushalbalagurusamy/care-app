@@ -24,6 +24,8 @@
 		77000081EDUPROGREP00002 /* EducationProgressRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000080EDUPROGREP00001 /* EducationProgressRepositoryProtocol.swift */; };
 		77000083EDUNAVTEST00002 /* EducationNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000082EDUNAVTEST00001 /* EducationNavigationTests.swift */; };
 		77000085EDUPRGTEST00002 /* EducationProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000084EDUPRGTEST00001 /* EducationProgressTests.swift */; };
+		77000091FUZZYMATCHER0002 /* FuzzyMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000090FUZZYMATCHER0001 /* FuzzyMatcher.swift */; };
+		77000093FUZZYTESTS000002 /* FuzzyMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000092FUZZYTESTS000001 /* FuzzyMatcherTests.swift */; };
 		77000041BIOAUTH000000002 /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000040BIOAUTH000000001 /* BiometricAuthService.swift */; };
 		77000043LOCKMGR000000002 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000042LOCKMGR000000001 /* AppLockManager.swift */; };
 		77000045LOCKVIEW000000002 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000044LOCKVIEW000000001 /* AppLockView.swift */; };
@@ -110,6 +112,8 @@
 		77000080EDUPROGREP00001 /* EducationProgressRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationProgressRepositoryProtocol.swift"; sourceTree = "<group>"; };
 		77000082EDUNAVTEST00001 /* EducationNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationNavigationTests.swift"; sourceTree = "<group>"; };
 		77000084EDUPRGTEST00001 /* EducationProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationProgressTests.swift"; sourceTree = "<group>"; };
+		77000090FUZZYMATCHER0001 /* FuzzyMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FuzzyMatcher.swift"; sourceTree = "<group>"; };
+		77000092FUZZYTESTS000001 /* FuzzyMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScreenTests/FuzzyMatcherTests.swift"; sourceTree = "<group>"; };
 		77000040BIOAUTH000000001 /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BiometricAuthService.swift"; sourceTree = "<group>"; };
 		77000042LOCKMGR000000001 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockManager.swift"; sourceTree = "<group>"; };
 		77000044LOCKVIEW000000001 /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLockView.swift"; sourceTree = "<group>"; };
@@ -280,6 +284,7 @@
 		77000032SERVICESGROUP0001 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				77000090FUZZYMATCHER0001 /* FuzzyMatcher.swift */,
 				77000040BIOAUTH000000001 /* BiometricAuthService.swift */,
 				77000030NOTIFSVC000000001 /* NotificationService.swift */,
 			);
@@ -339,6 +344,7 @@
 				55000003FILEREF00000003 /* AssessmentSessionTests.swift */,
 				55000004FILEREF00000004 /* DomainModelAndScoringTests.swift */,
 				55000005FILEREF00000005 /* ScreenViewTests.swift */,
+				77000092FUZZYTESTS000001 /* FuzzyMatcherTests.swift */,
 				55000006FILEREF00000006 /* AtomicComponentTests.swift */,
 			);
 			path = CAREAppTests;
@@ -606,6 +612,7 @@
 				55000003BUILDFILE000003 /* AssessmentSessionTests.swift in Sources */,
 				55000004BUILDFILE000004 /* DomainModelAndScoringTests.swift in Sources */,
 				55000005BUILDFILE000005 /* ScreenViewTests.swift in Sources */,
+				77000093FUZZYTESTS000002 /* FuzzyMatcherTests.swift in Sources */,
 				55000006BUILDFILE000006 /* AtomicComponentTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -614,6 +621,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77000091FUZZYMATCHER0002 /* FuzzyMatcher.swift in Sources */,
 				77000071EDUTOPICSVW00002 /* EducationTopicsView.swift in Sources */,
 				77000073EDUDETAILVW00002 /* TopicDetailView.swift in Sources */,
 				77000075EDUQUIZVW0000002 /* EducationQuizView.swift in Sources */,

@@ -215,11 +215,11 @@ public struct ComponentShowcaseView: View {
                         ActionCardView(title: "Exercises", subtitle: "Active Care", iconName: "icon_activity", backgroundImageName: "card_exercises_bg", action: {})
                     }
                     
-                    // MARK: 8. Historical Accordion Cards
-                    CollapsibleCardContainer(
+                    // MARK: 8. Historical Cards
+                    BubbleCardContainer(
                         title: "Past Results Trend",
-                        isExpanded: isAccordionExpanded,
-                        onToggle: { isAccordionExpanded.toggle() }
+                        isCollapsible: true,
+                        defaultExpanded: isAccordionExpanded
                     ) {
                         Text("83/100 Safe - Sarah Mitchell")
                             .font(Theme.Typography.poppins(.medium, size: 14))
