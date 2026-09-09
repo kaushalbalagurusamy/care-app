@@ -151,4 +151,22 @@ struct EducationModelTests {
         #expect(totalQuestions == 60, "Global question bank must contain exactly 60 questions")
         #expect(allQuestionIds.count == 60, "All 60 questions must have unique IDs")
     }
+    
+    @Test("TEST-EDM-07: Quiz bank has balanced A/B/C/D answer distribution across all topics")
+    func testBalancedAnswerDistribution() throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        var letterCounts: [String: Int] = ["A": 0, "B": 0, "C": 0, "D": 0]
+        
+        for topic in manifest {
+            for q in topic.quizBank {
+                letterCounts[q.correctOptionLetter, default: 0] += 1
+            }
+        }
+        
+        // Assert every letter appears at least 12 times and at most 18 times across 60 questions (balanced ~25% each)
+        for letter in ["A", "B", "C", "D"] {
+            let count = letterCounts[letter] ?? 0
+            #expect(count >= 12 && count <= 18, "Letter \(letter) count (\(count)) must be balanced near 15 (25%)")
+        }
+    }
 }

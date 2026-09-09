@@ -202,4 +202,39 @@ struct EducationProgressTests {
         #expect(record2.quizPassed == true)
         #expect(record2.isCompleted == true)
     }
+    
+    @Test("TEST-EDP-08: Strict 3/3 mastery gate prevents completion on 2/3 and requires perfect score")
+    func testStrictThreeOutOfThreeMasteryGate() async throws {
+        let repo = MockEducationProgressRepository()
+        
+        // Initial state: not completed
+        let initial = try await repo.fetchProgress(for: .impactOfRelationships)
+        #expect(initial.isCompleted == false)
+        
+        // Attempt with 2/3 (66%) score
+        try await repo.recordQuizSessionResult(
+            slug: .impactOfRelationships,
+            questionIds: ["ior-q51", "ior-q52", "ior-q53"],
+            score: 2,
+            totalQuestions: 3
+        )
+        
+        let afterPartial = try await repo.fetchProgress(for: .impactOfRelationships)
+        #expect(afterPartial.lastScore == 2)
+        #expect(afterPartial.quizPassed == false, "Score of 2/3 must NOT pass under strict 3/3 mastery gate")
+        #expect(afterPartial.isCompleted == false, "Score of 2/3 must NOT award topic completion checkmark")
+        
+        // Retry with 3/3 (100%) score
+        try await repo.recordQuizSessionResult(
+            slug: .impactOfRelationships,
+            questionIds: ["ior-q54", "ior-q55", "ior-q56"],
+            score: 3,
+            totalQuestions: 3
+        )
+        
+        let afterMastery = try await repo.fetchProgress(for: .impactOfRelationships)
+        #expect(afterMastery.lastScore == 3)
+        #expect(afterMastery.quizPassed == true, "Score of 3/3 MUST pass mastery gate")
+        #expect(afterMastery.isCompleted == true, "Score of 3/3 MUST award topic completion checkmark")
+    }
 }

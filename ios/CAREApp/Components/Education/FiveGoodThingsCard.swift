@@ -13,10 +13,10 @@ public struct FiveGoodThingsCard: View {
     public var accentColor: Color {
         switch item.index {
         case 1: return Color(hex: "#F59E0B") // Zest (Amber)
-        case 2: return Color(hex: "#EF4444") // Sense of Worth (Coral)
+        case 2: return Color(hex: "#EF4444") // Sense of Worth (Coral Red)
         case 3: return Color(hex: "#8B5CF6") // Clarity (Purple)
-        case 4: return Color(hex: "#10B981") // Creativity (Emerald)
-        case 5: return Color(hex: "#0EA5E9") // Connection (Sky Blue)
+        case 4: return Color(hex: "#10B981") // Creativity (Emerald Green)
+        case 5: return Color(hex: "#38BDF8") // Desire for More Connection (Sky Blue)
         default: return Theme.Colors.primary
         }
     }
@@ -29,24 +29,19 @@ public struct FiveGoodThingsCard: View {
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Header Row (Number badge, title, disclosure triangle)
+            // Header Row (8x8pt Color Dot, title, chevron)
             Button(action: {
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.impactOccurred()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     isExpanded.toggle()
                 }
             }) {
-                HStack(spacing: 12) {
-                    // Numbered Circular Badge (1..5)
-                    ZStack {
-                        Circle()
-                            .fill(accentColor)
-                            .frame(width: 24, height: 24)
-                        
-                        Text(badgeText)
-                            .font(Theme.Typography.poppins(.bold, size: 12))
-                            .foregroundColor(.white)
-                    }
-                    .frame(width: 24, height: 24)
+                HStack(spacing: 10) {
+                    // 8x8pt Solid Color Bullet Dot (Matching Figma Node 156:39)
+                    Circle()
+                        .fill(accentColor)
+                        .frame(width: 8, height: 8)
                     
                     Text(item.title)
                         .font(Theme.Typography.poppins(.bold, size: 16))
@@ -54,8 +49,8 @@ public struct FiveGoodThingsCard: View {
                     
                     Spacer()
                     
-                    Image(systemName: isExpanded ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
-                        .font(.system(size: 10))
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.system(size: 11, weight: .bold))
                         .foregroundColor(Theme.Colors.primary)
                 }
                 .frame(minHeight: Theme.Dimensions.minTouchTarget)
@@ -70,7 +65,7 @@ public struct FiveGoodThingsCard: View {
                     .foregroundColor(Theme.Colors.textSecondary)
                     .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.leading, 36)
+                    .padding(.leading, 18)
                     .padding(.bottom, 6)
             }
         }

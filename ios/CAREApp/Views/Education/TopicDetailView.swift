@@ -50,10 +50,9 @@ public struct TopicDetailView: View {
                         sectionView(for: section)
                     }
                     
-                    // Bottom Action: Test Your Understanding Primary CTA
+                    // Bottom Action: Test Your Understanding Primary CTA (Figma Node 156:74)
                     PrimaryButton(
                         title: "Test Your Understanding",
-                        icon: "arrow.right",
                         action: {
                             if let onTakeQuiz = onTakeQuiz {
                                 onTakeQuiz()
@@ -71,9 +70,6 @@ public struct TopicDetailView: View {
         .careAppBackground()
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
-        .task {
-            try? await appEnvironment?.educationRepo.markTopicCompleted(slug: topic.slug)
-        }
     }
     
     // MARK: - Section Payload Renderer
@@ -81,7 +77,11 @@ public struct TopicDetailView: View {
     private func sectionView(for section: EducationSectionPayload) -> some View {
         switch section {
         case .textOverview(let heading, let body):
-            BubbleCardContainer(title: heading.isEmpty ? nil : heading) {
+            BubbleCardContainer(
+                title: heading.isEmpty ? nil : heading,
+                isCollapsible: !heading.isEmpty,
+                defaultExpanded: true
+            ) {
                 Text(body)
                     .font(Theme.Typography.poppins(.regular, size: 14.5))
                     .foregroundColor(Theme.Colors.textSecondary)
@@ -90,7 +90,11 @@ public struct TopicDetailView: View {
             }
             
         case .foundersGrid(let founders):
-            BubbleCardContainer(title: "Founders") {
+            BubbleCardContainer(
+                title: "Founders",
+                isCollapsible: true,
+                defaultExpanded: true
+            ) {
                 VStack(spacing: 16) {
                     ForEach(founders) { founder in
                         FounderCard(
@@ -102,7 +106,11 @@ public struct TopicDetailView: View {
             }
             
         case .fiveGoodThings(let items):
-            BubbleCardContainer(title: "5 Good Things") {
+            BubbleCardContainer(
+                title: "5 Good Things",
+                isCollapsible: true,
+                defaultExpanded: true
+            ) {
                 VStack(spacing: 14) {
                     ForEach(items) { item in
                         FiveGoodThingsCard(item: item)

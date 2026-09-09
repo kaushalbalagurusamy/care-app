@@ -92,11 +92,11 @@
       "options": [
         {
           "letter": "A",
-          "text": "Psychological maturity is achieved through self-sufficiency and separation from others."
+          "text": "Human growth and development occur in and through relationships across the lifespan."
         },
         {
           "letter": "B",
-          "text": "Human growth and development occur in and through relationships across the lifespan."
+          "text": "Psychological maturity is achieved through self-sufficiency and separation from others."
         },
         {
           "letter": "C",
@@ -107,7 +107,7 @@
           "text": "Relational connections are secondary to individual autonomy and internal drive."
         }
       ],
-      "correctOptionLetter": "B",
+      "correctOptionLetter": "A",
       "rationale": "RCT posits that psychological growth occurs in and through relationships, directly challenging traditional paradigms that view maturity as separation."
     },
     "quizBank": [
@@ -117,11 +117,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "Psychological maturity is achieved through self-sufficiency and separation from others."
+            "text": "Human growth and development occur in and through relationships across the lifespan."
           },
           {
             "letter": "B",
-            "text": "Human growth and development occur in and through relationships across the lifespan."
+            "text": "Psychological maturity is achieved through self-sufficiency and separation from others."
           },
           {
             "letter": "C",
@@ -132,7 +132,7 @@
             "text": "Relational connections are secondary to individual autonomy and internal drive."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "RCT posits that psychological growth occurs in and through relationships, directly challenging traditional paradigms that view maturity as separation."
       },
       {
@@ -145,18 +145,18 @@
           },
           {
             "letter": "B",
-            "text": "Dr. Janet Surrey"
+            "text": "Dr. Jean Baker Miller"
           },
           {
             "letter": "C",
-            "text": "Dr. Jean Baker Miller"
+            "text": "Dr. Janet Surrey"
           },
           {
             "letter": "D",
             "text": "Dr. Irene Stiver"
           }
         ],
-        "correctOptionLetter": "C",
+        "correctOptionLetter": "B",
         "rationale": "Dr. Jean Baker Miller laid the foundational groundwork for RCT, demonstrating that growth occurs through mutual connection rather than separation."
       },
       {
@@ -165,22 +165,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "Dr. Judith V. Jordan"
-          },
-          {
-            "letter": "B",
             "text": "Dr. Irene Stiver"
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "Dr. Jean Baker Miller"
+          },
+          {
+            "letter": "C",
+            "text": "Dr. Judith V. Jordan"
           },
           {
             "letter": "D",
             "text": "Dr. Amy Banks"
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "C",
         "rationale": "Dr. Judith V. Jordan's clinical insights center on mutual empathy, relational courage, and growth-fostering relationships."
       },
       {
@@ -193,18 +193,18 @@
           },
           {
             "letter": "B",
-            "text": "Mindfulness and contemplative practices to foster deep empathy and resilience"
-          },
-          {
-            "letter": "C",
             "text": "Cognitive behavioral restructuring and exposure therapy"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Hierarchical organizational structures and power dynamics"
+          },
+          {
+            "letter": "D",
+            "text": "Mindfulness and contemplative practices to foster deep empathy and resilience"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Dr. Janet Surrey expanded RCT by bridging relational psychology with mindfulness and contemplative practices to foster mutual empowerment and voice."
       },
       {
@@ -241,18 +241,18 @@
           },
           {
             "letter": "B",
-            "text": "The surge of emotional energy, vitality, and enthusiasm experienced in mutually authentic connection"
+            "text": "An expanded clarity regarding relational dynamics between two people"
           },
           {
             "letter": "C",
-            "text": "An expanded clarity regarding relational dynamics between two people"
+            "text": "The surge of emotional energy, vitality, and enthusiasm experienced in mutually authentic connection"
           },
           {
             "letter": "D",
             "text": "The spark of original problem-solving without fear of defense"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "C",
         "rationale": "Zest is the surge of emotional energy and vitality experienced when engaging in a mutually authentic connection."
       },
       {
@@ -269,14 +269,14 @@
           },
           {
             "letter": "C",
-            "text": "Through genuine reception and validation by another, strengthening the realization that one is deserving of care."
+            "text": "By suppressing emotional expressions that might cause relational conflict."
           },
           {
             "letter": "D",
-            "text": "By suppressing emotional expressions that might cause relational conflict."
+            "text": "Through genuine reception and validation by another, strengthening the realization that one is deserving of care."
           }
         ],
-        "correctOptionLetter": "C",
+        "correctOptionLetter": "D",
         "rationale": "Being genuinely received and validated by another strengthens self-esteem and honors intrinsic human value, creating a deep sense of worth."
       },
       {
@@ -313,18 +313,18 @@
           },
           {
             "letter": "B",
-            "text": "Mutual empathy is a reciprocal, two-way process where both individuals are open and vulnerable to being impacted by one another."
+            "text": "Mutual empathy focuses exclusively on cognitive agreement rather than shared emotional resonance."
           },
           {
             "letter": "C",
-            "text": "Mutual empathy focuses exclusively on cognitive agreement rather than shared emotional resonance."
+            "text": "Mutual empathy is a reciprocal, two-way process where both individuals are open and vulnerable to being impacted by one another."
           },
           {
             "letter": "D",
             "text": "Mutual empathy occurs automatically without requiring neurobiological safety."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "C",
         "rationale": "Mutual empathy is a reciprocal two-way interaction where both people are authentically open and vulnerable to being impacted by each other."
       },
       {
@@ -337,18 +337,18 @@
           },
           {
             "letter": "B",
-            "text": "It creates a natural motivation to seek, build, and nurture further meaningful relationships and community."
-          },
-          {
-            "letter": "C",
             "text": "It triggers hypervigilance in social settings to avoid potential disconnection."
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "It forces individuals into power-over dynamics to protect their bonds."
+          },
+          {
+            "letter": "D",
+            "text": "It creates a natural motivation to seek, build, and nurture further meaningful relationships and community."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Experiencing growth-fostering relationships inspires people to seek out and nurture further meaningful, authentic bonds in their broader community."
       }
     ]
@@ -421,7 +421,7 @@
         }
       ],
       "correctOptionLetter": "B",
-      "rationale": "The smart vagus nerve tames the body’s acute stress responses and signals safety down through the body, shifting it out of chronic isolation and into a calm posture that allows for authentic engagement."
+      "rationale": "The smart vagus nerve tames the body\u2019s acute stress responses and signals safety down through the body, shifting it out of chronic isolation and into a calm posture that allows for authentic engagement."
     },
     "quizBank": [
       {
@@ -446,7 +446,7 @@
           }
         ],
         "correctOptionLetter": "B",
-        "rationale": "The smart vagus nerve tames the body’s acute stress responses and signals safety down through the body, shifting it out of chronic isolation and into a calm posture that allows for authentic engagement."
+        "rationale": "The smart vagus nerve tames the body\u2019s acute stress responses and signals safety down through the body, shifting it out of chronic isolation and into a calm posture that allows for authentic engagement."
       },
       {
         "id": "rn-q02",
@@ -454,22 +454,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "It processes relational pain along the exact same neural pathways as physical injury."
-          },
-          {
-            "letter": "B",
             "text": "It suppresses emotional distress to preserve cognitive problem-solving capabilities."
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "process relational rejection and exclusion?"
+          },
+          {
+            "letter": "C",
+            "text": "It processes relational pain along the exact same neural pathways as physical injury."
           },
           {
             "letter": "D",
             "text": "It acts as the primary motor center for mirroring gestures and body language."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "C",
         "rationale": "The dACC functions as the brain's social pain alarm, processing relational exclusion and rejection along the exact same neural pathways as physical injury."
       },
       {
@@ -486,14 +486,14 @@
           },
           {
             "letter": "C",
-            "text": "The Mirror Neuron System"
+            "text": "The Smart Vagus Nerve"
           },
           {
             "letter": "D",
-            "text": "The Smart Vagus Nerve"
+            "text": "The Mirror Neuron System"
           }
         ],
-        "correctOptionLetter": "C",
+        "correctOptionLetter": "D",
         "rationale": "The mirror neuron system acts as an internal resonance engine that mirrors the gestures, intentions, and emotional states of others in real-time, serving as the bedrock for authentic empathy."
       },
       {
@@ -502,11 +502,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "The brain shifts into a state of hypervigilance to evaluate power dynamics."
+            "text": "It encodes healthy relational engagement as deeply pleasurable and satisfying."
           },
           {
             "letter": "B",
-            "text": "It encodes healthy relational engagement as deeply pleasurable and satisfying."
+            "text": "The brain shifts into a state of hypervigilance to evaluate power dynamics."
           },
           {
             "letter": "C",
@@ -517,7 +517,7 @@
             "text": "It signals the dACC to increase sensitivity to social pain."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "Warm, responsive interactions fuel the dopamine reward system, encoding relational engagement as pleasurable and driving our intrinsic desire to seek and sustain connection."
       },
       {
@@ -534,14 +534,14 @@
           },
           {
             "letter": "C",
-            "text": "The smart vagus nerve releases cortisol to maintain active alertness."
+            "text": "The dACC quietens its distress signal, releasing the individual from defensive self-protection."
           },
           {
             "letter": "D",
-            "text": "The dACC quietens its distress signal, releasing the individual from defensive self-protection."
+            "text": "The smart vagus nerve releases cortisol to maintain active alertness."
           }
         ],
-        "correctOptionLetter": "D",
+        "correctOptionLetter": "C",
         "rationale": "Feeling accepted quietens the dACC's alarm, freeing the individual from defensive self-protection and fostering a deep sense of belonging."
       },
       {
@@ -554,18 +554,18 @@
           },
           {
             "letter": "B",
-            "text": "Experiencing the profound feeling of being genuinely seen and understood"
-          },
-          {
-            "letter": "C",
             "text": "Suppressing emotional responses during acute physical injury"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Increasing metabolic energy spent on vigilance"
+          },
+          {
+            "letter": "D",
+            "text": "Experiencing the profound feeling of being genuinely seen and understood"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Shared neural mapping through the mirror neuron system allows us to truly feel seen and understood, providing the neurobiological bedrock for authentic empathy."
       },
       {
@@ -574,11 +574,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "It creates a posture of hypervigilance and rigid boundaries."
+            "text": "It produces a calm internal baseline that makes true vulnerability and mutual connection possible."
           },
           {
             "letter": "B",
-            "text": "It produces a calm internal baseline that makes true vulnerability and mutual connection possible."
+            "text": "It creates a posture of hypervigilance and rigid boundaries."
           },
           {
             "letter": "C",
@@ -589,7 +589,7 @@
             "text": "It suppresses dopamine to maintain quiet contemplation."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "By shifting the body out of chronic stress, the smart vagus creates an internal baseline of calm that enables vulnerability, authentic engagement, and mutual connection."
       },
       {
@@ -626,18 +626,18 @@
           },
           {
             "letter": "B",
-            "text": "It triggers a continuous social pain alarm, keeping the brain in a defensive posture."
-          },
-          {
-            "letter": "C",
             "text": "It stimulates oxytocin release to force passive compliance."
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "It enhances mirror neuron accuracy to locate new connections."
+          },
+          {
+            "letter": "D",
+            "text": "It triggers a continuous social pain alarm, keeping the brain in a defensive posture."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Relational isolation keeps the dACC's social pain alarm firing, trapping the brain in fear and defensive self-protection."
       },
       {
@@ -646,22 +646,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "The creation of a \"power-over\" dynamic in social interactions"
+            "text": "Safe neurobiological grounds for mutual empathy, attunement, and authentic connection"
           },
           {
             "letter": "B",
-            "text": "A decrease in heart rate variability and increased cortisol production"
+            "text": "The creation of a \"power-over\" dynamic in social interactions"
           },
           {
             "letter": "C",
-            "text": "Safe neurobiological grounds for mutual empathy, attunement, and authentic connection"
+            "text": "A decrease in heart rate variability and increased cortisol production"
           },
           {
             "letter": "D",
             "text": "The permanent dismantling of all defensive neural pathways"
           }
         ],
-        "correctOptionLetter": "C",
+        "correctOptionLetter": "A",
         "rationale": "When the smart vagus signals safety and mirror neurons map emotional attunement, the nervous system has the neurobiological safety required for authentic connection."
       }
     ]
@@ -695,18 +695,18 @@
         },
         {
           "letter": "B",
-          "text": "The brain remains remarkably malleable, continuously physically restructuring itself in response to lived experiences."
+          "text": "Brain structure changes only in response to physical trauma, not relational experiences."
         },
         {
           "letter": "C",
-          "text": "Brain structure changes only in response to physical trauma, not relational experiences."
+          "text": "The brain remains remarkably malleable, continuously physically restructuring itself in response to lived experiences."
         },
         {
           "letter": "D",
           "text": "Relational injuries permanently lock neural pathways into hypervigilance."
         }
       ],
-      "correctOptionLetter": "B",
+      "correctOptionLetter": "C",
       "rationale": "Neuroplasticity demonstrates that the human brain remains malleable throughout life, continuously restructuring itself based on lived experience."
     },
     "quizBank": [
@@ -720,18 +720,18 @@
           },
           {
             "letter": "B",
-            "text": "The brain remains remarkably malleable, continuously physically restructuring itself in response to lived experiences."
+            "text": "Brain structure changes only in response to physical trauma, not relational experiences."
           },
           {
             "letter": "C",
-            "text": "Brain structure changes only in response to physical trauma, not relational experiences."
+            "text": "The brain remains remarkably malleable, continuously physically restructuring itself in response to lived experiences."
           },
           {
             "letter": "D",
             "text": "Relational injuries permanently lock neural pathways into hypervigilance."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "C",
         "rationale": "Neuroplasticity demonstrates that the human brain remains malleable throughout life, continuously restructuring itself based on lived experience."
       },
       {
@@ -740,22 +740,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "The brain fortifies neural pathways wired for hypervigilance and self-preservation."
-          },
-          {
-            "letter": "B",
             "text": "The mirror neuron system expands to compensate for social loss."
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "The smart vagus nerve becomes permanently hyperactive."
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Metabolic energy is redirected entirely into creative problem-solving."
+          },
+          {
+            "letter": "D",
+            "text": "The brain fortifies neural pathways wired for hypervigilance and self-preservation."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "D",
         "rationale": "Repeated exposure to relational distress and isolation fortifies neural circuits designed for defensive self-preservation and hypervigilance."
       },
       {
@@ -764,22 +764,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "Yes, because adult neuroplasticity cannot overwrite deeply entrenched trauma pathways."
+            "text": "No, biological flexibility means relational injuries are pathways waiting to be reshaped through safe connection."
           },
           {
             "letter": "B",
-            "text": "Yes, unless pharmaceutical interventions directly alter the dACC alarm."
+            "text": "Yes, because adult neuroplasticity cannot overwrite deeply entrenched trauma pathways."
           },
           {
             "letter": "C",
-            "text": "No, biological flexibility means relational injuries are pathways waiting to be reshaped through safe connection."
+            "text": "Yes, unless pharmaceutical interventions directly alter the dACC alarm."
           },
           {
             "letter": "D",
             "text": "No, but reshaping requires total isolation from relational triggers."
           }
         ],
-        "correctOptionLetter": "C",
+        "correctOptionLetter": "A",
         "rationale": "Relational injuries are not permanent life sentences; biological flexibility allows pathways to be reshaped through authentic, growth-fostering connection."
       },
       {
@@ -788,11 +788,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "It systematically strengthens neurobiological circuits supporting calm, regulation, and open engagement."
+            "text": "It permanently shuts down the dACC's capacity to feel physical pain."
           },
           {
             "letter": "B",
-            "text": "It permanently shuts down the dACC's capacity to feel physical pain."
+            "text": "It systematically strengthens neurobiological circuits supporting calm, regulation, and open engagement."
           },
           {
             "letter": "C",
@@ -803,7 +803,7 @@
             "text": "It forces the nervous system to rely on power-over structures for safety."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "B",
         "rationale": "Repeatedly stepping into mutual trust and vulnerability strengthens neural circuits that promote calm, self-regulation, and open engagement."
       },
       {
@@ -816,18 +816,18 @@
           },
           {
             "letter": "B",
-            "text": "From defensive self-protection to relaxed belonging"
-          },
-          {
-            "letter": "C",
             "text": "From mutual empathy to self-sufficient isolation"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "From emotional resonance to intellectual cognition"
+          },
+          {
+            "letter": "D",
+            "text": "From defensive self-protection to relaxed belonging"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Relational courage and support allow the brain to rewire its default posture away from defensive self-protection and toward relaxed belonging."
       },
       {
@@ -836,11 +836,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "Complete reliance on power-over dynamics in stressful situations"
+            "text": "Repeatedly engaging in safe, authentic, and growth-fostering connections over time"
           },
           {
             "letter": "B",
-            "text": "Repeatedly engaging in safe, authentic, and growth-fostering connections over time"
+            "text": "Complete reliance on power-over dynamics in stressful situations"
           },
           {
             "letter": "C",
@@ -851,7 +851,7 @@
             "text": "Avoiding all relational vulnerability to prevent social pain"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "Repeated safe and authentic connections construct new neural pathways that enable emotional resilience rather than reactive fear."
       },
       {
@@ -908,11 +908,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "Exercising power-over dynamics in moments of conflict"
+            "text": "Stepping into places of mutual trust and authentic vulnerability"
           },
           {
             "letter": "B",
-            "text": "Stepping into places of mutual trust and authentic vulnerability"
+            "text": "Exercising power-over dynamics in moments of conflict"
           },
           {
             "letter": "C",
@@ -923,7 +923,7 @@
             "text": "Relying on one-way empathy to analyze others safely"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "Actively entering into mutual trust and vulnerability stimulates new neural connections supporting connection and emotional safety."
       },
       {
@@ -936,18 +936,18 @@
           },
           {
             "letter": "B",
-            "text": "It confirms that their hypervigilance is an unchangeable biological state."
+            "text": "It offers hope by demonstrating that the brain can rewire for healthy connection when provided with safe relationships."
           },
           {
             "letter": "C",
-            "text": "It offers hope by demonstrating that the brain can rewire for healthy connection when provided with safe relationships."
+            "text": "It confirms that their hypervigilance is an unchangeable biological state."
           },
           {
             "letter": "D",
             "text": "It shows that power-over relationships are necessary for building stress tolerance."
           }
         ],
-        "correctOptionLetter": "C",
+        "correctOptionLetter": "B",
         "rationale": "Neuroplasticity shows that no matter past relational injuries, the brain retains the capacity to reshape and build pathways for connection."
       }
     ]
@@ -981,18 +981,18 @@
         },
         {
           "letter": "B",
-          "text": "Oxytocin and endorphins flood neural pathways, dampening the body's acute stress response."
-        },
-        {
-          "letter": "C",
           "text": "Dopamine production ceases to promote emotional calm."
         },
         {
-          "letter": "D",
+          "letter": "C",
           "text": "Epinephrine isolates the dACC from the rest of the brain."
+        },
+        {
+          "letter": "D",
+          "text": "Oxytocin and endorphins flood neural pathways, dampening the body's acute stress response."
         }
       ],
-      "correctOptionLetter": "B",
+      "correctOptionLetter": "D",
       "rationale": "Safe connections flood neural pathways with oxytocin and endorphins, lowering circulating stress hormones like cortisol."
     },
     "quizBank": [
@@ -1006,18 +1006,18 @@
           },
           {
             "letter": "B",
-            "text": "Oxytocin and endorphins flood neural pathways, dampening the body's acute stress response."
-          },
-          {
-            "letter": "C",
             "text": "Dopamine production ceases to promote emotional calm."
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Epinephrine isolates the dACC from the rest of the brain."
+          },
+          {
+            "letter": "D",
+            "text": "Oxytocin and endorphins flood neural pathways, dampening the body's acute stress response."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Safe connections flood neural pathways with oxytocin and endorphins, lowering circulating stress hormones like cortisol."
       },
       {
@@ -1026,11 +1026,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "The dACC turns up its volume to detect minor flaws in the partner."
+            "text": "The dACC quietens, effectively turning down the volume on the internal social pain alarm."
           },
           {
             "letter": "B",
-            "text": "The dACC quietens, effectively turning down the volume on the internal social pain alarm."
+            "text": "The dACC turns up its volume to detect minor flaws in the partner."
           },
           {
             "letter": "C",
@@ -1041,7 +1041,7 @@
             "text": "The dACC redirects all energy into hypervigilance."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "Deepening trust quietens the dACC, turning down the internal social pain alarm so the individual feels safe and accepted."
       },
       {
@@ -1078,18 +1078,18 @@
           },
           {
             "letter": "B",
-            "text": "Dopamine"
+            "text": "Adrenaline"
           },
           {
             "letter": "C",
-            "text": "Adrenaline"
+            "text": "Dopamine"
           },
           {
             "letter": "D",
             "text": "Melatonin"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "C",
         "rationale": "Responsive, attuned interactions stimulate the dopamine reward system, infusing daily life with vitality, enthusiasm, and zest."
       },
       {
@@ -1146,22 +1146,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "The neurobiological baseline necessary to rest, restore, and flourish"
-          },
-          {
-            "letter": "B",
             "text": "A continuous demand for hypervigilant monitoring"
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "A framework for establishing dominance over others"
+          },
+          {
+            "letter": "C",
+            "text": "The neurobiological baseline necessary to rest, restore, and flourish"
           },
           {
             "letter": "D",
             "text": "A mechanism to eliminate the desire for community"
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "C",
         "rationale": "Healthy relationships supply the essential neurobiological foundation our nervous system requires to rest, restore, and thrive."
       },
       {
@@ -1170,22 +1170,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "By stimulating the dopamine reward system and reinforcing feel-good neurochemical cascades."
-          },
-          {
-            "letter": "B",
             "text": "By keeping the dACC alarm continuously active to remind us of pain."
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "By demonstrating that self-sufficiency is safer than vulnerability."
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "By encouraging power-over control mechanisms."
+          },
+          {
+            "letter": "D",
+            "text": "By stimulating the dopamine reward system and reinforcing feel-good neurochemical cascades."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "D",
         "rationale": "Attuned interactions activate dopamine, oxytocin, and endorphins, neurobiologically reinforcing our drive to seek and sustain connection."
       },
       {
@@ -1218,22 +1218,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "Unburdened by fear or defense mechanisms, the brain is freed to explore new ideas and innovate."
-          },
-          {
-            "letter": "B",
             "text": "High cortisol levels force the brain to generate rapid solutions."
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "Power-over hierarchies demand strict creative output."
+          },
+          {
+            "letter": "C",
+            "text": "Unburdened by fear or defense mechanisms, the brain is freed to explore new ideas and innovate."
           },
           {
             "letter": "D",
             "text": "The dACC triggers creative thoughts as a distraction from social pain."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "C",
         "rationale": "When secure connection removes fear and hypervigilance, metabolic energy is freed for original thinking, dynamic problem-solving, and creativity."
       }
     ]
@@ -1249,7 +1249,7 @@
       {
         "type": "illustrationParagraph",
         "imageAsset": "img_power_over",
-        "body": "Traditional societal frameworks often rely on 'power-over' dynamics—hierarchical structures where one individual or group asserts dominance, control, or superiority over another. In relational contexts, power-over dynamics inevitably trigger chronic shame, hypervigilance, and defensive withdrawal, as the subordinate party is forced to suppress their authentic reality to preserve physical or emotional safety. The nervous system interprets ongoing subordination as chronic social threat, activating the Dorsal Anterior Cingulate Cortex (DACC) and locking the body into perpetual stress responses. Power-over relationships erode trust and stunt mutual development by prioritizing dominance over authentic connection."
+        "body": "Traditional societal frameworks often rely on 'power-over' dynamics\u2014hierarchical structures where one individual or group asserts dominance, control, or superiority over another. In relational contexts, power-over dynamics inevitably trigger chronic shame, hypervigilance, and defensive withdrawal, as the subordinate party is forced to suppress their authentic reality to preserve physical or emotional safety. The nervous system interprets ongoing subordination as chronic social threat, activating the Dorsal Anterior Cingulate Cortex (DACC) and locking the body into perpetual stress responses. Power-over relationships erode trust and stunt mutual development by prioritizing dominance over authentic connection."
       },
       {
         "type": "illustrationParagraph",
@@ -1263,11 +1263,11 @@
       "options": [
         {
           "letter": "A",
-          "text": "Shared agency, mutual growth, and collaborative problem-solving"
+          "text": "Control, dominance, and coercion that dictate human interactions"
         },
         {
           "letter": "B",
-          "text": "Control, dominance, and coercion that dictate human interactions"
+          "text": "Shared agency, mutual growth, and collaborative problem-solving"
         },
         {
           "letter": "C",
@@ -1278,7 +1278,7 @@
           "text": "Reciprocal vulnerability and equal emotional expression"
         }
       ],
-      "correctOptionLetter": "B",
+      "correctOptionLetter": "A",
       "rationale": "\"Power-over\" dynamics rely on control, dominance, and coercion to dictate human relationships."
     },
     "quizBank": [
@@ -1288,11 +1288,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "Shared agency, mutual growth, and collaborative problem-solving"
+            "text": "Control, dominance, and coercion that dictate human interactions"
           },
           {
             "letter": "B",
-            "text": "Control, dominance, and coercion that dictate human interactions"
+            "text": "Shared agency, mutual growth, and collaborative problem-solving"
           },
           {
             "letter": "C",
@@ -1303,7 +1303,7 @@
             "text": "Reciprocal vulnerability and equal emotional expression"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "\"Power-over\" dynamics rely on control, dominance, and coercion to dictate human relationships."
       },
       {
@@ -1312,22 +1312,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "They trigger chronic threat responses, keeping the brain trapped in fear, isolation, and defense."
-          },
-          {
-            "letter": "B",
             "text": "They activate the smart vagus nerve to promote disciplined calm."
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "They stimulate dopamine release to enhance productivity and zest."
+          },
+          {
+            "letter": "C",
+            "text": "They trigger chronic threat responses, keeping the brain trapped in fear, isolation, and defense."
           },
           {
             "letter": "D",
             "text": "They foster deep mutual empathy by clarifying roles."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "C",
         "rationale": "Power-over structures trigger threat responses, keeping the brain in a state of fear, isolation, and self-preservation while activating social pain."
       },
       {
@@ -1360,22 +1360,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "A dynamic grounded in mutual respect, shared agency, and collaborative growth"
-          },
-          {
-            "letter": "B",
             "text": "A system where power is held by one benevolent leader"
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "A structure that eliminates all individual differences to maintain equality"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "A strategy of disconnection used to avoid relational conflict"
+          },
+          {
+            "letter": "D",
+            "text": "A dynamic grounded in mutual respect, shared agency, and collaborative growth"
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "D",
         "rationale": "\"Power-with\" models offer an alternative rooted in mutual respect, shared agency, and collaborative growth without seeking to diminish others."
       },
       {
@@ -1384,11 +1384,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "To enforce compliance through subtle neurochemical rewards"
+            "text": "To expand the relational capacity and confidence of everyone involved"
           },
           {
             "letter": "B",
-            "text": "To expand the relational capacity and confidence of everyone involved"
+            "text": "To enforce compliance through subtle neurochemical rewards"
           },
           {
             "letter": "C",
@@ -1399,7 +1399,7 @@
             "text": "To quieten the mirror neuron system during decision-making"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "Power-with models do not seek to control; instead, they expand relational capacity, confidence, and mutual empowerment for all involved."
       },
       {
@@ -1412,18 +1412,18 @@
           },
           {
             "letter": "B",
-            "text": "The neurobiological safety required for true vulnerability, honest self-expression, and dynamic problem-solving"
-          },
-          {
-            "letter": "C",
             "text": "Complete suppression of stress hormones to prevent any conflict"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Automatic engagement of defensive neural highways"
+          },
+          {
+            "letter": "D",
+            "text": "The neurobiological safety required for true vulnerability, honest self-expression, and dynamic problem-solving"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Power-with paradigms create relational safety, enabling genuine vulnerability, authentic voice, and creative problem-solving."
       },
       {
@@ -1432,11 +1432,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "It enables individuals to feel heard, valued, and genuinely capable of taking meaningful action."
+            "text": "It encourages individuals to isolate themselves to maintain autonomy."
           },
           {
             "letter": "B",
-            "text": "It encourages individuals to isolate themselves to maintain autonomy."
+            "text": "It enables individuals to feel heard, valued, and genuinely capable of taking meaningful action."
           },
           {
             "letter": "C",
@@ -1447,7 +1447,7 @@
             "text": "It keeps the dACC alarm continuously active."
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "B",
         "rationale": "Mutual empowerment allows individuals to feel valued and supported, unlocking their capacity for meaningful action and dynamic contribution."
       },
       {
@@ -1456,22 +1456,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "Unlocked human potential and long-lasting psychological and relational resilience"
-          },
-          {
-            "letter": "B",
             "text": "Increased systemic inflammation and elevated cortisol"
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "A loss of clarity regarding individual goals and worth"
+          },
+          {
+            "letter": "C",
+            "text": "Unlocked human potential and long-lasting psychological and relational resilience"
           },
           {
             "letter": "D",
             "text": "Deactivation of the dopamine reward system"
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "C",
         "rationale": "Replacing control with connection unlocks human potential and fosters enduring psychological resilience and trust."
       },
       {
@@ -1480,11 +1480,11 @@
         "options": [
           {
             "letter": "A",
-            "text": "Because they rely on dopamine rewards that wear off quickly."
+            "text": "Because they keep the brain trapped in fear and defensive postures, preventing true neurobiological safety."
           },
           {
             "letter": "B",
-            "text": "Because they keep the brain trapped in fear and defensive postures, preventing true neurobiological safety."
+            "text": "Because they rely on dopamine rewards that wear off quickly."
           },
           {
             "letter": "C",
@@ -1495,7 +1495,7 @@
             "text": "Because they activate the smart vagus nerve too frequently."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "A",
         "rationale": "Power-over tactics keep the nervous system in threat mode, triggering social pain and defense rather than the safety required for resilience."
       },
       {
@@ -1508,18 +1508,18 @@
           },
           {
             "letter": "B",
-            "text": "Power-with fosters collaborative problem-solving where both parties can safely express authentic feelings."
-          },
-          {
-            "letter": "C",
             "text": "Power-with relies on strategies of disconnection to maintain peace."
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Power-with suppresses the mirror neuron system to avoid emotional impact."
+          },
+          {
+            "letter": "D",
+            "text": "Power-with fosters collaborative problem-solving where both parties can safely express authentic feelings."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Operating in power-with creates safety for honest self-expression and collaborative, dynamic problem-solving."
       }
     ]
@@ -1602,18 +1602,18 @@
           },
           {
             "letter": "B",
-            "text": "Cardiovascular health, immune system function, and stress physiology"
-          },
-          {
-            "letter": "C",
             "text": "Voluntary motor muscle movement exclusively"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "Digestive enzyme production alone"
+          },
+          {
+            "letter": "D",
+            "text": "Cardiovascular health, immune system function, and stress physiology"
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "D",
         "rationale": "Relational health directly impacts cardiovascular health, immune system efficiency, and overall stress physiology."
       },
       {
@@ -1650,18 +1650,18 @@
           },
           {
             "letter": "B",
-            "text": "It acts as a physiological buffer, mitigating the damaging physical effects of stress and trauma."
+            "text": "It suppresses all neural pathways in the brain."
           },
           {
             "letter": "C",
-            "text": "It suppresses all neural pathways in the brain."
+            "text": "It acts as a physiological buffer, mitigating the damaging physical effects of stress and trauma."
           },
           {
             "letter": "D",
             "text": "It forces the body into a permanent state of hypervigilance."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "C",
         "rationale": "Feeling connected buffers the body against physical illness and dampens the damaging physiological wear caused by stress and trauma."
       },
       {
@@ -1718,22 +1718,22 @@
         "options": [
           {
             "letter": "A",
-            "text": "A physiological buffer that equips us to navigate life's challenges with greater strength"
-          },
-          {
-            "letter": "B",
             "text": "A vulnerability to social pain that weakens physical immunity"
           },
           {
-            "letter": "C",
+            "letter": "B",
             "text": "A state of self-sufficiency that removes the need for others"
           },
           {
-            "letter": "D",
+            "letter": "C",
             "text": "A continuous cycle of hypervigilance and defense"
+          },
+          {
+            "letter": "D",
+            "text": "A physiological buffer that equips us to navigate life's challenges with greater strength"
           }
         ],
-        "correctOptionLetter": "A",
+        "correctOptionLetter": "D",
         "rationale": "Prioritizing growth-fostering relationships builds a biological buffer that equips the body to navigate stress with enhanced physical and emotional resilience."
       },
       {
@@ -1746,18 +1746,18 @@
           },
           {
             "letter": "B",
-            "text": "By demonstrating that we neurobiologically need one another to survive and thrive."
+            "text": "By showing that power-over dynamics are essential for cardiovascular fitness."
           },
           {
             "letter": "C",
-            "text": "By showing that power-over dynamics are essential for cardiovascular fitness."
+            "text": "By demonstrating that we neurobiologically need one another to survive and thrive."
           },
           {
             "letter": "D",
             "text": "By proving that isolation strengthens the smart vagus nerve."
           }
         ],
-        "correctOptionLetter": "B",
+        "correctOptionLetter": "C",
         "rationale": "Biological wiring shows that relationship quality dictates physical health, proving human interdependence is essential for survival and thriving."
       },
       {

@@ -216,8 +216,9 @@ public final class MockEducationProgressRepository: EducationProgressRepositoryP
         if score > current.bestScore {
             current.bestScore = score
         }
-        let passed = Double(score) / Double(max(1, totalQuestions)) >= 0.6
-        if passed {
+        // Strict 100% Mastery Invariant: Category completion requires 3/3 correct answers
+        let isPerfectMastery = (score == totalQuestions && totalQuestions > 0)
+        if isPerfectMastery {
             current.quizPassed = true
             current.quizPassedAt = Date()
             current.isCompleted = true
@@ -386,8 +387,9 @@ public final class LocalEducationProgressRepository: EducationProgressRepository
         if score > current.bestScore {
             current.bestScore = score
         }
-        let passed = Double(score) / Double(max(1, totalQuestions)) >= 0.6
-        if passed {
+        // Strict 100% Mastery Invariant: Category completion requires 3/3 correct answers
+        let isPerfectMastery = (score == totalQuestions && totalQuestions > 0)
+        if isPerfectMastery {
             current.quizPassed = true
             current.quizPassedAt = Date()
             current.isCompleted = true

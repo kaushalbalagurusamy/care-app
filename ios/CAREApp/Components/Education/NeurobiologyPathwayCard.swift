@@ -4,7 +4,6 @@ import SwiftUI
 public struct NeurobiologyPathwayCard: View {
     public let pathway: NeuralPathwayItem
     public let onExerciseTap: (() -> Void)?
-    @State private var isExerciseExpanded: Bool = false
     
     public var domainColor: Color {
         pathway.domain.themeColor
@@ -61,17 +60,11 @@ public struct NeurobiologyPathwayCard: View {
                 .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
             
-            // Strengthening Exercises Action Button
+            // Strengthening Exercises Action Button (Routes to upcoming Exercises flow)
             Button(action: {
                 let generator = UIImpactFeedbackGenerator(style: .light)
                 generator.impactOccurred()
-                if let onExerciseTap = onExerciseTap {
-                    onExerciseTap()
-                } else {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                        isExerciseExpanded.toggle()
-                    }
-                }
+                onExerciseTap?()
             }) {
                 Text("Strengthening Exercises")
                     .font(Theme.Typography.poppins(.semiBold, size: 14))
@@ -87,35 +80,6 @@ public struct NeurobiologyPathwayCard: View {
                     .contentShape(Capsule())
             }
             .buttonStyle(.plain)
-            
-            // Expandable Exercise Suggestion Box
-            if isExerciseExpanded && !pathway.exerciseSuggestion.isEmpty {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "sparkle")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(Theme.Colors.primary)
-                        
-                        Text("Suggested Clinical Exercise")
-                            .font(Theme.Typography.poppins(.bold, size: 12.5))
-                            .foregroundColor(Theme.Colors.textPrimary)
-                    }
-                    
-                    Text(pathway.exerciseSuggestion)
-                        .font(Theme.Typography.poppins(.regular, size: 13))
-                        .foregroundColor(Theme.Colors.textSecondary)
-                        .lineSpacing(2.5)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
-                )
-            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)

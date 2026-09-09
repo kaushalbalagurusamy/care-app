@@ -244,30 +244,38 @@ public struct EducationQuizView: View {
     // MARK: - Session Results Screen
     @ViewBuilder
     private var quizResultsContent: some View {
-        let isPass = Double(sessionScore) / Double(max(1, questions.count)) >= 0.6
+        let isMastered = (sessionScore == questions.count && questions.count > 0)
         let percent = Int((Double(sessionScore) / Double(max(1, questions.count))) * 100)
         
         VStack(spacing: 20) {
             // Mastery Icon Badge
             ZStack {
                 Circle()
-                    .fill(isPass ? Theme.Colors.primary.opacity(0.12) : Color.orange.opacity(0.12))
+                    .fill(isMastered ? Theme.Colors.primary.opacity(0.12) : Color.orange.opacity(0.12))
                     .frame(width: 80, height: 80)
                 
-                Image(systemName: isPass ? "sparkles" : "book.fill")
+                Image(systemName: isMastered ? "checkmark.seal.fill" : "book.fill")
                     .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(isPass ? Theme.Colors.primary : Color.orange)
+                    .foregroundColor(isMastered ? Theme.Colors.primary : Color.orange)
             }
             .padding(.top, 16)
             
             VStack(spacing: 8) {
-                Text(isPass ? "Mastery Achieved!" : "Insight Growing")
+                Text(isMastered ? "Mastery Achieved!" : "Insight Growing")
                     .font(Theme.Typography.poppins(.bold, size: 24))
                     .foregroundColor(Theme.Colors.textPrimary)
                 
-                Text("You answered \(sessionScore) of \(questions.count) correctly (\(percent)%)")
-                    .font(Theme.Typography.poppins(.medium, size: 15))
-                    .foregroundColor(Theme.Colors.textSecondary)
+                if isMastered {
+                    Text("Perfect score! You answered 3 of 3 correctly (100%). Category completed.")
+                        .font(Theme.Typography.poppins(.medium, size: 14.5))
+                        .foregroundColor(Theme.Colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                } else {
+                    Text("You answered \(sessionScore) of \(questions.count) correctly (\(percent)%). Score 3 of 3 to achieve category mastery and earn your checkmark.")
+                        .font(Theme.Typography.poppins(.medium, size: 14.5))
+                        .foregroundColor(Theme.Colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                }
             }
             
             // Freshness note card
@@ -384,7 +392,7 @@ public struct EducationQuizView: View {
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             isSessionFinished = true
         }
-        let passed = Double(sessionScore) / Double(max(1, questions.count)) >= 0.6
+        let passed = (sessionScore == questions.count && questions.count > 0)
         if let appEnvironment = appEnvironment {
             Task {
                 try? await appEnvironment.educationRepo.recordQuizSessionResult(

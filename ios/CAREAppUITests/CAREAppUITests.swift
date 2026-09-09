@@ -96,46 +96,43 @@ final class CAREAppUITests: XCTestCase {
         _ = homeTitle.waitForExistence(timeout: 4.0)
         
         // 2. Tap Education Action Card on Home
-        let educationCard = app.staticTexts["Education"]
-        XCTAssertTrue(educationCard.waitForExistence(timeout: 4.0))
-        educationCard.tap()
+        let educationCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Education'")).firstMatch
+        if !educationCard.waitForExistence(timeout: 4.0) {
+            _ = app.staticTexts["Education"].waitForExistence(timeout: 2.0)
+            app.staticTexts["Education"].tap()
+        } else {
+            educationCard.tap()
+        }
         
         // 3. Verify Education Topics Hub screen
-        let hubTitle = app.staticTexts["Education"]
+        let hubTitle = app.staticTexts["Explore science-backed wellness practices"]
         XCTAssertTrue(hubTitle.waitForExistence(timeout: 4.0))
         let hubScreenshot = XCUIScreen.main.screenshot()
         try? hubScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_hub.png"))
-        
-        // 3a. Tap Relational Neuroscience to verify button without emoji/chevron
-        let neuroCard = app.staticTexts["Relational Neuroscience"]
-        if neuroCard.waitForExistence(timeout: 4.0) {
-            neuroCard.tap()
-            _ = app.staticTexts["Relational Neuroscience"].waitForExistence(timeout: 4.0)
-            let neuroScreenshot = XCUIScreen.main.screenshot()
-            try? neuroScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_neuroscience.png"))
-            let backBtn = app.buttons["AppIcon_back"]
-            if backBtn.waitForExistence(timeout: 3.0) {
-                backBtn.tap()
-            }
-        }
         
         // 4. Tap Relational-Cultural Theory Topic Card
         let rctCard = app.staticTexts["Relational-Cultural Theory"]
         XCTAssertTrue(rctCard.waitForExistence(timeout: 4.0))
         rctCard.tap()
         
-        // 5. Verify RCT Topic Detail View and Founders Grid
+        // 5. Verify RCT Topic Detail View and Accordions
         let detailTitle = app.staticTexts["Relational-Cultural Theory"]
         XCTAssertTrue(detailTitle.waitForExistence(timeout: 4.0))
+        let topScreenshot = XCUIScreen.main.screenshot()
+        try? topScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_accordions.png"))
+        
         app.swipeUp()
         let detailScreenshot = XCUIScreen.main.screenshot()
         try? detailScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_founders.png"))
         
-        // 6. Scroll down to and tap "Test Your Understanding"
+        // 6. Scroll down to and tap "Test Your Understanding" (Clean button without arrow icon)
         let quizBtn = app.buttons["Test Your Understanding"]
         if !quizBtn.isHittable {
             app.swipeUp()
         }
+        let bottomScreenshot = XCUIScreen.main.screenshot()
+        try? bottomScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_cta.png"))
+        
         if quizBtn.waitForExistence(timeout: 3.0) {
             quizBtn.tap()
         }
@@ -146,10 +143,10 @@ final class CAREAppUITests: XCTestCase {
             let quizScreenshot = XCUIScreen.main.screenshot()
             try? quizScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_quiz.png"))
             
-            // Tap Option B on Question 1
-            let optionB = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option B'")).firstMatch
-            if optionB.waitForExistence(timeout: 3.0) {
-                optionB.tap()
+            // Tap first available option on Question 1
+            let option1 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
+            if option1.waitForExistence(timeout: 3.0) {
+                option1.tap()
             }
             
             // Advance through 3-question stepper
