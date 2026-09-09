@@ -24,6 +24,8 @@ public struct PageIndicatorDots: View {
                         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentIndex)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Person \(index + 1) of \(totalCount)")
+                .accessibilityIdentifier("PageDot_\(index)")
             }
         }
         .frame(height: 10)

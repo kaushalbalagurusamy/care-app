@@ -36,6 +36,8 @@ public struct IndividualResultCard: View {
                 Text(result.participant.person.name)
                     .font(Theme.Typography.poppins(.bold, size: 16))
                     .foregroundColor(Theme.Colors.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 
                 Text("\(Int(result.normalizedScore))/100")
                     .font(Theme.Typography.poppins(.medium, size: 13.5))
@@ -45,10 +47,11 @@ public struct IndividualResultCard: View {
             Spacer()
             
             // Safety Tier Pill Badge (Figma Frame 29:4)
-            Text(result.safetyTier.rawValue)
+            Text(result.safetyTier == .moderate ? "Moderate" : result.safetyTier.rawValue)
                 .font(Theme.Typography.poppins(.bold, size: 12.5))
                 .foregroundColor(.white)
-                .padding(.horizontal, 14)
+                .lineLimit(1)
+                .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(badgeColor)
                 .clipShape(Capsule())
@@ -56,6 +59,7 @@ public struct IndividualResultCard: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(Theme.Colors.primary, lineWidth: 1.5)

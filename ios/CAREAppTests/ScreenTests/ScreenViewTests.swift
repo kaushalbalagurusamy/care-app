@@ -154,4 +154,22 @@ struct ScreenViewTests {
         selectedIndividual = "James Rivera"
         #expect(selectedIndividual == "James Rivera")
     }
+
+    @Test("TEST-SCR-09: Results by individual swipeable carousel and page indicator dots")
+    @MainActor
+    func testResultsByIndividualPagingAndDots() {
+        var activeIndex = 0
+        let totalCount = 5
+        let dots = PageIndicatorDots(totalCount: totalCount, currentIndex: activeIndex) { newIndex in
+            activeIndex = newIndex
+        }
+        #expect(dots.totalCount == 5)
+        #expect(dots.currentIndex == 0)
+        
+        dots.onSelectIndex?(1)
+        #expect(activeIndex == 1)
+        
+        dots.onSelectIndex?(4)
+        #expect(activeIndex == 4)
+    }
 }

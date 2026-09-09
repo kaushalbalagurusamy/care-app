@@ -10,6 +10,7 @@ public struct PastResultsView: View {
     
     // Search & Individual Selection
     @State private var searchText: String = ""
+    @State private var selectedIndividualIndex: Int = 0
     @State private var selectedIndividual: String? = "Sarah Mitchell"
     
     private let individuals = [
@@ -52,6 +53,13 @@ public struct PastResultsView: View {
         }
     }
     
+    private var currentPerson: String {
+        if displayedIndividuals.indices.contains(selectedIndividualIndex) {
+            return displayedIndividuals[selectedIndividualIndex]
+        }
+        return displayedIndividuals.first ?? "Sarah Mitchell"
+    }
+    
     public var body: some View {
         VStack(spacing: 0) {
             // Standardized Modular Header Bar
@@ -84,7 +92,7 @@ public struct PastResultsView: View {
                             .padding(.top, 8)
                     }
                     
-                    // MARK: 3. Results by Individual Bubble Card (Static, Search Bar & Recent Selection)
+                    // MARK: 3. Results by Individual Bubble Card (Search Bar, Full-Width Swipeable Contact Card & Score Bands)
                     BubbleCardContainer(
                         title: "Results by Individual",
                         isCollapsible: false
@@ -120,51 +128,53 @@ public struct PastResultsView: View {
                                     .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
                             )
                             
-                            // Recent-5 / Filtered Selection Chips
                             if displayedIndividuals.isEmpty {
                                 Text("No individuals found matching \"\(searchText)\"")
                                     .font(Theme.Typography.poppins(.regular, size: 13))
                                     .foregroundColor(Theme.Colors.textSecondary)
-                                    .padding(.vertical, 8)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .padding(.vertical, 16)
                             } else {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 8) {
-                                        ForEach(displayedIndividuals, id: \.self) { name in
-                                            let isSelected = (selectedIndividual == name)
-                                            Button(action: {
-                                                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                                                    selectedIndividual = name
-                                                }
-                                            }) {
-                                                Text(name)
-                                                    .font(Theme.Typography.poppins(isSelected ? .bold : .medium, size: 13.5))
-                                                    .foregroundColor(isSelected ? .white : Theme.Colors.textPrimary)
-                                                    .padding(.horizontal, 16)
-                                                    .padding(.vertical, 8)
-                                                    .background(isSelected ? Theme.Colors.primary : Theme.Colors.surfaceSecondary)
-                                                    .clipShape(Capsule())
-                                                    .overlay(
-                                                        Capsule()
-                                                            .stroke(isSelected ? Color.clear : Theme.Colors.dividerSubtle, lineWidth: 1)
-                                                    )
-                                                    .shadow(color: isSelected ? Theme.Colors.primary.opacity(0.25) : Color.clear, radius: 4, x: 0, y: 2)
-                                            }
-                                            .buttonStyle(.plain)
-                                            .accessibilityLabel(name)
-                                            .accessibilityAddTraits(isSelected ? [.isSelected] : [])
-                                        }
+                                // Full-Width Swipeable Contact Bubble (Only 1 visible at a time)
+                                TabView(selection: $selectedIndividualIndex) {
+                                    ForEach(0..<displayedIndividuals.count, id: \.self) { index in
+                                        let name = displayedIndividuals[index]
+                                        IndividualResultCard(result: resultForIndividual(name))
+                                            .tag(index)
+                                            .accessibilityIdentifier("ContactCard_\(name)")
+                                            .contentShape(Rectangle())
                                     }
-                                    .padding(.vertical, 2)
                                 }
+                                .tabViewStyle(.page(indexDisplayMode: .never))
+                                .frame(height: 88)
+                                .accessibilityIdentifier("IndividualContactCarousel")
+                                
+                                // Theme-Matching 5-Dot Scroll Indicator (Matching Results Page)
+                                if displayedIndividuals.count > 1 {
+                                    HStack {
+                                        Spacer()
+                                        PageIndicatorDots(
+                                            totalCount: displayedIndividuals.count,
+                                            currentIndex: selectedIndividualIndex,
+                                            onSelectIndex: { index in
+                                                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                                                    selectedIndividualIndex = index
+                                                }
+                                            }
+                                        )
+                                        Spacer()
+                                    }
+                                    .padding(.top, 2)
+                                }
+                                
+                                // Selected Individual's Score Band Chart
+                                IndividualScoreBandChart(
+                                    dates: ["3/15", "4/02", "4/18", "5/02", "5/16", "5/25", "5/29"],
+                                    scores: scoresForIndividual(currentPerson)
+                                )
+                                .id(currentPerson)
+                                .padding(.top, 6)
                             }
-                            
-                            // Selected Individual's Score Band Chart
-                            let currentPerson = selectedIndividual ?? displayedIndividuals.first ?? "Sarah Mitchell"
-                            IndividualScoreBandChart(
-                                dates: ["3/15", "4/02", "4/18", "5/02", "5/16", "5/25", "5/29"],
-                                scores: scoresForIndividual(currentPerson)
-                            )
-                            .padding(.top, 6)
                         }
                     }
                 }
@@ -173,12 +183,63 @@ public struct PastResultsView: View {
             }
         }
         .background(Theme.Colors.background)
+        .onChange(of: searchText) { _, _ in
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                selectedIndividualIndex = 0
+            }
+        }
+        .onChange(of: selectedIndividualIndex) { _, newIndex in
+            if displayedIndividuals.indices.contains(newIndex) {
+                selectedIndividual = displayedIndividuals[newIndex]
+            }
+        }
         .task {
             savedHistory = (try? await appEnvironment.assessmentRepo.fetchAssessmentHistory()) ?? []
-            if selectedIndividual == nil {
+            if let current = selectedIndividual, let idx = displayedIndividuals.firstIndex(of: current) {
+                selectedIndividualIndex = idx
+            } else {
+                selectedIndividualIndex = 0
                 selectedIndividual = displayedIndividuals.first ?? "Sarah Mitchell"
             }
         }
+    }
+    
+    private func resultForIndividual(_ name: String) -> IndividualResult {
+        for session in savedHistory.reversed() {
+            if let match = session.individualResults.first(where: { $0.participant.person.name == name }) {
+                return match
+            }
+        }
+        
+        let scores = scoresForIndividual(name)
+        let latestScore = Double(scores.last ?? 75)
+        let tier: SafetyTier
+        if latestScore >= 67 {
+            tier = .healthy
+        } else if latestScore >= 34 {
+            tier = .moderate
+        } else {
+            tier = .highRisk
+        }
+        
+        let initials = name.split(separator: " ")
+            .compactMap { $0.first }
+            .map { String($0) }
+            .joined()
+        
+        let person = Person(
+            name: name,
+            initials: initials.isEmpty ? "P" : initials,
+            category: .partner,
+            age: 30
+        )
+        let participant = AssessmentParticipant(person: person, percentTimeSpent: 0.20)
+        return IndividualResult(
+            participant: participant,
+            normalizedScore: latestScore,
+            safetyTier: tier,
+            domainBreakdown: [.calm: 20, .accepted: 20, .resonant: 20, .energetic: 20]
+        )
     }
     
     private func scoresForIndividual(_ name: String) -> [CGFloat] {

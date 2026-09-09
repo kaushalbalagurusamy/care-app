@@ -87,11 +87,19 @@ final class CAREAppUITests: XCTestCase {
             let bottomShot = XCUIScreen.main.screenshot()
             try? bottomShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_bottom.png"))
             
-            // Tap a different individual chip (James)
-            let jamesChip = app.buttons.matching(NSPredicate(format: "label CONTAINS 'James'")).firstMatch
-            if jamesChip.waitForExistence(timeout: 2.0) {
-                jamesChip.tap()
+            // Navigate to next individual (James) via page dot or swipe
+            let pageDot1 = app.buttons["PageDot_1"]
+            if pageDot1.waitForExistence(timeout: 2.0) {
+                pageDot1.tap()
+            } else {
+                let carousel = app.descendants(matching: .any)["IndividualContactCarousel"]
+                if carousel.waitForExistence(timeout: 2.0) {
+                    carousel.swipeLeft()
+                }
             }
+            Thread.sleep(forTimeInterval: 0.5)
+            let swipedShot = XCUIScreen.main.screenshot()
+            try? swipedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_swiped_individual.png"))
             
             // Test Search Bar with typo "emly"
             let searchField = app.textFields["Search individuals..."]
