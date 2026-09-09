@@ -18,17 +18,17 @@ public enum AppIcon {
                 .font(.system(size: size, weight: weight))
                 .foregroundColor(color)
         case .chart:
-            // Custom high-fidelity stats icon with skinnier bars (66% thickness)
-            HStack(alignment: .bottom, spacing: max(1.5, size * 0.14)) {
-                RoundedRectangle(cornerRadius: max(0.6, size * 0.05))
+            // Custom high-fidelity stats icon with refined bar geometry (33% wider)
+            HStack(alignment: .bottom, spacing: max(1.8, size * 0.12)) {
+                RoundedRectangle(cornerRadius: max(0.8, size * 0.06))
                     .fill(color)
-                    .frame(width: max(2.2, size * 0.15), height: size * 0.42)
-                RoundedRectangle(cornerRadius: max(0.6, size * 0.05))
+                    .frame(width: max(2.9, size * 0.20), height: size * 0.42)
+                RoundedRectangle(cornerRadius: max(0.8, size * 0.06))
                     .fill(color)
-                    .frame(width: max(2.2, size * 0.15), height: size * 0.70)
-                RoundedRectangle(cornerRadius: max(0.6, size * 0.05))
+                    .frame(width: max(2.9, size * 0.20), height: size * 0.70)
+                RoundedRectangle(cornerRadius: max(0.8, size * 0.06))
                     .fill(color)
-                    .frame(width: max(2.2, size * 0.15), height: size * 0.98)
+                    .frame(width: max(2.9, size * 0.20), height: size * 0.98)
             }
             .frame(width: size, height: size, alignment: .bottom)
         case .profile:
