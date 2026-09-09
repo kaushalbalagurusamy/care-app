@@ -66,6 +66,49 @@ final class CAREAppUITests: XCTestCase {
         }
     }
 
+    func testAddPersonSheetAgePlaceholder() throws {
+        // 1. Home -> Tap Assessment Card
+        let assessmentCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Assessment'")).firstMatch
+        if assessmentCard.waitForExistence(timeout: 4.0) {
+            assessmentCard.tap()
+        }
+        
+        // 2. Assessment Overview -> Begin the Survey
+        let beginBtn = app.buttons["Begin the Survey"]
+        if beginBtn.waitForExistence(timeout: 3.0) {
+            beginBtn.tap()
+        }
+        
+        // 3. Survey Overview -> Next
+        let nextBtn = app.buttons["Next"]
+        if nextBtn.waitForExistence(timeout: 3.0) {
+            nextBtn.tap()
+        }
+        
+        // 4. On Choose Relationships screen -> Tap "Add Person" button
+        let addPersonBtn = app.buttons["Add Person"]
+        if addPersonBtn.waitForExistence(timeout: 3.0) {
+            addPersonBtn.tap()
+            Thread.sleep(forTimeInterval: 0.8)
+            
+            // Take screenshot of the Add Relationship sheet
+            let sheetShot = XCUIScreen.main.screenshot()
+            try? sheetShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/add_person_age_placeholder.png"))
+            
+            // Verify Age text field exists and its value is empty placeholder "Age"
+            let ageField = app.textFields["NewPersonAgeField"]
+            XCTAssertTrue(ageField.waitForExistence(timeout: 2.0))
+            XCTAssertEqual(ageField.placeholderValue, "Age")
+            XCTAssertNotEqual(ageField.value as? String, "30")
+            
+            // Cancel sheet
+            let cancelBtn = app.buttons["Cancel"]
+            if cancelBtn.waitForExistence(timeout: 2.0) {
+                cancelBtn.tap()
+            }
+        }
+    }
+
     func testPastResultsNavigation() throws {
         // Tap Stats / Chart icon in header bar to open Past Results
         let statsBtn = app.buttons["AppIcon_chart"]

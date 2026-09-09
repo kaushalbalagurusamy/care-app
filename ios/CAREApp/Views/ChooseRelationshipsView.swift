@@ -12,7 +12,7 @@ public struct ChooseRelationshipsView: View {
     @State private var newPersonLastName: String = ""
     @State private var newPersonCategory: RelationshipCategory = .partner
     @State private var customCategoryText: String = ""
-    @State private var newPersonAgeText: String = "30"
+    @State private var newPersonAgeText: String = ""
     
     public init(router: AppRouter, selectedPeople: Binding<[Person]>) {
         self.router = router
@@ -27,8 +27,10 @@ public struct ChooseRelationshipsView: View {
         let trimmedFirst = newPersonFirstName.trimmingCharacters(in: .whitespaces)
         guard !trimmedFirst.isEmpty else { return false }
         if newPersonCategory == .custom {
-            return !customCategoryText.trimmingCharacters(in: .whitespaces).isEmpty
+            guard !customCategoryText.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
         }
+        let digits = newPersonAgeText.filter { $0.isNumber }
+        guard let age = Int(digits), age > 0 else { return false }
         return true
     }
     
@@ -37,7 +39,7 @@ public struct ChooseRelationshipsView: View {
         newPersonLastName = ""
         newPersonCategory = .partner
         customCategoryText = ""
-        newPersonAgeText = "30"
+        newPersonAgeText = ""
         isShowingAddPersonSheet = false
     }
     
@@ -167,6 +169,7 @@ public struct ChooseRelationshipsView: View {
                         
                         TextField("Age", text: $newPersonAgeText)
                             .keyboardType(.numberPad)
+                            .accessibilityIdentifier("NewPersonAgeField")
                     }
                 }
                 .navigationTitle("Add Relationship")
@@ -189,7 +192,7 @@ public struct ChooseRelationshipsView: View {
                             let initials = (firstInitial + lastInitial).uppercased()
                             
                             let customName = (newPersonCategory == .custom) ? customCategoryText.trimmingCharacters(in: .whitespaces) : nil
-                            let age = Int(newPersonAgeText.filter { $0.isNumber }) ?? 30
+                            guard let age = Int(newPersonAgeText.filter { $0.isNumber }), age > 0 else { return }
                             
                             let person = Person(
                                 name: fullName,

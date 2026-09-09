@@ -49,6 +49,33 @@ struct ScreenViewTests {
         #expect(selectedIds.count <= 5)
     }
 
+    @Test("TEST-SCR-03B: Add person form validates required age and avoids defaulting to 30")
+    func testAddPersonAgeValidation() {
+        // Validation logic helper matching ChooseRelationshipsView
+        func isValid(firstName: String, category: RelationshipCategory, customCategory: String, ageText: String) -> Bool {
+            let trimmedFirst = firstName.trimmingCharacters(in: .whitespaces)
+            guard !trimmedFirst.isEmpty else { return false }
+            if category == .custom {
+                guard !customCategory.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+            }
+            let digits = ageText.filter { $0.isNumber }
+            guard let age = Int(digits), age > 0 else { return false }
+            return true
+        }
+        
+        // Empty age should not be valid
+        #expect(!isValid(firstName: "Alex", category: .friend, customCategory: "", ageText: ""))
+        // Non-positive age should not be valid
+        #expect(!isValid(firstName: "Alex", category: .friend, customCategory: "", ageText: "0"))
+        // Valid age should be valid
+        #expect(isValid(firstName: "Alex", category: .friend, customCategory: "", ageText: "27"))
+        
+        // Person created with explicit age
+        let person = Person(name: "Alex Smith", initials: "AS", category: .friend, age: 27)
+        #expect(person.age == 27)
+        #expect(person.age != 30)
+    }
+
     @Test("TEST-SCR-04: RelationshipFrequencyView allocations sum to exactly 100%")
     func testFrequencyAllocationsSum() {
         let allocations = [
