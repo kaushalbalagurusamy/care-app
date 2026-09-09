@@ -261,7 +261,7 @@ public struct EducationQuizView: View {
             .padding(.top, 16)
             
             VStack(spacing: 8) {
-                Text(isMastered ? "Mastery Achieved!" : "Insight Growing")
+                Text(isMastered ? "Mastery Achieved!" : (sessionScore == 2 ? "Almost There!" : "Keep Going!"))
                     .font(Theme.Typography.poppins(.bold, size: 24))
                     .foregroundColor(Theme.Colors.textPrimary)
                 
@@ -278,31 +278,10 @@ public struct EducationQuizView: View {
                 }
             }
             
-            // Freshness note card
-            HStack(spacing: 10) {
-                Image(systemName: "arrow.triangle.2.circlepath")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(Theme.Colors.primary)
-                
-                Text(remainingInPool > 0 ? "\(remainingInPool) fresh questions remain in bank for this topic." : "All questions in bank completed! Pool will refresh on next session.")
-                    .font(Theme.Typography.poppins(.regular, size: 13))
-                    .foregroundColor(Theme.Colors.textSecondary)
-                    .lineLimit(2)
-            }
-            .padding(14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Theme.Colors.cardSurface)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
-            )
-            
             // Actions
             VStack(spacing: 12) {
                 PrimaryButton(
-                    title: "Practice Another Set",
-                    icon: "arrow.triangle.2.circlepath",
+                    title: isMastered ? "Practice Again" : "Try Again",
                     action: {
                         startAnotherSet()
                     }
@@ -310,7 +289,6 @@ public struct EducationQuizView: View {
                 
                 SecondaryButton(
                     title: "Return to \(topic.title)",
-                    icon: "arrow.left",
                     action: {
                         if let onReturn = onReturn {
                             onReturn()

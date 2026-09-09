@@ -164,7 +164,12 @@ final class CAREAppUITests: XCTestCase {
                 let opt3 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
                 if opt3.waitForExistence(timeout: 2.0) { opt3.tap() }
                 let viewResultsBtn = app.buttons["View Results"]
-                if viewResultsBtn.waitForExistence(timeout: 2.0) { viewResultsBtn.tap() }
+                if viewResultsBtn.waitForExistence(timeout: 2.0) {
+                    viewResultsBtn.tap()
+                    Thread.sleep(forTimeInterval: 0.5)
+                    let resultsScreenshot = XCUIScreen.main.screenshot()
+                    try? resultsScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_quiz_results.png"))
+                }
             }
             
             // Tap Return to Topic from Results or Cancel
