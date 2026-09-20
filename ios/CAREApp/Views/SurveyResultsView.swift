@@ -70,11 +70,17 @@ public struct SurveyResultsView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
                     
-                    // Title Section
-                    Text("Survey Results")
-                        .font(Theme.Typography.poppins(.bold, size: 28))
-                        .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 4)
+                    // Title Section (Figma Frame 29:12)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Survey Results")
+                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                        
+                        Text("Review insights from your latest C.A.R.E. assessment")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                    }
+                    .padding(.top, 4)
                     
                     // MARK: 1. Score Composition & Category Breakdown Bubble (Figma Frame 29:4)
                     BubbleCardContainer(title: "Score Composition") {

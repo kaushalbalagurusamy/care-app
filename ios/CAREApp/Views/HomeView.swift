@@ -1,32 +1,9 @@
 import SwiftUI
 
-// MARK: - Home Alert Items
-enum HomeAlertItem: Identifiable {
-    case exercises
-    
-    var id: String {
-        switch self {
-        case .exercises: return "exercises"
-        }
-    }
-    
-    var title: String {
-        switch self {
-        case .exercises: return "Exercises Module"
-        }
-    }
-    
-    var message: String {
-        switch self {
-        case .exercises: return "Daily relational exercises and co-regulation tools will be available soon."
-        }
-    }
-}
 
 // MARK: - Screen 2: Homepage & Dashboard View (Figma Frame 5:4)
 public struct HomeView: View {
     public let router: AppRouter
-    @State private var activeAlert: HomeAlertItem? = nil
     
     public init(router: AppRouter) {
         self.router = router
@@ -34,8 +11,13 @@ public struct HomeView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Modular Compact Header Bar (Flush with Top)
-            HeaderNavBar(showBackButton: false)
+            // Modular Compact Header Bar (Flush with Top, Sparkle Between Chart & Profile on Right)
+            HeaderNavBar(
+                showBackButton: false,
+                showHomeButton: true,
+                showSparkleButton: true,
+                sparklePlacement: .right
+            )
             
             // Main Dashboard Body - Filling Full Vertical Height with Uniform Spacing
             VStack(alignment: .leading, spacing: 14) {
@@ -73,12 +55,12 @@ public struct HomeView: View {
                     iconName: "icon_activity",
                     backgroundImageName: "card_exercises_bg",
                     action: {
-                        activeAlert = .exercises
+                        router.navigate(to: .exercises)
                     }
                 )
                 
-                // Daily Streak Capsule Pill Anchored at Bottom with Same Uniform Spacing
-                StreakBadgeView(daysCount: 5)
+                // Assessment Interval Capsule Pill Anchored at Bottom with Centered Calendar Icon
+                StreakBadgeView(daysUntilNextAssessment: 3)
                     .padding(.bottom, 2)
             }
             .padding(.horizontal, 20)
@@ -86,19 +68,6 @@ public struct HomeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())
-        .alert(
-            activeAlert?.title ?? "",
-            isPresented: Binding(
-                get: { activeAlert != nil },
-                set: { if !$0 { activeAlert = nil } }
-            ),
-            actions: {
-                Button("OK", role: .cancel) { activeAlert = nil }
-            },
-            message: {
-                Text(activeAlert?.message ?? "")
-            }
-        )
     }
 }
 

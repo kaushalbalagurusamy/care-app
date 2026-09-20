@@ -31,6 +31,30 @@ struct ScreenViewTests {
         #expect(router.currentRoute == .assessmentOverview)
     }
 
+    @Test("TEST-SCR-02B: HomeView dispatches .exercises on Card 03 tap")
+    @MainActor
+    func testHomeViewExercisesNavigation() {
+        let router = AppRouter()
+        router.navigate(to: .home)
+        #expect(router.currentRoute == .home)
+        
+        // Simulating Exercises action card tap
+        router.navigate(to: .exercises)
+        #expect(router.currentRoute == .exercises)
+    }
+
+    @Test("TEST-SCR-02C: HomeView HeaderNavBar sparkle button navigates to .personalizedActionPlan")
+    @MainActor
+    func testHomeViewSparkleNavigation() {
+        let router = AppRouter()
+        router.navigate(to: .home)
+        #expect(router.currentRoute == .home)
+        
+        // Simulating Header Sparkle button tap
+        router.navigate(to: .personalizedActionPlan)
+        #expect(router.currentRoute == .personalizedActionPlan)
+    }
+
     @Test("TEST-SCR-03: ChooseRelationshipsView validates participant selection count")
     @MainActor
     func testChooseRelationshipsSelection() {

@@ -100,4 +100,38 @@ struct AtomicComponentTests {
         #expect(accordion.items[0].domain == .calm)
         #expect(accordion.items[0].score == 18)
     }
+
+    @Test("TEST-CMP-07: CalendarIcon and StreakBadgeView interval defaults")
+    func testCalendarIconAndStreakBadge() {
+        let icon = CalendarIcon(size: 16)
+        #expect(icon.size == 16)
+        
+        let badge = StreakBadgeView(daysUntilNextAssessment: 3)
+        #expect(badge.daysUntilNextAssessment == 3)
+        #expect(badge.title == "Days until next assessment:")
+        
+        // Backward-compatible init
+        let legacyBadge = StreakBadgeView(daysCount: 5)
+        #expect(legacyBadge.daysUntilNextAssessment == 5)
+    }
+
+    @Test("TEST-CMP-08: HeaderNavBar sparkle placement and visibility options")
+    func testHeaderNavBarSparkleOptions() {
+        let navBarLeft = HeaderNavBar(
+            showBackButton: false,
+            showHomeButton: true,
+            showSparkleButton: true,
+            sparklePlacement: .left
+        )
+        #expect(navBarLeft.showSparkleButton == true)
+        #expect(navBarLeft.sparklePlacement == .left)
+        #expect(navBarLeft.showBackButton == false)
+        
+        let navBarDefault = HeaderNavBar()
+        #expect(navBarDefault.showSparkleButton == true, "Sparkle button must be enabled by default across all app screens")
+        
+        let navBarCustomizationScreen = HeaderNavBar(showSparkleButton: false)
+        #expect(navBarCustomizationScreen.showSparkleButton == false, "Customization screen must be the only screen without sparkle button")
+    }
 }
+

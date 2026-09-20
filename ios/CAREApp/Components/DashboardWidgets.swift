@@ -123,34 +123,35 @@ struct ScaleCardButtonStyle: ButtonStyle {
     }
 }
 
-// MARK: - Daily Streak Pill Widget (Figma Frame 5:47 — Direct Figma Sparkles & Poppins)
+// MARK: - Daily Streak / Assessment Interval Pill Widget (Figma Frame 5:47)
 public struct StreakBadgeView: View {
-    public let daysCount: Int
+    public let daysUntilNextAssessment: Int
+    public let title: String
     
-    public init(daysCount: Int = 5) {
-        self.daysCount = daysCount
+    public init(daysUntilNextAssessment: Int = 3, title: String = "Days until next assessment:") {
+        self.daysUntilNextAssessment = daysUntilNextAssessment
+        self.title = title
+    }
+    
+    // Backward-compatible initializer for existing callers
+    public init(daysCount: Int) {
+        self.daysUntilNextAssessment = daysCount
+        self.title = "Days until next assessment:"
     }
     
     public var body: some View {
-        HStack(spacing: 10) {
-            // Direct Figma Sparkles Icon
-            Image("icon_sparkles")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 18, height: 18)
+        HStack(spacing: 8) {
+            CalendarIcon(size: 16, color: Theme.Colors.primary)
             
-            // Streak Text (Poppins SemiBold 13pt)
             HStack(spacing: 4) {
-                Text("Daily Streak:")
+                Text(title)
                     .font(Theme.Typography.menuLabel)
                     .foregroundColor(Theme.Colors.textPrimary)
                 
-                Text("\(daysCount) Days Active")
+                Text("\(daysUntilNextAssessment) days")
                     .font(Theme.Typography.menuLabel)
                     .foregroundColor(Theme.Colors.primary)
             }
-            
-            Spacer()
         }
         .padding(.horizontal, 18)
         .frame(maxWidth: .infinity)
@@ -164,6 +165,7 @@ public struct StreakBadgeView: View {
         )
     }
 }
+
 
 // MARK: - Previews
 #Preview("Dashboard Widgets") {

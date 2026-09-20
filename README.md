@@ -137,6 +137,8 @@ All architectural choices are recorded in [`docs/adr/`](docs/adr/):
 * [`docs/adr/0006-autonomous-observability-governance-and-tdd-loop.md`](docs/adr/0006-autonomous-observability-governance-and-tdd-loop.md) — Autonomous Execution Governance, Observability & TDD Loop
 * [`docs/adr/0007-user-accounts-auth-and-cloud-persistence.md`](docs/adr/0007-user-accounts-auth-and-cloud-persistence.md) — User Accounts, Auth & Cloud Persistence
 * [`docs/adr/0008-biometric-auth-and-app-lock.md`](docs/adr/0008-biometric-auth-and-app-lock.md) — Biometric Authentication & App Lock
+* [`docs/adr/0009-education-module-frontend-import.md`](docs/adr/0009-education-module-frontend-import.md) — Psychoeducation & Clinical Neuroscience Module Import Architecture
+* [`docs/adr/0010-bottom-navigation-button-standardization-audit.md`](docs/adr/0010-bottom-navigation-button-standardization-audit.md) — Bottom Navigation Button Standardization & Layout Audit
 * [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — System architecture diagram and end-to-end data flow
 
 ---

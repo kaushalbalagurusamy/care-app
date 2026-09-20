@@ -145,7 +145,16 @@ struct ContentView: View {
             EducationQuizView(topic: topic)
             
         case .exercises:
-            HomeView(router: router)
+            ExercisesView(router: router)
+            
+        case .welcomeAccountSetup:
+            WelcomeAccountSetupView(router: router)
+            
+        case .personalizedActionPlan:
+            PersonalizedActionPlanView(router: router, result: latestResult)
+            
+        case .profile:
+            ProfileView(router: router)
         }
     }
 }

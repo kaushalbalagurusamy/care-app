@@ -68,11 +68,17 @@ public struct PastResultsView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     
-                    // Title Section (Figma Frame 95:2)
-                    Text("Past Results")
-                        .font(Theme.Typography.poppins(.bold, size: 28))
-                        .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 4)
+                    // Title Section (Figma Frame 95:18)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Past Results")
+                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                        
+                        Text("Compare results across your C.A.R.E. assessments")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                    }
+                    .padding(.top, 4)
                     
                     // MARK: 1. C.A.R.E. Results Bubble Card (Static, Single 4-Line Multi-Trend Graph)
                     BubbleCardContainer(

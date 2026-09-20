@@ -8,6 +8,8 @@ public enum AppIcon {
     case back
     case info
     case checkmark
+    case sparkle
+    case calendar
     case custom(systemName: String)
     
     @ViewBuilder
@@ -47,6 +49,17 @@ public enum AppIcon {
             Image(systemName: "checkmark")
                 .font(.system(size: size, weight: weight))
                 .foregroundColor(color)
+        case .sparkle:
+            Image(systemName: "sparkles")
+                .font(.system(size: size, weight: weight))
+                .foregroundColor(color)
+        case .calendar:
+            Image("icon_calendar")
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size, height: size)
+                .foregroundColor(color)
         case .custom(let systemName):
             Image(systemName: systemName)
                 .font(.system(size: size, weight: weight))
@@ -62,6 +75,8 @@ public enum AppIcon {
         case .back: return "AppIcon_back"
         case .info: return "AppIcon_info"
         case .checkmark: return "AppIcon_checkmark"
+        case .sparkle: return "AppIcon_sparkle"
+        case .calendar: return "AppIcon_calendar"
         case .custom(let name): return "AppIcon_\(name)"
         }
     }
@@ -74,7 +89,25 @@ public enum AppIcon {
         case .back: return "Back"
         case .info: return "Information"
         case .checkmark: return "Completed"
+        case .sparkle: return "Personalized Action Plan"
+        case .calendar: return "Calendar"
         case .custom(let name): return name.replacingOccurrences(of: ".", with: " ").capitalized
         }
     }
 }
+
+// MARK: - Reusable Calendar Icon Component
+public struct CalendarIcon: View {
+    public let size: CGFloat
+    public let color: Color
+    
+    public init(size: CGFloat = 16, color: Color = Theme.Colors.primary) {
+        self.size = size
+        self.color = color
+    }
+    
+    public var body: some View {
+        AppIcon.calendar.view(size: size, color: color)
+    }
+}
+

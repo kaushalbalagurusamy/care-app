@@ -41,6 +41,7 @@ extension Theme {
         
         /// 16pt SemiBold / Bold - Card titles & primary button labels (Figma 5:28)
         public static let cardTitle: Font = poppins(.bold, size: 16)
+        public static let buttonLabel: Font = poppins(.bold, size: 16)
         
         /// 15pt Medium / Regular - Standard body copy & options text
         public static let body: Font = poppins(.regular, size: 15)
