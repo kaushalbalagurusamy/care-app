@@ -15,8 +15,8 @@
 | 5 | Add left arrow (`arrow.left`) to "Back to Results" button | Done | Passed | Standardized `PrimaryButton(title: "Back to Results", icon: "arrow.left")` in Frame 58:3 |
 | 6 | Center text on "Back to Results" button | Done | Passed | Verified Figma node 64:3 horizontal center alignment and SwiftUI maxWidth container |
 | 7 | Pinned sticky bottom bars for forms and survey views | Done | Passed | Standardized pinned bottom bar container with divider across Welcome, Exercises, Survey Overview, Choose Relationships, Frequency, and Question |
-| 8 | Add "Return to Home" button at bottom of Past Results | Pending | Pending | |
-| 9 | Add back button to Past Results top bar | Pending | Pending | |
+| 8 | Add "Return to Home" button at bottom of Past Results | Done | Passed | Added `SecondaryButton(title: "Return to Home", appIcon: .home)` to bottom of `PastResultsView` |
+| 9 | Add back button to Past Results top bar | Done | Passed | Configured `HeaderNavBar(showBackButton: true, onBack: { router.pop() })` in `PastResultsView` |
 | 10 | Calendar icon on streak badge | Done (`bb9ff1a`) | Passed | Resolved in Directive 1 |
 | 11 | 1-line description under Survey Overview heading | Pending | Pending | |
 | 12 | Up to 2-line purpose descriptions on Choose Relationships, Survey Overview, Survey Questions | Pending | Pending | |

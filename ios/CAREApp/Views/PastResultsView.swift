@@ -62,8 +62,11 @@ public struct PastResultsView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Standardized Modular Header Bar
-            HeaderNavBar()
+            // Standardized Modular Header Bar with Back Button (Directive #9)
+            HeaderNavBar(
+                showBackButton: true,
+                onBack: { router.pop() }
+            )
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
@@ -183,6 +186,13 @@ public struct PastResultsView: View {
                             }
                         }
                     }
+                    
+                    // Return to Home Action Button (Directive #8, matching Survey Results)
+                    SecondaryButton(title: "Return to Home", appIcon: .home) {
+                        router.popToRoot()
+                    }
+                    .accessibilityIdentifier("PastResultsReturnToHomeButton")
+                    .padding(.top, 8)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
