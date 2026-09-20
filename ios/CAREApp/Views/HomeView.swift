@@ -1,12 +1,24 @@
 import SwiftUI
 
 
-// MARK: - Screen 2: Homepage & Dashboard View (Figma Frame 5:4)
+// MARK: - Screen 2: Homepage & Dashboard View (Figma Frame 5:4 & 244:470)
 public struct HomeView: View {
     public let router: AppRouter
+    @Binding public var activeSession: AssessmentSessionState?
+    public var onDiscardAssessment: (() -> Void)?
     
-    public init(router: AppRouter) {
+    public init(
+        router: AppRouter,
+        activeSession: Binding<AssessmentSessionState?> = .constant(nil),
+        onDiscardAssessment: (() -> Void)? = nil
+    ) {
         self.router = router
+        self._activeSession = activeSession
+        self.onDiscardAssessment = onDiscardAssessment
+    }
+    
+    private var isAssessmentInProgress: Bool {
+        activeSession?.hasStarted == true
     }
     
     public var body: some View {
@@ -44,6 +56,16 @@ public struct HomeView: View {
                     subtitle: "Track Mind",
                     iconName: "icon_heart_pulse",
                     backgroundImageName: "card_assessment_bg",
+                    hasResumeControls: isAssessmentInProgress,
+                    onResume: {
+                        router.navigate(to: .surveyQuestion)
+                    },
+                    onDiscard: {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            activeSession = nil
+                            onDiscardAssessment?()
+                        }
+                    },
                     action: {
                         router.navigate(to: .assessmentOverview)
                     }

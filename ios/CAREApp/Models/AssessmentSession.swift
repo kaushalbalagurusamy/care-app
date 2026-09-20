@@ -52,6 +52,10 @@ public struct AssessmentSessionState: Hashable {
         return isLastParticipant && isLastQuestionForCurrentPerson && hasAnswerForCurrentQuestion
     }
     
+    public var hasStarted: Bool {
+        return !isComplete && (currentParticipantIndex > 0 || currentQuestionIndex > 0 || recordedAnswers.values.contains { !$0.isEmpty })
+    }
+    
     public var currentQuestionId: String {
         return "q_\(currentQuestionIndex + 1)"
     }

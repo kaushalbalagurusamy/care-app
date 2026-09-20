@@ -4,6 +4,7 @@ import SwiftUI
 public struct SurveyQuestionView: View {
     public let router: AppRouter
     @State public var session: AssessmentSessionState
+    public let onSessionUpdate: ((AssessmentSessionState) -> Void)?
     public let onComplete: (AssessmentResult) -> Void
     
     @State private var selectedOption: SurveyOption? = nil
@@ -13,10 +14,12 @@ public struct SurveyQuestionView: View {
     public init(
         router: AppRouter,
         session: AssessmentSessionState,
+        onSessionUpdate: ((AssessmentSessionState) -> Void)? = nil,
         onComplete: @escaping (AssessmentResult) -> Void
     ) {
         self.router = router
         self._session = State(initialValue: session)
+        self.onSessionUpdate = onSessionUpdate
         self.onComplete = onComplete
     }
     
@@ -50,6 +53,7 @@ public struct SurveyQuestionView: View {
     private func advanceSession(with option: SurveyOption) {
         guard let q = currentQuestion else { return }
         session.recordAnswer(for: q.id, option: option)
+        onSessionUpdate?(session)
         
         if session.isComplete {
             let engine = FlexibleScoringEngine()
@@ -59,6 +63,7 @@ public struct SurveyQuestionView: View {
         } else {
             let prevParticipantIndex = session.currentParticipantIndex
             _ = session.advance()
+            onSessionUpdate?(session)
             selectedOption = nil
             if session.currentParticipantIndex != prevParticipantIndex {
                 router.navigate(to: .personTransition)

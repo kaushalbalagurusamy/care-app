@@ -19,7 +19,13 @@ struct ContentView: View {
         
         ZStack {
             NavigationStack(path: $r.path) {
-                HomeView(router: router)
+                HomeView(
+                    router: router,
+                    activeSession: $activeSession,
+                    onDiscardAssessment: {
+                        activeSession = nil
+                    }
+                )
                     .navigationBarBackButtonHidden(true)
                     .toolbar(.hidden, for: .navigationBar)
                     .navigationDestination(for: AppRoute.self) { route in
@@ -65,7 +71,13 @@ struct ContentView: View {
             })
             
         case .home:
-            HomeView(router: router)
+            HomeView(
+                router: router,
+                activeSession: $activeSession,
+                onDiscardAssessment: {
+                    activeSession = nil
+                }
+            )
             
         case .assessmentOverview:
             AssessmentOverviewView(router: router)
@@ -125,8 +137,12 @@ struct ContentView: View {
                 SurveyQuestionView(
                     router: router,
                     session: session,
+                    onSessionUpdate: { updated in
+                        activeSession = updated
+                    },
                     onComplete: { result in
                         latestResult = result
+                        activeSession = nil
                         Task {
                             try? await appEnvironment.assessmentRepo.saveAssessmentResult(result)
                         }
@@ -142,8 +158,12 @@ struct ContentView: View {
                 SurveyQuestionView(
                     router: router,
                     session: session,
+                    onSessionUpdate: { updated in
+                        activeSession = updated
+                    },
                     onComplete: { result in
                         latestResult = result
+                        activeSession = nil
                         Task {
                             try? await appEnvironment.assessmentRepo.saveAssessmentResult(result)
                         }

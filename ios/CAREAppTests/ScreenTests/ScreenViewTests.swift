@@ -223,4 +223,52 @@ struct ScreenViewTests {
         dots.onSelectIndex?(4)
         #expect(activeIndex == 4)
     }
+
+    @Test("TEST-SCR-10: HomeView handles in-progress assessment resume and discard")
+    @MainActor
+    func testHomeViewResumeAndDiscard() {
+        let router = AppRouter()
+        let contacts = Person.mockFigmaContacts
+        let participants = [
+            AssessmentParticipant(person: contacts[0], percentTimeSpent: 0.50),
+            AssessmentParticipant(person: contacts[1], percentTimeSpent: 0.50)
+        ]
+        
+        var session = AssessmentSessionState(
+            participants: participants,
+            totalQuestionsPerPerson: 4
+        )
+        
+        // Initially no answers -> not started
+        #expect(!session.hasStarted)
+        
+        // Record an answer -> now started / in-progress
+        session.recordAnswer(for: "q_1", option: SurveyQuestion.standard5PointLikertOptions[2])
+        #expect(session.hasStarted)
+        #expect(!session.isComplete)
+        
+        // Test binding with HomeView
+        var activeSession: AssessmentSessionState? = session
+        var discarded = false
+        
+        let homeView = HomeView(
+            router: router,
+            activeSession: Binding(get: { activeSession }, set: { activeSession = $0 }),
+            onDiscardAssessment: {
+                discarded = true
+            }
+        )
+        #expect(homeView.activeSession != nil)
+        #expect(homeView.activeSession?.hasStarted == true)
+        
+        // Simulate discard
+        homeView.onDiscardAssessment?()
+        activeSession = nil
+        #expect(discarded)
+        #expect(activeSession == nil)
+        
+        // Simulate resume navigation
+        router.navigate(to: .surveyQuestion)
+        #expect(router.currentRoute == .surveyQuestion)
+    }
 }

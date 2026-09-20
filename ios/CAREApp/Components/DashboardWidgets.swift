@@ -6,6 +6,9 @@ public struct ActionCardView: View {
     public let subtitle: String
     public let iconName: String
     public let backgroundImageName: String
+    public let hasResumeControls: Bool
+    public let onResume: (() -> Void)?
+    public let onDiscard: (() -> Void)?
     public let action: () -> Void
     
     public init(
@@ -13,12 +16,18 @@ public struct ActionCardView: View {
         subtitle: String,
         iconName: String,
         backgroundImageName: String,
+        hasResumeControls: Bool = false,
+        onResume: (() -> Void)? = nil,
+        onDiscard: (() -> Void)? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.subtitle = subtitle
         self.iconName = iconName
         self.backgroundImageName = backgroundImageName
+        self.hasResumeControls = hasResumeControls
+        self.onResume = onResume
+        self.onDiscard = onDiscard
         self.action = action
     }
     
@@ -40,6 +49,9 @@ public struct ActionCardView: View {
         } else {
             self.iconName = "icon_activity"
         }
+        self.hasResumeControls = false
+        self.onResume = nil
+        self.onDiscard = nil
         self.action = action
     }
     
@@ -47,7 +59,11 @@ public struct ActionCardView: View {
         Button(action: {
             let generator = UIImpactFeedbackGenerator(style: .light)
             generator.impactOccurred()
-            action()
+            if hasResumeControls {
+                onResume?()
+            } else {
+                action()
+            }
         }) {
             ZStack {
                 // Background 3D Render Art (Pure art without baked-in 01/02/03 numbers)
@@ -76,17 +92,58 @@ public struct ActionCardView: View {
                     
                     Spacer()
                     
-                    // Right: 50% Larger Title and Subtitle (Aligned to Vertical Midpoint)
-                    VStack(alignment: .trailing, spacing: 3) {
+                    // Right: Title and Subtitle / Resume Controls (Aligned to Vertical Midpoint)
+                    VStack(alignment: .trailing, spacing: hasResumeControls ? 8 : 3) {
                         Text(title)
-                            .font(Theme.Typography.poppins(.semiBold, size: 28))
+                            .font(Theme.Typography.poppins(.semiBold, size: hasResumeControls ? 22 : 28))
                             .foregroundColor(.white)
                             .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
                         
-                        Text(subtitle)
-                            .font(Theme.Typography.poppins(.regular, size: 16))
-                            .foregroundColor(.white.opacity(0.95))
-                            .shadow(color: Color.black.opacity(0.20), radius: 3, x: 0, y: 1)
+                        if hasResumeControls {
+                            // Figma Node 244:560: buttons-row with Resume and Discard
+                            HStack(spacing: 8) {
+                                Button(action: {
+                                    let generator = UIImpactFeedbackGenerator(style: .medium)
+                                    generator.impactOccurred()
+                                    onResume?()
+                                }) {
+                                    Text("Resume")
+                                        .font(Theme.Typography.poppins(.semiBold, size: 12))
+                                        .foregroundColor(Color(hex: "#0F1D40"))
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .background(Color.white)
+                                        .clipShape(Capsule())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("ResumeAssessmentButton")
+                                
+                                Button(action: {
+                                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.impactOccurred()
+                                    onDiscard?()
+                                }) {
+                                    Text("Discard")
+                                        .font(Theme.Typography.poppins(.medium, size: 12))
+                                        .foregroundColor(Color.white.opacity(0.85))
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .background(Color.white.opacity(0.12))
+                                        .clipShape(Capsule())
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(Color.white.opacity(0.30), lineWidth: 1)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("DiscardAssessmentButton")
+                            }
+                        } else {
+                            Text(subtitle)
+                                .font(Theme.Typography.poppins(.regular, size: 16))
+                                .foregroundColor(.white.opacity(0.95))
+                                .shadow(color: Color.black.opacity(0.20), radius: 3, x: 0, y: 1)
+                        }
                     }
                 }
                 .padding(.horizontal, 24)
@@ -98,7 +155,7 @@ public struct ActionCardView: View {
         }
         .buttonStyle(ScaleCardButtonStyle())
         .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .accessibilityLabel("\(title), \(subtitle)")
+        .accessibilityLabel(hasResumeControls ? "\(title), In Progress. Resume or Discard." : "\(title), \(subtitle)")
     }
 }
 
