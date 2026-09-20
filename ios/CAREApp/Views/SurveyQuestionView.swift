@@ -47,42 +47,61 @@ public struct SurveyQuestionView: View {
         return "\(session.currentQuestionIndex + 1). \(promptText)"
     }
     
+    private func advanceSession(with option: SurveyOption) {
+        guard let q = currentQuestion else { return }
+        session.recordAnswer(for: q.id, option: option)
+        
+        if session.isComplete {
+            let engine = FlexibleScoringEngine()
+            let result = engine.calculateResult(for: session)
+            onComplete(result)
+            router.navigate(to: .surveyResults)
+        } else {
+            let prevParticipantIndex = session.currentParticipantIndex
+            _ = session.advance()
+            selectedOption = nil
+            if session.currentParticipantIndex != prevParticipantIndex {
+                router.navigate(to: .personTransition)
+            }
+        }
+    }
+    
     public var body: some View {
         VStack(spacing: 0) {
             // Header Bar (Matching Figma Frame 7 with all top controls)
             HeaderNavBar()
             
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 12) {
                     
                     // Title Section (Figma Frame 25:4 & Node 25:20 - Directives #12 & #13)
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text("C.A.R.E. Assessment:")
-                            .font(Theme.Typography.poppins(.bold, size: 26))
+                            .font(Theme.Typography.poppins(.bold, size: 24))
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text(currentParticipant?.person.name ?? "Assessment")
-                            .font(Theme.Typography.poppins(.semiBold, size: 20))
+                            .font(Theme.Typography.poppins(.semiBold, size: 18))
                             .foregroundColor(Theme.Colors.textSecondary)
                         
                         Text("Reflect on how you’ve felt in this relationship over the last 2 weeks.")
-                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .font(Theme.Typography.poppins(.regular, size: 12.5))
                             .foregroundColor(Theme.Colors.textSecondary)
-                            .padding(.top, 2)
+                            .padding(.top, 1)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, 2)
                     
                     // Retained Feature: Progress Bar & Dual Counter
-                    VStack(spacing: 6) {
+                    VStack(spacing: 4) {
                         HStack {
                             Text("Person \(session.currentParticipantIndex + 1) of \(max(session.participants.count, 1))")
-                                .font(Theme.Typography.poppins(.medium, size: 13))
+                                .font(Theme.Typography.poppins(.medium, size: 12))
                                 .foregroundColor(Theme.Colors.textSecondary)
                             
                             Spacer()
                             
                             Text("Question \(session.currentQuestionIndex + 1) of \(questions.count)")
-                                .font(Theme.Typography.poppins(.medium, size: 13))
+                                .font(Theme.Typography.poppins(.medium, size: 12))
                                 .foregroundColor(Theme.Colors.textSecondary)
                         }
                         
@@ -90,31 +109,31 @@ public struct SurveyQuestionView: View {
                             ZStack(alignment: .leading) {
                                 Capsule()
                                     .fill(Color(hex: "#E2E8F0"))
-                                    .frame(height: 5)
+                                    .frame(height: 4)
                                 
                                 Capsule()
                                     .fill(Theme.Colors.primary)
-                                    .frame(width: max(geo.size.width * CGFloat(session.progressRatio), 0), height: 5)
+                                    .frame(width: max(geo.size.width * CGFloat(session.progressRatio), 0), height: 4)
                                     .animation(.spring(response: 0.35, dampingFraction: 0.8), value: session.progressRatio)
                             }
                         }
-                        .frame(height: 5)
+                        .frame(height: 4)
                     }
                     .padding(.vertical, 2)
                     
                     // Question Prompt (Figma Frame 7)
                     if let question = currentQuestion {
                         Text(formattedQuestionPrompt(question: question, participant: currentParticipant))
-                            .font(Theme.Typography.poppins(.bold, size: 17))
+                            .font(Theme.Typography.poppins(.semiBold, size: 15.5))
                             .foregroundColor(Theme.Colors.textPrimary)
-                            .lineSpacing(4)
+                            .lineSpacing(3)
                             .fixedSize(horizontal: false, vertical: true)
-                            .padding(.top, 2)
+                            .padding(.top, 1)
                     }
                     
                     // 5-Point Likert Option Cards (Figma Frame 7 Left-Aligned Radio Style)
                     if let question = currentQuestion {
-                        VStack(spacing: 12) {
+                        VStack(spacing: 8) {
                             ForEach(question.options) { option in
                                 let isSelected = (selectedOption?.id == option.id)
                                 
@@ -122,42 +141,47 @@ public struct SurveyQuestionView: View {
                                     withAnimation(.spring(response: 0.22, dampingFraction: 0.85)) {
                                         selectedOption = option
                                     }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                        if selectedOption?.id == option.id {
+                                            advanceSession(with: option)
+                                        }
+                                    }
                                 }) {
-                                    HStack(alignment: .center, spacing: 14) {
+                                    HStack(alignment: .center, spacing: 12) {
                                         // Left-Side Circular Radio Indicator
                                         ZStack {
                                             if isSelected {
                                                 Circle()
                                                     .fill(Theme.Colors.primary)
-                                                    .frame(width: 22, height: 22)
+                                                    .frame(width: 20, height: 20)
                                                 
                                                 Circle()
                                                     .fill(Color.white)
-                                                    .frame(width: 8, height: 8)
+                                                    .frame(width: 7, height: 7)
                                             } else {
                                                 Circle()
-                                                    .stroke(Theme.Colors.primary, lineWidth: 2)
-                                                    .frame(width: 22, height: 22)
+                                                    .stroke(Theme.Colors.primary, lineWidth: 1.5)
+                                                    .frame(width: 20, height: 20)
                                             }
                                         }
                                         
                                         // Option Description Text
                                         Text(option.text)
-                                            .font(Theme.Typography.poppins(isSelected ? .semiBold : .regular, size: 14.5))
+                                            .font(Theme.Typography.poppins(isSelected ? .semiBold : .regular, size: 13))
                                             .foregroundColor(Theme.Colors.textPrimary)
                                             .multilineTextAlignment(.leading)
-                                            .lineSpacing(3)
+                                            .lineSpacing(2)
                                             .fixedSize(horizontal: false, vertical: true)
                                         
                                         Spacer(minLength: 0)
                                     }
-                                    .padding(.horizontal, 18)
-                                    .padding(.vertical, 16)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 10)
                                     .background(Theme.Colors.cardSurface)
-                                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                            .stroke(isSelected ? Theme.Colors.primary : Color.clear, lineWidth: 2)
+                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                            .stroke(isSelected ? Theme.Colors.primary : Color.clear, lineWidth: 1.5)
                                     )
                                 }
                                 .buttonStyle(.plain)
@@ -166,36 +190,22 @@ public struct SurveyQuestionView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.vertical, 10)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            // Pinned Bottom Action Bar (Matching ProfileView)
+            // Pinned Bottom Action Bar (Directive #15: Submit button, remove arrow)
             VStack(spacing: 0) {
                 Divider()
                     .background(Theme.Colors.dividerSubtle)
                 
                 PrimaryButton(
-                    title: session.currentButtonTitle == "Complete Assessment" ? "Complete Assessment" : "Next",
-                    trailingIcon: session.currentButtonTitle == "Complete Assessment" ? nil : "arrow.right",
+                    title: (session.isLastQuestionForCurrentPerson && session.isLastParticipant) ? "Complete Assessment" : "Submit",
+                    trailingIcon: nil,
                     isEnabled: selectedOption != nil,
                     action: {
-                        guard let chosen = selectedOption, let q = currentQuestion else { return }
-                        session.recordAnswer(for: q.id, option: chosen)
-                        
-                        if session.isComplete {
-                            let engine = FlexibleScoringEngine()
-                            let result = engine.calculateResult(for: session)
-                            onComplete(result)
-                            router.navigate(to: .surveyResults)
-                        } else {
-                            let prevParticipantIndex = session.currentParticipantIndex
-                            _ = session.advance()
-                            selectedOption = nil
-                            if session.currentParticipantIndex != prevParticipantIndex {
-                                router.navigate(to: .personTransition)
-                            }
-                        }
+                        guard let chosen = selectedOption else { return }
+                        advanceSession(with: chosen)
                     }
                 )
                 .accessibilityIdentifier("SurveyQuestionNextButton")
