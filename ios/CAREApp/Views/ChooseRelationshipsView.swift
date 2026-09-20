@@ -51,11 +51,17 @@ public struct ChooseRelationshipsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     
-                    // Title Section
-                    Text("Choose Relationships")
-                        .font(Theme.Typography.poppins(.bold, size: 30))
-                        .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 8)
+                    // Title Section (Figma Frame 17:4)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Choose Relationships")
+                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                        
+                        Text("Choose the five relationships you’ll reflect on in this C.A.R.E. assessment.")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                    }
+                    .padding(.top, 4)
                     
                     // "+ Add Person" Outlined Action Button (Figma Frame 17:4)
                     Button(action: {

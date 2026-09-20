@@ -18,9 +18,9 @@
 | 8 | Add "Return to Home" button at bottom of Past Results | Done | Passed | Added `SecondaryButton(title: "Return to Home", appIcon: .home)` to bottom of `PastResultsView` |
 | 9 | Add back button to Past Results top bar | Done | Passed | Configured `HeaderNavBar(showBackButton: true, onBack: { router.pop() })` in `PastResultsView` |
 | 10 | Calendar icon on streak badge | Done (`bb9ff1a`) | Passed | Resolved in Directive 1 |
-| 11 | 1-line description under Survey Overview heading | Pending | Pending | |
-| 12 | Up to 2-line purpose descriptions on Choose Relationships, Survey Overview, Survey Questions | Pending | Pending | |
-| 13 | Restyle Sarah Mitchell on Survey Question (muted slate 22pt) | Pending | Pending | |
+| 11 | 1-line description under Survey Overview heading | Done | Passed | Added `"Review guidelines for your C.A.R.E. assessment."` (`Poppins Regular 13pt`) |
+| 12 | Up to 2-line purpose descriptions on Choose Relationships, Survey Overview, Survey Questions | Done | Passed | Added purpose subtitles to Choose Relationships (`Frame 17:4`), Survey Overview (`Frame 13:4`), and Survey Questions (`Frame 25:4`) |
+| 13 | Restyle Sarah Mitchell on Survey Question (muted slate 22pt) | Done | Passed | Restyled participant name in `Poppins SemiBold 20pt` with `#64748B` (`textSecondary`) under 26pt bold header |
 | 14 | Interstitial participant transition card before survey for each person | Pending | Pending | |
 | 15 | Survey Question button "Submit", remove arrow, auto-advance, single-screen fit | Pending | Pending | |
 | 16 | Resume assessment button/banner on Homepage (resume or discard) | Pending | Pending | |

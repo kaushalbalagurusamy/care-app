@@ -55,15 +55,20 @@ public struct SurveyQuestionView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     
-                    // Title Section (Figma Frame 7: "C.A.R.E. Assessment:\n{Participant Name}")
-                    VStack(alignment: .leading, spacing: 2) {
+                    // Title Section (Figma Frame 25:4 & Node 25:20 - Directives #12 & #13)
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("C.A.R.E. Assessment:")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.poppins(.bold, size: 26))
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text(currentParticipant?.person.name ?? "Assessment")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
-                            .foregroundColor(Theme.Colors.textPrimary)
+                            .font(Theme.Typography.poppins(.semiBold, size: 20))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                        
+                        Text("Reflect on how you’ve felt in this relationship over the last 2 weeks.")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                            .padding(.top, 2)
                     }
                     .padding(.top, 4)
                     

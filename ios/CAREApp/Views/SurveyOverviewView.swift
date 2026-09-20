@@ -16,11 +16,17 @@ public struct SurveyOverviewView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     
-                    // Title Section
-                    Text("Survey Instructions")
-                        .font(Theme.Typography.poppins(.bold, size: 30))
-                        .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 8)
+                    // Title Section (Figma Frame 13:4)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Survey Instructions")
+                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                        
+                        Text("Review guidelines for your C.A.R.E. assessment.")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                    }
+                    .padding(.top, 4)
                     
                     // DO Section
                     VStack(alignment: .leading, spacing: 18) {
