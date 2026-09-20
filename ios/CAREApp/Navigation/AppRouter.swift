@@ -10,6 +10,7 @@ public enum AppRoute: Hashable {
     case surveyOverview
     case chooseRelationships
     case relationshipFrequency
+    case personTransition
     case surveyQuestion
     case surveyResults
     case surveyResultsExpanded

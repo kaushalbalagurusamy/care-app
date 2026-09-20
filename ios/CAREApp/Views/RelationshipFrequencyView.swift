@@ -64,7 +64,7 @@ public struct RelationshipFrequencyView: View {
                                 }
                             }
                             onProceed(participants)
-                            router.navigate(to: .surveyQuestion)
+                            router.navigate(to: .personTransition)
                         }
                     )
                     .accessibilityIdentifier("RelationshipFrequencyNextButton")

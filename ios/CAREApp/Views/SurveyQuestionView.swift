@@ -189,8 +189,12 @@ public struct SurveyQuestionView: View {
                             onComplete(result)
                             router.navigate(to: .surveyResults)
                         } else {
+                            let prevParticipantIndex = session.currentParticipantIndex
                             _ = session.advance()
                             selectedOption = nil
+                            if session.currentParticipantIndex != prevParticipantIndex {
+                                router.navigate(to: .personTransition)
+                            }
                         }
                     }
                 )

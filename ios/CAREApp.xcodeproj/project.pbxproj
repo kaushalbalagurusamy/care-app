@@ -96,6 +96,7 @@
 		22000021PERSPLANVW00002 /* PersonalizedActionPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000020PERSPLANVW00001 /* PersonalizedActionPlanView.swift */; };
 		22000031WELCOMESET00002 /* WelcomeAccountSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000030WELCOMESET00001 /* WelcomeAccountSetupView.swift */; };
 		22000041PROFILEVW000002 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000040PROFILEVW000001 /* ProfileView.swift */; };
+		22000051PERSTRANS000002 /* PersonTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000050PERSTRANS000001 /* PersonTransitionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -191,6 +192,7 @@
 		22000020PERSPLANVW00001 /* PersonalizedActionPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersonalizedActionPlanView.swift"; sourceTree = "<group>"; };
 		22000030WELCOMESET00001 /* WelcomeAccountSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WelcomeAccountSetupView.swift"; sourceTree = "<group>"; };
 		22000040PROFILEVW000001 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileView.swift"; sourceTree = "<group>"; };
+		22000050PERSTRANS000001 /* PersonTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersonTransitionView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXContainerItemProxy section */
@@ -443,6 +445,7 @@
 				22000020PERSPLANVW00001 /* PersonalizedActionPlanView.swift */,
 				22000030WELCOMESET00001 /* WelcomeAccountSetupView.swift */,
 				22000040PROFILEVW000001 /* ProfileView.swift */,
+				22000050PERSTRANS000001 /* PersonTransitionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -697,6 +700,7 @@
 				22000021PERSPLANVW00002 /* PersonalizedActionPlanView.swift in Sources */,
 				22000031WELCOMESET00002 /* WelcomeAccountSetupView.swift in Sources */,
 				22000041PROFILEVW000002 /* ProfileView.swift in Sources */,
+				22000051PERSTRANS000002 /* PersonTransitionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

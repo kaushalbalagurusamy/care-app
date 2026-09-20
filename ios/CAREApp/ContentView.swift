@@ -92,6 +92,34 @@ struct ContentView: View {
                 }
             )
             
+        case .personTransition:
+            if let session = activeSession {
+                PersonTransitionView(
+                    router: router,
+                    session: session,
+                    onStart: {
+                        if router.path.contains(.surveyQuestion) {
+                            router.pop()
+                        } else {
+                            router.navigate(to: .surveyQuestion)
+                        }
+                    }
+                )
+            } else {
+                let defaultParticipants = selectedPeople.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
+                let session = AssessmentSessionState(
+                    participants: defaultParticipants.isEmpty ? [AssessmentParticipant(person: Person.mockFigmaContacts[0], percentTimeSpent: 1.0)] : defaultParticipants,
+                    totalQuestionsPerPerson: 20
+                )
+                PersonTransitionView(
+                    router: router,
+                    session: session,
+                    onStart: {
+                        router.navigate(to: .surveyQuestion)
+                    }
+                )
+            }
+            
         case .surveyQuestion:
             if let session = activeSession {
                 SurveyQuestionView(

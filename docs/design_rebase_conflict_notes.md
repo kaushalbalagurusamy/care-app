@@ -21,7 +21,7 @@
 | 11 | 1-line description under Survey Overview heading | Done | Passed | Added `"Review guidelines for your C.A.R.E. assessment."` (`Poppins Regular 13pt`) |
 | 12 | Up to 2-line purpose descriptions on Choose Relationships, Survey Overview, Survey Questions | Done | Passed | Added purpose subtitles to Choose Relationships (`Frame 17:4`), Survey Overview (`Frame 13:4`), and Survey Questions (`Frame 25:4`) |
 | 13 | Restyle Sarah Mitchell on Survey Question (muted slate 22pt) | Done | Passed | Restyled participant name in `Poppins SemiBold 20pt` with `#64748B` (`textSecondary`) under 26pt bold header |
-| 14 | Interstitial participant transition card before survey for each person | Pending | Pending | |
+| 14 | Interstitial participant transition card before survey for each person | Done | Passed | Implemented `PersonTransitionView` (`Frames 241:467 & 241:492`) displaying participant avatar, category/age pills, and description card before survey and between participants |
 | 15 | Survey Question button "Submit", remove arrow, auto-advance, single-screen fit | Pending | Pending | |
 | 16 | Resume assessment button/banner on Homepage (resume or discard) | Pending | Pending | |
 
