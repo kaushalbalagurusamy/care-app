@@ -10,6 +10,8 @@ public enum AppIcon {
     case checkmark
     case sparkle
     case calendar
+    case arrowRight
+    case arrowLeft
     case custom(systemName: String)
     
     @ViewBuilder
@@ -60,6 +62,14 @@ public enum AppIcon {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: size, height: size)
                 .foregroundColor(color)
+        case .arrowRight:
+            Image(systemName: "arrow.right")
+                .font(.system(size: size, weight: weight))
+                .foregroundColor(color)
+        case .arrowLeft:
+            Image(systemName: "arrow.left")
+                .font(.system(size: size, weight: weight))
+                .foregroundColor(color)
         case .custom(let systemName):
             Image(systemName: systemName)
                 .font(.system(size: size, weight: weight))
@@ -77,6 +87,8 @@ public enum AppIcon {
         case .checkmark: return "AppIcon_checkmark"
         case .sparkle: return "AppIcon_sparkle"
         case .calendar: return "AppIcon_calendar"
+        case .arrowRight: return "AppIcon_arrowRight"
+        case .arrowLeft: return "AppIcon_arrowLeft"
         case .custom(let name): return "AppIcon_\(name)"
         }
     }
@@ -91,6 +103,8 @@ public enum AppIcon {
         case .checkmark: return "Completed"
         case .sparkle: return "Personalized Action Plan"
         case .calendar: return "Calendar"
+        case .arrowRight: return "Next"
+        case .arrowLeft: return "Previous"
         case .custom(let name): return name.replacingOccurrences(of: ".", with: " ").capitalized
         }
     }

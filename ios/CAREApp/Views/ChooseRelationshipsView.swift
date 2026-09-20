@@ -116,18 +116,15 @@ public struct ChooseRelationshipsView: View {
                     }
                     
                     // Action Button (Matching Figma Frame 5 "Next")
-                    Button(action: {
-                        router.navigate(to: .relationshipFrequency)
-                    }) {
-                        Text("Next")
-                            .font(Theme.Typography.poppins(.semiBold, size: 17))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 56)
-                            .background(Theme.Colors.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
+                    PrimaryButton(
+                        title: "Next",
+                        trailingIcon: "arrow.right",
+                        isEnabled: !selectedPeople.isEmpty,
+                        action: {
+                            router.navigate(to: .relationshipFrequency)
+                        }
+                    )
+                    .accessibilityIdentifier("ChooseRelationshipsNextButton")
                     .padding(.top, 12)
                     .padding(.bottom, 24)
                 }

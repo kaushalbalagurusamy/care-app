@@ -86,18 +86,14 @@ public struct SurveyOverviewView: View {
                     }
                     
                     // Action Button (Matching Figma Frame 4 "Next")
-                    Button(action: {
-                        router.navigate(to: .chooseRelationships)
-                    }) {
-                        Text("Next")
-                            .font(Theme.Typography.poppins(.semiBold, size: 17))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 56)
-                            .background(Theme.Colors.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
+                    PrimaryButton(
+                        title: "Next",
+                        trailingIcon: "arrow.right",
+                        action: {
+                            router.navigate(to: .chooseRelationships)
+                        }
+                    )
+                    .accessibilityIdentifier("SurveyOverviewNextButton")
                     .padding(.top, 12)
                     .padding(.bottom, 24)
                 }

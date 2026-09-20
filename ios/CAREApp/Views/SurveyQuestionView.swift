@@ -161,30 +161,26 @@ public struct SurveyQuestionView: View {
                     }
                     
                     // Action Button (Figma Frame 7 "Next")
-                    Button(action: {
-                        guard let chosen = selectedOption, let q = currentQuestion else { return }
-                        session.recordAnswer(for: q.id, option: chosen)
-                        
-                        if session.isComplete {
-                            let engine = FlexibleScoringEngine()
-                            let result = engine.calculateResult(for: session)
-                            onComplete(result)
-                            router.navigate(to: .surveyResults)
-                        } else {
-                            _ = session.advance()
-                            selectedOption = nil
+                    PrimaryButton(
+                        title: session.currentButtonTitle == "Complete Assessment" ? "Complete Assessment" : "Next",
+                        trailingIcon: session.currentButtonTitle == "Complete Assessment" ? nil : "arrow.right",
+                        isEnabled: selectedOption != nil,
+                        action: {
+                            guard let chosen = selectedOption, let q = currentQuestion else { return }
+                            session.recordAnswer(for: q.id, option: chosen)
+                            
+                            if session.isComplete {
+                                let engine = FlexibleScoringEngine()
+                                let result = engine.calculateResult(for: session)
+                                onComplete(result)
+                                router.navigate(to: .surveyResults)
+                            } else {
+                                _ = session.advance()
+                                selectedOption = nil
+                            }
                         }
-                    }) {
-                        Text(session.currentButtonTitle == "Complete Assessment" ? "Complete Assessment" : "Next")
-                            .font(Theme.Typography.poppins(.semiBold, size: 17))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 54)
-                            .background(selectedOption != nil ? Theme.Colors.primary : Theme.Colors.primary.opacity(0.4))
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    }
-                    .disabled(selectedOption == nil)
-                    .buttonStyle(.plain)
+                    )
+                    .accessibilityIdentifier("SurveyQuestionNextButton")
                     .padding(.top, 10)
                     .padding(.bottom, 24)
                 }

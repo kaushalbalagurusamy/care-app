@@ -42,30 +42,26 @@ public struct RelationshipFrequencyView: View {
                     .frame(maxHeight: .infinity)
                 
                 // Action Button
-                Button(action: {
-                    // Map allocations back to AssessmentParticipants
-                    var participants: [AssessmentParticipant] = []
-                    for alloc in allocations {
-                        if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
-                            participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                        } else {
-                            // Fallback
-                            let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
-                            participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                PrimaryButton(
+                    title: "Next",
+                    trailingIcon: "arrow.right",
+                    action: {
+                        // Map allocations back to AssessmentParticipants
+                        var participants: [AssessmentParticipant] = []
+                        for alloc in allocations {
+                            if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
+                                participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                            } else {
+                                // Fallback
+                                let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
+                                participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                            }
                         }
+                        onProceed(participants)
+                        router.navigate(to: .surveyQuestion)
                     }
-                    onProceed(participants)
-                    router.navigate(to: .surveyQuestion)
-                }) {
-                    Text("Next")
-                        .font(Theme.Typography.poppins(.semiBold, size: 17))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 54)
-                        .background(Theme.Colors.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                }
-                .buttonStyle(.plain)
+                )
+                .accessibilityIdentifier("RelationshipFrequencyNextButton")
                 .padding(.bottom, 12)
             }
             .padding(.horizontal, 20)

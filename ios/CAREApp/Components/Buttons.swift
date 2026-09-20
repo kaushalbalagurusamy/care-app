@@ -5,6 +5,8 @@ public struct PrimaryButton: View {
     public let title: String
     public let icon: String?
     public let appIcon: AppIcon?
+    public let trailingIcon: String?
+    public let trailingAppIcon: AppIcon?
     public let isEnabled: Bool
     public let isLoading: Bool
     public let action: () -> Void
@@ -15,6 +17,8 @@ public struct PrimaryButton: View {
         title: String,
         icon: String? = nil,
         appIcon: AppIcon? = nil,
+        trailingIcon: String? = nil,
+        trailingAppIcon: AppIcon? = nil,
         isEnabled: Bool = true,
         isLoading: Bool = false,
         action: @escaping () -> Void
@@ -22,6 +26,8 @@ public struct PrimaryButton: View {
         self.title = title
         self.icon = icon
         self.appIcon = appIcon
+        self.trailingIcon = trailingIcon
+        self.trailingAppIcon = trailingAppIcon
         self.isEnabled = isEnabled
         self.isLoading = isLoading
         self.action = action
@@ -48,6 +54,12 @@ public struct PrimaryButton: View {
                     }
                     Text(title)
                         .font(Theme.Typography.cardTitle)
+                    if let trailingAppIcon = trailingAppIcon {
+                        trailingAppIcon.view(size: 16, weight: .semibold, color: .white)
+                    } else if let trailingIcon = trailingIcon {
+                        Image(systemName: trailingIcon)
+                            .font(.system(size: 16, weight: .semibold))
+                    }
                 }
             }
             .frame(maxWidth: .infinity)
@@ -68,6 +80,8 @@ public struct SecondaryButton: View {
     public let title: String
     public let icon: String?
     public let appIcon: AppIcon?
+    public let trailingIcon: String?
+    public let trailingAppIcon: AppIcon?
     public let action: () -> Void
     
     public var minHeight: CGFloat { 56.0 }
@@ -76,11 +90,15 @@ public struct SecondaryButton: View {
         title: String,
         icon: String? = nil,
         appIcon: AppIcon? = nil,
+        trailingIcon: String? = nil,
+        trailingAppIcon: AppIcon? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.icon = icon
         self.appIcon = appIcon
+        self.trailingIcon = trailingIcon
+        self.trailingAppIcon = trailingAppIcon
         self.action = action
     }
     
@@ -99,6 +117,12 @@ public struct SecondaryButton: View {
                 }
                 Text(title)
                     .font(Theme.Typography.cardTitle)
+                if let trailingAppIcon = trailingAppIcon {
+                    trailingAppIcon.view(size: 16, weight: .semibold, color: Theme.Colors.primary)
+                } else if let trailingIcon = trailingIcon {
+                    Image(systemName: trailingIcon)
+                        .font(.system(size: 16, weight: .semibold))
+                }
             }
             .frame(maxWidth: .infinity)
             .frame(height: 56)
