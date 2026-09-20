@@ -40,34 +40,42 @@ public struct RelationshipFrequencyView: View {
                 // 5-Person Vertical Partition Container (Takes flexible space in single screen)
                 VerticalTimeAllocationBubble(allocations: $allocations)
                     .frame(maxHeight: .infinity)
-                
-                // Action Button
-                PrimaryButton(
-                    title: "Next",
-                    trailingIcon: "arrow.right",
-                    action: {
-                        // Map allocations back to AssessmentParticipants
-                        var participants: [AssessmentParticipant] = []
-                        for alloc in allocations {
-                            if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
-                                participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                            } else {
-                                // Fallback
-                                let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
-                                participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                            }
-                        }
-                        onProceed(participants)
-                        router.navigate(to: .surveyQuestion)
-                    }
-                )
-                .accessibilityIdentifier("RelationshipFrequencyNextButton")
-                .padding(.bottom, 12)
             }
             .padding(.horizontal, 20)
-        }
-        .background(Theme.Colors.background)
-        .toolbar(.hidden, for: .navigationBar)
+            
+            // Pinned Bottom Action Bar (Matching ProfileView)
+            VStack(spacing: 0) {
+                Divider()
+                    .background(Theme.Colors.dividerSubtle)
+                    
+                    PrimaryButton(
+                        title: "Next",
+                        trailingIcon: "arrow.right",
+                        action: {
+                            // Map allocations back to AssessmentParticipants
+                            var participants: [AssessmentParticipant] = []
+                            for alloc in allocations {
+                                if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
+                                    participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                                } else {
+                                    // Fallback
+                                    let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
+                                    participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
+                                }
+                            }
+                            onProceed(participants)
+                            router.navigate(to: .surveyQuestion)
+                        }
+                    )
+                    .accessibilityIdentifier("RelationshipFrequencyNextButton")
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
+                    .padding(.bottom, 10)
+                }
+                .background(Theme.Colors.background)
+            }
+            .background(Theme.Colors.background)
+            .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             if allocations.isEmpty {
                 setupInitialAllocations()

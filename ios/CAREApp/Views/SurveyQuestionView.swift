@@ -159,34 +159,42 @@ public struct SurveyQuestionView: View {
                             }
                         }
                     }
-                    
-                    // Action Button (Figma Frame 7 "Next")
-                    PrimaryButton(
-                        title: session.currentButtonTitle == "Complete Assessment" ? "Complete Assessment" : "Next",
-                        trailingIcon: session.currentButtonTitle == "Complete Assessment" ? nil : "arrow.right",
-                        isEnabled: selectedOption != nil,
-                        action: {
-                            guard let chosen = selectedOption, let q = currentQuestion else { return }
-                            session.recordAnswer(for: q.id, option: chosen)
-                            
-                            if session.isComplete {
-                                let engine = FlexibleScoringEngine()
-                                let result = engine.calculateResult(for: session)
-                                onComplete(result)
-                                router.navigate(to: .surveyResults)
-                            } else {
-                                _ = session.advance()
-                                selectedOption = nil
-                            }
-                        }
-                    )
-                    .accessibilityIdentifier("SurveyQuestionNextButton")
-                    .padding(.top, 10)
-                    .padding(.bottom, 24)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // Pinned Bottom Action Bar (Matching ProfileView)
+            VStack(spacing: 0) {
+                Divider()
+                    .background(Theme.Colors.dividerSubtle)
+                
+                PrimaryButton(
+                    title: session.currentButtonTitle == "Complete Assessment" ? "Complete Assessment" : "Next",
+                    trailingIcon: session.currentButtonTitle == "Complete Assessment" ? nil : "arrow.right",
+                    isEnabled: selectedOption != nil,
+                    action: {
+                        guard let chosen = selectedOption, let q = currentQuestion else { return }
+                        session.recordAnswer(for: q.id, option: chosen)
+                        
+                        if session.isComplete {
+                            let engine = FlexibleScoringEngine()
+                            let result = engine.calculateResult(for: session)
+                            onComplete(result)
+                            router.navigate(to: .surveyResults)
+                        } else {
+                            _ = session.advance()
+                            selectedOption = nil
+                        }
+                    }
+                )
+                .accessibilityIdentifier("SurveyQuestionNextButton")
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+                .padding(.bottom, 10)
+            }
+            .background(Theme.Colors.background)
         }
         .background(Theme.Colors.background)
         .toolbar(.hidden, for: .navigationBar)

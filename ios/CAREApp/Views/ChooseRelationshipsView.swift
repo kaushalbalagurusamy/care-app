@@ -114,22 +114,31 @@ public struct ChooseRelationshipsView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         }
                     }
-                    
-                    // Action Button (Matching Figma Frame 5 "Next")
-                    PrimaryButton(
-                        title: "Next",
-                        trailingIcon: "arrow.right",
-                        isEnabled: !selectedPeople.isEmpty,
-                        action: {
-                            router.navigate(to: .relationshipFrequency)
-                        }
-                    )
-                    .accessibilityIdentifier("ChooseRelationshipsNextButton")
-                    .padding(.top, 12)
-                    .padding(.bottom, 24)
                 }
                 .padding(.horizontal, 20)
+                .padding(.bottom, 16)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // Pinned Bottom Action Bar (Matching ProfileView)
+            VStack(spacing: 0) {
+                Divider()
+                    .background(Theme.Colors.dividerSubtle)
+                
+                PrimaryButton(
+                    title: "Next",
+                    trailingIcon: "arrow.right",
+                    isEnabled: !selectedPeople.isEmpty,
+                    action: {
+                        router.navigate(to: .relationshipFrequency)
+                    }
+                )
+                .accessibilityIdentifier("ChooseRelationshipsNextButton")
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+                .padding(.bottom, 10)
+            }
+            .background(Theme.Colors.background)
         }
         .background(Theme.Colors.background)
         .toolbar(.hidden, for: .navigationBar)

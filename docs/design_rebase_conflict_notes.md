@@ -14,7 +14,7 @@
 | 4 | Add forward arrows (`arrow.right`) to all blue "Next" buttons | Done | Passed | Added `trailingIcon` & `trailingAppIcon` to `PrimaryButton`, applied to Frames 04, 05, 06, 07 |
 | 5 | Add left arrow (`arrow.left`) to "Back to Results" button | Done | Passed | Standardized `PrimaryButton(title: "Back to Results", icon: "arrow.left")` in Frame 58:3 |
 | 6 | Center text on "Back to Results" button | Done | Passed | Verified Figma node 64:3 horizontal center alignment and SwiftUI maxWidth container |
-| 7 | Pinned sticky bottom bars for forms and survey views | Pending | Pending | |
+| 7 | Pinned sticky bottom bars for forms and survey views | Done | Passed | Standardized pinned bottom bar container with divider across Welcome, Exercises, Survey Overview, Choose Relationships, Frequency, and Question |
 | 8 | Add "Return to Home" button at bottom of Past Results | Pending | Pending | |
 | 9 | Add back button to Past Results top bar | Pending | Pending | |
 | 10 | Calendar icon on streak badge | Done (`bb9ff1a`) | Passed | Resolved in Directive 1 |
