@@ -57,9 +57,14 @@ public struct SurveyResultsExpandedView: View {
                     }
                     
                     // MARK: Bottom Action Button (Figma Frame 58:3)
-                    PrimaryButton(title: "Back to Results") {
-                        router.pop()
-                    }
+                    PrimaryButton(
+                        title: "Back to Results",
+                        icon: "arrow.left",
+                        action: {
+                            router.pop()
+                        }
+                    )
+                    .accessibilityIdentifier("BackToResultsButton")
                     .padding(.top, 6)
                 }
                 .padding(.horizontal, 20)
