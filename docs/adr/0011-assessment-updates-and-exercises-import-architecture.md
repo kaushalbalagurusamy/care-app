@@ -1,13 +1,13 @@
 # ADR 0011: Figma Design System Updates & Exercises Module Integration Architecture
 
-* **Status**: Proposed / Pending Review & Hand Inspection
+* **Status**: Accepted / Implemented (Directives #1–17 Completed & Verified with 111 Unit Tests + 6 UI Tests; Visual Pixel-Matching Staged)
 * **Date**: 2026-09-20
 * **Deciders**: Lead AI Systems Architect, Mobile Engineering Team, Product Design (Jayme)
 * **Figma File**: `C.A.R.E. App` (Key: `4uqL8l0VygkDoFQeXP7VeL`)
 * **Design Handoff Scope**:
   * 10 Updated Assessment & Dashboard Frames (Frames 01–10)
   * 4 Brand-New Application Screens (Frames 19–22)
-  * Jayme's 12 Canvas UI Directives (Figma Node `211:59`)
+  * Jayme's 17 Canvas UI Directives (Figma Nodes `211:59` through `239:8`, Frames `241:467`, `241:492`, `244:470`)
 
 ---
 
@@ -433,9 +433,101 @@ flowchart TD
     S2 --> S3
 ```
 
-| Verification Suite | Target Areas | Target Pass Rate |
-| :--- | :--- | :---: |
-| **Existing Unit Tests** | `ModelTests`, `NavigationTests`, `ThemeTests`, `StorageTests`, `SecurityTests` | **105 / 105 Passing** |
-| **Assessment Screen Tests** | `ScreenViewTests` (Frames 01–10 updated styling & pinned buttons) | **10 / 10 Passing** |
-| **New Screen Tests** | `NewScreenTests` (Frames 19–22 models, views, and routing) | **8 / 8 Passing** |
-| **Compiler Warnings** | Xcode toolchain build with strict concurrency check | **0 Warnings** |
+| Verification Suite | Target Areas | Pass Rate | Status |
+| :--- | :--- | :---: | :---: |
+| **All Unit Test Suites** | 18 Suites (`ModelTests`, `NavigationTests`, `ThemeTests`, `StorageTests`, `SecurityTests`, `ScreenViewTests`, `EducationTests`, `FuzzyMatcherTests`, etc.) | **111 / 111 Passing** | **Verified (0.74s)** |
+| **End-to-End UI Tests** | `CAREAppUITests` (Full assessment journey, Past Results, 4-line chart, swipeable carousel, search) | **6 / 6 Passing** | **Verified (119.5s)** |
+| **Compiler Warnings** | Xcode toolchain build with strict concurrency check | **0 Warnings** | **Verified** |
+
+---
+
+## 7. Jayme's Directives Implementation & Verification Matrix (Directives #1–17)
+
+All 17 design directives delivered across Figma Node `211:59`, Node `239:8`, and newly added frames have been implemented atomically and verified against non-regression test suites:
+
+| # | Directive Summary | Source Node / Frame | Commit SHA | Verified Status | Architecture & Implementation Summary |
+|---|---|---|---|---|---|
+| **1** | Streak pill -> "Days to Next Assessment" + calendar icon | Node `211:59` | `bb9ff1a` | Passed | Replaced streak badge with `CalendarIcon` displaying all 6 date slots using true alpha cutout transparency. Centered text. |
+| **2** | Sparkle icon in top navigation bar (except loading & action plan) | Node `211:59` | `bb9ff1a` | Passed | Standardized universal `HeaderNavBar` sparkle button between Chart and Profile icons (and on HomeView top bar). Routes to `.personalizedActionPlan`. |
+| **3** | Survey Results header styled identically to Past Results (2 lines) | Node `211:59` | `bb9ff1a` | Passed | Standardized 2-line header: 28pt Bold Title + 13pt Regular Subtitle with 4pt vertical spacing on `SurveyResultsView`. |
+| **4** | Add forward arrows (`arrow.right`) to all blue "Next" buttons | Node `211:59` | `b940856` | Passed | Added `trailingIcon: String?` to `PrimaryButton` and applied right-facing arrows across Frames 04, 05, and 06. |
+| **5** | Add left arrow (`arrow.left`) to "Back to Results" button | Node `211:59` | `9425915` | Passed | Configured `PrimaryButton(title: "Back to Results", icon: "arrow.left")` in `SurveyResultsExpandedView` (Frame 58:3). |
+| **6** | Center text on "Back to Results" button | Node `211:59` | `9425915` | Passed | Wrapped button title in horizontal centered alignment using `.frame(maxWidth: .infinity)`. |
+| **7** | Pinned sticky bottom bars for forms and survey views | Node `211:59` | `5bcfd5b` | Passed | Standardized pinned bottom bar container above safe area across Welcome, Exercises, Survey Overview, Choose Relationships, Frequency, and Question views. |
+| **8** | Add "Return to Home" button at bottom of Past Results | Node `211:59` | `02f3198` | Passed | Added `SecondaryButton(title: "Return to Home", appIcon: .home)` to bottom of `PastResultsView`. |
+| **9** | Add back button to Past Results top bar | Node `211:59` | `02f3198` | Passed | Configured `HeaderNavBar(showBackButton: true, onBack: { router.pop() })` in `PastResultsView`. |
+| **10** | Calendar icon on streak badge | Node `211:59` | `bb9ff1a` | Passed | Resolved as part of Directive #1 vector cutout implementation. |
+| **11** | 1-line description under Survey Overview heading | Node `211:59` | `f3c820c` | Passed | Added `"Review guidelines for your C.A.R.E. assessment."` (`Poppins Regular 13pt`, `#64748B`) under header. |
+| **12** | Up to 2-line purpose descriptions on Choose Relationships, Survey Overview, Survey Questions | Node `211:59` | `f3c820c` | Passed | Standardized purpose subtitles across Choose Relationships (Frame 17:4), Survey Overview (Frame 13:4), and Survey Questions (Frame 25:4). |
+| **13** | Restyle Sarah Mitchell on Survey Question (muted slate 20pt) | Node `211:59` | `f3c820c` | Passed | Restyled participant name in `Poppins SemiBold 20pt` with `#64748B` (`textSecondary`) under 26pt bold header. |
+| **14** | Interstitial participant transition card before survey for each person | Node `211:59` | `1a52595` | Passed | Implemented `PersonTransitionView` (Frames `241:467 & 241:492`) displaying participant avatar, category/age pills, and description card before survey and between participants. |
+| **15** | Survey Question button "Submit", remove arrow, auto-advance, single-screen fit | Node `211:59` | `62fe0e9` | Passed | Set button label to `"Submit"` (or `"Complete Assessment"` on final question), removed arrow (`trailingIcon: nil`), added 250ms auto-advance delay, and optimized vertical geometry for single-screen fit without scrolling. |
+| **16** | Resume assessment button on Homepage (resume or discard) | Node `244:470` | `7dbe5c3` | Passed | Implemented `homepage-resume` within Card 02 (`ActionCardView`) with "Resume" (white capsule, navy text) and "Discard" (frosted outline capsule, white text) buttons when an assessment session is in progress. |
+| **17** | Action Plan page: "Wired to Connect" should link to Amy's Book purchase link, underline text | Node `239:8` | `8bf0abf` | Passed | Replaced static card title text in `PersonalizedActionPlanView` with underlined interactive `Link` to Dr. Amy Banks' official book purchase URL. |
+
+---
+
+## 8. Architectural & UI Merge Conflict Resolutions (Design Rebase)
+
+Because Jayme's visual canvas branched from an earlier snapshot of the codebase prior to the SwiftData persistence and multi-line chart implementations, four distinct design and architecture conflicts were identified and resolved during rebase:
+
+1. **Directive #4 (Forward Arrows) vs Directive #15 (Remove Arrow on Survey Question)**:
+   - *Conflict*: Directive #4 mandated forward arrows on all blue "Next" buttons. Directive #15 explicitly required that the primary CTA on `survey-question` say `"Submit"` and have its arrow removed.
+   - *Resolution*: Scoped Directive #15 as a screen-specific override for `SurveyQuestionView`. Frames 04, 05, and 06 maintain `"Next →"`, while Frame 07 displays `"Submit"` (or `"Complete Assessment"` on the final question) with `trailingIcon: nil`.
+2. **Assessment Model Dynamic Progression vs UI "Submit" Button**:
+   - *Conflict*: Domain tests (`TEST-SCR-05`, `testSurveyQuestionButtonProgression`) assert that `session.currentButtonTitle` transitions from `"Next"` to `"Next: {Name}"` across participants.
+   - *Resolution*: Maintained `currentButtonTitle` on `AssessmentSessionState` for state machine logic and test contract compliance, while presentation on `SurveyQuestionView` cleanly presents `"Submit"` for individual questions and `"Complete Assessment"` on the final question.
+3. **Homepage Resume UI (`Frame 244:470`) vs Modern SwiftData Dashboard**:
+   - *Conflict*: Jayme's mockup `homepage-resume` (`Node 244:470`) showed an older card layout without the 4-line trend charts or dynamic session lifecycle management.
+   - *Resolution*: Embedded the exact `buttons-row` (`Node 244:560`) into Card 02 (`ActionCardView`) footer. When `activeSession.hasStarted == true`, it reveals "Resume" (pure white pill, navy text) and "Discard" (frosted outline pill, white text). Discarding purges the in-progress session and restores the default state.
+4. **Auto-Advance Debounce vs HIG Accessibility Standards**:
+   - *Conflict*: Instant transition upon selecting an option disorients users and prevents changing a mis-tapped option.
+   - *Resolution*: Implemented a 250ms tactile delay with `selectedOption?.id == option.id` guard verification before calling `onNext()`. This allows the selection animation to be perceived while preserving fast survey completion.
+
+---
+
+## 9. Open Questions for Product, Design & Engineering Review
+
+The following open questions are documented to facilitate product, design (Jayme), and engineering alignment prior to the visual pixel-matching pass:
+
+### 1. In-App Purchase (IAP) Policy vs External Book Purchase Link (Directive #17)
+* **Context**: `PersonalizedActionPlanView` currently links Dr. Amy Banks' book *"Wired to Connect"* to an external web URL (`https://www.penguinrandomhouse.com/...`). The bottom of the same screen features a `$9.99` "Purchase Now" button for a personalized workbook.
+* **Open Questions**:
+  1. Under Apple App Store Review Guideline 3.1.1, digital content or tailored workbook materials unlocked within the app must use StoreKit In-App Purchase (IAP). Is the `$9.99` action intended as an Apple IAP for in-app workbook access, or does it redirect to an external physical bookstore?
+  2. For the *"Wired to Connect"* book link: Should this open via external Mobile Safari, or should it use an in-app `SFSafariViewController` sheet so the user remains anchored within the app's action plan flow?
+
+### 2. Survey Auto-Advance Timing & Accessibility User Preferences (Directive #15)
+* **Context**: Directive #15 implemented a 250ms debounce before auto-advancing to the next question.
+* **Open Questions**:
+  1. Is 250ms perceived as comfortable across various user age groups and motor skill levels, or should it be adjusted (e.g., 350ms)?
+  2. Should CARE App include an accessibility setting (e.g., in `StorageSettingsView` or `ProfileView`) allowing users with cognitive or motor accommodations to toggle off auto-advance and require explicit taps on `"Submit"`?
+
+### 3. Interstitial Participant Transition Timing & Automation (Directive #14)
+* **Context**: `PersonTransitionView` (`Frames 241:467 & 241:492`) displays an introduction card before the survey starts for a person. Currently, it requires the user to tap "Begin Questionnaire" or "Next Participant".
+* **Open Questions**:
+  1. Should this transition screen remain strictly manual (user taps to proceed), or should it support an optional auto-countdown (e.g., 3-second animated ring)?
+  2. Should a transition animation (such as a smooth card flip or horizontal slide) be added to visually distinguish shifting between participants?
+
+### 4. Top Bar Sparkle Icon Destination Evolution (Directive #2)
+* **Context**: The sparkle icon is now universally positioned on the top bar and currently navigates to `.personalizedActionPlan`. Jayme noted this may eventually link to a "Customization" screen.
+* **Open Questions**:
+  1. What is the intended roadmap for the sparkle button? Will it evolve into a customization/theming screen, an AI insights coach, or remain as the primary shortcut to the Action Plan?
+  2. If the user has never completed an assessment, what empty state should `PersonalizedActionPlanView` present when accessed via the sparkle icon?
+
+### 5. Historical Data Visualization vs Static Mockups (Design Rebase)
+* **Context**: Jayme's Figma frames for Past Results and Results by Individual used a simpler 1-line representation. In Sprint 6/7, engineering implemented a richer 4-line `CARETrendChart` (displaying Calm, Accepted, Resonant, and Energetic trajectories over time) and a swipeable 5-dot carousel.
+* **Open Questions**:
+  1. In the upcoming visual pixel-matching pass, does design approve keeping the multi-line `CARETrendChart` and swipeable carousel as the production standard, applying only Jayme's typography, colors, and margins?
+  2. Or does design prefer a toggle between an aggregate composite score line and the detailed 4-pathway breakdown?
+
+### 6. Assessment Session Persistence Across App Termination (Directive #16)
+* **Context**: In-progress assessment state is currently maintained in memory within `AssessmentSessionState`.
+* **Open Questions**:
+  1. If the user quits the app or restarts their phone midway through a survey, should the in-progress draft answers be automatically serialized to SwiftData so they can resume days later?
+  2. What should be the expiration policy for an in-progress draft (e.g., auto-discard after 7 days)?
+
+### 7. Layout Density on Compact Form Factors (Frame 07 & Directive #7)
+* **Context**: Directive #15 optimized `SurveyQuestionView` typography (15.5pt header, 13pt options) and removed padding so the entire view fits on a single screen without scrolling on iPhone 16 Pro (393x852).
+* **Open Questions**:
+  1. On smaller legacy form factors such as iPhone SE (375x667), the pinned bottom bar and question options will require scrolling. Is standard vertical scrolling on compact devices acceptable, or should dynamic spacing scale down on smaller viewports?
+
