@@ -90,9 +90,19 @@ public struct PersonalizedActionPlanView: View {
                     
                     // Book Description Card
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Based on Wired to Connect")
-                            .font(Theme.Typography.poppins(.semiBold, size: 16))
-                            .foregroundColor(Theme.Colors.textPrimary)
+                        HStack(spacing: 4) {
+                            Text("Based on")
+                                .font(Theme.Typography.poppins(.semiBold, size: 16))
+                                .foregroundColor(Theme.Colors.textPrimary)
+                            
+                            Link(destination: URL(string: "https://www.penguinrandomhouse.com/books/318700/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")!) {
+                                Text("Wired to Connect")
+                                    .font(Theme.Typography.poppins(.semiBold, size: 16))
+                                    .foregroundColor(Theme.Colors.primary)
+                                    .underline()
+                            }
+                            .accessibilityIdentifier("wiredToConnectBookLink")
+                        }
                         
                         Text("Created in collaboration with Dr. Amy Banks, this tailored workbook provides specific daily exercises calibrated directly to your neural pathway scores.")
                             .font(Theme.Typography.poppins(.regular, size: 13))

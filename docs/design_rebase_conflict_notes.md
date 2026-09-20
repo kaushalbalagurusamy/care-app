@@ -23,7 +23,8 @@
 | 13 | Restyle Sarah Mitchell on Survey Question (muted slate 22pt) | Done (`f3c820c`) | Passed | Restyled participant name in `Poppins SemiBold 20pt` with `#64748B` (`textSecondary`) under 26pt bold header |
 | 14 | Interstitial participant transition card before survey for each person | Done (`1a52595`) | Passed | Implemented `PersonTransitionView` (`Frames 241:467 & 241:492`) displaying participant avatar, category/age pills, and description card before survey and between participants |
 | 15 | Survey Question button "Submit", remove arrow, auto-advance, single-screen fit | Done (`62fe0e9`) | Passed | Button label set to `"Submit"` (or `"Complete Assessment"` on final question), arrow removed (`trailingIcon: nil`), auto-advance with 250ms delay, and 15.5pt/13pt compact typography fitting within single screen |
-| 16 | Resume assessment button on Homepage (resume or discard) | Done | Passed | Implemented `homepage-resume` (`Frame 244:470`) within Card 02 (`ActionCardView`) with "Resume" and "Discard" capsule pills when an assessment session is in progress |
+| 16 | Resume assessment button on Homepage (resume or discard) | Done (`7dbe5c3`) | Passed | Implemented `homepage-resume` (`Frame 244:470`) within Card 02 (`ActionCardView`) with "Resume" and "Discard" capsule pills when an assessment session is in progress |
+| 17 | Action Plan page: "Wired to Connect" should link to Amy's Book purchase link, underline the text | Done | Passed | Formatted Dr. Amy Banks' book title in `PersonalizedActionPlanView` with underlined interactive `Link` to official book purchase URL |
 
 ## UI & Architecture Merge Conflicts Log
 

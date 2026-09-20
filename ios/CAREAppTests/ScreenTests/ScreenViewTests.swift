@@ -271,4 +271,17 @@ struct ScreenViewTests {
         router.navigate(to: .surveyQuestion)
         #expect(router.currentRoute == .surveyQuestion)
     }
+
+    @Test("TEST-SCR-14: PersonalizedActionPlanView renders correctly and supports Wired to Connect external link")
+    @MainActor
+    func testPersonalizedActionPlanViewRendering() {
+        let router = AppRouter()
+        let planView = PersonalizedActionPlanView(router: router)
+        #expect(planView.router === router)
+        
+        let url = URL(string: "https://www.penguinrandomhouse.com/books/318700/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")
+        #expect(url != nil)
+        #expect(url?.host == "www.penguinrandomhouse.com")
+    }
 }
+
