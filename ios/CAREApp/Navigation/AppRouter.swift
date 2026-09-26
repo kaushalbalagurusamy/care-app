@@ -20,6 +20,16 @@ public enum AppRoute: Hashable {
     case welcomeAccountSetup
     case personalizedActionPlan
     case profile
+    case careInfo
+    case addRelationship
+    case calmExercises
+    case watchFunny
+    case keepPhoto
+    case belongingList
+    case careResultsExercises
+    case exerciseComplete
+    case surveyResultsV2
+    case pastResultsV2
 }
 
 // MARK: - Swift 6 Observable Application Router

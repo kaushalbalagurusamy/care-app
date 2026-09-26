@@ -203,6 +203,36 @@ struct ContentView: View {
             
         case .profile:
             ProfileView(router: router)
+            
+        case .careInfo:
+            CAREInformationView()
+            
+        case .addRelationship:
+            AddRelationshipView()
+            
+        case .calmExercises:
+            CalmExercisesView()
+            
+        case .watchFunny:
+            WatchFunnyExerciseView()
+            
+        case .keepPhoto:
+            KeepPhotoExerciseView()
+            
+        case .belongingList:
+            BelongingListExerciseView()
+            
+        case .careResultsExercises:
+            CAREResultsExercisesView()
+            
+        case .exerciseComplete:
+            ExerciseCompleteView()
+            
+        case .surveyResultsV2:
+            SurveyResultsV2View()
+            
+        case .pastResultsV2:
+            PastResultsV2View()
         }
     }
 }
