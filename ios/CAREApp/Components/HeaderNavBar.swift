@@ -165,6 +165,11 @@ public struct HeaderNavBar: View {
             Theme.Colors.background
                 .ignoresSafeArea(edges: .top)
         )
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Color(hex: "#E2E8F0").opacity(0.8))
+                .frame(height: 0.5)
+        }
         .sheet(isPresented: $isShowingStorageSettings) {
             StorageSettingsView()
         }

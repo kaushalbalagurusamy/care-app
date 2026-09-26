@@ -137,21 +137,19 @@ public struct ProfileView: View {
                 .accessibilityIdentifier("SaveChangesButton")
                 
                 Button(action: {
-                    let generator = UIImpactFeedbackGenerator(style: .medium)
+                    let generator = UIImpactFeedbackGenerator(style: .light)
                     generator.impactOccurred()
-                    router.navigate(to: .personalizedActionPlan)
+                    router.pop()
                 }) {
-                    Text("Unlock Full Book Exercises")
-                        .font(Theme.Typography.buttonLabel)
-                        .foregroundColor(.white)
+                    Text("Cancel")
+                        .font(Theme.Typography.poppins(.medium, size: 16))
+                        .foregroundColor(Theme.Colors.textSecondary)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 52)
-                        .background(Color(hex: "#1E293B"))
-                        .cornerRadius(26)
+                        .frame(height: 44)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
-                .accessibilityIdentifier("ProfileUnlockExercisesButton")
+                .accessibilityIdentifier("ProfileCancelButton")
             }
             .background(Theme.Colors.background)
         }

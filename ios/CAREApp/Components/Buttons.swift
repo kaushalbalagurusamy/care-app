@@ -127,7 +127,7 @@ public struct SecondaryButton: View {
             .frame(maxWidth: .infinity)
             .frame(height: 56)
             .foregroundColor(Theme.Colors.primary)
-            .background(Theme.Colors.background)
+            .background(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay(
