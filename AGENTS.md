@@ -102,5 +102,15 @@ Refer to the [`docs/adr/`](file:///docs/adr/) folder for all binding design choi
 ## 6. Guidelines for AI Agents
 
 1. **Figma Porting Readiness**: `ios/CAREApp/ContentView.swift` is stripped of filler components and prepared to receive design system components from Figma specs.
-2. **Preserve Monorepo Integrity**: Do not create auxiliary files outside `ios/`, `backend/`, `docs/`, or `.mcp.json`.
+2. **Preserve Monorepo Integrity**: Do not create auxiliary files outside `ios/`, `backend/`, `docs/`, `jayme-codex-instructions/`, or `.mcp.json`.
 3. **Dependency Management**: Use `uv` for Python packages inside `backend/` and keep `requirements.txt` updated.
+
+---
+
+## 7. Jayme's Product & Codex Autonomous Engineering Hub
+
+For ChatGPT Desktop, OpenAI Codex, and product-driven mobile development workflows, see:
+* [`jayme-codex-instructions/README.md`](jayme-codex-instructions/README.md) — Master product engineering hub
+* [`jayme-codex-instructions/CODEX_AGENT_SYSTEM_PROMPT.md`](jayme-codex-instructions/CODEX_AGENT_SYSTEM_PROMPT.md) — Autonomous agent instructions & invariants
+* [`jayme-codex-instructions/JAYME_QUICKSTART_CARD.md`](jayme-codex-instructions/JAYME_QUICKSTART_CARD.md) — Jayme's 2-minute quickstart card
+

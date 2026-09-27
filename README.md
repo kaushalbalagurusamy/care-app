@@ -13,6 +13,7 @@ The platform integrates the **C.A.R.E.** neurological framework (**C**alm - Smar
 
 ```
 care-app/
+├── jayme-codex-instructions/ # Jayme's Product & Codex Autonomous Engineering Hub
 ├── ios/                      # Native Swift 5.10+ / SwiftUI Xcode Project (iOS 17+)
 │   ├── CAREApp/              # Application source files (CAREApp.swift, ContentView.swift)
 │   └── CAREApp.xcodeproj/    # Xcode project workspace configuration
@@ -26,8 +27,12 @@ care-app/
 │   └── adr/                  # Architectural Decision Records (ADRs 0001 - 0008)
 ├── docker-compose.yml        # Orchestrator: FastAPI API + PostgreSQL 16 pgvector
 ├── .mcp.json                 # Project-level Model Context Protocol (MCP) configuration
+├── CODEX.md                  # Root entrypoint for ChatGPT Desktop & Codex
 └── AGENTS.md                 # Single source of truth for AI agents operating in workspace
 ```
+
+> **For Product Development with ChatGPT Desktop & Codex**: See [`/jayme-codex-instructions/`](jayme-codex-instructions/README.md) for the automated setup, simulator tools, and spec-to-TDD workflow.
+
 
 ---
 
