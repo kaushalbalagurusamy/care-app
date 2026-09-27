@@ -14,10 +14,11 @@ struct CAREApp: App {
     }
     
     private func registerCustomFonts() {
-        let fonts = ["Poppins-Bold.ttf", "Poppins-SemiBold.ttf", "Poppins-Medium.ttf", "Poppins-Regular.ttf"]
-        for font in fonts {
-            if let url = Bundle.main.url(forResource: font, withExtension: nil) {
-                CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+        let fontNames = ["Poppins-Bold", "Poppins-SemiBold", "Poppins-Medium", "Poppins-Regular"]
+        for fontName in fontNames {
+            if let url = Bundle.main.url(forResource: fontName, withExtension: "ttf") ?? Bundle.main.url(forResource: fontName + ".ttf", withExtension: nil) {
+                var error: Unmanaged<CFError>?
+                CTFontManagerRegisterFontsForURL(url as CFURL, .process, &error)
             }
         }
     }

@@ -113,4 +113,14 @@ struct DesignTokensTests {
     func testMinimumTouchTargetDimension() {
         #expect(Theme.Dimensions.minTouchTarget == 44.0, "Minimum touch target must equal Apple HIG 44.0pt")
     }
+
+    @Test("TEST-TOK-06: Poppins custom fonts are properly loaded and registered")
+    func testPoppinsFontsRegistered() {
+        let weights = ["Poppins-Bold", "Poppins-SemiBold", "Poppins-Medium", "Poppins-Regular"]
+        for weight in weights {
+            // Note: If running in test host, custom fonts can be resolved via Theme.Typography or UIFont
+            let font = UIFont(name: weight, size: 16)
+            #expect(font != nil, "Font \(weight) must be loadable")
+        }
+    }
 }

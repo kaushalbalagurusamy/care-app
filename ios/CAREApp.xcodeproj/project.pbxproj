@@ -876,6 +876,12 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Unlock CARE App to securely access your relational safety assessments and contacts.";
+				INFOPLIST_KEY_UIAppFonts = (
+					"Poppins-Bold.ttf",
+					"Poppins-SemiBold.ttf",
+					"Poppins-Medium.ttf",
+					"Poppins-Regular.ttf",
+				);
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -905,6 +911,12 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Unlock CARE App to securely access your relational safety assessments and contacts.";
+				INFOPLIST_KEY_UIAppFonts = (
+					"Poppins-Bold.ttf",
+					"Poppins-SemiBold.ttf",
+					"Poppins-Medium.ttf",
+					"Poppins-Regular.ttf",
+				);
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

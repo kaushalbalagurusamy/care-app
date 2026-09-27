@@ -72,15 +72,14 @@ public struct ActionCardView: View {
                     .aspectRatio(350.0 / 149.0, contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: 149)
                     .clipped()
-                    .grayscale(1.0)
-                    .saturation(0.0)
-                    .brightness(hasResumeControls ? -0.08 : -0.02)
+                    .brightness(hasResumeControls ? -0.14 : -0.06)
+                    .contrast(1.05)
                 
-                // Contrast overlay (darker when in-progress for grayed-out effect)
+                // Slightly darker contrast overlay preserving rich photo color
                 LinearGradient(
                     colors: [
-                        Color.black.opacity(hasResumeControls ? 0.40 : 0.16),
-                        Color.black.opacity(hasResumeControls ? 0.62 : 0.38)
+                        Color.black.opacity(hasResumeControls ? 0.38 : 0.12),
+                        Color.black.opacity(hasResumeControls ? 0.60 : 0.28)
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -133,8 +132,9 @@ public struct ActionCardView: View {
                     // Bottom Row: Simple Title at Bottom-Left & Optional Resume/Discard Buttons at Bottom-Right
                     HStack(alignment: .bottom, spacing: 12) {
                         Text(title)
-                            .font(Theme.Typography.poppins(.semiBold, size: hasResumeControls ? 22 : 26))
+                            .font(Theme.Typography.poppins(.bold, size: hasResumeControls ? 20 : 22))
                             .foregroundColor(.white)
+                            .tracking(0.2)
                             .shadow(color: Color.black.opacity(0.35), radius: 3, x: 0, y: 1)
                         
                         Spacer()
