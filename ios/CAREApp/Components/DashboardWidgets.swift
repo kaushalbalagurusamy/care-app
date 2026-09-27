@@ -13,7 +13,7 @@ public struct ActionCardView: View {
     
     public init(
         title: String,
-        subtitle: String,
+        subtitle: String = "",
         iconName: String,
         backgroundImageName: String,
         hasResumeControls: Bool = false,
@@ -72,47 +72,42 @@ public struct ActionCardView: View {
                     .aspectRatio(350.0 / 149.0, contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: 149)
                     .clipped()
-                    .grayscale(hasResumeControls ? 0.92 : 0.0)
-                    .saturation(hasResumeControls ? 0.15 : 1.0)
-                    .brightness(hasResumeControls ? -0.06 : 0.0)
+                    .grayscale(1.0)
+                    .saturation(0.0)
+                    .brightness(hasResumeControls ? -0.08 : -0.02)
                 
-                // Grayed-out In-Progress Dark Tint & Frost Overlay
-                if hasResumeControls {
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(hex: "#0F172A").opacity(0.42),
-                                    Color(hex: "#1E293B").opacity(0.52)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
+                // Contrast overlay (darker when in-progress for grayed-out effect)
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(hasResumeControls ? 0.40 : 0.16),
+                        Color.black.opacity(hasResumeControls ? 0.62 : 0.38)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                
+                // Content Layer - Icon at top-left, Simple Title at bottom-left
+                VStack(alignment: .leading, spacing: 0) {
+                    // Top Row: Frosted Glass Circular Icon Badge (Left) & Optional In Progress Pill (Right)
+                    HStack(alignment: .center) {
+                        // Preserved frosted circular icon from our version
+                        Circle()
+                            .fill(hasResumeControls ? Color.white.opacity(0.16) : Color.white.opacity(0.24))
+                            .frame(width: 44, height: 44)
+                            .overlay(
+                                Circle()
+                                    .stroke(hasResumeControls ? Color.white.opacity(0.28) : Color.white.opacity(0.40), lineWidth: 1.5)
                             )
-                        )
-                }
-                
-                // Content Layer - Vertically Centered along button midpoint
-                HStack(alignment: .center, spacing: 14) {
-                    // Left: Frosted Glass Circular Icon Badge (Preserved from our version)
-                    Circle()
-                        .fill(hasResumeControls ? Color.white.opacity(0.16) : Color.white.opacity(0.24))
-                        .frame(width: 48, height: 48)
-                        .overlay(
-                            Circle()
-                                .stroke(hasResumeControls ? Color.white.opacity(0.28) : Color.white.opacity(0.40), lineWidth: 1.5)
-                        )
-                        .overlay(
-                            Image(iconName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 24, height: 24)
-                                .opacity(hasResumeControls ? 0.85 : 1.0)
-                        )
-                    
-                    Spacer()
-                    
-                    // Right: Title and Subtitle / Resume Controls (Aligned to Vertical Midpoint)
-                    VStack(alignment: .trailing, spacing: hasResumeControls ? 6 : 2) {
+                            .overlay(
+                                Image(iconName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 22, height: 22)
+                                    .opacity(hasResumeControls ? 0.85 : 1.0)
+                            )
+                        
+                        Spacer()
+                        
                         if hasResumeControls {
                             HStack(spacing: 5) {
                                 Circle()
@@ -122,19 +117,30 @@ public struct ActionCardView: View {
                                     .font(Theme.Typography.poppins(.medium, size: 10))
                                     .foregroundColor(Color.white.opacity(0.92))
                             }
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 2)
-                            .background(Color.black.opacity(0.28))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.black.opacity(0.35))
                             .clipShape(Capsule())
+                            .overlay(
+                                Capsule()
+                                    .stroke(Color.white.opacity(0.20), lineWidth: 1)
+                            )
                         }
-                        
+                    }
+                    
+                    Spacer()
+                    
+                    // Bottom Row: Simple Title at Bottom-Left & Optional Resume/Discard Buttons at Bottom-Right
+                    HStack(alignment: .bottom, spacing: 12) {
                         Text(title)
                             .font(Theme.Typography.poppins(.semiBold, size: hasResumeControls ? 22 : 26))
                             .foregroundColor(.white)
-                            .shadow(color: Color.black.opacity(0.28), radius: 3, x: 0, y: 1)
+                            .shadow(color: Color.black.opacity(0.35), radius: 3, x: 0, y: 1)
+                        
+                        Spacer()
                         
                         if hasResumeControls {
-                            // Figma Node 244:560: buttons-row with Resume and Discard
+                            // Buttons row with Resume and Discard
                             HStack(spacing: 8) {
                                 Button(action: {
                                     let generator = UIImpactFeedbackGenerator(style: .medium)
@@ -173,15 +179,11 @@ public struct ActionCardView: View {
                                 .buttonStyle(.plain)
                                 .accessibilityIdentifier("DiscardAssessmentButton")
                             }
-                        } else {
-                            Text(subtitle)
-                                .font(Theme.Typography.poppins(.regular, size: 15))
-                                .foregroundColor(.white.opacity(0.95))
-                                .shadow(color: Color.black.opacity(0.20), radius: 2, x: 0, y: 1)
                         }
                     }
                 }
-                .padding(.horizontal, 22)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
             }
             .frame(height: 149)
             .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
@@ -190,7 +192,7 @@ public struct ActionCardView: View {
         }
         .buttonStyle(ActionCardButtonStyle(hasResumeControls: hasResumeControls))
         .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .accessibilityLabel(hasResumeControls ? "\(title), In Progress. Resume or Discard." : "\(title), \(subtitle)")
+        .accessibilityLabel(hasResumeControls ? "\(title), In Progress. Resume or Discard." : "\(title)")
     }
 }
 

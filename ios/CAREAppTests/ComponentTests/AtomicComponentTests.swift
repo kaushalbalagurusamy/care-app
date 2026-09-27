@@ -167,6 +167,21 @@ struct AtomicComponentTests {
         inProgressCard.onDiscard?()
         #expect(discarded == true)
     }
+
+    @Test("TEST-CMP-10: ActionCardView supports simple title without subtitle and grayscale configuration")
+    func testActionCardViewSimpleTitleAndGrayscale() {
+        let card = ActionCardView(
+            title: "Education",
+            iconName: "icon_book_open",
+            backgroundImageName: "card_education_bg",
+            action: {}
+        )
+        #expect(card.title == "Education")
+        #expect(card.subtitle.isEmpty)
+        #expect(card.iconName == "icon_book_open")
+        #expect(card.backgroundImageName == "card_education_bg")
+        #expect(!card.hasResumeControls)
+    }
 }
 
 

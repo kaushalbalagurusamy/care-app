@@ -34,19 +34,18 @@ public struct HomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 8) {
                     
-                    // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt)
+                    // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt, 50%+ more top spacing)
                     Text("Welcome Back")
                         .font(Theme.Typography.welcomeTitle)
                         .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 2)
+                        .padding(.top, 14)
                     
                     // Top Weekly Exercise Tracker (Figma Frame 5:4 Updated & Directive 18+)
                     DailyExerciseTrackerView()
                     
-                    // 3 Action Cards (Compact 149pt height, Left Midpoint Icons, Single-page fit)
+                    // 3 Action Cards (Compact 149pt height, Bottom-Left Titles, Grayscale Images)
                     ActionCardView(
                         title: "Education",
-                        subtitle: "Learn Wellness",
                         iconName: "icon_book_open",
                         backgroundImageName: "card_education_bg",
                         action: {
@@ -56,7 +55,6 @@ public struct HomeView: View {
                     
                     ActionCardView(
                         title: "Assessment",
-                        subtitle: "Track Mind",
                         iconName: "icon_heart_pulse",
                         backgroundImageName: "card_assessment_bg",
                         hasResumeControls: isAssessmentInProgress,
@@ -77,7 +75,6 @@ public struct HomeView: View {
                     
                     ActionCardView(
                         title: "Exercises",
-                        subtitle: "Active Care",
                         iconName: "icon_activity",
                         backgroundImageName: "card_exercises_bg",
                         action: {
