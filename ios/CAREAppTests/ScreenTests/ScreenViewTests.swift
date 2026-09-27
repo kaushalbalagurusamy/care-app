@@ -224,9 +224,10 @@ struct ScreenViewTests {
         #expect(activeIndex == 4)
     }
 
-    @Test("TEST-SCR-10: HomeView handles in-progress assessment resume and discard")
+    @Test("TEST-SCR-10: HomeView handles in-progress assessment resume and discard with draft persistence")
     @MainActor
     func testHomeViewResumeAndDiscard() {
+        AssessmentSessionState.clearDraft()
         let router = AppRouter()
         let contacts = Person.mockFigmaContacts
         let participants = [
@@ -247,8 +248,12 @@ struct ScreenViewTests {
         #expect(session.hasStarted)
         #expect(!session.isComplete)
         
+        // Save to draft (simulating app quit during questionnaire)
+        session.saveDraft()
+        #expect(AssessmentSessionState.loadDraft() != nil)
+        
         // Test binding with HomeView
-        var activeSession: AssessmentSessionState? = session
+        var activeSession: AssessmentSessionState? = AssessmentSessionState.loadDraft()
         var discarded = false
         
         let homeView = HomeView(
@@ -256,21 +261,24 @@ struct ScreenViewTests {
             activeSession: Binding(get: { activeSession }, set: { activeSession = $0 }),
             onDiscardAssessment: {
                 discarded = true
+                AssessmentSessionState.clearDraft()
             }
         )
         #expect(homeView.activeSession != nil)
         #expect(homeView.activeSession?.hasStarted == true)
+        
+        // Simulate resume navigation
+        router.navigate(to: .surveyQuestion)
+        #expect(router.currentRoute == .surveyQuestion)
         
         // Simulate discard
         homeView.onDiscardAssessment?()
         activeSession = nil
         #expect(discarded)
         #expect(activeSession == nil)
-        
-        // Simulate resume navigation
-        router.navigate(to: .surveyQuestion)
-        #expect(router.currentRoute == .surveyQuestion)
+        #expect(AssessmentSessionState.loadDraft() == nil)
     }
+
 
     @Test("TEST-SCR-14: PersonalizedActionPlanView renders correctly and supports Wired to Connect external link")
     @MainActor

@@ -144,4 +144,33 @@ struct AssessmentSessionTests {
         #expect(session.canAdvance == false)
         #expect(session.advance() == false)
     }
+
+    @Test("TEST-SES-05: AssessmentSessionState draft persistence and restoration")
+    func testDraftPersistenceAndRestoration() {
+        AssessmentSessionState.clearDraft()
+        #expect(AssessmentSessionState.loadDraft() == nil)
+        
+        let p1 = Person(name: "Test Participant", initials: "TP", category: .friend, age: 28)
+        let participants = [AssessmentParticipant(person: p1)]
+        let opt = SurveyOption(id: "opt_3", text: "Neutral", rawScoreValue: 0.5)
+        
+        var session = AssessmentSessionState(participants: participants, totalQuestionsPerPerson: 10)
+        session.recordAnswer(for: "q_1", option: opt)
+        #expect(session.hasStarted == true)
+        
+        // Save draft
+        session.saveDraft()
+        
+        // Load draft from storage
+        let loaded = AssessmentSessionState.loadDraft()
+        #expect(loaded != nil)
+        #expect(loaded?.participants.count == 1)
+        #expect(loaded?.participants[0].person.name == "Test Participant")
+        #expect(loaded?.recordedAnswers[p1.id]?["q_1"]?.id == "opt_3")
+        
+        // Clear draft
+        AssessmentSessionState.clearDraft()
+        #expect(AssessmentSessionState.loadDraft() == nil)
+    }
 }
+

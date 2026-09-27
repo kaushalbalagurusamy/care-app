@@ -9,7 +9,7 @@ struct ContentView: View {
     // Shared State Across Assessment Funnel
     @State private var selectedPeople: [Person] = Array(Person.mockFigmaContacts.prefix(5))
     @State private var allocations: [ParticipantAllocation] = []
-    @State private var activeSession: AssessmentSessionState? = nil
+    @State private var activeSession: AssessmentSessionState? = AssessmentSessionState.loadDraft()
     @State private var latestResult: AssessmentResult = AssessmentResult.figmaMockResult
     
     @Environment(\.scenePhase) private var scenePhase
@@ -24,6 +24,7 @@ struct ContentView: View {
                     activeSession: $activeSession,
                     onDiscardAssessment: {
                         activeSession = nil
+                        AssessmentSessionState.clearDraft()
                     }
                 )
                     .navigationBarBackButtonHidden(true)
@@ -56,10 +57,21 @@ struct ContentView: View {
                     .zIndex(200)
             }
         }
+        .onChange(of: activeSession) { _, newSession in
+            if let s = newSession, s.hasStarted {
+                s.saveDraft()
+            } else {
+                AssessmentSessionState.clearDraft()
+            }
+        }
         .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background || newPhase == .inactive {
+                activeSession?.saveDraft()
+            }
             appEnvironment.appLockManager.handleScenePhaseChange(newPhase)
         }
     }
+
     
     // MARK: - Screen Route Dispatcher
     @ViewBuilder

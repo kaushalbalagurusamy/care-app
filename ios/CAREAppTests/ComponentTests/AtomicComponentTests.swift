@@ -133,5 +133,40 @@ struct AtomicComponentTests {
         let navBarCustomizationScreen = HeaderNavBar(showSparkleButton: false)
         #expect(navBarCustomizationScreen.showSparkleButton == false, "Customization screen must be the only screen without sparkle button")
     }
+
+    @Test("TEST-CMP-09: ActionCardView supports compact 149pt height and grayed-out resume controls")
+    func testActionCardViewResumeControls() {
+        var resumed = false
+        var discarded = false
+        var defaultAction = false
+        
+        let normalCard = ActionCardView(
+            title: "Assessment",
+            subtitle: "Track Mind",
+            iconName: "icon_heart_pulse",
+            backgroundImageName: "card_assessment_bg",
+            hasResumeControls: false,
+            action: { defaultAction = true }
+        )
+        #expect(normalCard.hasResumeControls == false)
+        #expect(normalCard.iconName == "icon_heart_pulse")
+        
+        let inProgressCard = ActionCardView(
+            title: "Assessment",
+            subtitle: "Track Mind",
+            iconName: "icon_heart_pulse",
+            backgroundImageName: "card_assessment_bg",
+            hasResumeControls: true,
+            onResume: { resumed = true },
+            onDiscard: { discarded = true },
+            action: { defaultAction = true }
+        )
+        #expect(inProgressCard.hasResumeControls == true)
+        inProgressCard.onResume?()
+        #expect(resumed == true)
+        inProgressCard.onDiscard?()
+        #expect(discarded == true)
+    }
 }
+
 

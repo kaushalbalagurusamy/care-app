@@ -32,7 +32,7 @@ public struct HomeView: View {
             )
             
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
                     
                     // Welcome Title (Matching Figma Frame 5:19 Poppins Bold 24pt)
                     Text("Welcome Back")
@@ -43,7 +43,7 @@ public struct HomeView: View {
                     // Top Weekly Exercise Tracker (Figma Frame 5:4 Updated & Directive 18+)
                     DailyExerciseTrackerView()
                     
-                    // 3 Action Cards (Clean 3D Art, Midpoint Icons, 50% Larger Titles)
+                    // 3 Action Cards (Compact 149pt height, Left Midpoint Icons, Single-page fit)
                     ActionCardView(
                         title: "Education",
                         subtitle: "Learn Wellness",
@@ -66,6 +66,7 @@ public struct HomeView: View {
                         onDiscard: {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                 activeSession = nil
+                                AssessmentSessionState.clearDraft()
                                 onDiscardAssessment?()
                             }
                         },
@@ -86,11 +87,13 @@ public struct HomeView: View {
                     
                     // Assessment Interval Capsule Pill Anchored at Bottom with Centered Calendar Icon
                     StreakBadgeView(daysUntilNextAssessment: 3)
-                        .padding(.bottom, 12)
+                        .padding(.top, 2)
+                        .padding(.bottom, 8)
                 }
                 .padding(.horizontal, 20)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())

@@ -14,12 +14,13 @@ public struct AssessmentParticipant: Identifiable, Hashable, Codable {
 }
 
 // MARK: - Assessment Session State Machine (Screen 5, 6, 7 Progression)
-public struct AssessmentSessionState: Hashable {
+public struct AssessmentSessionState: Hashable, Codable, Sendable {
     public var participants: [AssessmentParticipant]
     public var totalQuestionsPerPerson: Int
     public var currentParticipantIndex: Int
     public var currentQuestionIndex: Int
     public var recordedAnswers: [UUID: [String: SurveyOption]] // [ParticipantID: [QuestionID: SelectedOption]]
+
     
     public init(
         participants: [AssessmentParticipant] = [],
@@ -116,4 +117,30 @@ public struct AssessmentSessionState: Hashable {
             return true
         }
     }
+    
+    // MARK: - Draft Persistence Helpers
+    public static let draftStorageKey = "care_active_assessment_draft_session"
+    
+    public static func loadDraft() -> AssessmentSessionState? {
+        guard let data = UserDefaults.standard.data(forKey: draftStorageKey),
+              let session = try? JSONDecoder().decode(AssessmentSessionState.self, from: data) else {
+            return nil
+        }
+        return session.hasStarted ? session : nil
+    }
+    
+    public func saveDraft() {
+        guard hasStarted && !isComplete else {
+            Self.clearDraft()
+            return
+        }
+        if let data = try? JSONEncoder().encode(self) {
+            UserDefaults.standard.set(data, forKey: Self.draftStorageKey)
+        }
+    }
+    
+    public static func clearDraft() {
+        UserDefaults.standard.removeObject(forKey: draftStorageKey)
+    }
 }
+
