@@ -38,7 +38,7 @@ public struct HomeView: View {
                     Text("Welcome Back")
                         .font(Theme.Typography.welcomeTitle)
                         .foregroundColor(Theme.Colors.textPrimary)
-                        .padding(.top, 14)
+                        .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Top Weekly Exercise Tracker (Figma Frame 5:4 Updated & Directive 18+)
                     DailyExerciseTrackerView()

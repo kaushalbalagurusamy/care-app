@@ -291,5 +291,21 @@ struct ScreenViewTests {
         #expect(url != nil)
         #expect(url?.host == "www.penguinrandomhouse.com")
     }
+
+    @Test("TEST-SCR-15: SurveyOverviewView initializes with router and pinned action structure")
+    @MainActor
+    func testSurveyOverviewViewRendering() {
+        let router = AppRouter()
+        let surveyOverview = SurveyOverviewView(router: router)
+        #expect(surveyOverview.router === router)
+    }
+
+    @Test("TEST-SCR-16: AssessmentOverviewView initializes with router and pinned action structure")
+    @MainActor
+    func testAssessmentOverviewViewRendering() {
+        let router = AppRouter()
+        let overview = AssessmentOverviewView(router: router)
+        #expect(overview.router === router)
+    }
 }
 

@@ -47,7 +47,7 @@ public struct PersonTransitionView: View {
                                 .foregroundColor(Theme.Colors.primary)
                         }
                     }
-                    .padding(.top, 24)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Identity Group
                     VStack(spacing: 8) {

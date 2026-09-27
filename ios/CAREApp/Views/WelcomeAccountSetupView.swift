@@ -43,7 +43,7 @@ public struct WelcomeAccountSetupView: View {
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(3)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Profile Photo Placeholder
                     VStack(spacing: 8) {

@@ -48,7 +48,7 @@ public struct AddRelationshipView: View {
                                 .foregroundColor(Theme.Colors.textSecondary)
                                 .lineSpacing(2)
                         }
-                        .padding(.top, 4)
+                        .padding(.top, Theme.Spacing.headerTitleSpacing)
                         
                         // Photo Upload Trigger (Dashed Circle)
                         HStack(spacing: 16) {

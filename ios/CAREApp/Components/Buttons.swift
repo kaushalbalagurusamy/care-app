@@ -68,6 +68,7 @@ public struct PrimaryButton: View {
             .background(isEnabled ? Theme.Colors.primary : Theme.Colors.textMuted)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .animation(.easeInOut(duration: 0.25), value: isEnabled)
         }
         .disabled(!isEnabled || isLoading)
         .buttonStyle(.plain)

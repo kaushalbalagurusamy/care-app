@@ -61,7 +61,7 @@ public struct ChooseRelationshipsView: View {
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // "+ Add Person" Outlined Action Button (Figma Frame 17:4)
                     Button(action: {

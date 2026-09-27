@@ -12,6 +12,9 @@ extension Theme {
         /// 12pt - Standard compact spacing (card internal elements)
         public static let small: CGFloat = 12
         
+        /// 14pt - Standardized vertical spacing between HeaderNavBar and screen title
+        public static let headerTitleSpacing: CGFloat = 14
+        
         /// 16pt - Default view padding & vertical component spacing
         public static let medium: CGFloat = 16
         

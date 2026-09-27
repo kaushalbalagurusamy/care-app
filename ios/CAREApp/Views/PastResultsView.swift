@@ -81,7 +81,7 @@ public struct PastResultsView: View {
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // MARK: 1. C.A.R.E. Results Bubble Card (Static, Single 4-Line Multi-Trend Graph)
                     BubbleCardContainer(

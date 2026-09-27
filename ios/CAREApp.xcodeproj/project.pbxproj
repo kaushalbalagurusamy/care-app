@@ -60,6 +60,7 @@
 		228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EAD93550F185461E00000001 /* BubbleCardContainer.swift */; };
 		22000001APPICON00000001 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000002APPICON00000001 /* AppIcon.swift */; };
 		2251B440743818A38200000001 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B95E93EAC5E189A400000001 /* Buttons.swift */; };
+		22000002SCROLLGATED01 /* ScrollBottomGated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000001SCROLLGATED01 /* ScrollBottomGated.swift */; };
 		2252EF2EBEA151A37C00000001 /* CategoryBreakdownAccordion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */; };
 		220E58E1947B852B5F00000001 /* ComponentShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */; };
 		22B47F7780AEE3625A00000001 /* DashboardWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */; };
@@ -177,6 +178,7 @@
 		22EAD93550F185461E00000001 /* BubbleCardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BubbleCardContainer.swift"; sourceTree = "<group>"; };
 		22000002APPICON00000001 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppIcon.swift"; sourceTree = "<group>"; };
 		22B95E93EAC5E189A400000001 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Buttons.swift"; sourceTree = "<group>"; };
+		22000001SCROLLGATED01 /* ScrollBottomGated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollBottomGated.swift"; sourceTree = "<group>"; };
 		224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryBreakdownAccordion.swift"; sourceTree = "<group>"; };
 		223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComponentShowcaseView.swift"; sourceTree = "<group>"; };
 		22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashboardWidgets.swift"; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				22000002APPICON00000001 /* AppIcon.swift */,
 				22EAD93550F185461E00000001 /* BubbleCardContainer.swift */,
 				22B95E93EAC5E189A400000001 /* Buttons.swift */,
+				22000001SCROLLGATED01 /* ScrollBottomGated.swift */,
 				224BE02658C5B828D100000001 /* CategoryBreakdownAccordion.swift */,
 				223B11E43AC519D20600000001 /* ComponentShowcaseView.swift */,
 				22F314AEC26DC5A75600000001 /* DashboardWidgets.swift */,
@@ -738,6 +741,7 @@
 				110000032C12345600000001 /* ContentView.swift in Sources */,
 				228BC72CDCEE101F2300000001 /* BubbleCardContainer.swift in Sources */,
 				2251B440743818A38200000001 /* Buttons.swift in Sources */,
+				22000002SCROLLGATED01 /* ScrollBottomGated.swift in Sources */,
 				2252EF2EBEA151A37C00000001 /* CategoryBreakdownAccordion.swift in Sources */,
 				220E58E1947B852B5F00000001 /* ComponentShowcaseView.swift in Sources */,
 				22B47F7780AEE3625A00000001 /* DashboardWidgets.swift in Sources */,

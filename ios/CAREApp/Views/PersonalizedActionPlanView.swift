@@ -33,7 +33,7 @@ public struct PersonalizedActionPlanView: View {
                             .font(Theme.Typography.poppins(.bold, size: 26))
                             .foregroundColor(Theme.Colors.textPrimary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // C.A.R.E. Pathways Map Card
                     VStack(alignment: .leading, spacing: 14) {

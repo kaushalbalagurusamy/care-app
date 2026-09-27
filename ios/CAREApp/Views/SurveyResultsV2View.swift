@@ -34,7 +34,7 @@ public struct SurveyResultsV2View: View {
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Your C.A.R.E. Score Card with (i) Info Button
                     VStack(spacing: 16) {

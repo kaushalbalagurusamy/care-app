@@ -35,7 +35,7 @@ public struct CAREResultsExercisesView: View {
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Tailored Plan Card
                     VStack(alignment: .leading, spacing: 14) {

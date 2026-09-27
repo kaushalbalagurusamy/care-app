@@ -68,7 +68,7 @@ public struct BelongingListExerciseView: View {
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Fields List
                     VStack(alignment: .leading, spacing: 14) {

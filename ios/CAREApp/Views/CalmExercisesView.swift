@@ -57,7 +57,7 @@ public struct CalmExercisesView: View {
                             .font(Theme.Typography.poppins(.regular, size: 14))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Search Bar with Sort Filter Button
                     HStack(spacing: 10) {

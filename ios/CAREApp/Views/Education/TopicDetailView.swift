@@ -9,6 +9,7 @@ public struct TopicDetailView: View {
     public let onTakeQuiz: (() -> Void)?
     public let onBack: (() -> Void)?
     public let onHome: (() -> Void)?
+    @State private var hasScrolledToBottom: Bool = false
     
     public init(
         topic: EducationTopic,
@@ -42,7 +43,7 @@ public struct TopicDetailView: View {
                         .font(Theme.Typography.poppins(.bold, size: 26))
                         .foregroundColor(Theme.Colors.textPrimary)
                         .lineSpacing(2)
-                        .padding(.top, 4)
+                        .padding(.top, Theme.Spacing.headerTitleSpacing)
                         .accessibilityAddTraits(.isHeader)
                     
                     // Polymorphic Section Content
@@ -50,22 +51,37 @@ public struct TopicDetailView: View {
                         sectionView(for: section)
                     }
                     
-                    // Bottom Action: Test Your Understanding Primary CTA (Figma Node 156:74)
-                    PrimaryButton(
-                        title: "Test Your Understanding",
-                        action: {
-                            if let onTakeQuiz = onTakeQuiz {
-                                onTakeQuiz()
-                            } else {
-                                router?.navigate(to: .educationQuiz(topic: topic))
-                            }
-                        }
-                    )
-                    .padding(.top, 8)
-                    .padding(.bottom, 28)
+                    // Bottom Sentinel to detect reaching bottom of lesson content
+                    ScrollBottomSentinel(spaceName: "TopicDetailScroll")
                 }
                 .padding(.horizontal, 20)
+                .padding(.bottom, 16)
             }
+            .trackScrollBottom(isUnlocked: $hasScrolledToBottom, spaceName: "TopicDetailScroll")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // Pinned Bottom Action Bar (Visible from start, scroll-gated)
+            VStack(spacing: 0) {
+                Divider()
+                    .background(Theme.Colors.dividerSubtle)
+                
+                PrimaryButton(
+                    title: "Test Your Understanding",
+                    isEnabled: hasScrolledToBottom,
+                    action: {
+                        if let onTakeQuiz = onTakeQuiz {
+                            onTakeQuiz()
+                        } else {
+                            router?.navigate(to: .educationQuiz(topic: topic))
+                        }
+                    }
+                )
+                .accessibilityIdentifier("TopicDetailQuizButton")
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+                .padding(.bottom, 10)
+            }
+            .background(Theme.Colors.background)
         }
         .careAppBackground()
         .navigationBarBackButtonHidden(true)

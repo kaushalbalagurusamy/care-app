@@ -36,7 +36,7 @@ public struct ExerciseCompleteView: View {
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundColor(Theme.Colors.primary)
                         }
-                        .padding(.top, 10)
+                        .padding(.top, Theme.Spacing.headerTitleSpacing)
                         
                         VStack(spacing: 4) {
                             Text("Exercise Complete!")

@@ -90,7 +90,7 @@ public struct SurveyQuestionView: View {
                             .foregroundColor(Theme.Colors.textSecondary)
                             .padding(.top, 1)
                     }
-                    .padding(.top, 2)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Retained Feature: Progress Bar & Dual Counter
                     VStack(spacing: 4) {

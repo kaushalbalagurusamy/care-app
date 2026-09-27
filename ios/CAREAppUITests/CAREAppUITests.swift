@@ -66,6 +66,71 @@ final class CAREAppUITests: XCTestCase {
         }
     }
 
+    func testScrollGatedSurveyInstructionsJourney() throws {
+        // 1. Home -> Tap Assessment Card
+        let assessmentCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Assessment'")).firstMatch
+        if !assessmentCard.waitForExistence(timeout: 4.0) {
+            let assessmentText = app.staticTexts["Assessment"]
+            XCTAssertTrue(assessmentText.waitForExistence(timeout: 3.0))
+            assessmentText.tap()
+        } else {
+            assessmentCard.tap()
+        }
+        
+        // 2. Assessment Overview: Button visible from start, grayed out initially
+        let beginBtn = app.buttons["Begin the Survey"]
+        XCTAssertTrue(beginBtn.waitForExistence(timeout: 3.0))
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        let overviewLockedShot = XCUIScreen.main.screenshot()
+        try? overviewLockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/assessment_overview_locked.png"))
+        
+        // Pull scroll all the way down to unlock
+        app.swipeUp()
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        let overviewUnlockedShot = XCUIScreen.main.screenshot()
+        try? overviewUnlockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/assessment_overview_unlocked.png"))
+        
+        XCTAssertTrue(beginBtn.isEnabled)
+        beginBtn.tap()
+        
+        // 3. Survey Instructions Page: Next button visible from start, grayed out initially
+        let instructionsTitle = app.staticTexts["Survey Instructions"]
+        XCTAssertTrue(instructionsTitle.waitForExistence(timeout: 3.0))
+        
+        let nextBtn = app.buttons["Next"]
+        XCTAssertTrue(nextBtn.waitForExistence(timeout: 3.0))
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        let instructionsLockedShot = XCUIScreen.main.screenshot()
+        try? instructionsLockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/survey_instructions_locked.png"))
+        
+        // Pull scroll down to the bottom through Do and Don't guidelines
+        app.swipeUp()
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        let instructionsUnlockedShot = XCUIScreen.main.screenshot()
+        try? instructionsUnlockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/survey_instructions_unlocked.png"))
+        
+        XCTAssertTrue(nextBtn.isEnabled)
+        nextBtn.tap()
+        
+        // 4. Choose Relationships Page: Verify header and title spacing
+        let chooseTitle = app.staticTexts["Choose Relationships"]
+        XCTAssertTrue(chooseTitle.waitForExistence(timeout: 3.0))
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        let chooseShot = XCUIScreen.main.screenshot()
+        try? chooseShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/choose_relationships_spacing.png"))
+        
+        // Pop back to Home
+        let homeBtn = app.buttons["AppIcon_home"]
+        if homeBtn.waitForExistence(timeout: 2.0) {
+            homeBtn.tap()
+        }
+    }
+
     func testAddPersonSheetAgePlaceholder() throws {
         // 1. Home -> Tap Assessment Card
         let assessmentCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Assessment'")).firstMatch
@@ -73,15 +138,21 @@ final class CAREAppUITests: XCTestCase {
             assessmentCard.tap()
         }
         
-        // 2. Assessment Overview -> Begin the Survey
+        // 2. Assessment Overview -> Begin the Survey (scroll-gated)
         let beginBtn = app.buttons["Begin the Survey"]
         if beginBtn.waitForExistence(timeout: 3.0) {
+            if !beginBtn.isEnabled {
+                app.swipeUp()
+            }
             beginBtn.tap()
         }
         
-        // 3. Survey Overview -> Next
+        // 3. Survey Overview -> Next (scroll-gated)
         let nextBtn = app.buttons["Next"]
         if nextBtn.waitForExistence(timeout: 3.0) {
+            if !nextBtn.isEnabled {
+                app.swipeUp()
+            }
             nextBtn.tap()
         }
         
@@ -212,8 +283,10 @@ final class CAREAppUITests: XCTestCase {
         
         // 6. Scroll down to and tap "Test Your Understanding" (Clean button without arrow icon)
         let quizBtn = app.buttons["Test Your Understanding"]
-        if !quizBtn.isHittable {
-            app.swipeUp()
+        if quizBtn.waitForExistence(timeout: 3.0) {
+            if !quizBtn.isEnabled || !quizBtn.isHittable {
+                app.swipeUp()
+            }
         }
         let bottomScreenshot = XCUIScreen.main.screenshot()
         try? bottomScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_cta.png"))

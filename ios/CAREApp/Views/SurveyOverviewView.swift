@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Screen 4: Survey Instructions & Onboarding (Figma Frame 13:4)
 public struct SurveyOverviewView: View {
     public let router: AppRouter
+    @State private var hasScrolledToBottom: Bool = false
     
     public init(router: AppRouter) {
         self.router = router
@@ -26,7 +27,7 @@ public struct SurveyOverviewView: View {
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // DO Section
                     VStack(alignment: .leading, spacing: 18) {
@@ -91,10 +92,13 @@ public struct SurveyOverviewView: View {
                         )
                     }
                     
+                    // Bottom Sentinel to detect reaching bottom of instructions
+                    ScrollBottomSentinel(spaceName: "SurveyInstructionsScroll")
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 16)
             }
+            .trackScrollBottom(isUnlocked: $hasScrolledToBottom, spaceName: "SurveyInstructionsScroll")
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             // Pinned Bottom Action Bar (Matching ProfileView)
@@ -105,6 +109,7 @@ public struct SurveyOverviewView: View {
                 PrimaryButton(
                     title: "Next",
                     trailingIcon: "arrow.right",
+                    isEnabled: hasScrolledToBottom,
                     action: {
                         router.navigate(to: .chooseRelationships)
                     }

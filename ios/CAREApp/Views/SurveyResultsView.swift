@@ -80,7 +80,7 @@ public struct SurveyResultsView: View {
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // MARK: 1. Score Composition & Category Breakdown Bubble (Figma Frame 29:4)
                     BubbleCardContainer(title: "Score Composition") {

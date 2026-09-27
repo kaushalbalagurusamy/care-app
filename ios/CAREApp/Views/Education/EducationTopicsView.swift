@@ -61,7 +61,7 @@ public struct EducationTopicsView: View {
                             .font(Theme.Typography.poppins(.regular, size: 14.5))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Topics Cards List
                     LazyVStack(spacing: 14) {

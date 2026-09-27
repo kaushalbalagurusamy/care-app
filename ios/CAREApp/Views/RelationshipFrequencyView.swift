@@ -35,7 +35,7 @@ public struct RelationshipFrequencyView: View {
                         .font(Theme.Typography.poppins(.regular, size: 14))
                         .foregroundColor(Theme.Colors.textSecondary)
                 }
-                .padding(.top, 4)
+                .padding(.top, Theme.Spacing.headerTitleSpacing)
                 
                 // 5-Person Vertical Partition Container (Takes flexible space in single screen)
                 VerticalTimeAllocationBubble(allocations: $allocations)

@@ -36,7 +36,7 @@ public struct CAREInformationView: View {
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(3)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Category Switcher Pills
                     HStack(spacing: 8) {

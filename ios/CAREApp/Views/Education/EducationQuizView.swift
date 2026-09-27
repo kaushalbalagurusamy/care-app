@@ -113,7 +113,7 @@ public struct EducationQuizView: View {
             .font(Theme.Typography.poppins(.bold, size: 26))
             .foregroundColor(Theme.Colors.textPrimary)
             .lineSpacing(2)
-            .padding(.top, 4)
+            .padding(.top, Theme.Spacing.headerTitleSpacing)
             .accessibilityAddTraits(.isHeader)
         
         // Progress Segment Bar

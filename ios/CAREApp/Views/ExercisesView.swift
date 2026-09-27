@@ -31,7 +31,7 @@ public struct ExercisesView: View {
                             .font(Theme.Typography.poppins(.regular, size: 15))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // 4 Pathway Cards
                     VStack(spacing: 12) {

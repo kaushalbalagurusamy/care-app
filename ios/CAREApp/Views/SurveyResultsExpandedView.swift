@@ -26,7 +26,7 @@ public struct SurveyResultsExpandedView: View {
                             .font(Theme.Typography.poppins(.bold, size: 20))
                             .foregroundColor(Theme.Colors.textPrimary)
                     }
-                    .padding(.top, 2)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // MARK: 3 Relational Risk Tier Cards (Figma Frame 58:3)
                     VStack(spacing: 12) {

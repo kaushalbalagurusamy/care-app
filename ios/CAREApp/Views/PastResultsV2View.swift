@@ -40,7 +40,7 @@ public struct PastResultsV2View: View {
                             .font(Theme.Typography.poppins(.regular, size: 14))
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
-                    .padding(.top, 4)
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Total Score Trends Blue Card
                     VStack(alignment: .leading, spacing: 14) {
