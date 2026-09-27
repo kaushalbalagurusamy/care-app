@@ -6,12 +6,12 @@
       "scale": "1x"
     },
     {
-      "filename": "card_assessment_bg.png",
+      "filename": "card_assessment_bg@2x.png",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "card_assessment_bg.png",
+      "filename": "card_assessment_bg@3x.png",
       "idiom": "universal",
       "scale": "3x"
     }

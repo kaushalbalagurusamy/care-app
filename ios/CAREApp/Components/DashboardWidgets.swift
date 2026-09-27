@@ -56,143 +56,72 @@ public struct ActionCardView: View {
     }
     
     public var body: some View {
-        Button(action: {
-            let generator = UIImpactFeedbackGenerator(style: .light)
-            generator.impactOccurred()
-            if hasResumeControls {
-                onResume?()
-            } else {
-                action()
+        if hasResumeControls {
+            // In-progress assessment card directly from Figma Frame 491:203
+            ZStack(alignment: .bottom) {
+                Image("card_assessment_resume_bg")
+                    .resizable()
+                    .aspectRatio(350.0 / 149.0, contentMode: .fill)
+                    .frame(maxWidth: .infinity, maxHeight: 149)
+                    .clipped()
+                
+                // Interactive buttons mapped to Figma Frame 496:99 (Resume & Discard touch targets)
+                HStack(spacing: 8) {
+                    Button(action: {
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                        onResume?()
+                    }) {
+                        Color.clear
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 40)
+                            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Resume")
+                    .accessibilityIdentifier("ResumeAssessmentButton")
+                    
+                    Button(action: {
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                        generator.impactOccurred()
+                        onDiscard?()
+                    }) {
+                        Color.clear
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 40)
+                            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Discard")
+                    .accessibilityIdentifier("DiscardAssessmentButton")
+                }
+                .padding(.horizontal, 12)
+                .padding(.bottom, 31.5)
             }
-        }) {
-            ZStack {
-                // Background 3D Render Art (Exact 149pt height matching Jayme's Frame 5:4)
+            .frame(height: 149)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+            .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Assessment in progress")
+        } else {
+            Button(action: {
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.impactOccurred()
+                action()
+            }) {
                 Image(backgroundImageName)
                     .resizable()
                     .aspectRatio(350.0 / 149.0, contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: 149)
                     .clipped()
-                    .brightness(hasResumeControls ? -0.14 : -0.06)
-                    .contrast(1.05)
-                
-                // Slightly darker contrast overlay preserving rich photo color
-                LinearGradient(
-                    colors: [
-                        Color.black.opacity(hasResumeControls ? 0.38 : 0.12),
-                        Color.black.opacity(hasResumeControls ? 0.60 : 0.28)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                
-                // Content Layer - Icon at top-left, Simple Title at bottom-left
-                VStack(alignment: .leading, spacing: 0) {
-                    // Top Row: Frosted Glass Circular Icon Badge (Left) & Optional In Progress Pill (Right)
-                    HStack(alignment: .center) {
-                        // Preserved frosted circular icon from our version
-                        Circle()
-                            .fill(hasResumeControls ? Color.white.opacity(0.16) : Color.white.opacity(0.24))
-                            .frame(width: 44, height: 44)
-                            .overlay(
-                                Circle()
-                                    .stroke(hasResumeControls ? Color.white.opacity(0.28) : Color.white.opacity(0.40), lineWidth: 1.5)
-                            )
-                            .overlay(
-                                Image(iconName)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 22, height: 22)
-                                    .opacity(hasResumeControls ? 0.85 : 1.0)
-                            )
-                        
-                        Spacer()
-                        
-                        if hasResumeControls {
-                            HStack(spacing: 5) {
-                                Circle()
-                                    .fill(Color(hex: "#F59E0B"))
-                                    .frame(width: 6, height: 6)
-                                Text("In Progress")
-                                    .font(Theme.Typography.poppins(.medium, size: 10))
-                                    .foregroundColor(Color.white.opacity(0.92))
-                            }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.black.opacity(0.35))
-                            .clipShape(Capsule())
-                            .overlay(
-                                Capsule()
-                                    .stroke(Color.white.opacity(0.20), lineWidth: 1)
-                            )
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    // Bottom Row: Simple Title at Bottom-Left & Optional Resume/Discard Buttons at Bottom-Right
-                    HStack(alignment: .bottom, spacing: 12) {
-                        Text(title)
-                            .font(Theme.Typography.poppins(.bold, size: hasResumeControls ? 20 : 22))
-                            .foregroundColor(.white)
-                            .tracking(0.2)
-                            .shadow(color: Color.black.opacity(0.35), radius: 3, x: 0, y: 1)
-                        
-                        Spacer()
-                        
-                        if hasResumeControls {
-                            // Buttons row with Resume and Discard
-                            HStack(spacing: 8) {
-                                Button(action: {
-                                    let generator = UIImpactFeedbackGenerator(style: .medium)
-                                    generator.impactOccurred()
-                                    onResume?()
-                                }) {
-                                    Text("Resume")
-                                        .font(Theme.Typography.poppins(.semiBold, size: 12))
-                                        .foregroundColor(Color(hex: "#0F1D40"))
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 6)
-                                        .background(Color.white)
-                                        .clipShape(Capsule())
-                                        .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityIdentifier("ResumeAssessmentButton")
-                                
-                                Button(action: {
-                                    let generator = UIImpactFeedbackGenerator(style: .light)
-                                    generator.impactOccurred()
-                                    onDiscard?()
-                                }) {
-                                    Text("Discard")
-                                        .font(Theme.Typography.poppins(.medium, size: 12))
-                                        .foregroundColor(Color.white.opacity(0.90))
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 6)
-                                        .background(Color.white.opacity(0.15))
-                                        .clipShape(Capsule())
-                                        .overlay(
-                                            Capsule()
-                                                .stroke(Color.white.opacity(0.35), lineWidth: 1)
-                                        )
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityIdentifier("DiscardAssessmentButton")
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
             }
-            .frame(height: 149)
-            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
-            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .buttonStyle(ActionCardButtonStyle(hasResumeControls: false))
+            .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .accessibilityLabel(title)
         }
-        .buttonStyle(ActionCardButtonStyle(hasResumeControls: hasResumeControls))
-        .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .accessibilityLabel(hasResumeControls ? "\(title), In Progress. Resume or Discard." : "\(title)")
     }
 }
 
