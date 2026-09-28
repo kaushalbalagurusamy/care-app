@@ -35,7 +35,7 @@ public struct ProfileView: View {
                     // Title
                     VStack(alignment: .leading, spacing: 6) {
                         Text("My Profile")
-                            .font(Theme.Typography.poppins(.bold, size: 30))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Manage your personal details and assessment schedule")

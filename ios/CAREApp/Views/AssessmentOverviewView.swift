@@ -19,7 +19,7 @@ public struct AssessmentOverviewView: View {
                     
                     // Title Section (Two lines matching Figma Frame 3)
                     Text("C.A.R.E. Assessment\nOverview")
-                        .font(Theme.Typography.poppins(.bold, size: 30))
+                        .font(Theme.Typography.screenTitle)
                         .foregroundColor(Theme.Colors.textPrimary)
                         .lineSpacing(2)
                         .padding(.top, Theme.Spacing.headerTitleSpacing)

@@ -110,7 +110,7 @@ public struct EducationQuizView: View {
     private var quizStepperContent: some View {
         // Quiz Header Title
         Text("\(topic.title) Quiz")
-            .font(Theme.Typography.poppins(.bold, size: 26))
+            .font(Theme.Typography.screenTitle)
             .foregroundColor(Theme.Colors.textPrimary)
             .lineSpacing(2)
             .padding(.top, Theme.Spacing.headerTitleSpacing)

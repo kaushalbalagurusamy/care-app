@@ -40,7 +40,7 @@ public struct TopicDetailView: View {
                     
                     // Main Lesson Title (Matching Figma Page 2 Frame titles)
                     Text(topic.title)
-                        .font(Theme.Typography.poppins(.bold, size: 26))
+                        .font(Theme.Typography.screenTitle)
                         .foregroundColor(Theme.Colors.textPrimary)
                         .lineSpacing(2)
                         .padding(.top, Theme.Spacing.headerTitleSpacing)
