@@ -33,6 +33,9 @@ extension Theme {
         /// 24pt Bold - Welcome titles & Main screen headings (Figma Frame 5:19)
         public static let welcomeTitle: Font = poppins(.bold, size: 24)
         
+        /// 24pt Bold - Standardized screen titles across all views (pinned to welcomeTitle)
+        public static let screenTitle: Font = welcomeTitle
+
         /// 20pt Bold - Section titles & modal headers
         public static let title2: Font = poppins(.bold, size: 20)
         

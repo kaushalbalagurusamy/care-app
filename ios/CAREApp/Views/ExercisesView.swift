@@ -24,7 +24,7 @@ public struct ExercisesView: View {
                     // Title & Subtitle Header
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Exercises")
-                            .font(Theme.Typography.poppins(.bold, size: 30))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Strengthen your relational neural pathways")

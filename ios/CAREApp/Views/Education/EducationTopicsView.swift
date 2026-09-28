@@ -53,7 +53,7 @@ public struct EducationTopicsView: View {
                     // Screen Title & Subtitle Section (Matching Node 122:4)
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Education")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                             .accessibilityAddTraits(.isHeader)
                         

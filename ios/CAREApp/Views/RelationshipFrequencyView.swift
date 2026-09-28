@@ -28,7 +28,7 @@ public struct RelationshipFrequencyView: View {
                 // Title Section
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Choose Frequency")
-                        .font(Theme.Typography.poppins(.bold, size: 28))
+                        .font(Theme.Typography.screenTitle)
                         .foregroundColor(Theme.Colors.textPrimary)
                     
                     Text("Drag the borders to estimate the percent time spent in each relationship.")

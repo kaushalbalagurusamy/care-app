@@ -26,7 +26,7 @@ public struct SurveyResultsV2View: View {
                     // Title Section
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Survey Results")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Review insights and relational health metrics from your latest C.A.R.E. assessment.")

@@ -33,7 +33,7 @@ public struct PastResultsV2View: View {
                             .tracking(0.8)
                         
                         Text("Past Results")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Compare results across your C.A.R.E. assessments")

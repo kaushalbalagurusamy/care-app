@@ -50,7 +50,7 @@ public struct CalmExercisesView: View {
                     // Title Section
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Calm")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Exercises for feeling safe, grounded & connected.")

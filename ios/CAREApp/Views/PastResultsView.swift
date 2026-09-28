@@ -74,7 +74,7 @@ public struct PastResultsView: View {
                     // Title Section (Figma Frame 95:18)
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Past Results")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Compare results across your C.A.R.E. assessments")

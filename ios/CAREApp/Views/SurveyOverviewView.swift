@@ -20,7 +20,7 @@ public struct SurveyOverviewView: View {
                     // Title Section (Figma Frame 13:4)
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Survey Instructions")
-                            .font(Theme.Typography.poppins(.bold, size: 28))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Review guidelines for your C.A.R.E. assessment.")
