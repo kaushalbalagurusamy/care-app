@@ -408,6 +408,9 @@ struct ContentView: View {
 
         case .connectionCountdown:
             ConnectionCountdownExerciseView()
+
+        case .guidedExercise(let exerciseID):
+            GuidedExerciseView(exerciseID: exerciseID)
             
         case .careResultsExercises:
             if let latestResult { CAREResultsExercisesView(result: latestResult) }

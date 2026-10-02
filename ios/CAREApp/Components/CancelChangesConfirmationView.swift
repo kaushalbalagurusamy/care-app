@@ -92,6 +92,7 @@ public struct ExerciseLeaveConfirmationView: View {
         case .mirrorLovedOne: "mirror-loved-one"
         case .shareSomethingNew: "share-something-new"
         case .connectionCountdown: "connection-countdown"
+        case .guidedExercise(let id): id
         default: nil
         }
         return id.map { environment?.draftStore.failedExerciseSaves.contains($0) == true } ?? false

@@ -8,6 +8,7 @@ import WebKit
 // Bundle rendered color glyphs so the exercise artwork does not depend on the
 // active text font's emoji fallback (which can display a missing-glyph box).
 enum ExerciseEmojiAsset {
+    private static let addedEmoji = Set(ExerciseItem.additionalExercises.map(\.emoji))
     static let names: [String: String] = [
         "🎬": "clapper", "📷": "camera", "👥": "people", "💬": "chat",
         "🎥": "video", "💡": "bulb", "⌛": "hourglass", "😂": "laugh",
@@ -17,7 +18,12 @@ enum ExerciseEmojiAsset {
     ]
 
     static func name(for emoji: String) -> String? {
-        names[emoji].map { "ExerciseEmoji_\($0)" }
+        if let name = names[emoji] { return "ExerciseEmoji_\(name)" }
+        guard addedEmoji.contains(emoji) else { return nil }
+        let codepoints = emoji.unicodeScalars
+            .map { String($0.value, radix: 16) }
+            .joined(separator: "_")
+        return "ExerciseEmoji_u\(codepoints)"
     }
 }
 
@@ -30,7 +36,9 @@ struct ExerciseEmojiView: View {
             if let asset = ExerciseEmojiAsset.name(for: emoji) {
                 Image(asset).resizable().scaledToFit()
             } else {
-                Image(systemName: "sparkles").resizable().scaledToFit()
+                Text(emoji)
+                    .font(.system(size: size))
+                    .minimumScaleFactor(0.7)
             }
         }
         .frame(width: size, height: size)

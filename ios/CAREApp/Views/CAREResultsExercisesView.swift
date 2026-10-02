@@ -239,7 +239,7 @@ public struct CAREResultsExercisesView: View {
                     case "mirror-loved-one": router?.navigate(to: .mirrorLovedOne)
                     case "share-something-new": router?.navigate(to: .shareSomethingNew)
                     case "connection-countdown": router?.navigate(to: .connectionCountdown)
-                    default: router?.navigate(to: .exercises)
+                    default: router?.navigate(to: .guidedExercise(item.id))
                     }
                 }) {
                     Text("Start Exercise")

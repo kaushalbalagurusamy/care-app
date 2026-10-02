@@ -35,6 +35,7 @@ public enum AppRoute: Hashable {
     case mirrorLovedOne
     case shareSomethingNew
     case connectionCountdown
+    case guidedExercise(String)
     case careResultsExercises
     case exerciseComplete
     case exerciseCompleteFor(String)

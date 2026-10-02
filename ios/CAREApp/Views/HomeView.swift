@@ -115,42 +115,30 @@ public struct HomeView: View {
                         }
                     )
 
-                    Button {
-                        router.navigate(to: .personalizedActionPlan)
-                    } label: {
-                        HStack(spacing: 11) {
-                            Image(systemName: "sparkles")
-                                .font(.system(size: 19, weight: .semibold))
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("View Your C.A.R.E. Action Plan")
-                                    .font(Theme.Typography.poppins(.semiBold, size: 15))
-                                Text("Your pathways and recommended exercises")
-                                    .font(Theme.Typography.poppins(.regular, size: 11))
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                        .foregroundStyle(Theme.Colors.primary)
-                        .padding(15)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Theme.Colors.primary.opacity(0.09), in: RoundedRectangle(cornerRadius: 16))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("HomeCareActionPlanButton")
-                    
                     // Assessment Interval Capsule Pill Anchored at Bottom with Centered Calendar Icon
                     if let daysUntilNextAssessment {
                         StreakBadgeView(daysUntilNextAssessment: daysUntilNextAssessment)
                             .padding(.top, 2)
-                            .padding(.bottom, 8)
                     } else {
                         Label("Complete your first assessment to start your schedule", systemImage: "calendar")
                             .font(Theme.Typography.poppins(.medium, size: 13))
                             .foregroundStyle(Theme.Colors.textSecondary)
                             .frame(maxWidth: .infinity, minHeight: 48)
                             .background(Theme.Colors.cardSurface, in: Capsule())
-                            .padding(.bottom, 8)
                     }
+
+                    Button {
+                        router.navigate(to: .personalizedActionPlan)
+                    } label: {
+                        Label("View Your C.A.R.E. Action Plan", systemImage: "sparkles")
+                            .font(Theme.Typography.poppins(.semiBold, size: 13))
+                            .foregroundStyle(Theme.Colors.primary)
+                            .frame(maxWidth: .infinity, minHeight: 40)
+                            .background(Theme.Colors.primary.opacity(0.09), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 8)
+                    .accessibilityIdentifier("HomeCareActionPlanButton")
                 }
                 .padding(.horizontal, 20)
             }
@@ -198,7 +186,7 @@ public struct HomeView: View {
         case "mirror-loved-one": router.navigate(to: .mirrorLovedOne)
         case "share-something-new": router.navigate(to: .shareSomethingNew)
         case "connection-countdown": router.navigate(to: .connectionCountdown)
-        default: draftError = "That exercise is unavailable. Open Exercises to choose another."
+        default: router.navigate(to: .guidedExercise(id))
         }
     }
 }

@@ -183,7 +183,8 @@ public struct HeaderNavBar: View {
     private var isExerciseRoute: Bool {
         switch router?.currentRoute {
         case .watchFunny, .keepPhoto, .belongingList, .shareSomethingSmall,
-             .mirrorEmotion, .mirrorLovedOne, .shareSomethingNew, .connectionCountdown:
+             .mirrorEmotion, .mirrorLovedOne, .shareSomethingNew, .connectionCountdown,
+             .guidedExercise:
             return true
         default: return false
         }
@@ -206,6 +207,7 @@ public struct HeaderNavBar: View {
         case .mirrorLovedOne: "mirror-loved-one"
         case .shareSomethingNew: "share-something-new"
         case .connectionCountdown: "connection-countdown"
+        case .guidedExercise(let id): id
         default: nil
         }
         return id.map { store.failedExerciseSaves.contains($0) } ?? false

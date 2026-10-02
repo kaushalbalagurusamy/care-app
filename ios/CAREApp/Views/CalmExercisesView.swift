@@ -16,7 +16,6 @@ public struct ExerciseCategoryHomeView: View {
     @State private var selectedTab = "All"
     @State private var sortOption: ExerciseSortOption = .mostRecentlyCompleted
     @State private var isShowingSortSheet = false
-    @State private var isShowingUpcomingAlert = false
     @State private var draftError: String?
 
     public init(category: ExerciseCategory) { self.category = category }
@@ -144,11 +143,6 @@ public struct ExerciseCategoryHomeView: View {
                 isShowingSortSheet = false
             }, onCancel: { isShowingSortSheet = false }, accent: accent)
         }
-        .alert("Coming soon", isPresented: $isShowingUpcomingAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("This exercise will be available soon.")
-        }
         .alert("Could not update exercise", isPresented: Binding(get: { draftError != nil }, set: { if !$0 { draftError = nil } })) {
             Button("OK", role: .cancel) { draftError = nil }
         } message: { Text(draftError ?? "") }
@@ -203,7 +197,7 @@ public struct ExerciseCategoryHomeView: View {
         let entry = record(item.id)
         let lastCompleted = entry.completionDates.max()
         return VStack(alignment: .leading, spacing: 7) {
-            HStack(alignment: .top) {
+            HStack(alignment: .center, spacing: 10) {
                 ExerciseEmojiView(emoji: item.emoji, size: 20)
                     .frame(width: 32, height: 32)
                     .background(soft, in: Circle())
@@ -219,6 +213,7 @@ public struct ExerciseCategoryHomeView: View {
             Text(item.subtitle)
                 .font(Theme.Typography.poppins(.regular, size: 11))
                 .foregroundColor(Theme.Colors.textSecondary)
+                .padding(.leading, 42)
             Divider()
             Text(lastCompleted.map { "\(item.durationMinutesRange) • \(entry.completionDates.count) times completed • Last done: \($0.formatted(date: .abbreviated, time: .omitted))" } ?? "\(item.durationMinutesRange) • New exercise")
                 .font(Theme.Typography.poppins(.regular, size: 10))
@@ -279,7 +274,7 @@ public struct ExerciseCategoryHomeView: View {
         case "mirror-loved-one": router?.navigate(to: .mirrorLovedOne)
         case "share-something-new": router?.navigate(to: .shareSomethingNew)
         case "connection-countdown": router?.navigate(to: .connectionCountdown)
-        default: isShowingUpcomingAlert = true
+        default: router?.navigate(to: .guidedExercise(id))
         }
     }
 }

@@ -7,7 +7,6 @@ public struct ExerciseCompleteView: View {
     public let exerciseID: String
     @State private var selectedRating = 0
     @State private var recommendedID: String?
-    @State private var isShowingUpcomingAlert = false
 
     public init(exerciseID: String = "watch-something-funny") { self.exerciseID = exerciseID }
 
@@ -148,11 +147,6 @@ public struct ExerciseCompleteView: View {
                 }
             }
         }
-        .alert("Coming soon", isPresented: $isShowingUpcomingAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("This exercise will be available soon.")
-        }
     }
 
     private func stat(_ value: String, _ caption: String, showsFire: Bool = false) -> some View {
@@ -185,7 +179,7 @@ public struct ExerciseCompleteView: View {
         case "mirror-loved-one": router?.navigate(to: .mirrorLovedOne)
         case "share-something-new": router?.navigate(to: .shareSomethingNew)
         case "connection-countdown": router?.navigate(to: .connectionCountdown)
-        default: isShowingUpcomingAlert = true
+        default: router?.navigate(to: .guidedExercise(item.id))
         }
     }
 }

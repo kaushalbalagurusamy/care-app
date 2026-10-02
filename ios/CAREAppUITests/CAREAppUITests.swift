@@ -27,9 +27,16 @@ final class CAREAppUITests: XCTestCase {
 
     func testPaidActionPlanPreviewShowsRecommendationsAndExpandedCatalog() {
         launch(fixture: "--uitesting-history", skipWelcome: true)
+        let countdown = app.staticTexts["Days until next assessment:"]
+        XCTAssertTrue(countdown.waitForExistence(timeout: 8))
         let planButton = app.buttons["HomeCareActionPlanButton"]
         XCTAssertTrue(planButton.waitForExistence(timeout: 8))
         for _ in 0..<4 where !planButton.isHittable { app.swipeUp() }
+        XCTAssertGreaterThan(planButton.frame.minY, countdown.frame.maxY)
+        let homeScreenshot = XCTAttachment(screenshot: app.screenshot())
+        homeScreenshot.name = "Welcome Back with assessment countdown and plan button"
+        homeScreenshot.lifetime = .keepAlways
+        add(homeScreenshot)
         planButton.tap()
         XCTAssertTrue(app.staticTexts["Your C.A.R.E. Action Plan"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Recommended for you"].exists)
@@ -38,6 +45,25 @@ final class CAREAppUITests: XCTestCase {
         screenshot.name = "CARE Action Plan Preview"
         screenshot.lifetime = .keepAlways
         add(screenshot)
+    }
+
+    func testNewExerciseHasItsOwnSavedFlowAndCompletion() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        let start = require(app.buttons["DoExercise_build-safe-support-plan"])
+        for _ in 0..<10 where !start.isHittable { app.swipeUp() }
+        start.tap()
+        require(app.staticTexts["Build a Safe Support Plan"])
+        require(app.staticTexts["My Support List"])
+        let flowScreenshot = XCTAttachment(screenshot: app.screenshot())
+        flowScreenshot.name = "Build a Safe Support Plan guided flow"
+        flowScreenshot.lifetime = .keepAlways
+        add(flowScreenshot)
+        require(app.buttons["ExerciseFlowAction"]).tap()
+        require(app.staticTexts["Boundaries I Choose"])
+        require(app.buttons["ExerciseFlowAction"]).tap()
+        require(app.buttons["ExerciseFlowAction"]).tap()
+        require(app.staticTexts["Exercise Complete!"])
     }
 
     @discardableResult
