@@ -33,6 +33,7 @@ final class CAREAppUITests: XCTestCase {
         XCTAssertTrue(planButton.waitForExistence(timeout: 8))
         for _ in 0..<4 where !planButton.isHittable { app.swipeUp() }
         XCTAssertGreaterThan(planButton.frame.minY, countdown.frame.maxY)
+        app.swipeUp()
         let homeScreenshot = XCTAttachment(screenshot: app.screenshot())
         homeScreenshot.name = "Welcome Back with assessment countdown and plan button"
         homeScreenshot.lifetime = .keepAlways
