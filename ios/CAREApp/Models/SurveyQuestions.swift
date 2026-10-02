@@ -46,6 +46,15 @@ public enum CAREDomain: String, CaseIterable, Codable, Hashable, Sendable {
         case .energetic: return Theme.Colors.Domains.energetic
         }
     }
+
+    public var accentColor: Color {
+        switch self {
+        case .calm: return Theme.Colors.Domains.calmAccent
+        case .accepted: return Theme.Colors.Domains.acceptedAccent
+        case .resonant: return Theme.Colors.Domains.resonantAccent
+        case .energetic: return Theme.Colors.Domains.energeticAccent
+        }
+    }
 }
 
 // MARK: - Configurable Multi-Domain Weight Mapping

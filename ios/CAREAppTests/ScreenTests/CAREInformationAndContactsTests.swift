@@ -12,13 +12,11 @@ struct CAREInformationAndContactsTests {
         #expect(view.initialCategory == .calm)
     }
     
-    @Test("AddRelationshipView initializes with all 12 relationship categories")
+    @Test("W02: name and optional free-text relationship replace category pills")
     @MainActor
     func testAddRelationshipViewDefaultInitialization() {
         let view = AddRelationshipView()
-        #expect(view.relationshipTypes.count == 12)
-        #expect(view.relationshipTypes.contains("Partner"))
-        #expect(view.relationshipTypes.contains("Friend"))
-        #expect(view.relationshipTypes.contains("Mentor / Teacher"))
+        #expect(view.editingContactID == nil)
+        #expect(ContactEditDraft.isValidName("Jordan"))
     }
 }

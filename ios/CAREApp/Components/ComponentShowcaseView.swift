@@ -160,7 +160,7 @@ public struct ComponentShowcaseView: View {
                     BubbleCardContainer(title: "Results by Individual", showInfoIcon: true) {
                         let sampleResult = IndividualResult(
                             participant: AssessmentParticipant(
-                                person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32),
+                                person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner),
                                 percentTimeSpent: 0.30
                             ),
                             normalizedScore: 80.0,

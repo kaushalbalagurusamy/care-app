@@ -5,19 +5,13 @@ import SwiftData
 public final class LocalDeviceRepository: ContactsRepositoryProtocol, AssessmentRepositoryProtocol, @unchecked Sendable {
     private let modelContainer: ModelContainer
     private let maxContacts: Int
-    private let maxAssessments: Int
-    private let autoPruneAssessments: Bool
     
     public init(
         modelContainer: ModelContainer,
-        maxContacts: Int = StorageContainerFactory.maxContactsLimit,
-        maxAssessments: Int = StorageContainerFactory.maxAssessmentsLimit,
-        autoPruneAssessments: Bool = true
+        maxContacts: Int = StorageContainerFactory.maxContactsLimit
     ) {
         self.modelContainer = modelContainer
         self.maxContacts = maxContacts
-        self.maxAssessments = maxAssessments
-        self.autoPruneAssessments = autoPruneAssessments
     }
     
     @MainActor
@@ -58,7 +52,7 @@ public final class LocalDeviceRepository: ContactsRepositoryProtocol, Assessment
             stored.name = person.name
             stored.initials = person.initials
             stored.categoryRaw = person.category.rawValue
-            stored.age = person.age
+            stored.customCategoryName = person.customCategoryName
             try context.save()
         }
         return person
@@ -89,21 +83,14 @@ public final class LocalDeviceRepository: ContactsRepositoryProtocol, Assessment
     
     @MainActor
     public func saveAssessmentResult(_ result: AssessmentResult) async throws {
-        let currentCount = try await fetchHistoryCount()
-        if currentCount >= maxAssessments {
-            if autoPruneAssessments {
-                // Prune oldest session to keep strictly within max capacity
-                let descriptor = FetchDescriptor<StoredAssessmentSession>(
-                    sortBy: [SortDescriptor(\.date, order: .forward)]
-                )
-                if let oldest = try context.fetch(descriptor).first {
-                    context.delete(oldest)
-                }
-            } else {
-                throw StorageLimitError.assessmentLimitExceeded(max: maxAssessments)
-            }
+        let resultID = result.id
+        let duplicate = FetchDescriptor<StoredAssessmentSession>(predicate: #Predicate { $0.id == resultID })
+        if try context.fetch(duplicate).first != nil { return }
+        let existing = try context.fetch(FetchDescriptor<StoredAssessmentSession>())
+        guard !existing.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: result.timestamp) }) else {
+            throw AssessmentDailyLimitError.alreadyCompletedToday
         }
-        
+        // Results are immutable history. Pruning here would leave trend points without detail pages.
         let storedSession = StoredAssessmentSession(from: result)
         context.insert(storedSession)
         try context.save()

@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 // MARK: - Single Participant Allocation Item
-public struct ParticipantAllocation: Identifiable, Equatable {
+public struct ParticipantAllocation: Identifiable, Equatable, Codable {
     public let id: UUID
     public let initials: String
     public let firstName: String

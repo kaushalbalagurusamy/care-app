@@ -21,7 +21,7 @@ public struct DailyExerciseTrackerView: View {
     }
     
     public init(
-        completedDaysCount: Int = 5,
+        completedDaysCount: Int = 0,
         totalDaysCount: Int = 7,
         days: [DayStatus]? = nil
     ) {
@@ -30,14 +30,14 @@ public struct DailyExerciseTrackerView: View {
         if let days = days {
             self.days = days
         } else {
-            // Default 7-day week (M, T, W, T, F, S, S) matching Figma Frame 5:4
+            // Empty Monday-first week before the first completed exercise.
             self.days = [
-                DayStatus(id: 0, label: "M", isCompleted: true),
-                DayStatus(id: 1, label: "T", isCompleted: true),
-                DayStatus(id: 2, label: "W", isCompleted: true),
-                DayStatus(id: 3, label: "T", isCompleted: true),
-                DayStatus(id: 4, label: "F", isCompleted: true),
-                DayStatus(id: 5, label: "S", isCompleted: false, isCurrent: true),
+                DayStatus(id: 0, label: "M", isCompleted: false),
+                DayStatus(id: 1, label: "T", isCompleted: false),
+                DayStatus(id: 2, label: "W", isCompleted: false),
+                DayStatus(id: 3, label: "T", isCompleted: false),
+                DayStatus(id: 4, label: "F", isCompleted: false),
+                DayStatus(id: 5, label: "S", isCompleted: false),
                 DayStatus(id: 6, label: "S", isCompleted: false)
             ]
         }

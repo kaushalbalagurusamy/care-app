@@ -246,8 +246,7 @@ public struct PastResultsView: View {
         let person = Person(
             name: name,
             initials: initials.isEmpty ? "P" : initials,
-            category: .partner,
-            age: 30
+            category: .partner
         )
         let participant = AssessmentParticipant(person: person, percentTimeSpent: 0.20)
         return IndividualResult(
@@ -321,7 +320,7 @@ public struct CARETrendChart: View {
                     let stepWidth = max(viewportWidth / 3.0, 75) // Exactly 3 dates visible per screen width
                     let totalWidth = stepWidth * CGFloat(dates.count)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
+                    NoHorizontalBounceScrollView(showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 0) {
                             ZStack(alignment: .bottomLeading) {
                                 // Horizontal Grid Lines spanning entire scroll width
@@ -505,7 +504,7 @@ public struct RelationalSafetyTrendChart: View {
                     let stepWidth = max(viewportWidth / 3.0, 75) // Exactly 3 dates visible per screen width
                     let totalWidth = stepWidth * CGFloat(dates.count)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
+                    NoHorizontalBounceScrollView(showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 0) {
                             ZStack(alignment: .bottomLeading) {
                                 // Horizontal Grid Lines spanning entire scroll width
@@ -675,7 +674,7 @@ public struct IndividualScoreBandChart: View {
                     let stepWidth = max(viewportWidth / 3.0, 75) // Exactly 3 points visible per screen width
                     let totalWidth = stepWidth * CGFloat(dates.count)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
+                    NoHorizontalBounceScrollView(showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 0) {
                             ZStack(alignment: .bottomLeading) {
                                 // 3 Horizontal Colored Background Bands spanning entire scroll width

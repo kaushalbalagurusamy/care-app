@@ -9,6 +9,7 @@ public struct PrimaryButton: View {
     public let trailingAppIcon: AppIcon?
     public let isEnabled: Bool
     public let isLoading: Bool
+    public let accentColor: Color?
     public let action: () -> Void
     
     public var minHeight: CGFloat { 56.0 }
@@ -21,6 +22,7 @@ public struct PrimaryButton: View {
         trailingAppIcon: AppIcon? = nil,
         isEnabled: Bool = true,
         isLoading: Bool = false,
+        accentColor: Color? = nil,
         action: @escaping () -> Void
     ) {
         self.title = title
@@ -30,6 +32,7 @@ public struct PrimaryButton: View {
         self.trailingAppIcon = trailingAppIcon
         self.isEnabled = isEnabled
         self.isLoading = isLoading
+        self.accentColor = accentColor
         self.action = action
     }
     
@@ -65,7 +68,7 @@ public struct PrimaryButton: View {
             .frame(maxWidth: .infinity)
             .frame(height: 56)
             .foregroundColor(.white)
-            .background(isEnabled ? Theme.Colors.primary : Theme.Colors.textMuted)
+            .background(isEnabled ? (accentColor ?? Theme.Colors.primary) : Theme.Colors.textMuted)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .animation(.easeInOut(duration: 0.25), value: isEnabled)

@@ -2,9 +2,26 @@ import SwiftUI
 
 // MARK: - Screen: CARE Results Exercises / Action Plan (Figma Frame 288:4 & Node 239:8)
 public struct CAREResultsExercisesView: View {
+    @Environment(ExerciseProgressStore.self) private var exerciseProgress: ExerciseProgressStore?
     @Environment(AppRouter.self) private var router: AppRouter?
+    public let result: AssessmentResult
     
-    public init() {}
+    public init(result: AssessmentResult) { self.result = result }
+
+    private var rankedDomains: [CAREDomain] {
+        CAREDomain.allCases.sorted { (result.domainScores[$0]?.percentage ?? 0) > (result.domainScores[$1]?.percentage ?? 0) }
+    }
+
+    private var focusDomain: CAREDomain { rankedDomains.last ?? .calm }
+
+    private var recommendedExercises: [ExerciseItem] {
+        ExerciseItem.allExercises.filter { $0.category.rawValue == focusDomain.title }
+    }
+
+    private func score(for domain: CAREDomain) -> String {
+        guard let breakdown = result.domainScores[domain] else { return "—/125" }
+        return "\(Int(breakdown.earnedPoints.rounded()))/\(Int(breakdown.maxPossiblePoints.rounded()))"
+    }
     
     public var body: some View {
         VStack(spacing: 0) {
@@ -57,21 +74,19 @@ public struct CAREResultsExercisesView: View {
                         
                         // 4 Pathway Indicator Bars
                         HStack(spacing: 8) {
-                            pathwayMiniPill(label: "Calm", score: "18/125", color: Color(hex: "#3B82F6"))
-                            pathwayMiniPill(label: "Accepted", score: "20/125", color: Color(hex: "#10B981"))
-                            pathwayMiniPill(label: "Resonant", score: "15/125", color: Color(hex: "#8B5CF6"))
-                            pathwayMiniPill(label: "Energetic", score: "22/125", color: Color(hex: "#F97316"))
+                            ForEach(CAREDomain.allCases, id: \.self) { domain in
+                                pathwayMiniPill(label: domain.title, score: score(for: domain), color: ResultsV2Palette.donutColor(for: domain))
+                            }
                         }
                         
                         // Focus Highlight Box
                         HStack(alignment: .top, spacing: 10) {
-                            Text("💡")
-                                .font(.system(size: 16))
+                            ExerciseEmojiView(emoji: "💡", size: 16)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Focus Highlight:")
                                     .font(Theme.Typography.poppins(.semiBold, size: 13))
                                     .foregroundColor(Color(hex: "#92400E"))
-                                Text("Your personalized plan places special emphasis on strengthening your Resonant Pathway based on your latest assessment.")
+                                Text("Your latest assessment suggests focusing on your \(focusDomain.title) pathway.")
                                     .font(Theme.Typography.poppins(.regular, size: 12.5))
                                     .foregroundColor(Color(hex: "#B45309"))
                                     .lineSpacing(2)
@@ -94,7 +109,7 @@ public struct CAREResultsExercisesView: View {
                         Text("Your Relational Strengths")
                             .font(Theme.Typography.poppins(.bold, size: 16))
                             .foregroundColor(Theme.Colors.textPrimary)
-                        Text("You scored highest in Energetic and Accepted — you naturally bring vitality, warmth, and open-minded acceptance to your relationships. These are powerful gifts that create a safe, supportive space for those you love.")
+                        Text("Your strongest pathways are \(rankedDomains.prefix(2).map(\.title).joined(separator: " and ")). These scores reflect the relationships you assessed today.")
                             .font(Theme.Typography.poppins(.regular, size: 13.5))
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
@@ -113,7 +128,7 @@ public struct CAREResultsExercisesView: View {
                         Text("Areas to Nurture")
                             .font(Theme.Typography.poppins(.bold, size: 16))
                             .foregroundColor(Theme.Colors.textPrimary)
-                        Text("Building resonance means strengthening emotional attunement — learning to feel with another person and synchronize your energy. Committing to small, daily practices will help shift your nervous system into close harmony with others.")
+                        Text("Your \(focusDomain.title) score is your current area to nurture. Try a short exercise in this pathway and return to it as your relationships change.")
                             .font(Theme.Typography.poppins(.regular, size: 13.5))
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
@@ -133,12 +148,12 @@ public struct CAREResultsExercisesView: View {
                             Text("Recommended for You")
                                 .font(Theme.Typography.poppins(.bold, size: 16))
                                 .foregroundColor(Theme.Colors.textPrimary)
-                            Text("Exercises tailored to strengthen your Resonant pathway")
+                            Text("Exercises for your \(focusDomain.title) pathway")
                                 .font(Theme.Typography.poppins(.regular, size: 12.5))
                                 .foregroundColor(Theme.Colors.textSecondary)
                         }
                         
-                        ForEach(ExerciseItem.sampleResonantExercises) { item in
+                        ForEach(recommendedExercises) { item in
                             recommendedExerciseCard(item)
                         }
                     }
@@ -152,7 +167,7 @@ public struct CAREResultsExercisesView: View {
                 PrimaryButton(
                     title: "View All Exercises",
                     action: {
-                        router?.navigate(to: .calmExercises)
+                        router?.navigate(to: .exercises)
                     }
                 )
                 
@@ -189,8 +204,9 @@ public struct CAREResultsExercisesView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 HStack(spacing: 8) {
-                    Text(item.emoji)
-                        .font(.system(size: 20))
+                    ExerciseEmojiView(emoji: item.emoji, size: 20)
+                        .frame(width: 32, height: 32)
+                        .background(item.category.accentColor.opacity(0.08), in: Circle())
                     Text(item.title)
                         .font(Theme.Typography.poppins(.semiBold, size: 15))
                         .foregroundColor(Theme.Colors.textPrimary)
@@ -207,14 +223,24 @@ public struct CAREResultsExercisesView: View {
                 .lineSpacing(2)
             
             HStack {
-                Text("\(item.durationMinutesRange) • \(item.timesCompleted) times completed")
+                Text("\(item.durationMinutesRange) • \(exerciseProgress?.record(for: item.id).completionDates.count ?? 0) times completed")
                     .font(Theme.Typography.poppins(.regular, size: 11.5))
                     .foregroundColor(Theme.Colors.textSecondary)
                 
                 Spacer()
                 
                 Button(action: {
-                    router?.navigate(to: .calmExercises)
+                    switch item.id {
+                    case "watch-something-funny": router?.navigate(to: .watchFunny)
+                    case "keep-photo-close": router?.navigate(to: .keepPhoto)
+                    case "belonging-list": router?.navigate(to: .belongingList)
+                    case "share-something-small": router?.navigate(to: .shareSomethingSmall)
+                    case "mirror-emotion": router?.navigate(to: .mirrorEmotion)
+                    case "mirror-loved-one": router?.navigate(to: .mirrorLovedOne)
+                    case "share-something-new": router?.navigate(to: .shareSomethingNew)
+                    case "connection-countdown": router?.navigate(to: .connectionCountdown)
+                    default: router?.navigate(to: .exercises)
+                    }
                 }) {
                     Text("Start Exercise")
                         .font(Theme.Typography.poppins(.semiBold, size: 12.5))
@@ -237,5 +263,5 @@ public struct CAREResultsExercisesView: View {
 }
 
 #Preview {
-    CAREResultsExercisesView()
+    CAREResultsExercisesView(result: .figmaMockResult)
 }

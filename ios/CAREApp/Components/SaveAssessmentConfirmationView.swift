@@ -15,25 +15,22 @@ public struct SaveAssessmentConfirmationView: View {
     
     public var body: some View {
         ZStack {
-            Color.black.opacity(0.4)
+            Color.black.opacity(0.18)
                 .ignoresSafeArea()
             
-            VStack(spacing: 20) {
-                VStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 28) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Save your assessment?")
                         .font(Theme.Typography.poppins(.bold, size: 20))
                         .foregroundColor(Theme.Colors.textPrimary)
-                        .multilineTextAlignment(.center)
                     
                     Text("Would you like to save your progress before leaving? You can resume or discard this assessment the next time you open the app or return to the Home screen.")
                         .font(Theme.Typography.poppins(.regular, size: 14))
                         .foregroundColor(Theme.Colors.textSecondary)
-                        .multilineTextAlignment(.center)
                         .lineSpacing(2)
                 }
-                .padding(.horizontal, 8)
                 
-                VStack(spacing: 12) {
+                VStack(spacing: 8) {
                     PrimaryButton(
                         title: "Save Assessment",
                         action: onSaveAssessment
@@ -52,13 +49,14 @@ public struct SaveAssessmentConfirmationView: View {
                     }
                 }
             }
-            .padding(24)
+            .padding(22)
+            .frame(maxWidth: 350)
             .background(
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
-                    .fill(Color.white)
+                    .fill(Color(hex: "#FAFAFA"))
                     .shadow(color: Color.black.opacity(0.12), radius: 24, x: 0, y: 12)
             )
-            .padding(.horizontal, 28)
+            .padding(.horizontal, 20)
         }
     }
 }

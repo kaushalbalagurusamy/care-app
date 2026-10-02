@@ -1,185 +1,193 @@
 import SwiftUI
 
-// MARK: - Screen: Exercise Complete Celebration (Figma Frame 290:4 & Node 239:8)
+// Figma frame 290:4, populated from the exercise just completed.
 public struct ExerciseCompleteView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
-    @State private var selectedRating: Int = 4
-    
-    public init() {}
-    
+    @Environment(ExerciseProgressStore.self) private var progress: ExerciseProgressStore?
+    public let exerciseID: String
+    @State private var selectedRating = 0
+    @State private var recommendedID: String?
+    @State private var isShowingUpcomingAlert = false
+
+    public init(exerciseID: String = "watch-something-funny") { self.exerciseID = exerciseID }
+
+    private var exercise: ExerciseItem {
+        ExerciseItem.allExercises.first(where: { $0.id == exerciseID }) ?? ExerciseItem.sampleCalmExercises[0]
+    }
+    private var record: ExerciseProgressRecord { progress?.record(for: exerciseID) ?? .init() }
+    private var recommendation: ExerciseItem? {
+        ExerciseItem.allExercises.first { $0.id == recommendedID }
+    }
+    private var accent: Color { exercise.category.accentColor }
+
     public var body: some View {
         VStack(spacing: 0) {
-            HeaderNavBar(
-                showBackButton: true,
-                showHomeButton: true,
-                showSparkleButton: true,
-                showChartButton: true,
-                showProfileButton: true,
-                onBack: { router?.pop() }
-            )
-            
+            HeaderNavBar(accentColor: accent, onBack: { router?.pop() })
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 20) {
-                    
-                    // Celebration Header
-                    VStack(spacing: 12) {
-                        ZStack {
-                            Circle()
-                                .fill(Color(hex: "#EFF6FF"))
-                                .frame(width: 80, height: 80)
-                            
-                            Circle()
-                                .stroke(Theme.Colors.primary, lineWidth: 3)
-                                .frame(width: 80, height: 80)
-                            
-                            Image(systemName: "checkmark")
-                                .font(.system(size: 32, weight: .bold))
-                                .foregroundColor(Theme.Colors.primary)
-                        }
+                VStack(spacing: 18) {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 32, weight: .medium))
+                        .foregroundColor(accent)
+                        .frame(width: 80, height: 80)
+                        .background(accent.opacity(0.1), in: Circle())
+                        .overlay(Circle().stroke(accent.opacity(0.5), lineWidth: 1))
                         .padding(.top, Theme.Spacing.headerTitleSpacing)
-                        
-                        VStack(spacing: 4) {
-                            Text("Exercise Complete!")
-                                .font(Theme.Typography.poppins(.bold, size: 26))
-                                .foregroundColor(Theme.Colors.textPrimary)
-                            
-                            Text("Watch Something Funny")
-                                .font(Theme.Typography.poppins(.medium, size: 15))
-                                .foregroundColor(Theme.Colors.textSecondary)
-                        }
-                    }
-                    
-                    // Stats 3-Item Card
+                    Text("Exercise Complete!")
+                        .font(Theme.Typography.poppins(.bold, size: 22))
+                        .foregroundColor(Theme.Colors.textPrimary)
+                    Text(exercise.title)
+                        .font(Theme.Typography.poppins(.semiBold, size: 15))
+                        .foregroundColor(accent)
+
                     HStack(spacing: 0) {
-                        statColumn(value: "6", label: "Completed")
-                        Divider().frame(height: 36)
-                        statColumn(value: "3 days", label: "Streak 🔥")
-                        Divider().frame(height: 36)
-                        statColumn(value: "Sep 22", label: "Last Done")
+                        stat("\(record.completionDates.count)", "Completed")
+                        Rectangle().fill(Color(hex: "#DCE4EE")).frame(width: 1, height: 35)
+                        stat(streakLabel, "Streak", showsFire: true)
+                        Rectangle().fill(Color(hex: "#DCE4EE")).frame(width: 1, height: 35)
+                        stat(record.completionDates.last?.formatted(.dateTime.month(.abbreviated).day()) ?? "Today", "Last Done")
                     }
                     .padding(.vertical, 14)
-                    .background(Color(hex: "#F8FAFC"))
-                    .cornerRadius(18)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18)
-                            .stroke(Color(hex: "#E2E8F0"), lineWidth: 1)
-                    )
-                    
-                    // Rating Section
-                    VStack(spacing: 10) {
+                    .background(accent.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                    VStack(spacing: 12) {
                         Text("How helpful was this exercise?")
-                            .font(Theme.Typography.poppins(.semiBold, size: 14))
-                            .foregroundColor(Theme.Colors.textPrimary)
-                        
-                        HStack(spacing: 12) {
+                            .font(Theme.Typography.poppins(.medium, size: 13))
+                        HStack(spacing: 9) {
                             ForEach(1...5, id: \.self) { star in
-                                Button(action: {
-                                    let generator = UIImpactFeedbackGenerator(style: .light)
-                                    generator.impactOccurred()
+                                Button {
                                     selectedRating = star
-                                }) {
+                                    progress?.setRating(star, for: exerciseID)
+                                } label: {
                                     Image(systemName: star <= selectedRating ? "star.fill" : "star")
-                                        .font(.system(size: 26))
-                                        .foregroundColor(Color(hex: "#F59E0B"))
+                                        .font(.system(size: 24))
+                                        .foregroundColor(Color(hex: "#F2A900"))
                                 }
-                                .buttonStyle(.plain)
+                                .accessibilityLabel("Rate \(star) stars")
                             }
                         }
                     }
-                    .padding(16)
                     .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(18)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18)
-                            .stroke(Color(hex: "#E2E8F0"), lineWidth: 1)
-                    )
-                    
-                    // Try Next Card
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("TRY NEXT")
-                            .font(Theme.Typography.poppins(.bold, size: 11))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                        
-                        HStack(spacing: 12) {
-                            Text("📷")
-                                .font(.system(size: 24))
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Keep a Photo Close")
-                                    .font(Theme.Typography.poppins(.semiBold, size: 14.5))
-                                    .foregroundColor(Theme.Colors.textPrimary)
-                                Text("Ground yourself with an image of someone you love")
-                                    .font(Theme.Typography.poppins(.regular, size: 12))
-                                    .foregroundColor(Theme.Colors.textSecondary)
+                    .padding(18)
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#DCE4EE")))
+
+                    if let recommendation {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("TRY NEXT")
+                                .font(Theme.Typography.poppins(.semiBold, size: 10))
+                                .foregroundColor(Theme.Colors.textSecondary)
+                            HStack(spacing: 9) {
+                                ExerciseEmojiView(emoji: recommendation.emoji, size: 20)
+                                    .frame(width: 32, height: 32)
+                                    .background(recommendation.category.accentColor.opacity(0.08), in: Circle())
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(recommendation.title)
+                                        .font(Theme.Typography.poppins(.bold, size: 13))
+                                    Text(recommendation.subtitle)
+                                        .font(Theme.Typography.poppins(.regular, size: 11))
+                                        .foregroundColor(Theme.Colors.textSecondary)
+                                        .lineLimit(1)
+                                }
+                                Spacer()
+                                Button { open(recommendation) } label: {
+                                    Label("Try", systemImage: "arrow.right")
+                                        .font(Theme.Typography.poppins(.semiBold, size: 11))
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 10)
+                                        .frame(height: 30)
+                                        .background(accent)
+                                        .clipShape(RoundedRectangle(cornerRadius: 9))
+                                }
                             }
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                router?.navigate(to: .keepPhoto)
-                            }) {
-                                Text("Try")
-                                    .font(Theme.Typography.poppins(.semiBold, size: 13))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 8)
-                                    .background(Theme.Colors.primary)
-                                    .clipShape(Capsule())
-                            }
+                            .padding(12)
+                            .background(accent.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
                         }
-                        .padding(14)
-                        .background(Color.white)
-                        .cornerRadius(16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(hex: "#E2E8F0"), lineWidth: 1)
-                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 24)
+                .padding(.bottom, 20)
             }
-            
-            // Bottom Buttons Group
-            VStack(spacing: 10) {
-                PrimaryButton(
-                    title: "View All Exercises",
-                    action: {
-                        router?.navigate(to: .calmExercises)
-                    }
-                )
-                
-                SecondaryButton(
-                    title: "Return to Home",
-                    icon: "house.fill",
-                    action: {
-                        router?.popToRoot()
-                    }
-                )
+            VStack(spacing: 8) {
+                Button {
+                    router?.popToRoot()
+                    router?.navigate(to: .exercises)
+                } label: {
+                    Text("View All Exercises")
+                        .font(Theme.Typography.poppins(.semiBold, size: 15))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(accent)
+                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                }
+                Button { router?.popToRoot() } label: {
+                    Label("Return to Home", systemImage: "arrow.left")
+                        .font(Theme.Typography.poppins(.semiBold, size: 15))
+                        .foregroundColor(accent)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .overlay(RoundedRectangle(cornerRadius: 13).stroke(accent))
+                }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .background(Color.white.ignoresSafeArea(edges: .bottom))
+            .padding(.vertical, 9)
+            .background(.white)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.Colors.background.ignoresSafeArea())
+        .background(.white)
+        .onAppear {
+            selectedRating = record.rating
+            if recommendedID == nil {
+                if exerciseID == "watch-something-funny" {
+                    recommendedID = "keep-photo-close"
+                } else if exerciseID == "keep-photo-close" {
+                    recommendedID = "watch-something-funny"
+                } else {
+                    recommendedID = ExerciseItem.allExercises
+                    .filter { $0.category == exercise.category && $0.id != exerciseID }
+                    .randomElement()?.id
+                }
+            }
+        }
+        .alert("Coming soon", isPresented: $isShowingUpcomingAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This exercise will be available soon.")
+        }
     }
-    
-    @ViewBuilder
-    private func statColumn(value: String, label: String) -> some View {
-        VStack(spacing: 2) {
+
+    private func stat(_ value: String, _ caption: String, showsFire: Bool = false) -> some View {
+        VStack(spacing: 3) {
             Text(value)
-                .font(Theme.Typography.poppins(.bold, size: 16))
-                .foregroundColor(Theme.Colors.textPrimary)
-            Text(label)
-                .font(Theme.Typography.poppins(.regular, size: 11.5))
-                .foregroundColor(Theme.Colors.textSecondary)
+                .font(Theme.Typography.poppins(.bold, size: 17))
+                .foregroundColor(accent)
+            HStack(spacing: 3) {
+                Text(caption)
+                    .font(Theme.Typography.poppins(.regular, size: 10))
+                    .foregroundColor(Theme.Colors.textSecondary)
+                if showsFire { ExerciseEmojiView(emoji: "🔥", size: 12) }
+            }
         }
         .frame(maxWidth: .infinity)
     }
+
+    private var streakLabel: String {
+        let days = progress?.currentStreak(for: exercise.category) ?? 0
+        return "\(days) \(days == 1 ? "day" : "days")"
+    }
+
+    private func open(_ item: ExerciseItem) {
+        switch item.id {
+        case "watch-something-funny": router?.navigate(to: .watchFunny)
+        case "keep-photo-close": router?.navigate(to: .keepPhoto)
+        case "belonging-list": router?.navigate(to: .belongingList)
+        case "share-something-small": router?.navigate(to: .shareSomethingSmall)
+        case "mirror-emotion": router?.navigate(to: .mirrorEmotion)
+        case "mirror-loved-one": router?.navigate(to: .mirrorLovedOne)
+        case "share-something-new": router?.navigate(to: .shareSomethingNew)
+        case "connection-countdown": router?.navigate(to: .connectionCountdown)
+        default: isShowingUpcomingAlert = true
+        }
+    }
 }
 
-#Preview {
-    ExerciseCompleteView()
-}
+#Preview { ExerciseCompleteView() }

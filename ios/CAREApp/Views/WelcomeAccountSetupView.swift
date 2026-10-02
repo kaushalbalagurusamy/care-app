@@ -1,12 +1,16 @@
 import SwiftUI
+import PhotosUI
 
 // MARK: - Screen 19: Welcome & Account Setup View (Figma Frame 213:4)
 public struct WelcomeAccountSetupView: View {
     public let router: AppRouter
+    @Environment(ProfileSettingsStore.self) private var settings: ProfileSettingsStore
     
     @State private var fullName: String = ""
-    @State private var age: String = ""
     @State private var selectedFrequency: String = "biweekly"
+    @State private var photoSelection: PhotosPickerItem?
+    @State private var photoData: Data?
+    @State private var saveError: String?
     
     let frequencies = [
         ("2x/week", false),
@@ -22,13 +26,9 @@ public struct WelcomeAccountSetupView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            HeaderNavBar(
-                showBackButton: true,
-                showHomeButton: true,
-                showSparkleButton: true,
-                sparklePlacement: .right,
-                title: nil
-            )
+            HeaderNavBar(showBackButton: false, showHomeButton: false,
+                         showSparkleButton: false, showChartButton: false,
+                         showProfileButton: false)
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
@@ -39,21 +39,29 @@ public struct WelcomeAccountSetupView: View {
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Let's finish setting up your account to start evaluating and tracking your relational health.")
-                            .font(Theme.Typography.poppins(.regular, size: 15))
+                            .font(Theme.Typography.screenSubtitle)
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(3)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // Profile Photo Placeholder
+                    PhotosPicker(selection: $photoSelection, matching: .images) {
                     VStack(spacing: 8) {
                         Circle()
                             .strokeBorder(Theme.Colors.primary.opacity(0.4), style: StrokeStyle(lineWidth: 1.5, dash: [6]))
                             .frame(width: 80, height: 80)
                             .overlay(
-                                Image(systemName: "camera.fill")
-                                    .font(.system(size: 24))
-                                    .foregroundColor(Theme.Colors.primary)
+                                Group {
+                                    if let photoData, let image = UIImage(data: photoData) {
+                                        Image(uiImage: image).resizable().scaledToFill()
+                                    } else {
+                                        Image(systemName: "camera.fill")
+                                            .font(.system(size: 24))
+                                            .foregroundColor(Theme.Colors.primary)
+                                    }
+                                }
+                                .frame(width: 80, height: 80).clipShape(Circle())
                             )
                         
                         Text("Add Profile Photo")
@@ -62,6 +70,8 @@ public struct WelcomeAccountSetupView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
+                    }
+                    .buttonStyle(.plain)
                     
                     // Form Fields
                     VStack(alignment: .leading, spacing: 14) {
@@ -78,19 +88,6 @@ public struct WelcomeAccountSetupView: View {
                                 .cornerRadius(12)
                         }
                         
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Age")
-                                .font(Theme.Typography.poppins(.semiBold, size: 14))
-                                .foregroundColor(Theme.Colors.textPrimary)
-                            
-                            TextField("e.g., 28", text: $age)
-                                .font(Theme.Typography.poppins(.regular, size: 15))
-                                .keyboardType(.numberPad)
-                                .padding(.horizontal, 14)
-                                .frame(height: 48)
-                                .background(Theme.Colors.surfaceSecondary)
-                                .cornerRadius(12)
-                        }
                     }
                     
                     // Assessment Frequency
@@ -143,7 +140,10 @@ public struct WelcomeAccountSetupView: View {
                 Button(action: {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    router.popToRoot()
+                    do {
+                        try settings.save(name: fullName, frequency: selectedFrequency, photoData: photoData)
+                        router.popToRoot()
+                    } catch { saveError = "Your profile could not be saved. Please try again." }
                 }) {
                     Text("Complete Setup")
                         .font(Theme.Typography.buttonLabel)
@@ -155,13 +155,31 @@ public struct WelcomeAccountSetupView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 14)
-                .padding(.bottom, 10)
+                .disabled(fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .opacity(fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.45 : 1)
                 .accessibilityIdentifier("CompleteSetupButton")
+                Button("Skip for now") {
+                    do { try settings.skipSetup(); router.popToRoot() }
+                    catch { saveError = "Your setup choice could not be saved. Please try again." }
+                }
+                .font(Theme.Typography.poppins(.medium, size: 15))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .frame(maxWidth: .infinity).frame(height: 44)
+                .padding(.bottom, 8)
             }
             .background(Theme.Colors.background)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())
+        .onChange(of: photoSelection) { _, selection in
+            Task {
+                guard let data = try? await selection?.loadTransferable(type: Data.self) else { return }
+                photoData = ProfilePhotoProcessor.compactJPEG(data)
+            }
+        }
+        .alert("Save failed", isPresented: Binding(get: { saveError != nil }, set: { if !$0 { saveError = nil } })) {
+            Button("OK", role: .cancel) { saveError = nil }
+        } message: { Text(saveError ?? "") }
     }
 }
 

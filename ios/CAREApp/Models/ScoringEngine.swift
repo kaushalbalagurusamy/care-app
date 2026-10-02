@@ -58,7 +58,8 @@ public struct FlexibleScoringEngine: ScoringEngineProtocol {
                 let targetDomains = question?.targetDomains ?? [DomainWeightMapping(domain: .calm, weightMultiplier: 1.0)]
                 
                 for mapping in targetDomains {
-                    let weightedPoints = rawValue * mapping.weightMultiplier * 25.0 // Scaled points
+                    // Each of five answers contributes 1–5 points for each person.
+                    let weightedPoints = rawValue * mapping.weightMultiplier * 5.0
                     participantDomainSums[mapping.domain, default: 0.0] += weightedPoints
                     domainEarnedTotals[mapping.domain, default: 0.0] += weightedPoints
                 }
@@ -104,7 +105,7 @@ public struct FlexibleScoringEngine: ScoringEngineProtocol {
         var domainBreakdowns: [CAREDomain: DomainScoreBreakdown] = [:]
         for domain in CAREDomain.allCases {
             let earned = domainEarnedTotals[domain] ?? 0.0
-            let vagalStatus = (domain == .calm && earned >= 15.0) ? "Good Vagal Tone" : nil
+            let vagalStatus = (domain == .calm && earned >= config.domainMaxPoints * 0.76) ? "Good Vagal Tone" : nil
             domainBreakdowns[domain] = DomainScoreBreakdown(
                 domain: domain,
                 earnedPoints: earned,
@@ -124,11 +125,18 @@ public struct FlexibleScoringEngine: ScoringEngineProtocol {
         )
     }
     
-    public func calculateResult(for session: AssessmentSessionState, questions: [SurveyQuestion] = SurveyQuestion.mockQuestionBank) -> AssessmentResult {
-        return computeResult(
+    public func calculateResult(for session: AssessmentSessionState, questions: [SurveyQuestion] = SurveyQuestion.full20QuestionBank) -> AssessmentResult {
+        let computed = computeResult(
             participants: session.participants,
             recordedAnswers: session.recordedAnswers,
             questions: questions
+        )
+        return AssessmentResult(
+            id: session.id ?? computed.id,
+            domainScores: computed.domainScores,
+            safetyDistribution: computed.safetyDistribution,
+            individualResults: computed.individualResults,
+            timestamp: computed.timestamp
         )
     }
 }

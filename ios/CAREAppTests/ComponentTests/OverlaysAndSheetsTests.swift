@@ -8,12 +8,10 @@ struct OverlaysAndSheetsTests {
     @Test("RelationshipSortOption enum cases and identifiers")
     func testRelationshipSortOptions() {
         let options = RelationshipSortOption.allCases
-        #expect(options.count == 5)
+        #expect(options.count == 3)
         #expect(options.contains(.mostRecent))
         #expect(options.contains(.mostCompleted))
         #expect(options.contains(.highestScore))
-        #expect(options.contains(.relationshipType))
-        #expect(options.contains(.age))
         #expect(RelationshipSortOption.mostRecent.id == "Most recent")
     }
     

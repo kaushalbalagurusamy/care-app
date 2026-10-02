@@ -1,14 +1,99 @@
 import Testing
 import Foundation
+import SwiftData
 @testable import CAREApp
 
 @Suite("Phase 2: Assessment Session & Multi-Person Progression Test Suite")
 struct AssessmentSessionTests {
+
+    @Test("Discarded assessment and selection do not reappear after store reopening")
+    @MainActor
+    func testDurableAssessmentDiscard() throws {
+        let container = StorageContainerFactory.createInMemoryContainer()
+        let store = try UserDraftStore(container: container)
+        let session = AssessmentSessionState(participants: Person.mockFigmaContacts.map { AssessmentParticipant(person: $0) })
+        try store.saveValue(session, key: "assessment-draft")
+        try store.saveValue(Person.mockFigmaContacts, key: "assessment-selection")
+        try store.saveValue([ParticipantAllocation](), key: "assessment-allocations")
+        try store.discardAssessmentDraft()
+        let reopened = try UserDraftStore(container: container)
+        #expect(try reopened.loadValue(AssessmentSessionState.self, key: "assessment-draft") == nil)
+        #expect(try reopened.loadValue([Person].self, key: "assessment-selection") == nil)
+        #expect(try reopened.loadValue([ParticipantAllocation].self, key: "assessment-allocations") == nil)
+    }
+
+    @Test("Assessment Back follows saved question position, including participant boundaries")
+    func testPreviousAssessmentStepAfterResume() throws {
+        let participants = Person.mockFigmaContacts.map { AssessmentParticipant(person: $0) }
+        let first = SurveyQuestion.full20QuestionBank[0].options[0]
+        let last = SurveyQuestion.full20QuestionBank[19].options[1]
+        var session = AssessmentSessionState(participants: participants)
+        let beforeFirst = session.moveToPreviousQuestion()
+        #expect(!beforeFirst)
+        session.recordAnswer(for: "q_1", option: first)
+        let advanced = session.advance()
+        #expect(advanced)
+        let movedBack = session.moveToPreviousQuestion()
+        #expect(movedBack)
+        #expect(session.currentAnswer?.id == first.id)
+        #expect(session.currentQuestionIndex == 0)
+        session.currentParticipantIndex = 1
+        session.currentQuestionIndex = 0
+        session.recordedAnswers[participants[0].id, default: [:]]["q_20"] = last
+        let resumed = try JSONDecoder().decode(AssessmentSessionState.self, from: JSONEncoder().encode(session))
+        var moved = resumed
+        let crossedBoundary = moved.moveToPreviousQuestion()
+        #expect(crossedBoundary)
+        #expect(moved.currentParticipantIndex == 0)
+        #expect(moved.currentQuestionIndex == 19)
+        #expect(moved.currentAnswer?.id == last.id)
+    }
+
+    @Test("Daily assessment policy uses calendar day, not elapsed hours")
+    func testDailyAssessmentPolicy() throws {
+        let utc = try #require(TimeZone(secondsFromGMT: 0))
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = utc
+        let first = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 29, hour: 23, minute: 59)))
+        let sameDay = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 29, hour: 1)))
+        let nextDay = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 30, hour: 0, minute: 1)))
+        #expect(!AssessmentDailyPolicy.canStart(after: first, now: sameDay, calendar: calendar))
+        #expect(AssessmentDailyPolicy.canStart(after: first, now: nextDay, calendar: calendar))
+        #expect(AssessmentDailyPolicy.canStart(after: nil, now: sameDay, calendar: calendar))
+    }
+
+    @Test("Submission requires exactly five distinct people and every answer")
+    func testFullSubmissionValidation() {
+        let people = Person.mockFigmaContacts
+        let participants = people.map { AssessmentParticipant(person: $0) }
+        let questions = SurveyQuestion.full20QuestionBank
+        var session = AssessmentSessionState(participants: participants)
+        #expect(!session.isFullyAnswered)
+        for person in people {
+            for question in questions { session.recordedAnswers[person.id, default: [:]][question.id] = question.options[0] }
+        }
+        #expect(session.isFullyAnswered)
+        session.recordedAnswers[people[0].id]?[questions[0].id] = SurveyOption(
+            id: questions[0].options[0].id, text: "Older wording", rawScoreValue: questions[0].options[0].rawScoreValue
+        )
+        #expect(session.isFullyAnswered)
+        session.recordedAnswers[people[0].id]?[questions[0].id] = SurveyOption(id: "tampered", text: "tampered", rawScoreValue: 50)
+        #expect(!session.isFullyAnswered)
+        session.recordedAnswers[people[0].id]?[questions[0].id] = questions[0].options[0]
+        session.recordedAnswers[people[0].id]?["unknown"] = questions[0].options[0]
+        #expect(!session.isFullyAnswered)
+        session.recordedAnswers[people[0].id]?.removeValue(forKey: "unknown")
+        #expect(session.isFullyAnswered)
+        session.recordedAnswers[people[0].id]?.removeValue(forKey: questions[0].id)
+        #expect(!session.isFullyAnswered)
+        session.participants[4] = participants[0]
+        #expect(!session.isFullyAnswered)
+    }
     
     @Test("TEST-SES-01: Progress ratio increases monotonically across questionnaire steps when answered")
     func testMonotonicProgressRatio() {
-        let p1 = Person(name: "P1", initials: "P1", category: .partner, age: 30)
-        let p2 = Person(name: "P2", initials: "P2", category: .friend, age: 25)
+        let p1 = Person(name: "P1", initials: "P1", category: .partner)
+        let p2 = Person(name: "P2", initials: "P2", category: .friend)
         let participants = [AssessmentParticipant(person: p1), AssessmentParticipant(person: p2)]
         let opt = SurveyOption(id: "opt_1", text: "Option A", rawScoreValue: 1.0)
         
@@ -50,7 +135,7 @@ struct AssessmentSessionTests {
 
     @Test("TEST-SES-02: Mutating/updating a recorded answer overwrites in place without duplicating records")
     func testInPlaceAnswerMutation() {
-        let p1 = Person(name: "P1", initials: "P1", category: .partner, age: 30)
+        let p1 = Person(name: "P1", initials: "P1", category: .partner)
         let participant = AssessmentParticipant(person: p1)
         var session = AssessmentSessionState(participants: [participant], totalQuestionsPerPerson: 2)
         
@@ -67,40 +152,45 @@ struct AssessmentSessionTests {
         #expect(session.recordedAnswers[p1.id]?.count == 1)
     }
 
-    @Test("TEST-SES-03: Multi-person progression correctly updates button titles across all 5 participant boundaries")
-    func testMultiPersonButtonTitles() {
+    @Test("TEST-SES-03: Submit is reserved for the final question of the final participant")
+    func testFinalSubmissionBoundary() {
         let contacts = Person.mockFigmaContacts // 5 people
         let participants = contacts.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
         let opt = SurveyOption(id: "opt_1", text: "Option A", rawScoreValue: 1.0)
         
         var session = AssessmentSessionState(participants: participants, totalQuestionsPerPerson: 4)
         
-        // Person 1 (Sarah Mitchell) Q1-Q3 -> "Next"
-        #expect(session.currentButtonTitle == "Next")
+        // No question for an earlier participant needs a Submit button.
+        #expect(session.isFinalQuestion == false)
         session.currentQuestionIndex = 1
-        #expect(session.currentButtonTitle == "Next")
+        #expect(session.isFinalQuestion == false)
         session.currentQuestionIndex = 2
-        #expect(session.currentButtonTitle == "Next")
+        #expect(session.isFinalQuestion == false)
         
-        // Person 1 Q4 -> "Next: James Cooper"
+        // The last question for person 1 still advances automatically.
         session.currentQuestionIndex = 3
-        #expect(session.currentButtonTitle == "Next: James Cooper")
+        #expect(session.isFinalQuestion == false)
         
         // Advance to Person 2 (James Cooper)
         session.recordAnswer(for: "q_4", option: opt)
         let _ = session.advance()
         #expect(session.currentParticipantIndex == 1)
         #expect(session.currentQuestionIndex == 0)
-        #expect(session.currentButtonTitle == "Next")
+        #expect(session.isFinalQuestion == false)
         
-        // Person 2 Q4 -> "Next: Linda Chen"
+        // The last question for person 2 is not the assessment's last question.
         session.currentQuestionIndex = 3
-        #expect(session.currentButtonTitle == "Next: Linda Chen")
+        #expect(session.isFinalQuestion == false)
         
         // Advance to Person 5 (Rachel Stein - Final Person)
         session.currentParticipantIndex = 4
+        session.currentQuestionIndex = 2
+        #expect(session.isFinalQuestion == false)
         session.currentQuestionIndex = 3
-        #expect(session.currentButtonTitle == "Complete Assessment")
+        #expect(session.isFinalQuestion == true)
+        #expect(session.isComplete == false)
+        session.recordAnswer(for: "q_4", option: opt)
+        #expect(session.isComplete == true)
     }
 
     @Test("TEST-SES-04: Person rolodex initializes with Figma defaults")
@@ -116,7 +206,7 @@ struct AssessmentSessionTests {
 
     @Test("TEST-SES-05: Strict answer requirement blocks progression until question is answered")
     func testStrictAnswerRequirement() {
-        let p1 = Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)
+        let p1 = Person(name: "Sarah Mitchell", initials: "SM", category: .partner)
         let participant = AssessmentParticipant(person: p1)
         var session = AssessmentSessionState(participants: [participant], totalQuestionsPerPerson: 3)
         let opt = SurveyOption(id: "opt_1", text: "Completely grounded", rawScoreValue: 1.0)
@@ -150,11 +240,11 @@ struct AssessmentSessionTests {
         AssessmentSessionState.clearDraft()
         #expect(AssessmentSessionState.loadDraft() == nil)
         
-        let p1 = Person(name: "Test Participant", initials: "TP", category: .friend, age: 28)
-        let participants = [AssessmentParticipant(person: p1)]
+        let p1 = Person(name: "Test Participant", initials: "TP", category: .friend)
+        let participants = [p1, Person(name: "Second", initials: "SE", category: .friend), Person(name: "Third", initials: "TH", category: .friend), Person(name: "Fourth", initials: "FO", category: .friend), Person(name: "Fifth", initials: "FI", category: .friend)].map { AssessmentParticipant(person: $0) }
         let opt = SurveyOption(id: "opt_3", text: "Neutral", rawScoreValue: 0.5)
         
-        var session = AssessmentSessionState(participants: participants, totalQuestionsPerPerson: 10)
+        var session = AssessmentSessionState(participants: participants, totalQuestionsPerPerson: 20)
         session.recordAnswer(for: "q_1", option: opt)
         #expect(session.hasStarted == true)
         
@@ -164,7 +254,7 @@ struct AssessmentSessionTests {
         // Load draft from storage
         let loaded = AssessmentSessionState.loadDraft()
         #expect(loaded != nil)
-        #expect(loaded?.participants.count == 1)
+        #expect(loaded?.participants.count == 5)
         #expect(loaded?.participants[0].person.name == "Test Participant")
         #expect(loaded?.recordedAnswers[p1.id]?["q_1"]?.id == "opt_3")
         
@@ -173,4 +263,3 @@ struct AssessmentSessionTests {
         #expect(AssessmentSessionState.loadDraft() == nil)
     }
 }
-

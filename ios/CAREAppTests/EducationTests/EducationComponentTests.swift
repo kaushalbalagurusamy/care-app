@@ -4,6 +4,30 @@ import SwiftUI
 
 @Suite("Phase 2: Psychoeducation Reusable Components Test Suite")
 struct EducationComponentTests {
+
+    @Test("Shared assessment and quiz answer cards retain distinct feedback fills")
+    func testSharedAnswerCardStates() {
+        let selected = AssessmentAnswerOptionCard(text: "Selected", state: .selected, action: {})
+        let correct = AssessmentAnswerOptionCard(text: "Correct", state: .correct, action: {})
+        let incorrect = AssessmentAnswerOptionCard(text: "Incorrect", state: .incorrect, action: {})
+        #expect(selected.state.backgroundColor != correct.state.backgroundColor)
+        #expect(correct.state.backgroundColor != incorrect.state.backgroundColor)
+        #expect(selected.state.borderColor == Theme.Colors.primary)
+    }
+
+    @Test("Quiz score derives from saved answers so revisions never double count")
+    func testQuizScoreRevision() {
+        let questions = [
+            QuizQuestion(id: "one", prompt: "One?", options: [QuizOption(letter: "A", text: "A"), QuizOption(letter: "B", text: "B")], correctOptionLetter: "A", rationale: "Because"),
+            QuizQuestion(id: "two", prompt: "Two?", options: [QuizOption(letter: "A", text: "A"), QuizOption(letter: "B", text: "B")], correctOptionLetter: "B", rationale: "Because")
+        ]
+        var answers = ["one": "A", "two": "B"]
+        #expect(EducationQuizView.score(for: questions, answeredLetters: answers) == 2)
+        answers["one"] = "B"
+        #expect(EducationQuizView.score(for: questions, answeredLetters: answers) == 1)
+        answers["one"] = "A"
+        #expect(EducationQuizView.score(for: questions, answeredLetters: answers) == 2)
+    }
     
     @Test("TEST-EDC-01: EducationTopicCard satisfies minimum 44pt touch target and layout bounds")
     func testTopicCardGeometry() {

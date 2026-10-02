@@ -15,6 +15,9 @@ public final class StoredAssessmentSession {
     public var acceptedScore: Double = 0.0
     public var resonantScore: Double = 0.0
     public var energeticScore: Double = 0.0
+    // Existing records predate this field and remain on the original /100 scale.
+    public var categoryMaxPoints: Double = 100.0
+    public var scoringVersion: Int = 1
     
     @Relationship(deleteRule: .cascade)
     public var participants: [StoredParticipantResult]? = []
@@ -31,6 +34,8 @@ public final class StoredAssessmentSession {
         acceptedScore: Double = 0.0,
         resonantScore: Double = 0.0,
         energeticScore: Double = 0.0,
+        categoryMaxPoints: Double = 100.0,
+        scoringVersion: Int = 1,
         participants: [StoredParticipantResult] = []
     ) {
         self.id = id
@@ -44,6 +49,8 @@ public final class StoredAssessmentSession {
         self.acceptedScore = acceptedScore
         self.resonantScore = resonantScore
         self.energeticScore = energeticScore
+        self.categoryMaxPoints = categoryMaxPoints
+        self.scoringVersion = scoringVersion
         self.participants = participants
     }
     
@@ -66,6 +73,8 @@ public final class StoredAssessmentSession {
             acceptedScore: accepted,
             resonantScore: resonant,
             energeticScore: energetic,
+            categoryMaxPoints: result.domainScores[.calm]?.maxPossiblePoints ?? 125.0,
+            scoringVersion: 2,
             participants: storedParticipants
         )
     }
@@ -73,10 +82,10 @@ public final class StoredAssessmentSession {
     public func toDomain() -> AssessmentResult {
         let mappedParticipants = (participants ?? []).map { $0.toDomain() }
         let domainScores: [CAREDomain: DomainScoreBreakdown] = [
-            .calm: DomainScoreBreakdown(domain: .calm, earnedPoints: calmScore, maxPossiblePoints: 125.0),
-            .accepted: DomainScoreBreakdown(domain: .accepted, earnedPoints: acceptedScore, maxPossiblePoints: 125.0),
-            .resonant: DomainScoreBreakdown(domain: .resonant, earnedPoints: resonantScore, maxPossiblePoints: 125.0),
-            .energetic: DomainScoreBreakdown(domain: .energetic, earnedPoints: energeticScore, maxPossiblePoints: 125.0)
+            .calm: DomainScoreBreakdown(domain: .calm, earnedPoints: calmScore, maxPossiblePoints: categoryMaxPoints),
+            .accepted: DomainScoreBreakdown(domain: .accepted, earnedPoints: acceptedScore, maxPossiblePoints: categoryMaxPoints),
+            .resonant: DomainScoreBreakdown(domain: .resonant, earnedPoints: resonantScore, maxPossiblePoints: categoryMaxPoints),
+            .energetic: DomainScoreBreakdown(domain: .energetic, earnedPoints: energeticScore, maxPossiblePoints: categoryMaxPoints)
         ]
         let safetyDist = RelationalSafetyDistribution(
             safePercentage: safePercentage,

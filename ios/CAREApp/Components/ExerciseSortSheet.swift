@@ -5,18 +5,21 @@ public struct ExerciseSortSheet: View {
     @Binding public var selectedOption: ExerciseSortOption
     public let onApply: (ExerciseSortOption) -> Void
     public let onCancel: () -> Void
+    public let accent: Color
     
     @State private var tempOption: ExerciseSortOption
     
     public init(
         selectedOption: Binding<ExerciseSortOption>,
         onApply: @escaping (ExerciseSortOption) -> Void,
-        onCancel: @escaping () -> Void
+        onCancel: @escaping () -> Void,
+        accent: Color = Theme.Colors.primary
     ) {
         self._selectedOption = selectedOption
         self._tempOption = State(initialValue: selectedOption.wrappedValue)
         self.onApply = onApply
         self.onCancel = onCancel
+        self.accent = accent
     }
     
     public var body: some View {
@@ -49,18 +52,18 @@ public struct ExerciseSortSheet: View {
                         HStack {
                             Text(option.rawValue)
                                 .font(Theme.Typography.poppins(tempOption == option ? .semiBold : .regular, size: 15))
-                                .foregroundColor(tempOption == option ? Theme.Colors.primary : Theme.Colors.textPrimary)
+                                .foregroundColor(tempOption == option ? accent : Theme.Colors.textPrimary)
                             
                             Spacer()
                             
                             ZStack {
                                 Circle()
-                                    .stroke(tempOption == option ? Theme.Colors.primary : Color(hex: "#CBD5E1"), lineWidth: 2)
+                                    .stroke(tempOption == option ? accent : Color(hex: "#CBD5E1"), lineWidth: 2)
                                     .frame(width: 22, height: 22)
                                 
                                 if tempOption == option {
                                     Circle()
-                                        .fill(Theme.Colors.primary)
+                                        .fill(accent)
                                         .frame(width: 12, height: 12)
                                 }
                             }
@@ -105,7 +108,8 @@ public struct ExerciseSortSheet: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 16)
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.height(544)])
+        .presentationCornerRadius(30)
         .presentationDragIndicator(.hidden)
     }
 }

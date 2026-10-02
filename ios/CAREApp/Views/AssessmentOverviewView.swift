@@ -3,10 +3,14 @@ import SwiftUI
 // MARK: - Screen 3: Assessment Overview & Domain Intro (Figma Frame 11:4)
 public struct AssessmentOverviewView: View {
     public let router: AppRouter
+    public let latestAssessmentDate: Date?
+    public let hasCompletedToday: Bool
     @State private var hasScrolledToBottom: Bool = false
     
-    public init(router: AppRouter) {
+    public init(router: AppRouter, latestAssessmentDate: Date? = nil, hasCompletedToday: Bool = false) {
         self.router = router
+        self.latestAssessmentDate = latestAssessmentDate
+        self.hasCompletedToday = hasCompletedToday
     }
     
     public var body: some View {
@@ -17,8 +21,8 @@ public struct AssessmentOverviewView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     
-                    // Title Section (Two lines matching Figma Frame 3)
-                    Text("C.A.R.E. Assessment\nOverview")
+                    // Keep the overview heading on one line.
+                    Text("Assessment Overview")
                         .font(Theme.Typography.screenTitle)
                         .foregroundColor(Theme.Colors.textPrimary)
                         .lineSpacing(2)
@@ -40,14 +44,14 @@ public struct AssessmentOverviewView: View {
                     VStack(spacing: 12) {
                         ForEach(CAREDomain.allCases, id: \.self) { domain in
                             HStack(alignment: .top, spacing: 16) {
-                                // White Circular Letter Badge with bold blue letter
+                                // Match the category badges on the Exercises screen.
                                 Circle()
-                                    .fill(Color.white)
+                                    .fill(domain.themeColor)
                                     .frame(width: 48, height: 48)
                                     .overlay(
                                         Text(domain.letter)
                                             .font(Theme.Typography.poppins(.bold, size: 20))
-                                            .foregroundColor(Theme.Colors.primary)
+                                            .foregroundColor(domain.accentColor)
                                     )
                                 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -83,10 +87,18 @@ public struct AssessmentOverviewView: View {
             VStack(spacing: 0) {
                 Divider()
                     .background(Theme.Colors.dividerSubtle)
+                if hasCompletedToday || !AssessmentDailyPolicy.canStart(after: latestAssessmentDate) {
+                    Text("You’ve completed an assessment today. You can begin another tomorrow.")
+                        .font(Theme.Typography.poppins(.medium, size: 13))
+                        .foregroundColor(Theme.Colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 10)
+                }
                 
                 PrimaryButton(
                     title: "Begin the Survey",
-                    isEnabled: hasScrolledToBottom,
+                    isEnabled: hasScrolledToBottom && !hasCompletedToday && AssessmentDailyPolicy.canStart(after: latestAssessmentDate),
                     action: {
                         router.navigate(to: .surveyOverview)
                     }

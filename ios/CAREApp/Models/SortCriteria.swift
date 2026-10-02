@@ -5,8 +5,6 @@ public enum RelationshipSortOption: String, CaseIterable, Identifiable, Sendable
     case mostRecent = "Most recent"
     case mostCompleted = "Most completed assessments"
     case highestScore = "Highest overall score"
-    case relationshipType = "Relationship type"
-    case age = "Age"
     
     public var id: String { rawValue }
 }

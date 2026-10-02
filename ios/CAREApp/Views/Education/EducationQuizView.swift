@@ -15,9 +15,12 @@ public struct EducationQuizView: View {
     @State public var selectedOptionLetter: String? = nil
     @State public var hasSubmittedCurrent: Bool = false
     @State public var sessionScore: Int = 0
+    @State private var answeredLetters: [String: String] = [:]
     @State public var isSessionFinished: Bool = false
     @State public var wasPoolReset: Bool = false
     @State public var remainingInPool: Int = 0
+    @State private var draftError: String?
+    @State private var isFinishing = false
     
     public init(
         topic: EducationTopic,
@@ -70,13 +73,16 @@ public struct EducationQuizView: View {
                 showChartButton: true,
                 showProfileButton: true,
                 onBack: {
+                    if !isSessionFinished && moveToPreviousQuestion() { return }
                     if let onReturn = onReturn {
                         onReturn()
                     } else {
                         router?.pop()
                     }
                 },
-                onHome: onHome
+                onHome: onHome,
+                warnOnBack: currentQuestionIndex == 0 && !isSessionFinished,
+                warnOnFlowNavigation: !isSessionFinished
             )
             
             ScrollView(showsIndicators: false) {
@@ -94,15 +100,38 @@ public struct EducationQuizView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .task {
-            // If running with real AppEnvironment and default questions weren't manually overridden, fetch a fresh randomized session
+            guard !isSessionFinished else { return }
+            if let draft = appEnvironment?.draftStore.quiz(for: topic.slug) {
+                let bank = topic.quizBank.isEmpty ? [topic.quiz] : topic.quizBank
+                let mapped = draft.questionIDs.compactMap { id in bank.first { $0.id == id } }
+                if mapped.count == draft.questionIDs.count, !mapped.isEmpty {
+                    questions = mapped
+                    currentQuestionIndex = min(max(draft.questionIndex, 0), mapped.count - 1)
+                    selectedOptionLetter = draft.selectedOptionLetter
+                    hasSubmittedCurrent = draft.hasSubmitted
+                    sessionScore = draft.score
+                    answeredLetters = draft.answeredLetters
+                    if answeredLetters.isEmpty, let selected = draft.selectedOptionLetter {
+                        answeredLetters[mapped[currentQuestionIndex].id] = selected
+                    }
+                    return
+                }
+                draftError = "This quiz changed since you started it. Discard its draft to start again."
+                return
+            }
+            // Fetch once for a new attempt; resume never draws new questions.
             if let appEnvironment = appEnvironment, questions.count <= 1 || questions == Array(topic.quizBank.prefix(3)) {
                 if let session = try? await appEnvironment.educationRepo.fetchNextQuizSession(for: topic, count: 3) {
                     self.questions = session.questions
                     self.wasPoolReset = session.wasPoolReset
                     self.remainingInPool = session.remainingInPoolAfterSession
+                    saveDraft()
                 }
             }
         }
+        .alert("Quiz progress", isPresented: Binding(get: { draftError != nil }, set: { if !$0 { draftError = nil } })) {
+            Button("OK", role: .cancel) { draftError = nil }
+        } message: { Text(draftError ?? "") }
     }
     
     // MARK: - Active Stepper Content
@@ -162,7 +191,7 @@ public struct EducationQuizView: View {
                 QuizOptionCard(
                     option: option,
                     state: optionState,
-                    isEnabled: !hasSubmittedCurrent,
+                    isEnabled: true,
                     action: {
                         handleOptionSelection(option.letter)
                     }
@@ -334,27 +363,17 @@ public struct EducationQuizView: View {
     
     private func handleOptionSelection(_ letter: String) {
         selectedOptionLetter = letter
+        answeredLetters[activeQuestion.id] = letter
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             hasSubmittedCurrent = true
         }
-        if letter == activeQuestion.correctOptionLetter {
-            sessionScore += 1
-        }
+        sessionScore = Self.score(for: questions, answeredLetters: answeredLetters)
+        saveDraft()
         
         // If single-question session, record outcome directly
         if questions.count == 1 {
             let passed = (letter == activeQuestion.correctOptionLetter)
-            if let appEnvironment = appEnvironment {
-                Task {
-                    try? await appEnvironment.educationRepo.recordQuizSessionResult(
-                        slug: topic.slug,
-                        questionIds: [activeQuestion.id],
-                        score: passed ? 1 : 0,
-                        totalQuestions: 1
-                    )
-                }
-            }
-            onCompleteQuiz?(passed)
+            completeSession(passed: passed)
         }
     }
     
@@ -364,24 +383,58 @@ public struct EducationQuizView: View {
             selectedOptionLetter = nil
             hasSubmittedCurrent = false
         }
+        saveDraft()
+    }
+
+    @discardableResult
+    private func moveToPreviousQuestion() -> Bool {
+        guard currentQuestionIndex > 0 else { return false }
+        currentQuestionIndex -= 1
+        selectedOptionLetter = answeredLetters[activeQuestion.id]
+        hasSubmittedCurrent = selectedOptionLetter != nil
+        saveDraft()
+        return true
+    }
+
+    public static func score(for questions: [QuizQuestion], answeredLetters: [String: String]) -> Int {
+        questions.reduce(0) { total, question in
+            total + (answeredLetters[question.id] == question.correctOptionLetter ? 1 : 0)
+        }
     }
     
     private func finishSession() {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-            isSessionFinished = true
-        }
         let passed = (sessionScore == questions.count && questions.count > 0)
-        if let appEnvironment = appEnvironment {
-            Task {
-                try? await appEnvironment.educationRepo.recordQuizSessionResult(
-                    slug: topic.slug,
-                    questionIds: questions.map(\.id),
-                    score: sessionScore,
-                    totalQuestions: questions.count
-                )
-            }
+        completeSession(passed: passed)
+    }
+
+    private func saveDraft() {
+        guard let appEnvironment, !questions.isEmpty else { return }
+        let draft = QuizDraft(topicSlug: topic.slug, questionIDs: questions.map(\.id), questionIndex: currentQuestionIndex, selectedOptionLetter: selectedOptionLetter, hasSubmitted: hasSubmittedCurrent, score: sessionScore, answeredLetters: answeredLetters)
+        do {
+            try appEnvironment.draftStore.saveQuiz(draft)
+        } catch {
+            draftError = "Your quiz progress could not be saved. Please try again before leaving."
         }
-        onCompleteQuiz?(passed)
+    }
+
+    private func completeSession(passed: Bool) {
+        guard !isFinishing else { return }
+        isFinishing = true
+        Task {
+            do {
+                if let appEnvironment {
+                    try await appEnvironment.educationRepo.recordQuizSessionResult(slug: topic.slug, questionIds: questions.map(\.id), score: sessionScore, totalQuestions: questions.count)
+                    if !(appEnvironment.educationRepo is SwiftDataEducationProgressRepository) {
+                        try appEnvironment.draftStore.discardQuiz(for: topic.slug)
+                    }
+                }
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { isSessionFinished = true }
+                onCompleteQuiz?(passed)
+            } catch {
+                draftError = "Your quiz result could not be saved. Your progress is still here; please retry."
+            }
+            isFinishing = false
+        }
     }
     
     private func startAnotherSet() {
@@ -397,8 +450,10 @@ public struct EducationQuizView: View {
                         self.selectedOptionLetter = nil
                         self.hasSubmittedCurrent = false
                         self.sessionScore = 0
+                        self.answeredLetters = [:]
                         self.isSessionFinished = false
                     }
+                    saveDraft()
                 }
             } else {
                 await MainActor.run {
@@ -407,8 +462,10 @@ public struct EducationQuizView: View {
                         self.selectedOptionLetter = nil
                         self.hasSubmittedCurrent = false
                         self.sessionScore = 0
+                        self.answeredLetters = [:]
                         self.isSessionFinished = false
                     }
+                    saveDraft()
                 }
             }
         }

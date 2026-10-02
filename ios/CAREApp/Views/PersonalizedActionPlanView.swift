@@ -1,222 +1,184 @@
 import SwiftUI
 
-// MARK: - Screen 21: Unlock Personalized Action Plan View (Figma Frame 215:5)
+/// Visual review of the action plan after the assessment has been unlocked.
 public struct PersonalizedActionPlanView: View {
     public let router: AppRouter
     public let result: AssessmentResult
-    
-    public init(router: AppRouter, result: AssessmentResult = .figmaMockResult) {
+
+    public init(router: AppRouter, result: AssessmentResult) {
         self.router = router
         self.result = result
     }
-    
+
+    private var focusDomain: CAREDomain {
+        CAREDomain.allCases.min {
+            (result.domainScores[$0]?.percentage ?? 1) < (result.domainScores[$1]?.percentage ?? 1)
+        } ?? .calm
+    }
+
+    private var focusCategory: ExerciseCategory {
+        ExerciseCategory.allCases.first { $0.rawValue == focusDomain.title } ?? .calm
+    }
+
+    private var recommendations: [ExerciseItem] {
+        Array(ExerciseItem.allExercises.filter { $0.category == focusCategory }.prefix(3))
+    }
+
+    private var focusCopy: String {
+        let lowest = result.domainScores[focusDomain]?.percentage ?? 1
+        let tied = CAREDomain.allCases.filter { abs((result.domainScores[$0]?.percentage ?? 1) - lowest) < 0.001 }
+        if tied.count > 1 {
+            return "Your pathway scores are tied today. Begin with \(focusDomain.title), then explore every pathway at your own pace."
+        }
+        return "Start with \(focusDomain.title). This is your lowest pathway score today, so the exercises below give it extra attention. Explore every pathway at your own pace."
+    }
+
     public var body: some View {
         VStack(spacing: 0) {
-            // Header Bar (Explicitly NO sparkle icon on Frame 21)
-            HeaderNavBar(
-                showBackButton: true,
-                showHomeButton: true,
-                showSparkleButton: false,
-                title: nil
-            )
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    // Eyebrow and Title
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("EXCLUSIVE SCIENCE-BACKED GUIDE")
+            HeaderNavBar(showBackButton: true, showHomeButton: true, showSparkleButton: false, onBack: { router.pop() })
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("YOUR PERSONALIZED PLAN")
                             .font(Theme.Typography.poppins(.bold, size: 12))
-                            .foregroundColor(Theme.Colors.primary)
-                            .tracking(1.2)
-                        
-                        Text("Unlock Your Personalized Action Plan")
-                            .font(Theme.Typography.poppins(.bold, size: 26))
-                            .foregroundColor(Theme.Colors.textPrimary)
+                            .tracking(1)
+                            .foregroundStyle(Theme.Colors.primary)
+                        Text("Your C.A.R.E. Action Plan")
+                            .font(Theme.Typography.poppins(.bold, size: 27))
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                        Text("A practical place to begin, based on your latest assessment.")
+                            .font(Theme.Typography.poppins(.regular, size: 14))
+                            .foregroundStyle(Theme.Colors.textSecondary)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)
-                    
-                    // C.A.R.E. Pathways Map Card
+
                     VStack(alignment: .leading, spacing: 14) {
-                        HStack {
-                            Image(systemName: "sparkles")
-                                .foregroundColor(Theme.Colors.primary)
-                            
-                            Text("Your C.A.R.E. Pathways Map")
-                                .font(Theme.Typography.poppins(.semiBold, size: 16))
-                                .foregroundColor(Theme.Colors.textPrimary)
-                            
-                            Spacer()
-                            
-                            Text("TAILORED")
-                                .font(Theme.Typography.poppins(.bold, size: 11))
-                                .foregroundColor(Theme.Colors.primary)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(Theme.Colors.primary.opacity(0.12))
-                                .clipShape(Capsule())
-                        }
-                        
-                        // 4 Score Badges
-                        HStack(spacing: 8) {
-                            PathScoreBadge(title: "Calm", score: "18/125", isHighlighted: false)
-                            PathScoreBadge(title: "Accepted", score: "20/125", isHighlighted: false)
-                            PathScoreBadge(title: "Resonant", score: "15/125", isHighlighted: true)
-                            PathScoreBadge(title: "Energetic", score: "22/125", isHighlighted: false)
-                        }
-                        
-                        // Focus Highlight Callout
-                        HStack(alignment: .top, spacing: 10) {
-                            Image(systemName: "lightbulb.fill")
-                                .foregroundColor(Color(hex: "#D97706"))
-                                .font(.system(size: 14))
-                                .padding(.top, 2)
-                            
-                            Text("Focus Highlight: Your personalized plan places special emphasis on strengthening your Resonant Pathway based on your latest assessment.")
-                                .font(Theme.Typography.poppins(.regular, size: 13))
-                                .foregroundColor(Theme.Colors.textPrimary)
-                                .lineSpacing(2)
-                        }
-                        .padding(12)
-                        .background(Color(hex: "#FEF3C7").opacity(0.6))
-                        .cornerRadius(12)
-                    }
-                    .padding(16)
-                    .background(Theme.Colors.cardSurface)
-                    .cornerRadius(16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
-                    )
-                    
-                    // Book Description Card
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack(spacing: 4) {
-                            Text("Based on")
-                                .font(Theme.Typography.poppins(.semiBold, size: 16))
-                                .foregroundColor(Theme.Colors.textPrimary)
-                            
-                            Link(destination: URL(string: "https://www.penguinrandomhouse.com/books/318700/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")!) {
-                                Text("Wired to Connect")
-                                    .font(Theme.Typography.poppins(.semiBold, size: 16))
-                                    .foregroundColor(Theme.Colors.primary)
-                                    .underline()
+                        Text("Your C.A.R.E. pathways")
+                            .font(Theme.Typography.poppins(.semiBold, size: 17))
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                        HStack(spacing: 7) {
+                            ForEach(CAREDomain.allCases, id: \.self) { domain in
+                                VStack(spacing: 4) {
+                                    Text(domain.title)
+                                        .font(Theme.Typography.poppins(.medium, size: 10))
+                                    Text(scoreLabel(domain))
+                                        .font(Theme.Typography.poppins(.bold, size: 14))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(domain == focusDomain ? Theme.Colors.primary : Theme.Colors.textPrimary)
+                                .padding(.vertical, 10)
+                                .background(domain == focusDomain ? Theme.Colors.primary.opacity(0.12) : Theme.Colors.surfaceSecondary, in: RoundedRectangle(cornerRadius: 10))
                             }
-                            .accessibilityIdentifier("wiredToConnectBookLink")
                         }
-                        
-                        Text("Created in collaboration with Dr. Amy Banks, this tailored workbook provides specific daily exercises calibrated directly to your neural pathway scores.")
+                        Text(focusCopy)
                             .font(Theme.Typography.poppins(.regular, size: 13))
-                            .foregroundColor(Theme.Colors.textSecondary)
-                            .lineSpacing(3)
-                        
-                        HStack(spacing: 8) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(Theme.Colors.Safety.lowRisk)
-                            Text("Includes 28 neuro-relational exercises & reflection prompts")
-                                .font(Theme.Typography.poppins(.medium, size: 12))
-                                .foregroundColor(Theme.Colors.textPrimary)
-                        }
-                        .padding(.top, 4)
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color(hex: "#FEF3C7").opacity(0.7), in: RoundedRectangle(cornerRadius: 12))
                     }
                     .padding(16)
-                    .background(Theme.Colors.cardSurface)
-                    .cornerRadius(16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
-                    )
+                    .background(Theme.Colors.cardSurface, in: RoundedRectangle(cornerRadius: 18))
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Your first steps")
+                            .font(Theme.Typography.poppins(.bold, size: 19))
+                        planStep(1, "Choose one short \(focusDomain.title) exercise below.")
+                        planStep(2, "Notice how you feel before and after. Repeat the ones that help.")
+                        planStep(3, "Explore another pathway when you feel ready. Your plan can change with your next assessment.")
+                    }
+                    .foregroundStyle(Theme.Colors.textPrimary)
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Recommended for you")
+                            .font(Theme.Typography.poppins(.bold, size: 19))
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                        Text("A starting set for your \(focusDomain.title) pathway")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundStyle(Theme.Colors.textSecondary)
+                        ForEach(recommendations) { exercise in exerciseRow(exercise, showDescription: true) }
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Explore every pathway")
+                            .font(Theme.Typography.poppins(.bold, size: 19))
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                        Text("\(ExerciseItem.allExercises.count) exercises across Calm, Accepted, Resonant, and Energetic")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundStyle(Theme.Colors.textSecondary)
+                        ForEach(ExerciseCategory.allCases) { category in
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text(category.rawValue)
+                                        .font(Theme.Typography.poppins(.bold, size: 16))
+                                        .foregroundStyle(category.accentColor)
+                                    Spacer()
+                                    Text("\(ExerciseItem.allExercises.filter { $0.category == category }.count) exercises")
+                                        .font(Theme.Typography.poppins(.medium, size: 11))
+                                        .foregroundStyle(Theme.Colors.textSecondary)
+                                }
+                                ForEach(ExerciseItem.allExercises.filter { $0.category == category }) { exercise in
+                                    exerciseRow(exercise, showDescription: false)
+                                }
+                            }
+                            .padding(14)
+                            .background(Theme.Colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
+                        }
+                    }
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 24)
+                .padding(.bottom, 28)
             }
-            
-            // Pinned Bottom Actions
-            VStack(spacing: 10) {
-                Divider()
-                    .background(Theme.Colors.dividerSubtle)
-                
-                Button(action: {
-                    let generator = UIImpactFeedbackGenerator(style: .medium)
-                    generator.impactOccurred()
-                }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "creditcard.fill")
-                        Text("Purchase Now — $9.99")
-                    }
-                    .font(Theme.Typography.buttonLabel)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(Theme.Colors.primary)
-                    .cornerRadius(28)
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
-                .accessibilityIdentifier("PurchasePlanButton")
-                
-                Button(action: {
-                    let generator = UIImpactFeedbackGenerator(style: .light)
-                    generator.impactOccurred()
-                    if router.currentRoute != .exercises {
-                        router.navigate(to: .exercises)
-                    } else {
-                        router.pop()
-                    }
-                }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "arrow.left")
-                        Text("Return to Exercises")
-                    }
-                    .font(Theme.Typography.buttonLabel)
-                    .foregroundColor(Theme.Colors.primary)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .background(Color.clear)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(Theme.Colors.primary.opacity(0.4), lineWidth: 1.5)
-                    )
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 10)
-                .accessibilityIdentifier("ReturnToExercisesButton")
-            }
-            .background(Theme.Colors.background)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())
+        .accessibilityIdentifier("CareActionPlanScreen")
     }
-}
 
-// MARK: - Pathway Score Badge Component
-private struct PathScoreBadge: View {
-    let title: String
-    let score: String
-    let isHighlighted: Bool
-    
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(title)
-                .font(Theme.Typography.poppins(.medium, size: 11))
-                .foregroundColor(isHighlighted ? Theme.Colors.primary : Theme.Colors.textSecondary)
-                .lineLimit(1)
-            
-            Text(score)
-                .font(Theme.Typography.poppins(.bold, size: 13))
-                .foregroundColor(isHighlighted ? Theme.Colors.primary : Theme.Colors.textPrimary)
+    private func scoreLabel(_ domain: CAREDomain) -> String {
+        guard let score = result.domainScores[domain] else { return "—" }
+        return "\(Int((score.percentage * 100).rounded()))%"
+    }
+
+    private func planStep(_ number: Int, _ copy: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Text("\(number)")
+                .font(Theme.Typography.poppins(.bold, size: 12))
+                .foregroundStyle(.white)
+                .frame(width: 25, height: 25)
+                .background(Theme.Colors.primary, in: Circle())
+            Text(copy)
+                .font(Theme.Typography.poppins(.regular, size: 13))
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
-        .background(isHighlighted ? Theme.Colors.primary.opacity(0.12) : Theme.Colors.surfaceSecondary)
-        .cornerRadius(10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(isHighlighted ? Theme.Colors.primary : Color.clear, lineWidth: 1.5)
-        )
+    }
+
+    private func exerciseRow(_ item: ExerciseItem, showDescription: Bool) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            ExerciseEmojiView(emoji: item.emoji, size: 21)
+                .frame(width: 34, height: 34)
+                .background(item.category.accentColor.opacity(0.1), in: Circle())
+            VStack(alignment: .leading, spacing: 3) {
+                Text(item.title)
+                    .font(Theme.Typography.poppins(.semiBold, size: 13))
+                    .foregroundStyle(Theme.Colors.textPrimary)
+                if showDescription {
+                    Text(item.subtitle)
+                        .font(Theme.Typography.poppins(.regular, size: 12))
+                        .foregroundStyle(Theme.Colors.textSecondary)
+                }
+                Text(item.durationMinutesRange)
+                    .font(Theme.Typography.poppins(.medium, size: 11))
+                    .foregroundStyle(item.category.accentColor)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(11)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.Colors.surfaceSecondary, in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
-// MARK: - Previews
-#Preview("Personalized Action Plan View") {
-    PersonalizedActionPlanView(router: AppRouter())
+#Preview("C.A.R.E. Action Plan") {
+    PersonalizedActionPlanView(router: AppRouter(), result: .figmaMockResult)
 }

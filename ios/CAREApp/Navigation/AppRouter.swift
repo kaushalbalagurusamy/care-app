@@ -22,14 +22,25 @@ public enum AppRoute: Hashable {
     case profile
     case careInfo
     case addRelationship
+    case editContact(UUID)
     case calmExercises
+    case acceptedExercises
+    case resonantExercises
+    case energeticExercises
     case watchFunny
     case keepPhoto
     case belongingList
+    case shareSomethingSmall
+    case mirrorEmotion
+    case mirrorLovedOne
+    case shareSomethingNew
+    case connectionCountdown
     case careResultsExercises
     case exerciseComplete
+    case exerciseCompleteFor(String)
     case surveyResultsV2
     case pastResultsV2
+    case historicalSurveyResults(UUID)
 }
 
 // MARK: - Swift 6 Observable Application Router
@@ -61,5 +72,10 @@ public final class AppRouter {
     /// Reset navigation stack completely back to root (Home)
     public func popToRoot() {
         path.removeAll()
+    }
+
+    /// Close an editable flow before presenting its committed result.
+    public func finishFlow(at resultRoute: AppRoute) {
+        path = [resultRoute]
     }
 }

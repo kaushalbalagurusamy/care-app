@@ -4,6 +4,22 @@ import SwiftUI
 
 @Suite("Phase 2: App Router & Navigation State Test Suite")
 struct AppRouterTests {
+
+    @Test("Finishing an assessment removes all editable routes from Back history")
+    @MainActor
+    func testCommittedFlowBoundary() {
+        let router = AppRouter(path: [.assessmentOverview, .surveyOverview, .chooseRelationships, .surveyQuestion])
+        router.finishFlow(at: .surveyResults)
+        #expect(router.path == [.surveyResults])
+        router.pop()
+        #expect(router.path.isEmpty)
+    }
+
+    @Test("Education resume card names the active quiz")
+    func testQuizProgressCardLabel() {
+        let card = ActionCardView(title: "Education", iconName: "icon_book_open", backgroundImageName: "card_education_bg", hasResumeControls: true, action: {})
+        #expect(card.progressTitle == "Quiz in Progress")
+    }
     
     @Test("TEST-NAV-01: Deep navigation traversal correctly tracks stacked routes")
     @MainActor

@@ -5,6 +5,7 @@ import UserNotifications
 public protocol NotificationSchedulerProtocol: Sendable {
     func requestAuthorization() async throws -> Bool
     func scheduleBiWeeklyReminder(preferredHour: Int, preferredWeekday: Int) async throws
+    func scheduleAssessmentReminder(frequency: String) async throws
     func cancelReminders() async throws
     func isReminderScheduled() async throws -> Bool
 }
@@ -22,21 +23,27 @@ public final class NotificationService: NotificationSchedulerProtocol, @unchecke
     }
     
     public func scheduleBiWeeklyReminder(preferredHour: Int = 19, preferredWeekday: Int = 1) async throws {
+        try await scheduleAssessmentReminder(frequency: "biweekly")
+    }
+
+    public func scheduleAssessmentReminder(frequency: String) async throws {
         // Cancel existing pending reminders first to prevent duplicates
         await cancelReminders()
         
         let content = UNMutableNotificationContent()
         content.title = "C.A.R.E. Check-In"
-        content.body = "🌱 Time for your bi-weekly Relational Safety check-in. Tap to reflect on your connections."
+        content.body = "🌱 Time for your Relational Safety check-in. Tap to reflect on your connections."
         content.sound = .default
-        
-        // Configure bi-weekly calendar trigger (e.g. Sunday at 7:00 PM)
-        var dateComponents = DateComponents()
-        dateComponents.weekday = preferredWeekday // 1 = Sunday
-        dateComponents.hour = preferredHour
-        dateComponents.minute = 0
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+
+        let days: Double
+        switch frequency {
+        case "2x/week": days = 3.5
+        case "1x/week": days = 7
+        case "monthly": days = 30
+        case "every 3 months": days = 90
+        default: days = 14
+        }
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: days * 24 * 60 * 60, repeats: true)
         let request = UNNotificationRequest(
             identifier: NotificationService.reminderIdentifier,
             content: content,
@@ -75,6 +82,10 @@ public final class MockNotificationService: NotificationSchedulerProtocol, @unch
         lock.lock()
         defer { lock.unlock() }
         isScheduled = true
+    }
+
+    public func scheduleAssessmentReminder(frequency: String) async throws {
+        try await scheduleBiWeeklyReminder(preferredHour: 19, preferredWeekday: 1)
     }
     
     public func cancelReminders() async throws {

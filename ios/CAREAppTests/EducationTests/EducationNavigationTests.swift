@@ -5,6 +5,13 @@ import SwiftUI
 // MARK: - Phase 4: Education Navigation Tests (TEST-EDN-01 through TEST-EDN-04)
 @Suite("Phase 4: Education Navigation Routing Test Suite")
 struct EducationNavigationTests {
+
+    @Test("Completed quiz navigation omits the unfinished-progress warning")
+    func testCompletedQuizHeaderState() {
+        let completedHeader = HeaderNavBar(warnOnBack: false, warnOnFlowNavigation: false)
+        #expect(!completedHeader.warnOnBack)
+        #expect(!completedHeader.warnOnFlowNavigation)
+    }
     
     @Test("TEST-EDN-01: Home Dashboard to Education Hub navigation")
     @MainActor

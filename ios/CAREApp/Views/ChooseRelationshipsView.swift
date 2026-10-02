@@ -4,43 +4,52 @@ import SwiftUI
 public struct ChooseRelationshipsView: View {
     public let router: AppRouter
     @Binding public var selectedPeople: [Person]
+    public let refreshToken: Int
     @Environment(AppEnvironment.self) private var appEnvironment
     
-    @State private var availablePeople: [Person] = Person.mockRolodex
-    @State private var isShowingAddPersonSheet: Bool = false
-    @State private var newPersonFirstName: String = ""
-    @State private var newPersonLastName: String = ""
-    @State private var newPersonCategory: RelationshipCategory = .partner
-    @State private var customCategoryText: String = ""
-    @State private var newPersonAgeText: String = ""
+    @State private var availablePeople: [Person] = []
+    @State private var showSelectionLimit = false
+    @State private var hasInitializedSelection = false
+    @State private var autoSelectNewContacts = false
     
-    public init(router: AppRouter, selectedPeople: Binding<[Person]>) {
+    public init(router: AppRouter, selectedPeople: Binding<[Person]>, refreshToken: Int = 0) {
         self.router = router
         self._selectedPeople = selectedPeople
+        self.refreshToken = refreshToken
     }
     
-    private var isSelectionFull: Bool {
-        selectedPeople.count >= 5
-    }
-    
-    private var isAddPersonFormValid: Bool {
-        let trimmedFirst = newPersonFirstName.trimmingCharacters(in: .whitespaces)
-        guard !trimmedFirst.isEmpty else { return false }
-        if newPersonCategory == .custom {
-            guard !customCategoryText.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+    static func toggledSelection(_ selected: [Person], person: Person) -> [Person]? {
+        if selected.contains(where: { $0.id == person.id }) {
+            return selected.filter { $0.id != person.id }
         }
-        let digits = newPersonAgeText.filter { $0.isNumber }
-        guard let age = Int(digits), age > 0 else { return false }
-        return true
+        guard selected.count < AssessmentSessionState.requiredParticipantCount else { return nil }
+        return selected + [person]
+    }
+
+    static func initialSelection(contacts: [Person], previousIDs: [UUID]?, draft: [Person]) -> [Person] {
+        let byID = Dictionary(uniqueKeysWithValues: contacts.map { ($0.id, $0) })
+        if !draft.isEmpty { return draft.compactMap { byID[$0.id] } }
+        if let previousIDs {
+            return Array(previousIDs.compactMap { byID[$0] }.prefix(AssessmentSessionState.requiredParticipantCount))
+        }
+        return Array(contacts.prefix(AssessmentSessionState.requiredParticipantCount))
     }
     
-    private func resetAddPersonForm() {
-        newPersonFirstName = ""
-        newPersonLastName = ""
-        newPersonCategory = .partner
-        customCategoryText = ""
-        newPersonAgeText = ""
-        isShowingAddPersonSheet = false
+    private func refreshContacts() async {
+        guard let loaded = try? await appEnvironment.contactsRepo.fetchContacts() else { return }
+        if !hasInitializedSelection {
+            let history = try? await appEnvironment.assessmentRepo.fetchAssessmentHistory()
+            let previousIDs = history?.first.map { $0.individualResults.map(\.id) }
+            autoSelectNewContacts = previousIDs == nil && selectedPeople.isEmpty
+            selectedPeople = Self.initialSelection(contacts: loaded, previousIDs: previousIDs, draft: selectedPeople)
+            hasInitializedSelection = true
+        } else if autoSelectNewContacts {
+            selectedPeople = Array(loaded.prefix(AssessmentSessionState.requiredParticipantCount))
+        } else {
+            let byID = Dictionary(uniqueKeysWithValues: loaded.map { ($0.id, $0) })
+            selectedPeople = selectedPeople.compactMap { byID[$0.id] }
+        }
+        availablePeople = loaded
     }
     
     public var body: some View {
@@ -57,15 +66,15 @@ public struct ChooseRelationshipsView: View {
                             .font(Theme.Typography.poppins(.bold, size: 28))
                             .foregroundColor(Theme.Colors.textPrimary)
                         
-                        Text("Choose the five relationships you’ll reflect on in this C.A.R.E. assessment.")
-                            .font(Theme.Typography.poppins(.regular, size: 13))
+                        Text("Add at least five people to start the assessment.")
+                            .font(Theme.Typography.screenSubtitle)
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
                     // "+ Add Person" Outlined Action Button (Figma Frame 17:4)
                     Button(action: {
-                        isShowingAddPersonSheet = true
+                        router.navigate(to: .addRelationship)
                     }) {
                         HStack(spacing: 8) {
                             Image(systemName: "plus")
@@ -86,10 +95,32 @@ public struct ChooseRelationshipsView: View {
                     }
                     .buttonStyle(.plain)
                     
+                    HStack {
+                        Text("Choose five")
+                            .font(Theme.Typography.poppins(.semiBold, size: 16))
+                        Spacer()
+                        Text("\(selectedPeople.count)/5")
+                            .font(Theme.Typography.poppins(.semiBold, size: 16))
+                            .accessibilityIdentifier("SelectedRelationshipCount")
+                    }
+                    .foregroundStyle(Theme.Colors.textPrimary)
+
+                    Text("Tap the five contacts you want to select. You can change your selection before continuing.")
+                        .font(Theme.Typography.screenSubtitle)
+                        .foregroundColor(Theme.Colors.textSecondary)
+
                     // Chosen Relationship Cards (Figma Frame 17:4)
                     VStack(spacing: 12) {
                         ForEach(availablePeople) { person in
+                            let isSelected = selectedPeople.contains(where: { $0.id == person.id })
                             HStack(spacing: 16) {
+                                Button {
+                                    autoSelectNewContacts = false
+                                    if let updated = Self.toggledSelection(selectedPeople, person: person) {
+                                        selectedPeople = updated
+                                    } else { showSelectionLimit = true }
+                                } label: {
+                                HStack(spacing: 16) {
                                 // Pure White Circular Initials Badge
                                 Circle()
                                     .fill(Color.white)
@@ -99,25 +130,56 @@ public struct ChooseRelationshipsView: View {
                                             .font(Theme.Typography.poppins(.bold, size: 17))
                                             .foregroundColor(Theme.Colors.primary)
                                     )
+                                    .overlay {
+                                        Circle().stroke(isSelected ? Theme.Colors.primary : Color.clear, lineWidth: 2)
+                                    }
                                 
-                                // Name and Category/Age
+                                // Name and optional relationship
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text(person.name)
                                         .font(Theme.Typography.poppins(.bold, size: 17))
                                         .foregroundColor(Theme.Colors.textPrimary)
                                     
-                                    Text("\(person.category.rawValue), \(person.age)")
-                                        .font(Theme.Typography.poppins(.regular, size: 14))
-                                        .foregroundColor(Theme.Colors.textSecondary)
+                                    if !person.displayCategory.isEmpty {
+                                        Text(person.displayCategory)
+                                            .font(Theme.Typography.poppins(.regular, size: 14))
+                                            .foregroundColor(Theme.Colors.textSecondary)
+                                    }
                                 }
                                 
                                 Spacer()
+                                }
+                                .padding(.leading, 16)
+                                .padding(.vertical, 16)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("\(isSelected ? "Deselect" : "Select") \(person.name)")
+                                .accessibilityAddTraits(isSelected ? .isSelected : [])
+                                Button {
+                                    router.navigate(to: .editContact(person.id))
+                                } label: {
+                                    Image("icon_contact_edit")
+                                        .resizable()
+                                        .renderingMode(.template)
+                                        .frame(width: 25, height: 25)
+                                        .foregroundStyle(Theme.Colors.primary)
+                                        .frame(width: 44, height: 44)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Edit \(person.name)")
+                                .padding(.trailing, 16)
                             }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 16)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Theme.Colors.cardSurface)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color(hex: "#E1EFFE"))
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .stroke(isSelected ? Theme.Colors.primary : Theme.Colors.primary.opacity(0.28), lineWidth: isSelected ? 2 : 1)
+                            }
                         }
                     }
                 }
@@ -134,7 +196,7 @@ public struct ChooseRelationshipsView: View {
                 PrimaryButton(
                     title: "Next",
                     trailingIcon: "arrow.right",
-                    isEnabled: !selectedPeople.isEmpty,
+                    isEnabled: AssessmentSessionState.canStart(with: selectedPeople.count),
                     action: {
                         router.navigate(to: .relationshipFrequency)
                     }
@@ -149,84 +211,13 @@ public struct ChooseRelationshipsView: View {
         .background(Theme.Colors.background)
         .toolbar(.hidden, for: .navigationBar)
         .task {
-            if let loaded = try? await appEnvironment.contactsRepo.fetchContacts(), !loaded.isEmpty {
-                availablePeople = loaded
-            }
-            if selectedPeople.isEmpty {
-                selectedPeople = Array(availablePeople.prefix(5))
-            }
+            await refreshContacts()
         }
-        .sheet(isPresented: $isShowingAddPersonSheet) {
-            NavigationStack {
-                Form {
-                    Section("Contact Information") {
-                        TextField("First Name", text: $newPersonFirstName)
-                            .textContentType(.givenName)
-                            .autocorrectionDisabled()
-                        
-                        TextField("Last Name", text: $newPersonLastName)
-                            .textContentType(.familyName)
-                            .autocorrectionDisabled()
-                        
-                        Picker("Relationship", selection: $newPersonCategory) {
-                            ForEach(RelationshipCategory.allCases, id: \.self) { cat in
-                                Text(cat.rawValue).tag(cat)
-                            }
-                        }
-                        
-                        if newPersonCategory == .custom {
-                            TextField("Custom Relationship (e.g. Mentor)", text: $customCategoryText)
-                                .autocorrectionDisabled()
-                        }
-                        
-                        TextField("Age", text: $newPersonAgeText)
-                            .keyboardType(.numberPad)
-                            .accessibilityIdentifier("NewPersonAgeField")
-                    }
-                }
-                .navigationTitle("Add Relationship")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            resetAddPersonForm()
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
-                            let trimmedFirst = newPersonFirstName.trimmingCharacters(in: .whitespaces)
-                            let trimmedLast = newPersonLastName.trimmingCharacters(in: .whitespaces)
-                            guard !trimmedFirst.isEmpty else { return }
-                            
-                            let fullName = trimmedLast.isEmpty ? trimmedFirst : "\(trimmedFirst) \(trimmedLast)"
-                            let firstInitial = trimmedFirst.first.map { String($0) } ?? ""
-                            let lastInitial = trimmedLast.first.map { String($0) } ?? ""
-                            let initials = (firstInitial + lastInitial).uppercased()
-                            
-                            let customName = (newPersonCategory == .custom) ? customCategoryText.trimmingCharacters(in: .whitespaces) : nil
-                            guard let age = Int(newPersonAgeText.filter { $0.isNumber }), age > 0 else { return }
-                            
-                            let person = Person(
-                                name: fullName,
-                                initials: initials.isEmpty ? "CO" : initials,
-                                category: newPersonCategory,
-                                customCategoryName: customName,
-                                age: age
-                            )
-                            
-                            Task {
-                                _ = try? await appEnvironment.contactsRepo.createContact(person)
-                                if let refreshed = try? await appEnvironment.contactsRepo.fetchContacts() {
-                                    availablePeople = refreshed
-                                }
-                            }
-                            resetAddPersonForm()
-                        }
-                        .disabled(!isAddPersonFormValid)
-                    }
-                }
-            }
-            .presentationDetents([.medium, .large])
+        .onChange(of: refreshToken) { _, _ in Task { await refreshContacts() } }
+        .alert("Choose exactly five relationships", isPresented: $showSelectionLimit) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Deselect someone before adding another person to this assessment.")
         }
     }
 }
