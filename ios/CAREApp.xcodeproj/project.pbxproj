@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A30000000000000000000002 /* NotoEmojiLicense.txt in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000001 /* NotoEmojiLicense.txt */; };
 		77000051EDUTOPIC00000002 /* EducationTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000050EDUTOPIC00000001 /* EducationTopic.swift */; };
 		77000053EDUMANIFEST00002 /* EducationManifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 77000052EDUMANIFEST00001 /* EducationManifest.json */; };
 		77000055EDUMODTEST000002 /* EducationModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77000054EDUMODTEST000001 /* EducationModelTests.swift */; };
@@ -124,6 +125,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A30000000000000000000001 /* NotoEmojiLicense.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Resources/NotoEmojiLicense.txt; sourceTree = "<group>"; };
 		77000050EDUTOPIC00000001 /* EducationTopic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationTopic.swift"; sourceTree = "<group>"; };
 		77000052EDUMANIFEST00001 /* EducationManifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "EducationManifest.json"; sourceTree = "<group>"; };
 		77000054EDUMODTEST000001 /* EducationModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EducationModelTests.swift"; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 				110000022C12345600000001 /* CAREApp.swift */,
 				110000042C12345600000001 /* ContentView.swift */,
 				110000062C12345600000001 /* Assets.xcassets */,
+				A30000000000000000000001 /* NotoEmojiLicense.txt */,
 				22C34CE04453256C0700000001 /* Components */,
 				22AAC7DC5DCD23638D00000001 /* Models */,
 				22E691E766F2D4FA8400000001 /* Navigation */,
@@ -661,6 +664,7 @@
 			files = (
 				77000053EDUMANIFEST00002 /* EducationManifest.json in Resources */,
 				110000052C12345600000001 /* Assets.xcassets in Resources */,
+				A30000000000000000000002 /* NotoEmojiLicense.txt in Resources */,
 			
 				F184D45DB8322540EF97625E /* Poppins-Bold.ttf in Resources */,
 				F1A3760CDF65F04D5E93719B /* Poppins-SemiBold.ttf in Resources */,

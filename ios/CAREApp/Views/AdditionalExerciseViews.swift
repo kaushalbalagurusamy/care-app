@@ -5,17 +5,36 @@ import SwiftUI
 import UniformTypeIdentifiers
 import WebKit
 
+// Noto Emoji artwork is distributed under Apache License 2.0. Its license is
+// bundled with the app as NotoEmojiLicense.txt.
+enum ExerciseEmojiAsset {
+    static let names: [String: String] = [
+        "🎬": "clapper", "📷": "camera", "👥": "people", "💬": "chat",
+        "🎥": "video", "🎭": "theater", "🫂": "hug", "💡": "bulb", "⌛": "hourglass", "⏳": "hourglass_flowing", "😂": "laugh",
+        "💭": "thought", "🫶": "heart_hands", "✨": "sparkles", "➕": "plus",
+        "🍲": "stew", "🎵": "music", "💃": "dancer", "📸": "camera_flash",
+        "😄": "smile", "🔥": "fire"
+    ]
+
+    static func name(for emoji: String) -> String? {
+        names[emoji].map { "ExerciseEmoji_\($0)" }
+    }
+}
+
 struct ExerciseEmojiView: View {
     let emoji: String
     let size: CGFloat
 
     var body: some View {
-        // System text renders Unicode emoji on the device. Keep the explicit
-        // system font so an inherited Poppins style cannot show a missing glyph.
-        Text(emoji)
-        .font(.system(size: size))
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
+        Group {
+            if let asset = ExerciseEmojiAsset.name(for: emoji) {
+                Image(asset).resizable().scaledToFit()
+                    // The Noto camera file has extra transparent space above its artwork.
+                    .offset(y: emoji == "📷" ? -size / 12 : 0)
+            } else {
+                Text(emoji).font(.system(size: size))
+            }
+        }
         .frame(width: size, height: size)
         .accessibilityLabel(emoji)
     }
@@ -32,8 +51,8 @@ struct ExercisePageHeader: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            ExerciseEmojiView(emoji: item.emoji, size: 36)
-                .frame(width: 56, height: 56)
+            ExerciseEmojiView(emoji: item.emoji, size: 24)
+                .frame(width: 48, height: 48)
                 .background(soft, in: Circle())
                 .overlay(Circle().stroke(accent.opacity(0.35)))
                 .accessibilityIdentifier("ExerciseHeaderEmoji")

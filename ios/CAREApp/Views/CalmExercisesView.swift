@@ -191,10 +191,8 @@ public struct ExerciseCategoryHomeView: View {
         let entry = record(item.id)
         let lastCompleted = entry.completionDates.max()
         return VStack(alignment: .leading, spacing: 7) {
-            HStack(alignment: .top) {
-                ExerciseEmojiView(emoji: item.emoji, size: 20)
-                    .frame(width: 32, height: 32)
-                    .background(soft, in: Circle())
+            HStack(alignment: .center) {
+                ExerciseEmojiView(emoji: item.emoji, size: 24)
                 Text(item.title)
                     .font(Theme.Typography.poppins(.bold, size: 13))
                     .foregroundColor(Theme.Colors.textPrimary)

@@ -91,7 +91,12 @@ final class CAREAppUITests: XCTestCase {
             require(app.buttons["AppIcon_back"]).tap()
         }
         require(app.buttons["Calm"]).tap()
-        require(app.buttons["DoExercise_watch-something-funny"])
+        require(app.buttons["DoExercise_watch-something-funny"]).tap()
+        require(app.staticTexts["Watch Something Funny"])
+        let exerciseCapture = XCTAttachment(screenshot: app.screenshot())
+        exerciseCapture.name = "Free Calm exercise header and emoji"
+        exerciseCapture.lifetime = .keepAlways
+        add(exerciseCapture)
     }
 
     func testPrivacyDetailsAreAccessibleFromProfileAndSettings() {
@@ -153,7 +158,15 @@ final class CAREAppUITests: XCTestCase {
         require(app.images["🔥"])
         require(app.staticTexts["7–10 min • New exercise"])
         require(app.buttons["DoExercise_watch-something-funny"]).tap()
-        XCTAssertTrue(require(app.images["ExerciseHeaderEmoji"]).isHittable)
+        let emojiBadge = require(app.images["ExerciseHeaderEmoji"])
+        XCTAssertTrue(emojiBadge.isHittable)
+        XCTAssertEqual(emojiBadge.frame.width, 48, accuracy: 1, "Figma uses a 48-point exercise emoji badge")
+        XCTAssertEqual(emojiBadge.frame.height, 48, accuracy: 1)
+        XCTAssertEqual(emojiBadge.frame.midX, app.frame.midX, accuracy: 1)
+        let exercisePreview = XCTAttachment(screenshot: app.screenshot())
+        exercisePreview.name = "Watch Something Funny emoji badge"
+        exercisePreview.lifetime = .keepAlways
+        add(exercisePreview)
         let funnyTitle = require(app.staticTexts["Watch Something Funny"])
         let funnyDescription = require(app.staticTexts["ExerciseDescription"])
         XCTAssertGreaterThan(funnyDescription.frame.minY, funnyTitle.frame.maxY)

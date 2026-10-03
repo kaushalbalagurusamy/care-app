@@ -6,6 +6,16 @@ import SwiftData
 @Suite("Exercises Module Data Models & Views Test Suite")
 struct ExercisesModuleTests {
 
+    @Test("Every exercise icon resolves to licensed artwork")
+    func testExerciseArtwork() {
+        let choiceEmoji = ["😂", "💭", "🫶", "✨", "➕", "🍲", "🎵", "💃", "📸", "😄", "🔥"]
+        for emoji in ExerciseItem.allExercises.map(\.emoji) + choiceEmoji {
+            let asset = ExerciseEmojiAsset.name(for: emoji)
+            #expect(asset != nil, "Missing art mapping for \(emoji)")
+            if let asset { #expect(UIImage(named: asset) != nil, "Missing image \(asset)") }
+        }
+    }
+
     @Test("ExerciseCategory allCases covers all 4 CARE dimensions")
     func testExerciseCategories() {
         let categories = ExerciseCategory.allCases

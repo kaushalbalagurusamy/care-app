@@ -116,7 +116,7 @@ public struct ExerciseItem: Identifiable, Codable, Sendable, Equatable {
     ]
     
     public static let sampleAcceptedExercises: [ExerciseItem] = [
-        ExerciseItem(id: "belonging-list", title: "Make a Belonging List", category: .accepted, emoji: "👥", subtitle: "Notice the people, places, and communities where you feel you belong.", durationMinutesRange: "3–5 min", minimumDurationMinutes: 3, maximumDurationMinutes: 5),
+        ExerciseItem(id: "belonging-list", title: "Make a Belonging List", category: .accepted, emoji: "🫂", subtitle: "Notice the people, places, and communities where you feel you belong.", durationMinutesRange: "3–5 min", minimumDurationMinutes: 3, maximumDurationMinutes: 5),
         ExerciseItem(id: "share-something-small", title: "Share Something Small", category: .accepted, emoji: "💬", subtitle: "Share a small thought or appreciation with someone you trust.", durationMinutesRange: "2–5 min", minimumDurationMinutes: 2, maximumDurationMinutes: 5)
     ]
 
@@ -125,7 +125,7 @@ public struct ExerciseItem: Identifiable, Codable, Sendable, Equatable {
             id: "mirror-emotion",
             title: "Mirror the Emotion",
             category: .resonant,
-            emoji: "🎥",
+            emoji: "🎭",
             subtitle: "Gently mirror expressions and notice any shift in your mood.",
             durationMinutesRange: "2–4 min",
             minimumDurationMinutes: 2,
@@ -144,8 +144,8 @@ public struct ExerciseItem: Identifiable, Codable, Sendable, Equatable {
     ]
 
     public static let sampleEnergeticExercises: [ExerciseItem] = [
-        ExerciseItem(id: "share-something-new", title: "Share Something New", category: .energetic, emoji: "💡", subtitle: "Send a new discovery to someone who might enjoy it.", durationMinutesRange: "2–5 min", minimumDurationMinutes: 2, maximumDurationMinutes: 5),
-        ExerciseItem(id: "connection-countdown", title: "Connection Countdown", category: .energetic, emoji: "⌛", subtitle: "Look forward to a small moment with someone you care about.", durationMinutesRange: "1–3 min", minimumDurationMinutes: 1, maximumDurationMinutes: 3)
+        ExerciseItem(id: "share-something-new", title: "Share Something New", category: .energetic, emoji: "✨", subtitle: "Send a new discovery to someone who might enjoy it.", durationMinutesRange: "2–5 min", minimumDurationMinutes: 2, maximumDurationMinutes: 5),
+        ExerciseItem(id: "connection-countdown", title: "Connection Countdown", category: .energetic, emoji: "⏳", subtitle: "Look forward to a small moment with someone you care about.", durationMinutesRange: "1–3 min", minimumDurationMinutes: 1, maximumDurationMinutes: 3)
     ]
 
     public static var allExercises: [ExerciseItem] {
