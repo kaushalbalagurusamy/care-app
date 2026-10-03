@@ -88,7 +88,7 @@ enum GuidedExerciseContent {
     "hot-button-practice": [
         .init(heading: "Choose a setting", instructions: [], prompts: [], options: ["A debate or news discussion", "A family conversation", "An online comment", "An everyday disagreement", "Start gently", "Use a manageable example, real or imagined.", "This is a private rehearsal."]),
         .init(heading: "What shows up?", instructions: [], prompts: ["What feelings do you notice?", "What happens in your body?", "What is the first story your mind tells?"], options: []),
-        .init(heading: "Pause and relabel", instructions: ["Name the first thought as a judgment or assumption.", "Take one easy breath before deciding what it means.", "Ask what else might be true, even if you still disagree.", "A new perspective does not require you to abandon your values."], prompts: ["What else might explain this person's words or actions?", "What matters to you in this situation?"], options: []),
+        .init(heading: "Relabel and Refocus", instructions: ["Name the first thought as a judgment or assumption.", "Take one easy breath before deciding what it means.", "Ask what else might be true, even if you still disagree.", "A new perspective does not require you to abandon your values."], prompts: ["What else might explain this person's words or actions?", "What matters to you in this situation?"], options: []),
         .init(heading: "What could you do?", instructions: ["Choose one or more options, and change your mind later. The reflection is optional."], prompts: ["How could these choices support connection or protect your limits?"], options: [])
     ],
     "name-what-hurts": [
