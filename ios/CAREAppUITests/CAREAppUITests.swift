@@ -104,6 +104,7 @@ final class CAREAppUITests: XCTestCase {
         require(app.buttons["Privacy"]).tap()
         require(app.buttons["ProfilePrivacyDetailsButton"]).tap()
         require(app.staticTexts["Privacy & Data Use"])
+        require(app.descendants(matching: .any)["CAREPrivacyPolicyLink"])
         require(app.staticTexts["What stays on your device"])
         require(app.staticTexts["When you use other services"])
         require(app.staticTexts["Your choices and deletion"])

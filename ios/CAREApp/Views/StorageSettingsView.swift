@@ -353,14 +353,20 @@ public struct StorageSettingsView: View {
     }
 }
 
-/// App-owned privacy information, available without leaving the app or opening a web browser.
-/// The public App Store privacy-policy URL must be approved and supplied separately.
+/// App-owned privacy information with a link to CARE's public policy.
 public struct PrivacyDetailsView: View {
+    public static let policyURL = URL(string: "https://care-app-privacy.vercel.app/")!
+
     public init() {}
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.large) {
+                Link("Read CARE Privacy Policy", destination: Self.policyURL)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundColor(Theme.Colors.primary)
+                    .accessibilityIdentifier("CAREPrivacyPolicyLink")
+
                 section(
                     "What stays on your device",
                     "CARE saves your profile name and photo, saved contacts and their photos, assessment answers and results, unfinished quiz and exercise answers, and exercise completion history on this device. CARE does not upload this information to a CARE account or sync it across devices. Your device's own backup settings are managed by iOS."

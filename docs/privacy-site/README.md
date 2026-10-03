@@ -4,4 +4,4 @@
 
 Amy Banks, MD has approved the policy text and operator/contact line for publication. The page reflects the iOS implementation as checked on October 1, 2026, including local SwiftData storage, optional photo selection, embedded YouTube playback, Messages sharing, and in-app data deletion. If the app's data flows change, revise the policy and App Store privacy answers together.
 
-When the Vercel account is available, create a standalone project rooted at `docs/privacy-site`, publish it to production, open its public URL without signing in, and then enter that URL in App Store Connect → RCT CARE → App Privacy → Privacy Policy URL. The same HTML can later be copied into Amy's website without changing the privacy content.
+The standalone Vercel project is published at <https://care-app-privacy.vercel.app/>. The page returned HTTP 200 without signing in, and the same production URL is set for the RCT CARE English (US) App Store privacy-policy field. The same HTML can later be copied into Amy's website without changing the privacy content.

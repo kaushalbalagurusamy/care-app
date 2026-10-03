@@ -1,6 +1,6 @@
 # CARE App Store privacy disclosure worksheet
 
-Status: source audit completed October 2, 2026; **not entered or published in App Store Connect**. Complete this against the exact release binary and the current App Privacy form before submission.
+Status: source audit completed October 2, 2026; public policy published and accessible without sign-in at <https://care-app-privacy.vercel.app/>; the English (US) App Store privacy-policy URL is set. **App Privacy data-practice answers are not yet entered or published in App Store Connect.** Complete these against the exact release binary and the current App Privacy form before submission.
 
 ## Source-backed inventory
 
@@ -14,7 +14,7 @@ Status: source audit completed October 2, 2026; **not entered or published in Ap
 
 ## App Privacy form work
 
-1. Set the public CARE privacy-policy URL after the standalone Vercel project is deployed and tested in a signed-out browser. Do not use Amy's generic WordPress website policy.
+1. The public CARE privacy-policy URL is set to <https://care-app-privacy.vercel.app/>. Do not use Amy's generic WordPress website policy.
 2. Answer **Yes** to collection because of the embedded YouTube player. Do not label the app “Data Not Collected” while that player is present.
 3. Map Google's embedded-player data to Apple's current categories in App Store Connect. Evidence supports at least video-view **Product Interaction** and device/network identifiers; Google says IP address can indicate general location. Verify the exact category wording and whether the player uses identifiers, coarse location, ad interaction, or diagnostic categories in this integration. Do not mark locally stored CARE records as transmitted.
 4. For each selected category, verify Apple's purpose, linked-to-user, and tracking questions against Google's current embedded-player practices. Google says embedded services may use information for ads and personalization; Apple's tracking definition and ATT rule apply to tracking inside a functional WebView. The current CARE app has no ATT consent flow. Therefore **do not publish a “no tracking” assertion or a final disclosure until this is resolved**. A privacy-enhanced YouTube embed is currently documented by YouTube for websites, not iOS apps.
