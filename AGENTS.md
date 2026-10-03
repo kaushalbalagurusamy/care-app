@@ -2,6 +2,10 @@
 
 Welcome to the **CARE App** dual-stack monorepo (`native iOS/iPadOS` + `Python FastAPI` backend). This document serves as the single source of truth for AI agents operating in this workspace.
 
+## Paid preview branch handoff
+
+When working on `feature/paid-care-action-plan-preview`, read [docs/PAID_RELEASE_HANDOFF.md](docs/PAID_RELEASE_HANDOFF.md) before changing purchase access, release settings, or App Store metadata. Jayme's design, routing, and exercise-content edits belong on this branch. The free app submission runs from a separate checkout; record its released commit and merge that commit into the paid branch after the free release is fixed. Treat the current paid screens as a visual preview until StoreKit entitlements, media rights, privacy, and first-IAP review gates in the handoff are complete. Keep the Figma exercise screens visually faithful and retain the app's shared top bar.
+
 ---
 
 ## 1. Monorepo Architecture
@@ -113,4 +117,3 @@ For ChatGPT Desktop, OpenAI Codex, and product-driven mobile development workflo
 * [`jayme-codex-instructions/README.md`](jayme-codex-instructions/README.md) — Master product engineering hub
 * [`jayme-codex-instructions/CODEX_AGENT_SYSTEM_PROMPT.md`](jayme-codex-instructions/CODEX_AGENT_SYSTEM_PROMPT.md) — Autonomous agent instructions & invariants
 * [`jayme-codex-instructions/JAYME_QUICKSTART_CARD.md`](jayme-codex-instructions/JAYME_QUICKSTART_CARD.md) — Jayme's 2-minute quickstart card
-
