@@ -9,7 +9,6 @@ public final class StoredParticipantResult {
     public var initials: String = ""
     public var categoryRaw: String = "Partner"
     public var customCategoryName: String? = nil
-    public var age: Int = 30
     public var percentTimeSpent: Double = 0.20
     public var individualScore: Double = 0.0
     public var safetyTierRaw: String = "Safe"
@@ -24,7 +23,6 @@ public final class StoredParticipantResult {
         initials: String = "",
         categoryRaw: String = "Partner",
         customCategoryName: String? = nil,
-        age: Int = 30,
         percentTimeSpent: Double = 0.20,
         individualScore: Double = 0.0,
         safetyTierRaw: String = "Safe",
@@ -38,7 +36,6 @@ public final class StoredParticipantResult {
         self.initials = initials
         self.categoryRaw = categoryRaw
         self.customCategoryName = customCategoryName
-        self.age = age
         self.percentTimeSpent = percentTimeSpent
         self.individualScore = individualScore
         self.safetyTierRaw = safetyTierRaw
@@ -55,7 +52,6 @@ public final class StoredParticipantResult {
             initials: result.participant.person.initials,
             categoryRaw: result.participant.person.category.rawValue,
             customCategoryName: result.participant.person.customCategoryName,
-            age: result.participant.person.age,
             percentTimeSpent: result.participant.percentTimeSpent,
             individualScore: result.normalizedScore,
             safetyTierRaw: result.safetyTier.rawValue,
@@ -73,8 +69,7 @@ public final class StoredParticipantResult {
             name: personName,
             initials: initials,
             category: category,
-            customCategoryName: customCategoryName,
-            age: age
+            customCategoryName: customCategoryName
         )
         let participant = AssessmentParticipant(person: person, percentTimeSpent: percentTimeSpent)
         let tier: SafetyTier = {

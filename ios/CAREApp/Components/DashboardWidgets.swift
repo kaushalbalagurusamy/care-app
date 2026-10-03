@@ -10,6 +10,7 @@ public struct ActionCardView: View {
     public let onResume: (() -> Void)?
     public let onDiscard: (() -> Void)?
     public let action: () -> Void
+    public var progressTitle: String { title == "Education" ? "Quiz in Progress" : "\(title) in progress" }
     
     public init(
         title: String,
@@ -56,7 +57,7 @@ public struct ActionCardView: View {
     }
     
     public var body: some View {
-        if hasResumeControls {
+        if hasResumeControls && title == "Assessment" {
             // In-progress assessment card directly from Figma Frame 491:203
             ZStack(alignment: .bottom) {
                 Image("card_assessment_resume_bg")
@@ -104,24 +105,129 @@ public struct ActionCardView: View {
             .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Assessment in progress")
+        } else if hasResumeControls {
+            ZStack {
+                Image(backgroundImageName)
+                    .resizable()
+                    .aspectRatio(350.0 / 149.0, contentMode: .fill)
+                    .frame(maxWidth: .infinity, maxHeight: 149)
+                    .clipped()
+                    .grayscale(1)
+                Color.gray.opacity(0.82)
+                VStack(spacing: 10) {
+                    Text(progressTitle)
+                        .font(Theme.Typography.poppins(.bold, size: 17))
+                        .foregroundStyle(.white)
+                    HStack(spacing: 10) {
+                        resumeAction("Continue", action: onResume)
+                        resumeAction("Discard", action: onDiscard)
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            .frame(height: 149)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+            .accessibilityElement(children: .contain)
         } else {
             Button(action: {
                 let generator = UIImpactFeedbackGenerator(style: .light)
                 generator.impactOccurred()
                 action()
             }) {
-                Image(backgroundImageName)
-                    .resizable()
-                    .aspectRatio(350.0 / 149.0, contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: 149)
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                ZStack(alignment: .bottomLeading) {
+                    Image(backgroundImageName)
+                        .resizable()
+                        .aspectRatio(350.0 / 149.0, contentMode: .fill)
+                        .frame(maxWidth: .infinity, maxHeight: 149)
+                        .clipped()
+
+                    // Keep the three home-card artworks text-free so titles remain crisp at every scale.
+                    if title == "Education" || title == "Assessment" || title == "Exercises" {
+                        LinearGradient(
+                            colors: [Color(red: 0.10, green: 0.28, blue: 0.45).opacity(0.55), .clear],
+                            startPoint: .bottomLeading,
+                            endPoint: .topTrailing
+                        )
+                        .allowsHitTesting(false)
+
+                        Text(title)
+                            .font(Theme.Typography.poppins(.bold, size: 17))
+                            .foregroundStyle(.white)
+                            .padding(.leading, 16)
+                            .padding(.bottom, 24)
+                    }
+                }
+                .frame(height: 149)
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
             }
             .buttonStyle(ActionCardButtonStyle(hasResumeControls: false))
             .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .accessibilityLabel(title)
         }
+    }
+
+    private func resumeAction(_ title: String, action: (() -> Void)?) -> some View {
+        Button { action?() } label: {
+            Text(title)
+                .font(Theme.Typography.poppins(.semiBold, size: 13))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 38)
+                .background(.black.opacity(0.28))
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("\(title)\(self.title)Button")
+    }
+}
+
+/// Fits the card underneath while exposing explicit resume and discard actions.
+public struct InProgressCardOverlay: View {
+    public let title: String
+    public let cornerRadius: CGFloat
+    public let onContinue: () -> Void
+    public let onDiscard: () -> Void
+
+    public init(title: String, cornerRadius: CGFloat = 18, onContinue: @escaping () -> Void, onDiscard: @escaping () -> Void) {
+        self.title = title
+        self.cornerRadius = cornerRadius
+        self.onContinue = onContinue
+        self.onDiscard = onDiscard
+    }
+
+    public var body: some View {
+        VStack(spacing: 6) {
+            Text(title)
+                .font(Theme.Typography.poppins(.semiBold, size: 12))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+            HStack(spacing: 8) {
+                action("Continue", systemName: "arrow.uturn.forward", action: onContinue)
+                action("Discard", systemName: "trash", action: onDiscard)
+            }
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.gray.opacity(0.92))
+        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(title)
+    }
+
+    private func action(_ title: String, systemName: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: systemName)
+                .font(Theme.Typography.poppins(.semiBold, size: 11))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 28)
+                .background(Color.black.opacity(0.25))
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("\(title)InProgressButton")
     }
 }
 

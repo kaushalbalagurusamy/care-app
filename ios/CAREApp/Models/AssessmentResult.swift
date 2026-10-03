@@ -150,10 +150,10 @@ public extension AssessmentResult {
         }
         
         let domains: [CAREDomain: DomainScoreBreakdown] = [
-            .calm: DomainScoreBreakdown(domain: .calm, earnedPoints: 18, maxPossiblePoints: 125, vagalToneStatus: "Good Vagal Tone"),
-            .accepted: DomainScoreBreakdown(domain: .accepted, earnedPoints: 20, maxPossiblePoints: 125),
-            .resonant: DomainScoreBreakdown(domain: .resonant, earnedPoints: 15, maxPossiblePoints: 125),
-            .energetic: DomainScoreBreakdown(domain: .energetic, earnedPoints: 22, maxPossiblePoints: 125)
+            .calm: DomainScoreBreakdown(domain: .calm, earnedPoints: 72, maxPossiblePoints: 100, vagalToneStatus: "Moderate Vagal Tone"),
+            .accepted: DomainScoreBreakdown(domain: .accepted, earnedPoints: 80, maxPossiblePoints: 100),
+            .resonant: DomainScoreBreakdown(domain: .resonant, earnedPoints: 60, maxPossiblePoints: 100),
+            .energetic: DomainScoreBreakdown(domain: .energetic, earnedPoints: 88, maxPossiblePoints: 100)
         ]
         
         return AssessmentResult(

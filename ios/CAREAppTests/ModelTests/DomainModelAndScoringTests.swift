@@ -34,7 +34,7 @@ struct DomainModelAndScoringTests {
 
     @Test("TEST-MOD-02A: Scoring engine calculates 100% Safe when all answers are maximum (1.0)")
     func testScoringAllMaximumSafeScores() {
-        let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)
+        let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner)
         let participant = AssessmentParticipant(person: person, percentTimeSpent: 1.0)
         let optMax = SurveyOption(id: "opt_5", text: "Max Grounded", rawScoreValue: 1.0)
         
@@ -64,7 +64,7 @@ struct DomainModelAndScoringTests {
 
     @Test("TEST-MOD-02B: Scoring engine calculates 100% High Risk when all answers are minimum (0.2)")
     func testScoringAllMinimumHighRiskScores() {
-        let person = Person(name: "Linda Chen", initials: "LC", category: .coworker, age: 41)
+        let person = Person(name: "Linda Chen", initials: "LC", category: .coworker)
         let participant = AssessmentParticipant(person: person, percentTimeSpent: 1.0)
         let optMin = SurveyOption(id: "opt_1", text: "Tense/Anxious", rawScoreValue: 0.20)
         
@@ -96,22 +96,22 @@ struct DomainModelAndScoringTests {
         let config = ScoringConfiguration(safeScoreCutoff: 75.0, moderateScoreCutoff: 60.0)
         
         // Exact 75.0 -> Healthy/Safe
-        let p75 = Person(name: "P75", initials: "P1", category: .friend, age: 30)
+        let p75 = Person(name: "P75", initials: "P1", category: .friend)
         let part75 = AssessmentParticipant(person: p75, percentTimeSpent: 0.25)
         let opt75 = SurveyOption(id: "o75", text: "75%", rawScoreValue: 0.75)
         
         // Exact 74.0 -> Moderate
-        let p74 = Person(name: "P74", initials: "P2", category: .friend, age: 30)
+        let p74 = Person(name: "P74", initials: "P2", category: .friend)
         let part74 = AssessmentParticipant(person: p74, percentTimeSpent: 0.25)
         let opt74 = SurveyOption(id: "o74", text: "74%", rawScoreValue: 0.74)
         
         // Exact 60.0 -> Moderate
-        let p60 = Person(name: "P60", initials: "P3", category: .friend, age: 30)
+        let p60 = Person(name: "P60", initials: "P3", category: .friend)
         let part60 = AssessmentParticipant(person: p60, percentTimeSpent: 0.25)
         let opt60 = SurveyOption(id: "o60", text: "60%", rawScoreValue: 0.60)
         
         // Exact 59.0 -> High Risk
-        let p59 = Person(name: "P59", initials: "P4", category: .friend, age: 30)
+        let p59 = Person(name: "P59", initials: "P4", category: .friend)
         let part59 = AssessmentParticipant(person: p59, percentTimeSpent: 0.25)
         let opt59 = SurveyOption(id: "o59", text: "59%", rawScoreValue: 0.59)
         
@@ -138,7 +138,7 @@ struct DomainModelAndScoringTests {
 
     @Test("TEST-MOD-02D: Scoring engine gracefully handles empty answers without NaN or crashes")
     func testScoringEmptyAnswersFallback() {
-        let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)
+        let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner)
         let participant = AssessmentParticipant(person: person, percentTimeSpent: 1.0)
         
         let engine = FlexibleScoringEngine()
@@ -156,8 +156,8 @@ struct DomainModelAndScoringTests {
 
     @Test("TEST-MOD-02E: Frequency-weighted distribution normalizes skewed participant weights accurately")
     func testFrequencyWeightedDistribution() {
-        let personA = Person(name: "Partner", initials: "P", category: .partner, age: 30)
-        let personB = Person(name: "Coworker", initials: "C", category: .coworker, age: 40)
+        let personA = Person(name: "Partner", initials: "P", category: .partner)
+        let personB = Person(name: "Coworker", initials: "C", category: .coworker)
         
         // 80% time with high-risk person, 20% time with safe person
         let participants = [
@@ -183,5 +183,56 @@ struct DomainModelAndScoringTests {
         #expect(result.safetyDistribution.safePercentage == 0.20)
         #expect(result.safetyDistribution.highRiskPercentage == 0.80)
         #expect(result.safetyDistribution.moderatePercentage == 0.0)
+    }
+
+    @Test("Five people answering all 20 questions at maximum produce 125 points per C.A.R.E. category")
+    func testTwentyQuestionCategoryMaximum() {
+        let people = Array(Person.mockFigmaContacts.prefix(5))
+        let participants = people.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
+        let answers = Dictionary(uniqueKeysWithValues: people.map { person in
+            (person.id, Dictionary(uniqueKeysWithValues: SurveyQuestion.full20QuestionBank.map { question in
+                (question.id, question.options.last!)
+            }))
+        })
+
+        let result = FlexibleScoringEngine().calculateResult(
+            for: AssessmentSessionState(
+                participants: participants,
+                recordedAnswers: answers
+            )
+        )
+
+        for domain in CAREDomain.allCases {
+            #expect(abs((result.domainScores[domain]?.earnedPoints ?? 0) - 125) < 0.001)
+            #expect(result.domainScores[domain]?.maxPossiblePoints == 125)
+        }
+        #expect(ResultsV2Metrics.totalScore(result) == 500)
+    }
+
+    @Test("Exactly five distinct relationships are required to begin an assessment")
+    func testRequiredRelationshipCount() {
+        #expect(!AssessmentSessionState.canStart(with: 0))
+        #expect(!AssessmentSessionState.canStart(with: 4))
+        #expect(AssessmentSessionState.canStart(with: 5))
+        #expect(!AssessmentSessionState.canStart(with: 6))
+    }
+
+    @Test("Category totals sum raw points independently of relationship time shares")
+    func testCategoryRawPointsIgnoreTimeAllocation() {
+        let people = Array(Person.mockFigmaContacts.prefix(5))
+        let participants = people.enumerated().map { index, person in
+            AssessmentParticipant(person: person, percentTimeSpent: index == 0 ? 0.80 : 0.05)
+        }
+        let questions = SurveyQuestion.full20QuestionBank
+        let answers = Dictionary(uniqueKeysWithValues: people.enumerated().map { index, person in
+            (person.id, Dictionary(uniqueKeysWithValues: questions.map { question in
+                (question.id, question.options[index])
+            }))
+        })
+        let result = FlexibleScoringEngine().computeResult(participants: participants, recordedAnswers: answers, questions: questions)
+        for domain in CAREDomain.allCases {
+            #expect(result.domainScores[domain]?.earnedPoints == 75)
+            #expect(result.domainScores[domain]?.maxPossiblePoints == 125)
+        }
     }
 }

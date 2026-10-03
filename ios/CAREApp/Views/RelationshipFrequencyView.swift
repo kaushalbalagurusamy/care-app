@@ -5,13 +5,13 @@ public struct RelationshipFrequencyView: View {
     public let router: AppRouter
     public let selectedPeople: [Person]
     @Binding public var allocations: [ParticipantAllocation]
-    public let onProceed: ([AssessmentParticipant]) -> Void
+    public let onProceed: ([AssessmentParticipant]) -> Bool
     
     public init(
         router: AppRouter,
         selectedPeople: [Person],
         allocations: Binding<[ParticipantAllocation]>,
-        onProceed: @escaping ([AssessmentParticipant]) -> Void
+        onProceed: @escaping ([AssessmentParticipant]) -> Bool
     ) {
         self.router = router
         self.selectedPeople = selectedPeople
@@ -51,19 +51,17 @@ public struct RelationshipFrequencyView: View {
                     PrimaryButton(
                         title: "Next",
                         trailingIcon: "arrow.right",
+                        isEnabled: AssessmentSessionState.canStart(with: selectedPeople.count) && allocations.count == AssessmentSessionState.requiredParticipantCount,
                         action: {
                             // Map allocations back to AssessmentParticipants
                             var participants: [AssessmentParticipant] = []
                             for alloc in allocations {
                                 if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
                                     participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                                } else {
-                                    // Fallback
-                                    let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
-                                    participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
                                 }
                             }
-                            onProceed(participants)
+                            guard AssessmentSessionState.canStart(with: participants) else { return }
+                            guard onProceed(participants) else { return }
                             router.navigate(to: .personTransition)
                         }
                     )
@@ -77,7 +75,7 @@ public struct RelationshipFrequencyView: View {
             .background(Theme.Colors.background)
             .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            if allocations.isEmpty {
+            if Set(allocations.map(\.id)) != Set(selectedPeople.map(\.id)) {
                 setupInitialAllocations()
             }
         }
@@ -137,7 +135,7 @@ public struct RelationshipFrequencyView: View {
                 router: AppRouter(),
                 selectedPeople: Person.mockFigmaContacts,
                 allocations: $sampleAllocations,
-                onProceed: { _ in }
+                onProceed: { _ in true }
             )
         }
     }

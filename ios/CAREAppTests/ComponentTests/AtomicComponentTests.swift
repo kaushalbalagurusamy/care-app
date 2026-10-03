@@ -63,7 +63,7 @@ struct AtomicComponentTests {
     @Test("TEST-CMP-06: IndividualResultCard initializes with normalized score")
     func testIndividualResultCardInit() {
         let result = IndividualResult(
-            participant: AssessmentParticipant(person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)),
+            participant: AssessmentParticipant(person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner)),
             normalizedScore: 83.0,
             safetyTier: .healthy,
             domainBreakdown: [.calm: 22.0, .accepted: 20.0, .resonant: 18.0, .energetic: 23.0]

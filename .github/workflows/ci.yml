@@ -7,6 +7,36 @@ on:
     branches: [ main ]
 
 jobs:
+  ios-test:
+    name: iOS Simulator Tests
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select an available iPhone simulator
+        run: |
+          xcodebuild -version
+          SIMULATOR_ID=$(xcrun simctl list -j devices available | python3 -c 'import json,sys; devices=json.load(sys.stdin)["devices"]; phones=[d for runtime,group in devices.items() if runtime.startswith("com.apple.CoreSimulator.SimRuntime.iOS-") for d in group if d["name"].startswith("iPhone") and d["isAvailable"]]; preferred=next((d for d in phones if "Pro" in d["name"]), None); chosen=preferred or (phones[0] if phones else None); assert chosen, "No available iPhone simulator"; print(chosen["udid"])')
+          echo "SIMULATOR_ID=$SIMULATOR_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$SIMULATOR_ID"
+          xcrun simctl bootstatus "$SIMULATOR_ID" -b
+      - name: Run complete iOS evaluation suite
+        run: |
+          xcodebuild test \
+            -project ios/CAREApp.xcodeproj \
+            -scheme CAREApp \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
+            -parallel-testing-enabled NO \
+            -resultBundlePath "$RUNNER_TEMP/care-tests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Preserve test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: care-ios-xcresult
+          path: ${{ runner.temp }}/care-tests.xcresult
+          if-no-files-found: ignore
+
   backend-test:
     name: Backend Tests & Lint
     runs-on: ubuntu-latest

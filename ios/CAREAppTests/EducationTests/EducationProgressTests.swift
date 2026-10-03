@@ -5,6 +5,37 @@ import Foundation
 // MARK: - Phase 4: Education Progress Tests (TEST-EDP-01 through TEST-EDP-03)
 @Suite("Phase 4: Education Progress Tracking Test Suite")
 struct EducationProgressTests {
+
+    @Test("Quiz draft restores the same questions, answer and cursor, then discards")
+    @MainActor
+    func testQuizDraftRoundTrip() throws {
+        let container = StorageContainerFactory.createInMemoryContainer()
+        let store = try UserDraftStore(container: container)
+        let draft = QuizDraft(topicSlug: .relationalCulturalTheory, questionIDs: ["first", "second", "third"], questionIndex: 1, selectedOptionLetter: "B", hasSubmitted: true, score: 1)
+        try store.saveQuiz(draft)
+
+        let reopened = try UserDraftStore(container: container)
+        #expect(reopened.quiz(for: .relationalCulturalTheory) == draft)
+        try reopened.discardQuiz(for: .relationalCulturalTheory)
+        #expect(try UserDraftStore(container: container).quiz(for: .relationalCulturalTheory) == nil)
+    }
+
+    @Test("Quiz result and draft removal commit together and cannot double count")
+    @MainActor
+    func testAtomicQuizCompletion() async throws {
+        let container = StorageContainerFactory.createInMemoryContainer()
+        let drafts = try UserDraftStore(container: container)
+        let repo = SwiftDataEducationProgressRepository(store: drafts)
+        try drafts.saveQuiz(QuizDraft(topicSlug: .relationalCulturalTheory, questionIDs: ["one", "two", "three"], score: 2))
+        try await repo.recordQuizSessionResult(slug: .relationalCulturalTheory, questionIds: ["one", "two", "three"], score: 2, totalQuestions: 3)
+        #expect(try await repo.fetchProgress(for: .relationalCulturalTheory).quizAttemptsCount == 1)
+        #expect(drafts.quiz(for: .relationalCulturalTheory) == nil)
+        let reopened = try UserDraftStore(container: container)
+        #expect(try await SwiftDataEducationProgressRepository(store: reopened).fetchProgress(for: .relationalCulturalTheory).quizAttemptsCount == 1)
+        await #expect(throws: CocoaError.self) {
+            try await repo.recordQuizSessionResult(slug: .relationalCulturalTheory, questionIds: ["one", "two", "three"], score: 2, totalQuestions: 3)
+        }
+    }
     
     @Test("TEST-EDP-01: Mark topic as completed updates repository and count")
     func testMarkTopicCompleted() async throws {

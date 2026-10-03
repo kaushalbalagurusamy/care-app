@@ -13,7 +13,7 @@ struct StorageEngineTests {
         let context = container.mainContext
         
         // 1. Create
-        let contact = StoredContact(name: "Sarah Mitchell", initials: "SM", categoryRaw: "partner", age: 32)
+        let contact = StoredContact(name: "Sarah Mitchell", initials: "SM", categoryRaw: "partner")
         context.insert(contact)
         try context.save()
         
@@ -89,13 +89,13 @@ struct StorageEngineTests {
         
         // Pre-populate with 50 contacts
         for i in 1...50 {
-            let p = Person(name: "Contact \(i)", initials: "C\(i)", category: .friend, age: 25)
+            let p = Person(name: "Contact \(i)", initials: "C\(i)", category: .friend)
             _ = try await repo.createContact(p)
         }
         #expect(try await repo.fetchContactCount() == 50)
         
         // Attempting to insert 51st contact must throw StorageLimitError
-        let overflowPerson = Person(name: "Overflow Person", initials: "OP", category: .coworker, age: 30)
+        let overflowPerson = Person(name: "Overflow Person", initials: "OP", category: .coworker)
         
         var threwExpectedError = false
         do {
@@ -110,19 +110,16 @@ struct StorageEngineTests {
         #expect(try await repo.fetchContactCount() == 50)
     }
 
-    @Test("TEST-STO-05: LocalDeviceRepository auto-prunes oldest assessment when reaching 50-session ceiling")
+    @Test("TEST-STO-05: LocalDeviceRepository retains every historical assessment")
     @MainActor
     func testAssessmentLimitAndPruning() async throws {
         let container = StorageContainerFactory.createInMemoryContainer()
-        let repo = LocalDeviceRepository(
-            modelContainer: container,
-            maxAssessments: 3,
-            autoPruneAssessments: true
-        )
+        let repo = LocalDeviceRepository(modelContainer: container)
         
-        let oldestDate = Date().addingTimeInterval(-10000)
-        let middleDate = Date().addingTimeInterval(-5000)
-        let recentDate = Date()
+        let baseDate = Date(timeIntervalSince1970: 1_700_000_000)
+        let oldestDate = baseDate.addingTimeInterval(-4 * 86_400)
+        let middleDate = baseDate.addingTimeInterval(-3 * 86_400)
+        let recentDate = baseDate.addingTimeInterval(-2 * 86_400)
         
         let res1 = AssessmentResult(
             domainScores: [:],
@@ -148,19 +145,55 @@ struct StorageEngineTests {
         try await repo.saveAssessmentResult(res3)
         #expect(try await repo.fetchHistoryCount() == 3)
         
-        // 4th session insertion auto-prunes res1 (the oldest session)
+        // A later assessment must never make an older trend point lose its detail page.
         let res4 = AssessmentResult(
             domainScores: [:],
             safetyDistribution: RelationalSafetyDistribution(safePercentage: 0.9, moderatePercentage: 0.1, highRiskPercentage: 0.0),
             individualResults: [],
-            timestamp: Date().addingTimeInterval(100)
+            timestamp: baseDate.addingTimeInterval(-86_400)
         )
         try await repo.saveAssessmentResult(res4)
         
-        #expect(try await repo.fetchHistoryCount() == 3)
+        #expect(try await repo.fetchHistoryCount() == 4)
         let history = try await repo.fetchAssessmentHistory()
-        #expect(!history.contains(where: { $0.id == res1.id }))
+        #expect(history.contains(where: { $0.id == res1.id }))
         #expect(history.contains(where: { $0.id == res4.id }))
+    }
+
+    @Test("W11: the production repository keeps the first detail record after 51 assessments")
+    @MainActor
+    func testHistoricalResultsRemainAfterFormerFiftyRecordLimit() async throws {
+        let repo = LocalDeviceRepository(modelContainer: StorageContainerFactory.createInMemoryContainer())
+        var firstID: UUID?
+        for index in 0..<51 {
+            let result = AssessmentResult(
+                domainScores: [:],
+                safetyDistribution: RelationalSafetyDistribution(safePercentage: 1, moderatePercentage: 0, highRiskPercentage: 0),
+                individualResults: [],
+                timestamp: Date(timeIntervalSince1970: Double(index * 86_400))
+            )
+            if index == 0 { firstID = result.id }
+            try await repo.saveAssessmentResult(result)
+        }
+        let history = try await repo.fetchAssessmentHistory()
+        #expect(history.count == 51)
+        #expect(history.contains(where: { $0.id == firstID }))
+    }
+
+    @Test("W07: alternate assessment repository writer also rejects a second result on the same local day")
+    @MainActor
+    func testRepositoryRejectsSecondAssessmentToday() async throws {
+        let repo = LocalDeviceRepository(modelContainer: StorageContainerFactory.createInMemoryContainer())
+        let timestamp = Date(timeIntervalSince1970: 1_700_000_000)
+        let first = AssessmentResult(domainScores: [:], safetyDistribution: .init(safePercentage: 1, moderatePercentage: 0, highRiskPercentage: 0), individualResults: [], timestamp: timestamp)
+        let second = AssessmentResult(domainScores: [:], safetyDistribution: .init(safePercentage: 0, moderatePercentage: 1, highRiskPercentage: 0), individualResults: [], timestamp: timestamp.addingTimeInterval(60))
+        try await repo.saveAssessmentResult(first)
+        do {
+            try await repo.saveAssessmentResult(second)
+            Issue.record("A second assessment on the same day was saved")
+        } catch AssessmentDailyLimitError.alreadyCompletedToday {
+            #expect(try await repo.fetchHistoryCount() == 1)
+        }
     }
 
     @Test("TEST-STO-06: Maximum capacity storage footprint benchmark strictly conforms to < 500 KB ceiling")
@@ -171,7 +204,7 @@ struct StorageEngineTests {
         
         // Populate max 50 contacts
         for i in 1...50 {
-            let contact = StoredContact(name: "Person Number \(i)", initials: "P\(i)", categoryRaw: "friend", age: 25 + (i % 20))
+            let contact = StoredContact(name: "Person Number \(i)", initials: "P\(i)", categoryRaw: "friend\(i % 20)")
             context.insert(contact)
         }
         

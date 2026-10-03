@@ -48,6 +48,9 @@ extension Theme {
         
         /// 15pt Medium / Regular - Standard body copy & options text
         public static let body: Font = poppins(.regular, size: 15)
+
+        /// Introductory copy directly below a screen title.
+        public static let screenSubtitle: Font = poppins(.regular, size: 14)
         
         /// 13pt SemiBold - Home pill label & Streak text (Figma 5:14, 5:49)
         public static let menuLabel: Font = poppins(.semiBold, size: 13)

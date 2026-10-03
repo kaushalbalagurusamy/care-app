@@ -4,10 +4,22 @@ import SwiftUI
 public struct PersonalizedActionPlanView: View {
     public let router: AppRouter
     public let result: AssessmentResult
+    @State private var isShowingComingSoon = false
     
-    public init(router: AppRouter, result: AssessmentResult = .figmaMockResult) {
+    public init(router: AppRouter, result: AssessmentResult) {
         self.router = router
         self.result = result
+    }
+
+    private var focusDomain: CAREDomain {
+        CAREDomain.allCases.min {
+            (result.domainScores[$0]?.percentage ?? 1) < (result.domainScores[$1]?.percentage ?? 1)
+        } ?? .resonant
+    }
+
+    private func scoreLabel(for domain: CAREDomain) -> String {
+        guard let score = result.domainScores[domain] else { return "—/125" }
+        return "\(Int(score.earnedPoints.rounded()))/\(Int(score.maxPossiblePoints.rounded()))"
     }
     
     public var body: some View {
@@ -58,10 +70,10 @@ public struct PersonalizedActionPlanView: View {
                         
                         // 4 Score Badges
                         HStack(spacing: 8) {
-                            PathScoreBadge(title: "Calm", score: "18/125", isHighlighted: false)
-                            PathScoreBadge(title: "Accepted", score: "20/125", isHighlighted: false)
-                            PathScoreBadge(title: "Resonant", score: "15/125", isHighlighted: true)
-                            PathScoreBadge(title: "Energetic", score: "22/125", isHighlighted: false)
+                            PathScoreBadge(title: "Calm", score: scoreLabel(for: .calm), isHighlighted: focusDomain == .calm)
+                            PathScoreBadge(title: "Accepted", score: scoreLabel(for: .accepted), isHighlighted: focusDomain == .accepted)
+                            PathScoreBadge(title: "Resonant", score: scoreLabel(for: .resonant), isHighlighted: focusDomain == .resonant)
+                            PathScoreBadge(title: "Energetic", score: scoreLabel(for: .energetic), isHighlighted: focusDomain == .energetic)
                         }
                         
                         // Focus Highlight Callout
@@ -71,7 +83,7 @@ public struct PersonalizedActionPlanView: View {
                                 .font(.system(size: 14))
                                 .padding(.top, 2)
                             
-                            Text("Focus Highlight: Your personalized plan places special emphasis on strengthening your Resonant Pathway based on your latest assessment.")
+                            Text("Focus Highlight: Your personalized plan places special emphasis on strengthening your \(focusDomain.title) Pathway based on your latest assessment.")
                                 .font(Theme.Typography.poppins(.regular, size: 13))
                                 .foregroundColor(Theme.Colors.textPrimary)
                                 .lineSpacing(2)
@@ -79,6 +91,7 @@ public struct PersonalizedActionPlanView: View {
                         .padding(12)
                         .background(Color(hex: "#FEF3C7").opacity(0.6))
                         .cornerRadius(12)
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(hex: "#F2B84B"), lineWidth: 1.5))
                     }
                     .padding(16)
                     .background(Theme.Colors.cardSurface)
@@ -104,7 +117,7 @@ public struct PersonalizedActionPlanView: View {
                             .accessibilityIdentifier("wiredToConnectBookLink")
                         }
                         
-                        Text("Created in collaboration with Dr. Amy Banks, this tailored workbook provides specific daily exercises calibrated directly to your neural pathway scores.")
+                        Text("Created in collaboration with Dr. Amy Banks, this tailored action plan provides specific daily exercises calibrated directly from your neural pathway scores.")
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(3)
@@ -138,11 +151,9 @@ public struct PersonalizedActionPlanView: View {
                 Button(action: {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
+                    isShowingComingSoon = true
                 }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "creditcard.fill")
-                        Text("Purchase Now — $9.99")
-                    }
+                    Text("Coming Soon")
                     .font(Theme.Typography.buttonLabel)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -152,7 +163,7 @@ public struct PersonalizedActionPlanView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
-                .accessibilityIdentifier("PurchasePlanButton")
+                .accessibilityIdentifier("ComingSoonPlanButton")
                 
                 Button(action: {
                     let generator = UIImpactFeedbackGenerator(style: .light)
@@ -185,6 +196,11 @@ public struct PersonalizedActionPlanView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())
+        .alert("Coming soon", isPresented: $isShowingComingSoon) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This feature is coming soon.")
+        }
     }
 }
 
@@ -218,5 +234,5 @@ private struct PathScoreBadge: View {
 
 // MARK: - Previews
 #Preview("Personalized Action Plan View") {
-    PersonalizedActionPlanView(router: AppRouter())
+    PersonalizedActionPlanView(router: AppRouter(), result: .figmaMockResult)
 }

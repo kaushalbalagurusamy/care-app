@@ -2,18 +2,20 @@ import SwiftUI
 
 // MARK: - User Storage & Data Privacy Management View
 public struct StorageSettingsView: View {
+    public let onDataCleared: (String) -> Void
     @Environment(AppEnvironment.self) private var appEnvironment
+    @Environment(ProfileSettingsStore.self) private var profileSettings
     @Environment(\.dismiss) private var dismiss
     
     @State private var assessmentCount: Int = 0
     @State private var contactCount: Int = 0
-    @State private var approximateStorageKB: Int = 30
     @State private var isRemindersEnabled: Bool = false
     @State private var isAppLockToggle: Bool = false
     @State private var isShowingPurgeConfirmation: Bool = false
     @State private var isShowingResetContactsConfirmation: Bool = false
+    @State private var storageError: String?
     
-    public init() {}
+    public init(onDataCleared: @escaping (String) -> Void = { _ in }) { self.onDataCleared = onDataCleared }
     
     public var body: some View {
         NavigationStack {
@@ -63,36 +65,42 @@ public struct StorageSettingsView: View {
             ) {
                 Button("Delete All History", role: .destructive) {
                     Task {
-                        try? await appEnvironment.assessmentRepo.clearAllHistory()
-                        try? await appEnvironment.educationRepo.resetProgress()
-                        await refreshStorageMetrics()
+                        do {
+                            try appEnvironment.draftStore.deleteAssessments()
+                            AssessmentSessionState.clearDraft()
+                            onDataCleared("assessments")
+                            await refreshStorageMetrics()
+                        } catch { storageError = "Assessment history could not be cleared. Please try again." }
                     }
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This action will permanently delete all historical assessment sessions and participant scores across this device and iCloud. This cannot be undone.")
+                Text("This permanently deletes assessment history and the current draft on this device. iCloud sync is not enabled.")
             }
             .confirmationDialog(
-                "Reset Contacts to Defaults?",
+                "Delete Saved Contacts?",
                 isPresented: $isShowingResetContactsConfirmation,
                 titleVisibility: .visible
             ) {
-                Button("Reset Contacts", role: .destructive) {
+                Button("Delete Saved Contacts", role: .destructive) {
                     Task {
-                        let existing = try? await appEnvironment.contactsRepo.fetchContacts()
-                        for c in existing ?? [] {
-                            try? await appEnvironment.contactsRepo.deleteContact(id: c.id)
+                        do {
+                            try appEnvironment.draftStore.deleteRelationships()
+                            AssessmentSessionState.clearDraft()
+                            onDataCleared("relationships")
+                            await refreshStorageMetrics()
+                        } catch {
+                            storageError = "Some relationships could not be deleted. Please try again."
                         }
-                        for p in Person.mockFigmaContacts {
-                            _ = try? await appEnvironment.contactsRepo.createContact(p)
-                        }
-                        await refreshStorageMetrics()
                     }
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This will restore the contact rolodex to default sample contacts.")
+                Text("This deletes saved contacts and their app-stored photos. Names in past assessment results remain until you also delete assessment history or clear all data.")
             }
+            .alert("Storage update failed", isPresented: Binding(get: { storageError != nil }, set: { if !$0 { storageError = nil } })) {
+                Button("OK", role: .cancel) { storageError = nil }
+            } message: { Text(storageError ?? "") }
         }
     }
     
@@ -111,13 +119,13 @@ public struct StorageSettingsView: View {
             
             VStack(spacing: Theme.Spacing.small) {
                 metricRow(
-                    title: "Estimated Data Footprint",
-                    value: "\(approximateStorageKB) KB / 500 KB limit",
+                    title: "Saved data",
+                    value: "On this device",
                     icon: "chart.bar.xaxis"
                 )
                 metricRow(
                     title: "Stored Assessments",
-                    value: "\(assessmentCount) / 50 max",
+                    value: "\(assessmentCount) saved",
                     icon: "list.bullet.clipboard"
                 )
                 metricRow(
@@ -164,7 +172,7 @@ public struct StorageSettingsView: View {
                     if newValue {
                         let granted = try? await appEnvironment.notificationScheduler.requestAuthorization()
                         if granted == true {
-                            try? await appEnvironment.notificationScheduler.scheduleBiWeeklyReminder(preferredHour: 19, preferredWeekday: 1)
+                            try? await appEnvironment.notificationScheduler.scheduleAssessmentReminder(frequency: profileSettings.frequency)
                         } else {
                             isRemindersEnabled = false
                         }
@@ -234,17 +242,31 @@ public struct StorageSettingsView: View {
             HStack {
                 Image(systemName: "lock.shield.fill")
                     .foregroundColor(Theme.Colors.Safety.lowRisk)
-                Text("Zero-Knowledge Security")
+                Text("Local Data & Privacy")
                     .font(Theme.Typography.cardTitle)
                     .foregroundColor(Theme.Colors.textPrimary)
             }
             
             Divider()
             
-            Text("All relational safety scores are hardware-encrypted (AES-256) on your device and synchronized exclusively through your Private iCloud Container with End-to-End Encryption. No third-party servers ever receive your data.")
+            Text("Your profile, contacts, assessments, and progress are saved on this device. CARE does not sync them across devices. Embedded YouTube videos connect to Google when you play them.")
                 .font(Theme.Typography.caption)
                 .foregroundColor(Theme.Colors.textSecondary)
                 .lineSpacing(3)
+
+            NavigationLink {
+                PrivacyDetailsView()
+            } label: {
+                HStack {
+                    Text("How CARE uses your data")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+                .font(Theme.Typography.subheadline)
+                .foregroundColor(Theme.Colors.primary)
+                .frame(minHeight: 44)
+            }
+            .accessibilityIdentifier("PrivacyDetailsLink")
         }
         .padding(Theme.Spacing.large)
         .background(
@@ -287,7 +309,7 @@ public struct StorageSettingsView: View {
             }) {
                 HStack {
                     Image(systemName: "arrow.counterclockwise")
-                    Text("Reset Contacts to Defaults")
+                    Text("Delete Saved Contacts")
                     Spacer()
                 }
                 .font(Theme.Typography.subheadline)
@@ -328,6 +350,61 @@ public struct StorageSettingsView: View {
         contactCount = contacts
         isRemindersEnabled = scheduled
         isAppLockToggle = appEnvironment.appLockManager.isAppLockEnabled
-        approximateStorageKB = max(30, (history * 3) + (contacts * 1) + 20)
+    }
+}
+
+/// App-owned privacy information, available without leaving the app or opening a web browser.
+/// The public App Store privacy-policy URL must be approved and supplied separately.
+public struct PrivacyDetailsView: View {
+    public init() {}
+
+    public var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: Theme.Spacing.large) {
+                section(
+                    "What stays on your device",
+                    "CARE saves your profile name and photo, saved contacts and their photos, assessment answers and results, unfinished quiz and exercise answers, and exercise completion history on this device. CARE does not upload this information to a CARE account or sync it across devices. Your device's own backup settings are managed by iOS."
+                )
+
+                section(
+                    "Photos and videos",
+                    "You choose media with Apple's photo picker. Profile and contact photos are resized and saved in CARE's local data. For unfinished exercises, CARE saves a reference to a selected photo or video when available; the original remains in your Photos library. A selected video may be copied temporarily on this device for playback."
+                )
+
+                section(
+                    "When you use other services",
+                    "Playing an embedded YouTube video loads Google's player, which may receive device, network, and playback information under Google's policies. If you choose to share an exercise by text, iOS opens Messages with the content you selected; you decide whether to send it. Opening an outside link also takes you to that provider."
+                )
+
+                Link("Read Google's Privacy Policy", destination: URL(string: "https://policies.google.com/privacy")!)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundColor(Theme.Colors.primary)
+                    .accessibilityIdentifier("GooglePrivacyLink")
+
+                section(
+                    "Your choices and deletion",
+                    "Photo selection and messaging are optional. You can manage photo access, notifications, and Face ID in iOS Settings. CARE keeps local records until you delete them. Completed exercises keep dates and counts, not your written answers. In Profile → Privacy you can clear profile information, saved contacts, assessment data, or all CARE data. Clearing saved contacts alone leaves their names in past assessment results; also clear assessments or all data to remove those names from this device."
+                )
+            }
+            .padding(Theme.Spacing.large)
+        }
+        .background(Theme.Colors.background.ignoresSafeArea())
+        .navigationTitle("Privacy & Data Use")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func section(_ title: String, _ text: String) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.small) {
+            Text(title)
+                .font(Theme.Typography.cardTitle)
+                .foregroundColor(Theme.Colors.textPrimary)
+            Text(text)
+                .font(Theme.Typography.subheadline)
+                .foregroundColor(Theme.Colors.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(Theme.Spacing.large)
+        .background(Theme.Colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
     }
 }

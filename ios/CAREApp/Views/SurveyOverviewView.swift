@@ -24,7 +24,7 @@ public struct SurveyOverviewView: View {
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Review guidelines for your C.A.R.E. assessment.")
-                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .font(Theme.Typography.screenSubtitle)
                             .foregroundColor(Theme.Colors.textSecondary)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)

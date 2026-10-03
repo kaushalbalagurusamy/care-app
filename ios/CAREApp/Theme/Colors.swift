@@ -69,10 +69,16 @@ public enum Theme {
         
         // C.A.R.E. Assessment Domain Categories
         public enum Domains {
-            public static let calm = Color(hex: "#ECDF96")        // C - Calm
-            public static let accepted = Color(hex: "#F3B0BD")    // A - Accepted
-            public static let resonant = Color(hex: "#ABDCFB")    // R - Resonant
-            public static let energetic = Color(hex: "#6CBB9E")   // E - Energetic
+            // Exact badge fills and lettering from Jamie's Exercises frame (214:4).
+            public static let calm = Color(hex: "#93C5FD")
+            public static let accepted = Color(hex: "#99F6E4")
+            public static let resonant = Color(hex: "#D8B4FE")
+            public static let energetic = Color(hex: "#FED7AA")
+
+            public static let calmAccent = Color(hex: "#246BB8")
+            public static let acceptedAccent = Color(hex: "#107A57")
+            public static let resonantAccent = Color(hex: "#6B30CE")
+            public static let energeticAccent = Color(hex: "#C26A14")
         }
     }
 }

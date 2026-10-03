@@ -5,27 +5,62 @@ public struct PersonTransitionView: View {
     public let router: AppRouter
     public let session: AssessmentSessionState
     public var onStart: (() -> Void)? = nil
+    public var onPreviousQuestion: (() -> Void)? = nil
+    public var onDiscardAssessment: (() throws -> Void)? = nil
+    @State private var showSaveConfirmation = false
+    @State private var pendingDestination: AppRoute?
+    @State private var discardError: String?
     
     public init(
         router: AppRouter,
         session: AssessmentSessionState,
-        onStart: (() -> Void)? = nil
+        onStart: (() -> Void)? = nil,
+        onPreviousQuestion: (() -> Void)? = nil,
+        onDiscardAssessment: (() throws -> Void)? = nil
     ) {
         self.router = router
         self.session = session
         self.onStart = onStart
+        self.onPreviousQuestion = onPreviousQuestion
+        self.onDiscardAssessment = onDiscardAssessment
     }
     
     private var currentParticipant: AssessmentParticipant? {
         session.currentParticipant
     }
+
+    private func requestLeave(to destination: AppRoute?) {
+        pendingDestination = destination
+        if session.hasStarted {
+            showSaveConfirmation = true
+        } else {
+            navigateAway()
+        }
+    }
+
+    private func navigateAway() {
+        if let pendingDestination {
+            router.popToRoot()
+            if pendingDestination != .home { router.navigate(to: pendingDestination) }
+        } else {
+            router.pop()
+        }
+    }
     
     public var body: some View {
+        ZStack {
         VStack(spacing: 0) {
             // Header Bar
             HeaderNavBar(
                 showBackButton: true,
-                onBack: { router.pop() }
+                onBack: {
+                    if session.currentParticipantIndex > 0, let onPreviousQuestion { onPreviousQuestion() }
+                    else { requestLeave(to: nil) }
+                },
+                onHome: { requestLeave(to: .home) },
+                onSparkle: { requestLeave(to: .personalizedActionPlan) },
+                onChart: { requestLeave(to: .pastResults) },
+                onProfile: { requestLeave(to: .profile) }
             )
             
             ScrollView(showsIndicators: false) {
@@ -62,7 +97,7 @@ public struct PersonTransitionView: View {
                         
                         // Metadata Pills
                         HStack(spacing: 8) {
-                            if let category = currentParticipant?.person.category.rawValue {
+                            if let category = currentParticipant?.person.displayCategory, !category.isEmpty {
                                 Text(category)
                                     .font(Theme.Typography.poppins(.medium, size: 12))
                                     .foregroundColor(Theme.Colors.textPrimary)
@@ -72,15 +107,6 @@ public struct PersonTransitionView: View {
                                     .clipShape(Capsule())
                             }
                             
-                            if let age = currentParticipant?.person.age {
-                                Text("Age: \(age)")
-                                    .font(Theme.Typography.poppins(.medium, size: 12))
-                                    .foregroundColor(Theme.Colors.textPrimary)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Theme.Colors.surfaceSecondary)
-                                    .clipShape(Capsule())
-                            }
                         }
                         .padding(.top, 2)
                     }
@@ -139,6 +165,27 @@ public struct PersonTransitionView: View {
         }
         .background(Theme.Colors.background)
         .toolbar(.hidden, for: .navigationBar)
+        .alert("Assessment not discarded", isPresented: Binding(get: { discardError != nil }, set: { if !$0 { discardError = nil } })) {
+            Button("OK", role: .cancel) { discardError = nil }
+        } message: { Text(discardError ?? "") }
+        if showSaveConfirmation {
+            SaveAssessmentConfirmationView(
+                onSaveAssessment: {
+                    showSaveConfirmation = false
+                    navigateAway()
+                },
+                onDiscardAssessment: {
+                    do {
+                        try onDiscardAssessment?()
+                        showSaveConfirmation = false
+                        navigateAway()
+                    } catch {
+                        discardError = "Your saved assessment could not be discarded. Please try again."
+                    }
+                }
+            )
+        }
+        }
     }
 }
 

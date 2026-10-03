@@ -97,7 +97,7 @@ public enum AppIcon {
         switch self {
         case .home: return "Home"
         case .chart: return "Past Results"
-        case .profile: return "Settings"
+        case .profile: return "Profile"
         case .back: return "Back"
         case .info: return "Information"
         case .checkmark: return "Completed"
@@ -124,4 +124,3 @@ public struct CalendarIcon: View {
         AppIcon.calendar.view(size: size, color: color)
     }
 }
-

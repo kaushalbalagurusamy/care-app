@@ -60,8 +60,14 @@ struct StorageManagementTests {
         let repo = LocalDeviceRepository(modelContainer: container)
         
         // Save 5 results
-        for _ in 1...5 {
-            try await repo.saveAssessmentResult(AssessmentResult.figmaMockResult)
+        for offset in 1...5 {
+            let source = AssessmentResult.figmaMockResult
+            try await repo.saveAssessmentResult(AssessmentResult(
+                domainScores: source.domainScores,
+                safetyDistribution: source.safetyDistribution,
+                individualResults: source.individualResults,
+                timestamp: source.timestamp.addingTimeInterval(Double(offset * 86_400))
+            ))
         }
         #expect(try await repo.fetchHistoryCount() == 5)
         
@@ -77,8 +83,14 @@ struct StorageManagementTests {
         let container = StorageContainerFactory.createInMemoryContainer()
         let repo = LocalDeviceRepository(modelContainer: container)
         
-        for _ in 1...10 {
-            try await repo.saveAssessmentResult(AssessmentResult.figmaMockResult)
+        for offset in 1...10 {
+            let source = AssessmentResult.figmaMockResult
+            try await repo.saveAssessmentResult(AssessmentResult(
+                domainScores: source.domainScores,
+                safetyDistribution: source.safetyDistribution,
+                individualResults: source.individualResults,
+                timestamp: source.timestamp.addingTimeInterval(Double(offset * 86_400))
+            ))
         }
         for p in Person.mockFigmaContacts {
             _ = try await repo.createContact(p)

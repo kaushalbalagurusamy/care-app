@@ -75,17 +75,17 @@ public struct ParallelSlitDonutSegmentShape: Shape {
         let deltaI_fillet = min(r_c / innerRadius, (innerEnd - innerStart) / 2.5)
         
         // 4 Corner Vertices (where the parallel straight edges meet the outer and inner circles)
-        let v_outer_start = CGPoint(x: center.x + outerRadius * cos(outerStart), y: center.y + outerRadius * sin(outerStart))
-        let v_outer_end = CGPoint(x: center.x + outerRadius * cos(outerEnd), y: center.y + outerRadius * sin(outerEnd))
-        let v_inner_end = CGPoint(x: center.x + innerRadius * cos(innerEnd), y: center.y + innerRadius * sin(innerEnd))
-        let v_inner_start = CGPoint(x: center.x + innerRadius * cos(innerStart), y: center.y + innerRadius * sin(innerStart))
+        let v_outer_start = CGPoint(x: center.x + outerRadius * cos(CGFloat(outerStart)), y: center.y + outerRadius * sin(CGFloat(outerStart)))
+        let v_outer_end = CGPoint(x: center.x + outerRadius * cos(CGFloat(outerEnd)), y: center.y + outerRadius * sin(CGFloat(outerEnd)))
+        let v_inner_end = CGPoint(x: center.x + innerRadius * cos(CGFloat(innerEnd)), y: center.y + innerRadius * sin(CGFloat(innerEnd)))
+        let v_inner_start = CGPoint(x: center.x + innerRadius * cos(CGFloat(innerStart)), y: center.y + innerRadius * sin(CGFloat(innerStart)))
         
         // Arc start and end endpoints (inset by fillet angle)
-        let p_outer_arc_start = CGPoint(x: center.x + outerRadius * cos(outerStart + deltaO_fillet), y: center.y + outerRadius * sin(outerStart + deltaO_fillet))
-        let p_outer_arc_end = CGPoint(x: center.x + outerRadius * cos(outerEnd - deltaO_fillet), y: center.y + outerRadius * sin(outerEnd - deltaO_fillet))
+        let p_outer_arc_start = CGPoint(x: center.x + outerRadius * cos(CGFloat(outerStart + deltaO_fillet)), y: center.y + outerRadius * sin(CGFloat(outerStart + deltaO_fillet)))
+        let p_outer_arc_end = CGPoint(x: center.x + outerRadius * cos(CGFloat(outerEnd - deltaO_fillet)), y: center.y + outerRadius * sin(CGFloat(outerEnd - deltaO_fillet)))
         
-        let p_inner_arc_end = CGPoint(x: center.x + innerRadius * cos(innerEnd - deltaI_fillet), y: center.y + innerRadius * sin(innerEnd - deltaI_fillet))
-        let p_inner_arc_start = CGPoint(x: center.x + innerRadius * cos(innerStart + deltaI_fillet), y: center.y + innerRadius * sin(innerStart + deltaI_fillet))
+        let p_inner_arc_end = CGPoint(x: center.x + innerRadius * cos(CGFloat(innerEnd - deltaI_fillet)), y: center.y + innerRadius * sin(CGFloat(innerEnd - deltaI_fillet)))
+        let p_inner_arc_start = CGPoint(x: center.x + innerRadius * cos(CGFloat(innerStart + deltaI_fillet)), y: center.y + innerRadius * sin(CGFloat(innerStart + deltaI_fillet)))
         
         // Straight leading edge (outerEnd -> innerEnd) unit direction
         let v_lead = CGPoint(x: v_inner_end.x - v_outer_end.x, y: v_inner_end.y - v_outer_end.y)

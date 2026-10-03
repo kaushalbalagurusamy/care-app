@@ -12,6 +12,7 @@ public struct EducationTopicsView: View {
     public let onHome: (() -> Void)?
     
     @State private var persistedCompletedSlugs: Set<EducationTopicSlug> = []
+    @State private var draftError: String?
     
     public init(
         topics: [EducationTopic]? = nil,
@@ -78,6 +79,19 @@ public struct EducationTopicsView: View {
                                     }
                                 }
                             )
+                            .overlay {
+                                if appEnvironment?.draftStore.quiz(for: topic.slug) != nil {
+                                    InProgressCardOverlay(title: "Quiz in progress", onContinue: {
+                                        router?.navigate(to: .educationQuiz(topic: topic))
+                                    }, onDiscard: {
+                                        do {
+                                            try appEnvironment?.draftStore.discardQuiz(for: topic.slug)
+                                        } catch {
+                                            draftError = "The quiz could not be discarded. Please try again."
+                                        }
+                                    })
+                                }
+                            }
                         }
                     }
                     .padding(.top, 2)
@@ -92,6 +106,9 @@ public struct EducationTopicsView: View {
         .task {
             await loadProgress()
         }
+        .alert("Could not update quiz", isPresented: Binding(get: { draftError != nil }, set: { if !$0 { draftError = nil } })) {
+            Button("OK", role: .cancel) { draftError = nil }
+        } message: { Text(draftError ?? "") }
     }
     
     private func loadProgress() async {
