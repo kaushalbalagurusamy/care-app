@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if !DEBUG
+#error("Paid CARE preview: complete the StoreKit, entitlement, media-rights, and App Review gates in docs/PAID_RELEASE_HANDOFF.md before making a distribution build.")
+#endif
+
 // A native SwiftUI rendering of the individual Figma components. The JSON is
 // exported from the four CARE exercise pages, excluding only the app top bar.
 struct FigmaColor: Decodable {

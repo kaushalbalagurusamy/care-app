@@ -8,6 +8,7 @@ Updated 2026-10-02. This handoff applies to the local `feature/paid-care-action-
 - This is a **design preview**, not a purchasable build. There is no StoreKit purchase, restoration, entitlement, or refund handling. The Action Plan and exercises can currently be opened without payment.
 - The paid branch is committed locally. A verified Git bundle backup is at `../../../outputs/care-paid-preview.bundle`. GitHub publication is pending a private destination or an explicit decision to publish the full source to the public repository; the public push was rejected by automatic approval review.
 - The current iOS app target uses bundle ID `com.careapp.CAREApp`, marketing version `1.0`, and build `7`. Record the **actual** free-release version, build, and commit after the other agent finishes; these values will change.
+- The paid branch has a compile-time guard in `FigmaExerciseScreenView.swift`: Debug builds work for design review, and distribution/Release builds stop with a message pointing to this protocol. The release engineer removes the guard only after the gates below are complete.
 
 ## Jayme's design lane
 
