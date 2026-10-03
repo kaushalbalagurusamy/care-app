@@ -539,6 +539,8 @@ public struct MirrorExerciseView: View {
     @State private var step = 0
     @State private var showCancel = false
     @State private var showVideo = false
+    @State private var showYouTubeConsent = false
+    @State private var consentedToPlayYouTube = false
     @State private var selectedVideo: PhotosPickerItem?
     @State private var videoURL: URL?
     @State private var videoPlayer: AVPlayer?
@@ -591,6 +593,17 @@ public struct MirrorExerciseView: View {
             } else {
                 reflectionCard
             }
+        }
+        .sheet(isPresented: $showYouTubeConsent, onDismiss: {
+            if consentedToPlayYouTube {
+                showVideo = true
+                consentedToPlayYouTube = false
+            }
+        }) {
+            YouTubePlaybackConsentSheet(
+                onPlay: { consentedToPlayYouTube = true; showYouTubeConsent = false },
+                onCancel: { showYouTubeConsent = false }
+            )
         }
         .fullScreenCover(isPresented: $showVideo) {
             ZStack(alignment: .topLeading) {
@@ -678,7 +691,7 @@ public struct MirrorExerciseView: View {
         let scale = cardWidth / 350
         return HStack {
             Spacer(minLength: 0)
-            Button { showVideo = true } label: {
+            Button { showYouTubeConsent = true } label: {
                 VStack(spacing: 16 * scale) {
                     Rectangle()
                         .fill(Color.clear)

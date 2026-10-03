@@ -37,6 +37,10 @@ These are working answers, not a published App Privacy label. Apple says data se
 
 Apple says tracking inside a WebView used for app functionality requires ATT permission and also says apps cannot condition functionality on agreeing to tracking. A simple ATT prompt alone therefore does not resolve what happens when a user declines. Keep the embedded player while investigating a documented nontracking configuration or an equivalent no-tracking viewing path before making a final tracking declaration.
 
+## Embedded-player terms check
+
+The current code uses YouTube's iframe API. YouTube's developer policies require an API client to display a link to YouTube's Terms of Service, state that using the client binds users to those terms, and obtain agreement to an accessible privacy policy before the client feature is used. The local free-release branch now shows an optional pre-play sheet with the CARE policy and YouTube Terms links, plus an explicit Agree & Play action, before either embedded player loads. A user who declines can still complete the exercise. Both playback entry points passed focused simulator UI tests. This is not yet in a TestFlight build and does not settle the separate Apple tracking/ATT question or establish that the full YouTube policy is satisfied.
+
 ## Evidence
 
 - App: `ios/CAREApp/Navigation/AppEnvironment.swift`, `ios/CAREApp/Storage/StorageContainer.swift`, `ios/CAREApp/Views/WatchFunnyExerciseView.swift`, and `ios/CAREApp/Views/AdditionalExerciseViews.swift`.

@@ -11,6 +11,8 @@ public struct WatchFunnyExerciseView: View {
     @Environment(ExerciseProgressStore.self) private var progress: ExerciseProgressStore?
     @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     @State private var activeClip: ExerciseVideoClip?
+    @State private var clipAwaitingConsent: ExerciseVideoClip?
+    @State private var consentedClip: ExerciseVideoClip?
     @State private var selectedVideo: PhotosPickerItem?
     @State private var uploadedPlayer: AVPlayer?
     @State private var uploadedVideoURL: URL?
@@ -137,6 +139,17 @@ public struct WatchFunnyExerciseView: View {
         .alert("Video unavailable", isPresented: Binding(get: { uploadError != nil }, set: { if !$0 { uploadError = nil } })) {
             Button("OK", role: .cancel) { uploadError = nil }
         } message: { Text(uploadError ?? "") }
+        .sheet(item: $clipAwaitingConsent, onDismiss: {
+            if let consentedClip {
+                activeClip = consentedClip
+                self.consentedClip = nil
+            }
+        }) { clip in
+            YouTubePlaybackConsentSheet(
+                onPlay: { consentedClip = clip; clipAwaitingConsent = nil },
+                onCancel: { clipAwaitingConsent = nil }
+            )
+        }
         .fullScreenCover(item: $activeClip) { clip in
             ZStack(alignment: .topTrailing) {
                 Color.black.ignoresSafeArea()
@@ -189,7 +202,7 @@ public struct WatchFunnyExerciseView: View {
     }
 
     private func clipCard(_ clip: ExerciseVideoClip) -> some View {
-        Button { activeClip = clip } label: {
+        Button { clipAwaitingConsent = clip } label: {
             VStack(alignment: .center, spacing: 8) {
                 GeometryReader { geometry in
                     Image(clip.thumbnailAsset)
@@ -226,6 +239,45 @@ public struct WatchFunnyExerciseView: View {
         .frame(width: UIScreen.main.bounds.width - 40)
         .clipped()
         .accessibilityLabel("Play \(clip.title)")
+    }
+}
+
+// The YouTube iframe is loaded only after the user chooses to open it. This
+// disclosure leaves exercise completion available when the user declines.
+struct YouTubePlaybackConsentSheet: View {
+    let onPlay: () -> Void
+    let onCancel: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Before playing this video")
+                .font(Theme.Typography.poppins(.bold, size: 20))
+                .foregroundStyle(Theme.Colors.textPrimary)
+            Text("The embedded YouTube player connects to Google and may share device, network, and playback information. Watching is optional; you can still complete the exercise without it.")
+                .font(Theme.Typography.poppins(.regular, size: 14))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .multilineTextAlignment(.center)
+            HStack(spacing: 18) {
+                Link("CARE Privacy Policy", destination: PrivacyDetailsView.policyURL)
+                Link("YouTube Terms", destination: URL(string: "https://www.youtube.com/t/terms")!)
+            }
+            .font(Theme.Typography.poppins(.medium, size: 13))
+            Text("By choosing Agree & Play, you agree to the linked CARE Privacy Policy and YouTube Terms of Service.")
+                .font(Theme.Typography.poppins(.regular, size: 12))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .multilineTextAlignment(.center)
+            PrimaryButton(title: "Agree & Play Video", action: onPlay)
+                .accessibilityIdentifier("YouTubeAgreeAndPlayButton")
+            Button("Not Now", action: onCancel)
+                .font(Theme.Typography.poppins(.medium, size: 14))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .accessibilityIdentifier("YouTubeNotNowButton")
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
+        .presentationDetents([.height(390)])
+        .presentationDragIndicator(.visible)
     }
 }
 

@@ -373,4 +373,31 @@ final class CAREAppUITests: XCTestCase {
         require(app.staticTexts["Completed"])
         require(app.staticTexts["1"])
     }
+
+    func testYouTubePlayerRequiresOptionalTermsChoice() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.buttons["DoExercise_watch-something-funny"]).tap()
+        require(app.buttons["Play Funny Animal Compilation"]).tap()
+
+        require(app.staticTexts["Before playing this video"])
+        require(app.descendants(matching: .any)["CARE Privacy Policy"])
+        require(app.descendants(matching: .any)["YouTube Terms"])
+        require(app.buttons["YouTubeNotNowButton"]).tap()
+        XCTAssertTrue(app.buttons["Complete Exercise"].isEnabled)
+        XCTAssertFalse(app.staticTexts["Before playing this video"].exists)
+
+    }
+
+    func testMirrorVideoUsesTheSameOptionalTermsChoice() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Resonant"]).tap()
+        require(app.buttons["DoExercise_mirror-emotion"]).tap()
+        require(app.buttons["MirrorEmotionPreviewButton"]).tap()
+
+        require(app.staticTexts["Before playing this video"])
+        require(app.buttons["YouTubeNotNowButton"]).tap()
+        XCTAssertFalse(app.staticTexts["Before playing this video"].exists)
+        XCTAssertTrue(app.buttons["Next"].isEnabled)
+    }
 }
