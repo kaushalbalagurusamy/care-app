@@ -6,20 +6,6 @@ import SwiftData
 @Suite("Exercises Module Data Models & Views Test Suite")
 struct ExercisesModuleTests {
 
-    @Test("Every exercise and choice emoji has bundled color artwork")
-    func testExerciseEmojiArtwork() {
-        for item in ExerciseItem.allExercises {
-            let asset = ExerciseEmojiAsset.name(for: item.emoji)
-            #expect(asset != nil, "Missing artwork mapping for \(item.title)")
-            if let asset { #expect(UIImage(named: asset) != nil, "Missing image \(asset)") }
-        }
-        for emoji in ["😂", "💭", "🫶", "✨", "➕", "🍲", "🎵", "💃", "📸", "😄", "🔥"] {
-            let asset = ExerciseEmojiAsset.name(for: emoji)
-            #expect(asset != nil)
-            if let asset { #expect(UIImage(named: asset) != nil) }
-        }
-    }
-    
     @Test("ExerciseCategory allCases covers all 4 CARE dimensions")
     func testExerciseCategories() {
         let categories = ExerciseCategory.allCases
@@ -27,7 +13,10 @@ struct ExercisesModuleTests {
         #expect(categories.map(\.rawValue) == ["Calm", "Accepted", "Resonant", "Energetic"])
         for cat in categories {
             #expect(!cat.pathwayDescription.isEmpty)
+            #expect(ExerciseItem.allExercises.filter { $0.category == cat }.count == 2,
+                    "The free release has exactly two exercises in each CARE category")
         }
+        #expect(ExerciseItem.allExercises.count == 8)
     }
     
     @Test("Calm exercises start without completed activity")

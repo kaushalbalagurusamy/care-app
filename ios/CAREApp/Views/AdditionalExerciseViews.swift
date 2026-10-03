@@ -5,34 +5,17 @@ import SwiftUI
 import UniformTypeIdentifiers
 import WebKit
 
-// Bundle rendered color glyphs so the exercise artwork does not depend on the
-// active text font's emoji fallback (which can display a missing-glyph box).
-enum ExerciseEmojiAsset {
-    static let names: [String: String] = [
-        "🎬": "clapper", "📷": "camera", "👥": "people", "💬": "chat",
-        "🎥": "video", "💡": "bulb", "⌛": "hourglass", "😂": "laugh",
-        "💭": "thought", "🫶": "heart_hands", "✨": "sparkles", "➕": "plus",
-        "🍲": "stew", "🎵": "music", "💃": "dancer", "📸": "camera_flash",
-        "😄": "smile", "🔥": "fire"
-    ]
-
-    static func name(for emoji: String) -> String? {
-        names[emoji].map { "ExerciseEmoji_\($0)" }
-    }
-}
-
 struct ExerciseEmojiView: View {
     let emoji: String
     let size: CGFloat
 
     var body: some View {
-        Group {
-            if let asset = ExerciseEmojiAsset.name(for: emoji) {
-                Image(asset).resizable().scaledToFit()
-            } else {
-                Image(systemName: "sparkles").resizable().scaledToFit()
-            }
-        }
+        // System text renders Unicode emoji on the device. Keep the explicit
+        // system font so an inherited Poppins style cannot show a missing glyph.
+        Text(emoji)
+        .font(.system(size: size))
+        .lineLimit(1)
+        .minimumScaleFactor(0.8)
         .frame(width: size, height: size)
         .accessibilityLabel(emoji)
     }
