@@ -15,8 +15,6 @@ public struct ExercisesView: View {
             HeaderNavBar(
                 showBackButton: true,
                 showHomeButton: true,
-                showSparkleButton: true,
-                sparklePlacement: .right,
                 accentColor: Theme.Colors.Domains.calmAccent,
                 title: nil
             )
@@ -83,30 +81,6 @@ public struct ExercisesView: View {
                 .padding(.bottom, 24)
             }
             
-            // Bottom Action: Pinned "Unlock Full Book Exercises" Button
-            VStack(spacing: 0) {
-                Divider()
-                    .background(Theme.Colors.dividerSubtle)
-                
-                Button(action: {
-                    let generator = UIImpactFeedbackGenerator(style: .medium)
-                    generator.impactOccurred()
-                    router.navigate(to: .personalizedActionPlan)
-                }) {
-                    Label("Unlock Full Book Exercises", systemImage: "sparkles")
-                        .font(Theme.Typography.poppins(.semiBold, size: 14))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Theme.Colors.primary)
-                        .cornerRadius(14)
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-                .padding(.bottom, 10)
-                .accessibilityIdentifier("UnlockFullBookExercisesButton")
-            }
-            .background(Theme.Colors.background)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())

@@ -45,8 +45,6 @@ public struct ProfileView: View {
             HeaderNavBar(
                 showBackButton: true,
                 showHomeButton: true,
-                showSparkleButton: true,
-                sparklePlacement: .right,
                 title: nil
             )
             

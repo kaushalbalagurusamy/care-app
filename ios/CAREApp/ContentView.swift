@@ -339,10 +339,6 @@ struct ContentView: View {
         case .welcomeAccountSetup:
             WelcomeAccountSetupView(router: router)
             
-        case .personalizedActionPlan:
-            if let latestResult { PersonalizedActionPlanView(router: router, result: latestResult) }
-            else { NoAssessmentResultsView(router: router) }
-            
         case .profile:
             ProfileView(router: router, onDataCleared: { scope in
                 if scope == "relationships" || scope == "all" {

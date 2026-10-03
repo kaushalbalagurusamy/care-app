@@ -146,7 +146,6 @@ public struct SurveyQuestionView: View {
             HeaderNavBar(
                 onBack: { goBackWithinAssessment() },
                 onHome: { requestLeave(to: .home) },
-                onSparkle: { requestLeave(to: .personalizedActionPlan) },
                 onChart: { requestLeave(to: .pastResults) },
                 onProfile: { requestLeave(to: .profile) }
             )

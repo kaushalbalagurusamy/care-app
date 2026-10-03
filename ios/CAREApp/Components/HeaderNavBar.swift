@@ -1,11 +1,5 @@
 import SwiftUI
 
-// MARK: - Sparkle Button Placement Option
-public enum SparklePlacement {
-    case left
-    case right
-}
-
 // MARK: - Reusable High-Fidelity Header Navigation Bar (Figma Frames 5:4, 11:4, 13:4, 29:4, 41:4)
 public struct HeaderNavBar: View {
     @Environment(AppRouter.self) private var router: AppRouter?
@@ -15,15 +9,12 @@ public struct HeaderNavBar: View {
     
     public let showBackButton: Bool
     public let showHomeButton: Bool
-    public let showSparkleButton: Bool
-    public let sparklePlacement: SparklePlacement
     public let showChartButton: Bool
     public let showProfileButton: Bool
     public let accentColor: Color?
     public let title: String?
     public let onBack: (() -> Void)?
     public let onHome: (() -> Void)?
-    public let onSparkle: (() -> Void)?
     public let onChart: (() -> Void)?
     public let onProfile: (() -> Void)?
     public let warnOnBack: Bool
@@ -32,15 +23,12 @@ public struct HeaderNavBar: View {
     public init(
         showBackButton: Bool = true,
         showHomeButton: Bool = true,
-        showSparkleButton: Bool = true,
-        sparklePlacement: SparklePlacement = .right,
         showChartButton: Bool = true,
         showProfileButton: Bool = true,
         accentColor: Color? = nil,
         title: String? = nil,
         onBack: (() -> Void)? = nil,
         onHome: (() -> Void)? = nil,
-        onSparkle: (() -> Void)? = nil,
         onChart: (() -> Void)? = nil,
         onProfile: (() -> Void)? = nil,
         warnOnBack: Bool = true,
@@ -48,15 +36,12 @@ public struct HeaderNavBar: View {
     ) {
         self.showBackButton = showBackButton
         self.showHomeButton = showHomeButton
-        self.showSparkleButton = showSparkleButton
-        self.sparklePlacement = sparklePlacement
         self.showChartButton = showChartButton
         self.showProfileButton = showProfileButton
         self.accentColor = accentColor
         self.title = title
         self.onBack = onBack
         self.onHome = onHome
-        self.onSparkle = onSparkle
         self.onChart = onChart
         self.onProfile = onProfile
         self.warnOnBack = warnOnBack
@@ -65,7 +50,7 @@ public struct HeaderNavBar: View {
     
     public var body: some View {
         HStack(alignment: .center) {
-            // Left Button Cluster (Back, Home & Optional Sparkle)
+            // Left Button Cluster (Back and Home)
             HStack(spacing: 8) {
                 if showBackButton {
                     CircularNavIconButton(
@@ -90,15 +75,6 @@ public struct HeaderNavBar: View {
                     )
                 }
                 
-                if showSparkleButton && sparklePlacement == .left {
-                    CircularNavIconButton(
-                        icon: .sparkle,
-                        accentColor: accentColor,
-                        action: {
-                            navigateWithProgressWarning { if let onSparkle { onSparkle() } else if router?.currentRoute != .personalizedActionPlan { router?.navigate(to: .personalizedActionPlan) } }
-                        }
-                    )
-                }
             }
             
             Spacer()
@@ -113,7 +89,7 @@ public struct HeaderNavBar: View {
             
             Spacer()
             
-            // Right Button Cluster (Past Results Chart, Sparkle Action Plan & Profile)
+            // Right Button Cluster (Past Results Chart and Profile)
             HStack(spacing: 8) {
                 if showChartButton {
                     CircularNavIconButton(
@@ -125,15 +101,6 @@ public struct HeaderNavBar: View {
                     )
                 }
                 
-                if showSparkleButton && sparklePlacement == .right {
-                    CircularNavIconButton(
-                        icon: .sparkle,
-                        accentColor: accentColor,
-                        action: {
-                            navigateWithProgressWarning { if let onSparkle { onSparkle() } else if router?.currentRoute != .personalizedActionPlan { router?.navigate(to: .personalizedActionPlan) } }
-                        }
-                    )
-                }
                 
                 if showProfileButton {
                     CircularNavIconButton(

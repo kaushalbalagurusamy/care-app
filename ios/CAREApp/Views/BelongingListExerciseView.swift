@@ -31,7 +31,6 @@ public struct BelongingListExerciseView: View {
             HeaderNavBar(
                 showBackButton: true,
                 showHomeButton: true,
-                showSparkleButton: true,
                 showChartButton: true,
                 showProfileButton: true,
                 accentColor: ExerciseCategory.accepted.accentColor,

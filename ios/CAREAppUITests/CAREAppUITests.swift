@@ -78,6 +78,22 @@ final class CAREAppUITests: XCTestCase {
         require(app.staticTexts["Welcome Back"])
     }
 
+    func testFreeReleaseHasNoPurchaseEntryPoints() {
+        XCTAssertFalse(app.buttons["AppIcon_sparkle"].exists)
+        require(app.buttons["Exercises"]).tap()
+        XCTAssertFalse(app.buttons["AppIcon_sparkle"].exists)
+        XCTAssertFalse(app.buttons["UnlockFullBookExercisesButton"].exists)
+
+        for category in ["Calm", "Accepted", "Resonant", "Energetic"] {
+            require(app.buttons[category]).tap()
+            XCTAssertFalse(app.buttons["AppIcon_sparkle"].exists)
+            XCTAssertFalse(app.buttons["UnlockFullBookExercisesButton"].exists)
+            require(app.buttons["AppIcon_back"]).tap()
+        }
+        require(app.buttons["Calm"]).tap()
+        require(app.buttons["DoExercise_watch-something-funny"])
+    }
+
     func testPrivacyDetailsAreAccessibleFromProfileAndSettings() {
         require(app.buttons["Profile"]).tap()
         require(app.buttons["Privacy"]).tap()

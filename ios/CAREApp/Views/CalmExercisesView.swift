@@ -124,18 +124,6 @@ public struct ExerciseCategoryHomeView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             }
-            Button { router?.navigate(to: .personalizedActionPlan) } label: {
-                Label("Unlock Full Book Exercises", systemImage: "sparkles")
-                    .font(Theme.Typography.poppins(.semiBold, size: 14))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            .background(.white)
         }
         .background(.white)
         .sheet(isPresented: $isShowingSortSheet) {

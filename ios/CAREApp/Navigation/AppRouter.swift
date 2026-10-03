@@ -18,7 +18,6 @@ public enum AppRoute: Hashable {
     case educationDetail(topic: EducationTopic)
     case educationQuiz(topic: EducationTopic)
     case welcomeAccountSetup
-    case personalizedActionPlan
     case profile
     case careInfo
     case addRelationship

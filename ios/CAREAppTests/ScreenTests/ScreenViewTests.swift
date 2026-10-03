@@ -43,18 +43,6 @@ struct ScreenViewTests {
         #expect(router.currentRoute == .exercises)
     }
 
-    @Test("TEST-SCR-02C: HomeView HeaderNavBar sparkle button navigates to .personalizedActionPlan")
-    @MainActor
-    func testHomeViewSparkleNavigation() {
-        let router = AppRouter()
-        router.navigate(to: .home)
-        #expect(router.currentRoute == .home)
-        
-        // Simulating Header Sparkle button tap
-        router.navigate(to: .personalizedActionPlan)
-        #expect(router.currentRoute == .personalizedActionPlan)
-    }
-
     @Test("TEST-SCR-03: ChooseRelationshipsView validates participant selection count")
     @MainActor
     func testChooseRelationshipsSelection() {
@@ -285,18 +273,6 @@ struct ScreenViewTests {
         #expect(AssessmentSessionState.loadDraft() == nil)
     }
 
-
-    @Test("TEST-SCR-14: PersonalizedActionPlanView renders correctly and supports Wired to Connect external link")
-    @MainActor
-    func testPersonalizedActionPlanViewRendering() {
-        let router = AppRouter()
-        let planView = PersonalizedActionPlanView(router: router, result: .figmaMockResult)
-        #expect(planView.router === router)
-        
-        let url = URL(string: "https://www.penguinrandomhouse.com/books/318700/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")
-        #expect(url != nil)
-        #expect(url?.host == "www.penguinrandomhouse.com")
-    }
 
     @Test("TEST-SCR-15: SurveyOverviewView initializes with router and pinned action structure")
     @MainActor

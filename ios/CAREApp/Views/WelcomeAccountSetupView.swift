@@ -27,7 +27,7 @@ public struct WelcomeAccountSetupView: View {
     public var body: some View {
         VStack(spacing: 0) {
             HeaderNavBar(showBackButton: false, showHomeButton: false,
-                         showSparkleButton: false, showChartButton: false,
+                         showChartButton: false,
                          showProfileButton: false)
             
             ScrollView {

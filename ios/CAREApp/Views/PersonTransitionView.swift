@@ -58,7 +58,6 @@ public struct PersonTransitionView: View {
                     else { requestLeave(to: nil) }
                 },
                 onHome: { requestLeave(to: .home) },
-                onSparkle: { requestLeave(to: .personalizedActionPlan) },
                 onChart: { requestLeave(to: .pastResults) },
                 onProfile: { requestLeave(to: .profile) }
             )

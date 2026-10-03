@@ -16,7 +16,6 @@ public struct CAREInformationView: View {
             HeaderNavBar(
                 showBackButton: true,
                 showHomeButton: true,
-                showSparkleButton: true,
                 showChartButton: true,
                 showProfileButton: true,
                 onBack: { router?.pop() }

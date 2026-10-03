@@ -57,7 +57,6 @@ public struct PastResultsV2View: View {
             HeaderNavBar(
                 showBackButton: true,
                 showHomeButton: true,
-                showSparkleButton: true,
                 showChartButton: false,
                 showProfileButton: true,
                 onBack: { router?.pop() }

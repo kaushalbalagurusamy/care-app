@@ -41,12 +41,10 @@ public struct HomeView: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            // Modular Compact Header Bar (Flush with Top, Sparkle Between Chart & Profile on Right)
+            // Modular compact header bar
             HeaderNavBar(
                 showBackButton: false,
-                showHomeButton: true,
-                showSparkleButton: true,
-                sparklePlacement: .right
+                showHomeButton: true
             )
             
             ScrollView(showsIndicators: false) {

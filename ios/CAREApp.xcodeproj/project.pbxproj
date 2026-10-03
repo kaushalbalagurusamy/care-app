@@ -95,7 +95,6 @@
 		110000032C12345600000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000042C12345600000001 /* ContentView.swift */; };
 		110000052C12345600000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 110000062C12345600000001 /* Assets.xcassets */; };
 		22000011EXERCISEVW00002 /* ExercisesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000010EXERCISEVW00001 /* ExercisesView.swift */; };
-		22000021PERSPLANVW00002 /* PersonalizedActionPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000020PERSPLANVW00001 /* PersonalizedActionPlanView.swift */; };
 		22000031WELCOMESET00002 /* WelcomeAccountSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000030WELCOMESET00001 /* WelcomeAccountSetupView.swift */; };
 		22000041PROFILEVW000002 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000040PROFILEVW000001 /* ProfileView.swift */; };
 		22000051PERSTRANS000002 /* PersonTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22000050PERSTRANS000001 /* PersonTransitionView.swift */; };
@@ -216,7 +215,6 @@
 		110000042C12345600000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		110000062C12345600000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		22000010EXERCISEVW00001 /* ExercisesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExercisesView.swift"; sourceTree = "<group>"; };
-		22000020PERSPLANVW00001 /* PersonalizedActionPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersonalizedActionPlanView.swift"; sourceTree = "<group>"; };
 		22000030WELCOMESET00001 /* WelcomeAccountSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WelcomeAccountSetupView.swift"; sourceTree = "<group>"; };
 		22000040PROFILEVW000001 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileView.swift"; sourceTree = "<group>"; };
 		22000050PERSTRANS000001 /* PersonTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersonTransitionView.swift"; sourceTree = "<group>"; };
@@ -506,7 +504,6 @@
 				220087ED35151F643C00000001 /* SurveyResultsExpandedView.swift */,
 				2279E25F3CD322252D00000001 /* SurveyResultsView.swift */,
 				22000010EXERCISEVW00001 /* ExercisesView.swift */,
-				22000020PERSPLANVW00001 /* PersonalizedActionPlanView.swift */,
 				22000030WELCOMESET00001 /* WelcomeAccountSetupView.swift */,
 				22000040PROFILEVW000001 /* ProfileView.swift */,
 				22000050PERSTRANS000001 /* PersonTransitionView.swift */,
@@ -779,7 +776,6 @@
 				22805D60F10BD2E25D00000001 /* SurveyResultsExpandedView.swift in Sources */,
 				225FCA897071EA857700000001 /* SurveyResultsView.swift in Sources */,
 				22000011EXERCISEVW00002 /* ExercisesView.swift in Sources */,
-				22000021PERSPLANVW00002 /* PersonalizedActionPlanView.swift in Sources */,
 				22000031WELCOMESET00002 /* WelcomeAccountSetupView.swift in Sources */,
 				22000041PROFILEVW000002 /* ProfileView.swift in Sources */,
 				22000051PERSTRANS000002 /* PersonTransitionView.swift in Sources */,

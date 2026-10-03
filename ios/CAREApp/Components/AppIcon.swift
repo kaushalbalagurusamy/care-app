@@ -8,7 +8,6 @@ public enum AppIcon {
     case back
     case info
     case checkmark
-    case sparkle
     case calendar
     case arrowRight
     case arrowLeft
@@ -51,10 +50,6 @@ public enum AppIcon {
             Image(systemName: "checkmark")
                 .font(.system(size: size, weight: weight))
                 .foregroundColor(color)
-        case .sparkle:
-            Image(systemName: "sparkles")
-                .font(.system(size: size, weight: weight))
-                .foregroundColor(color)
         case .calendar:
             Image("icon_calendar")
                 .renderingMode(.template)
@@ -85,7 +80,6 @@ public enum AppIcon {
         case .back: return "AppIcon_back"
         case .info: return "AppIcon_info"
         case .checkmark: return "AppIcon_checkmark"
-        case .sparkle: return "AppIcon_sparkle"
         case .calendar: return "AppIcon_calendar"
         case .arrowRight: return "AppIcon_arrowRight"
         case .arrowLeft: return "AppIcon_arrowLeft"
@@ -101,7 +95,6 @@ public enum AppIcon {
         case .back: return "Back"
         case .info: return "Information"
         case .checkmark: return "Completed"
-        case .sparkle: return "Personalized Action Plan"
         case .calendar: return "Calendar"
         case .arrowRight: return "Next"
         case .arrowLeft: return "Previous"
