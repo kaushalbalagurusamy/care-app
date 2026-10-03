@@ -126,6 +126,11 @@ platform :ios do
     ipa_path = Dir[File.join(export_dir, "*.ipa")].first
     UI.user_error!("Xcode export did not produce an IPA") unless ipa_path
 
+    if ENV["SKIP_TESTFLIGHT_UPLOAD"] == "1"
+      UI.success("Release IPA prepared for review without uploading: #{ipa_path}")
+      next ipa_path
+    end
+
     upload_to_testflight(
       api_key: api_key,
       app_identifier: bundle_id,

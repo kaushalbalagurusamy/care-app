@@ -325,6 +325,7 @@ final class CAREAppUITests: XCTestCase {
         require(app.buttons["DoExercise_mirror-emotion"]).tap()
         require(app.staticTexts["Mirror the Emotion"])
         require(app.buttons["Tap to play the video"]).tap()
+        require(app.buttons["YouTubeAgreeAndPlayButton"]).tap()
         let close = require(app.buttons["MirrorVideoCloseButton"])
         XCTAssertTrue(close.isHittable)
         XCTAssertLessThan(close.frame.midX, app.frame.midX, "Close should sit on the left, clear of player settings")
