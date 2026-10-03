@@ -1,13 +1,13 @@
 # RCT CARE App Store listing draft
 
-**Status:** draft for Amy and Jayme to review before entry in App Store Connect. The English (US) version 1.0 record currently has no description, keywords, or support URL. This is not published metadata.
+**Status:** draft entered in App Store Connect on October 3, 2026, for Amy and Jayme to review before submission. The English (US) version 1.0 record now has this description, the keywords below, and a provisional support URL. This is not a submitted or public listing.
 
 | Field | Proposed text |
 | --- | --- |
 | App name | RCT CARE (existing App Store Connect name) |
 | Subtitle | Reflect on your relationships |
 | Keywords | relationships,reflection,wellness,education,exercises,connection |
-| Support URL | Decision needed: use a CARE-specific public support page with contact information. The privacy policy's contact section is currently the only CARE-specific public page. |
+| Support URL | <https://care-app-privacy.vercel.app/#contact> is entered provisionally. It is reachable and contains Amy's published contact email; a dedicated CARE app support page with app-specific help remains preferable before submission. |
 
 ## Proposed description
 
@@ -22,8 +22,9 @@ CARE is for education and personal reflection. It does not provide a medical dia
 ## Verification before publication
 
 - Confirm the final description, subtitle, and keywords with Amy; keep educational claims aligned with the app's actual content.
-- Provide a stable CARE support URL and test it without signing in.
-- Verify the app is priced Free, U.S. storefront availability, screenshots, rights, age rating, and App Privacy answers in App Store Connect.
+- Review the entered copy and replace the provisional support URL with a dedicated CARE app help page if available.
+- Apple's API verified the app's starting price as Free and the primary category as Education. Confirm storefront availability, screenshots, rights, age rating, and App Privacy answers in App Store Connect.
+- App Review sign-in is marked not required because the app has no account. The review contact, copyright holder, and release timing still require the team's exact details/choice.
 - Use screenshots from the final phone-sized release build, without sample data or purchase UI.
 
 Source checkpoints: `ios/CAREApp/Views/HomeView.swift`, `Views/ExercisesView.swift`, `Views/AssessmentOverviewView.swift`, `Views/SurveyResultsV2View.swift`, `Views/PastResultsV2View.swift`, `Views/Education/EducationTopicsView.swift`, and `Views/StorageSettingsView.swift`.

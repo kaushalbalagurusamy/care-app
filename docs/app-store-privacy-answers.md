@@ -1,6 +1,6 @@
 # CARE App Store privacy disclosure worksheet
 
-Status: source audit completed October 2, 2026; public policy published and accessible without sign-in at <https://care-app-privacy.vercel.app/>; the English (US) App Store privacy-policy URL and optional privacy-choices URL (`/#choices`) are set. **App Privacy data-practice answers are not yet entered or published in App Store Connect.** Complete these against the exact release binary and the current App Privacy form before submission.
+Status: source audit completed October 2, 2026; public policy published and accessible without sign-in at <https://care-app-privacy.vercel.app/>; the English (US) App Store privacy-policy URL and optional privacy-choices URL (`/#choices`) are set. On October 3, App Store Connect saved an **unpublished, incomplete** App Privacy draft declaring collection of Usage Data → Product Interaction. Its purpose, linkage, and tracking questions remain unanswered, as do any other applicable data types. Complete these against the exact release binary and the current App Privacy form before publication or submission.
 
 ## Source-backed inventory
 
