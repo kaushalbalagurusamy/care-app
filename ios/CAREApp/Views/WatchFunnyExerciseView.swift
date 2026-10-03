@@ -32,7 +32,7 @@ public struct WatchFunnyExerciseView: View {
                     VStack(alignment: .leading, spacing: 22) {
                         ExercisePageHeader(
                             item: ExerciseItem.sampleCalmExercises[0],
-                            description: "Pick a short clip that makes you smile. Laughter activates your smart vagus nerve and helps your body feel safe."
+                            description: "Pick a short clip that makes you smile. Laughter activates your smart vagus nerve and your dopamine reward system and helps your body feel safe."
                         )
                         Divider()
                         Text("Choose a clip")

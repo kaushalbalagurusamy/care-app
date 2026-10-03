@@ -164,7 +164,7 @@ public struct KeepPhotoExerciseView: View {
                 Text("Once you've uploaded your photo")
                     .font(Theme.Typography.poppins(.bold, size: 13))
                 prompt("Look at the photo for 1–2 minutes")
-                prompt("Think about a happy memory you share with this person or being")
+                prompt("Think about a happy memory you share with this person or being (a positive relational moment).")
                 prompt("Notice any warmth, calm, or connection you feel in your body")
                 Divider()
                 Text("Save this photo somewhere easy to find — your lock screen, wallet, or favorites — so it’s always there when you need it.")
