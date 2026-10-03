@@ -71,6 +71,8 @@ final class CAREAppUITests: XCTestCase {
     func testFirstLaunchProfileHasNoAgeField() {
         launch(fixture: "--uitesting-fresh", skipWelcome: false)
         require(app.staticTexts["Welcome"])
+        require(app.staticTexts["Set up your profile to explore your relationships and track your reflections over time."])
+        XCTAssertFalse(app.staticTexts["Let's finish setting up your account to start evaluating and tracking your relational health."].exists)
         require(app.textFields["e.g., Alex Johnson"])
         XCTAssertFalse(app.staticTexts["Age"].exists)
         XCTAssertFalse(app.textFields["Age"].exists)
@@ -101,7 +103,9 @@ final class CAREAppUITests: XCTestCase {
 
     func testPrivacyDetailsAreAccessibleFromProfileAndSettings() {
         require(app.buttons["Profile"]).tap()
-        require(app.buttons["Privacy"]).tap()
+        let privacyTab = require(app.buttons["Privacy"])
+        XCTAssertTrue(privacyTab.isHittable, "The Privacy tab must be visible without horizontal scrolling")
+        privacyTab.tap()
         require(app.buttons["ProfilePrivacyDetailsButton"]).tap()
         require(app.staticTexts["Privacy & Data Use"])
         require(app.descendants(matching: .any)["CAREPrivacyPolicyLink"])

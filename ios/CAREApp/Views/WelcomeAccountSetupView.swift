@@ -38,7 +38,7 @@ public struct WelcomeAccountSetupView: View {
                             .font(Theme.Typography.poppins(.bold, size: 30))
                             .foregroundColor(Theme.Colors.textPrimary)
                         
-                        Text("Let's finish setting up your account to start evaluating and tracking your relational health.")
+                        Text("Set up your profile to explore your relationships and track your reflections over time.")
                             .font(Theme.Typography.screenSubtitle)
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(3)

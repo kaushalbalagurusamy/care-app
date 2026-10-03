@@ -68,7 +68,7 @@ public struct ProfileView: View {
                                 Button { selectedTab = tab } label: {
                                     Text(tab)
                                         .font(Theme.Typography.poppins(.medium, size: 13))
-                                        .padding(.horizontal, 14).frame(height: 38)
+                                        .padding(.horizontal, 6).frame(height: 38)
                                         .foregroundStyle(selectedTab == tab ? .white : Theme.Colors.textPrimary)
                                         .background(selectedTab == tab ? Theme.Colors.primary : Theme.Colors.cardSurface)
                                         .clipShape(Capsule())
@@ -159,7 +159,7 @@ public struct ProfileView: View {
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundStyle(Theme.Colors.textSecondary)
                     } else {
-                        Text(selectedTab == "Security" ? "Protect your account" : "Your data and privacy")
+                        Text(selectedTab == "Security" ? "Protect your CARE data" : "Your data and privacy")
                             .font(Theme.Typography.poppins(.semiBold, size: 17))
                         Text(selectedTab == "Security" ? "Manage biometric app lock and device protection." : "Review local storage and manage your saved information.")
                             .font(Theme.Typography.poppins(.regular, size: 14))

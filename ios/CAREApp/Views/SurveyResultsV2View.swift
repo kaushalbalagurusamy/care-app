@@ -56,7 +56,7 @@ public struct SurveyResultsV2View: View {
                             .font(Theme.Typography.screenTitle)
                             .foregroundColor(Theme.Colors.textPrimary)
                         
-                        Text("Review insights and relational health metrics from your C.A.R.E. assessment.")
+                        Text("Review insights and relationship patterns from your C.A.R.E. assessment.")
                             .font(Theme.Typography.screenSubtitle)
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
