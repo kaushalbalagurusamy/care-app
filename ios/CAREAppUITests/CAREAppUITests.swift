@@ -67,6 +67,26 @@ final class CAREAppUITests: XCTestCase {
         require(app.staticTexts["Exercise Complete!"])
     }
 
+    func testImportedFigmaScreensAcrossPaidCategories() {
+        for (category, exerciseID, expectedTitle) in [
+            ("Accepted", "spot-removal", "SPOT Removal"),
+            ("Resonant", "read-a-characters-feelings", "Read a Character’s Feelings"),
+            ("Energetic", "map-your-feel-good-sources", "Map Your Feel-Good Sources")
+        ] {
+            launch(fixture: "--uitesting-fresh", skipWelcome: true)
+            require(app.buttons["Exercises"]).tap()
+            require(app.buttons[category]).tap()
+            let start = require(app.buttons["DoExercise_\(exerciseID)"])
+            for _ in 0..<20 where !start.isHittable { app.swipeUp() }
+            start.tap()
+            require(app.staticTexts[expectedTitle])
+            let screenshot = XCTAttachment(screenshot: app.screenshot())
+            screenshot.name = "Figma \(category) exercise screen"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+        }
+    }
+
     @discardableResult
     private func require(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
         XCTAssertTrue(element.waitForExistence(timeout: 8), "Missing UI element: \(element.debugDescription)", file: file, line: line)

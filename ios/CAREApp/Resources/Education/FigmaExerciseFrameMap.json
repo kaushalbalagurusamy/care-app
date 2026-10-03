@@ -1,0 +1,244 @@
+{
+  "build-safe-support-plan": [
+    "599:94",
+    "599:211",
+    "757:105"
+  ],
+  "practice-pausing": [
+    "601:94",
+    "601:146"
+  ],
+  "relabel-stress-story": [
+    "601:196",
+    "601:240",
+    "616:94"
+  ],
+  "notice-friendly-exchange": [
+    "602:94"
+  ],
+  "listen-yourself-into-safety": [
+    "602:135"
+  ],
+  "active-listening-together": [
+    "602:178",
+    "602:218"
+  ],
+  "relational-mindfulness": [
+    "602:263",
+    "602:303"
+  ],
+  "meditation-pause": [
+    "605:210"
+  ],
+  "alternate-nostril-breathing": [
+    "605:245",
+    "781:624"
+  ],
+  "play-with-a-pet": [
+    "605:291"
+  ],
+  "warm-bath-reset": [
+    "605:332"
+  ],
+  "massage-for-relaxation": [
+    "605:373"
+  ],
+  "ask-for-a-safe-hug": [
+    "605:414"
+  ],
+  "move-out-of-freeze": [
+    "605:455"
+  ],
+  "spot-removal": [
+    "789:105",
+    "789:232",
+    "789:359",
+    "789:512"
+  ],
+  "what-are-you-hiding": [
+    "789:654",
+    "789:807"
+  ],
+  "root-chakra-work": [
+    "789:951"
+  ],
+  "compassion-meditation": [
+    "790:105",
+    "790:214"
+  ],
+  "notice-the-pullback": [
+    "792:105"
+  ],
+  "accepted-moments-library": [
+    "792:234",
+    "792:357"
+  ],
+  "feedback-that-connects": [
+    "792:493",
+    "792:643"
+  ],
+  "listen-across-difference": [
+    "792:770",
+    "792:922",
+    "792:1033"
+  ],
+  "hot-button-practice": [
+    "792:1158",
+    "792:1308",
+    "792:1455",
+    "792:1597"
+  ],
+  "name-what-hurts": [
+    "792:1759"
+  ],
+  "a-kind-note": [
+    "792:1912",
+    "797:105"
+  ],
+  "choose-your-support": [
+    "797:243",
+    "797:388",
+    "797:538"
+  ],
+  "values-beyond-approval": [
+    "797:680",
+    "797:815"
+  ],
+  "plan-in-person-connection": [
+    "835:230"
+  ],
+  "make-room-for-resonant-relationships": [
+    "839:105",
+    "839:235",
+    "839:365"
+  ],
+  "find-an-emotion-in-your-body": [
+    "839:493",
+    "839:623",
+    "839:725"
+  ],
+  "name-the-emotional-spectrum": [
+    "839:867",
+    "839:997"
+  ],
+  "bring-feelings-and-thoughts-together": [
+    "839:1142",
+    "839:1265"
+  ],
+  "choose-a-gentler-media-moment": [
+    "839:1394"
+  ],
+  "notice-a-relational-template": [
+    "839:1563",
+    "839:1686"
+  ],
+  "spot-patterns-across-relationships": [
+    "839:1816",
+    "839:1946"
+  ],
+  "invite-a-trusted-perspective": [
+    "839:2069",
+    "839:2200"
+  ],
+  "find-a-bridging-truth": [
+    "839:2333",
+    "839:2463",
+    "839:2591",
+    "839:2714"
+  ],
+  "read-a-characters-feelings": [
+    "840:499",
+    "840:587"
+  ],
+  "relabel-an-old-relational-image": [
+    "840:105",
+    "840:235",
+    "840:365"
+  ],
+  "mirror-a-gentle-gesture": [
+    "840:729",
+    "840:839"
+  ],
+  "check-your-read": [
+    "840:964"
+  ],
+  "save-a-resonant-moment": [
+    "840:1099"
+  ],
+  "map-your-feel-good-sources": [
+    "844:105",
+    "844:242"
+  ],
+  "find-your-high-zest-people": [
+    "844:408",
+    "844:538",
+    "844:668"
+  ],
+  "energetic-relabel-and-refocus": [
+    "844:792",
+    "844:932",
+    "844:1029"
+  ],
+  "practice-feeling-better-together": [
+    "844:1191",
+    "844:1312",
+    "844:1411"
+  ],
+  "revisit-an-early-spark": [
+    "844:1532",
+    "844:1664"
+  ],
+  "move-together": [
+    "845:105",
+    "845:237"
+  ],
+  "daylight-connection": [
+    "845:373",
+    "845:505"
+  ],
+  "make-a-nourishing-meal-together": [
+    "845:641",
+    "845:773",
+    "845:910"
+  ],
+  "share-a-small-win": [
+    "845:1041"
+  ],
+  "try-something-new-together": [
+    "845:1168",
+    "845:1300"
+  ],
+  "make-a-tiny-project-together": [
+    "845:1675",
+    "845:1807",
+    "845:1939"
+  ],
+  "say-what-you-appreciate": [
+    "845:2075"
+  ],
+  "do-a-small-kindness-together": [
+    "845:2206",
+    "845:2338"
+  ],
+  "share-a-music-moment": [
+    "845:2474",
+    "845:2606"
+  ],
+  "find-a-small-delight": [
+    "845:2742"
+  ],
+  "mark-a-tiny-win": [
+    "845:2896"
+  ],
+  "recall-a-warm-connection": [
+    "845:3034"
+  ],
+  "take-a-solo-movement-break": [
+    "845:3178",
+    "845:3308"
+  ],
+  "follow-your-curiosity": [
+    "845:3442",
+    "845:3572"
+  ]
+}

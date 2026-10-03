@@ -35,6 +35,16 @@ struct GuidedExerciseView: View {
             HeaderNavBar(accentColor: accent, onBack: {
                 if stepIndex > 0 { stepIndex -= 1 } else { showCancel = true }
             })
+            if let figmaScreen = FigmaExerciseScreenCatalog.screen(for: exerciseID, step: stepIndex) {
+                FigmaExerciseScreenView(
+                    screen: figmaScreen,
+                    accent: accent,
+                    fields: $fields,
+                    onNext: nextStep,
+                    onCancel: { showCancel = true },
+                    onFavorite: { progress?.toggleFavorite(exerciseID) }
+                )
+            } else {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     ExercisePageHeader(item: item, description: item.subtitle,
@@ -99,9 +109,7 @@ struct GuidedExerciseView: View {
             VStack(spacing: 6) {
                 PrimaryButton(title: stepIndex == steps.count - 1 ? "Complete Exercise" : "Next",
                     trailingIcon: stepIndex == steps.count - 1 ? nil : "arrow.right",
-                    accentColor: accent) {
-                    if stepIndex < steps.count - 1 { stepIndex += 1 } else { complete() }
-                }
+                    accentColor: accent, action: nextStep)
                 .accessibilityIdentifier("ExerciseFlowAction")
                 Button("Cancel") { showCancel = true }
                     .font(Theme.Typography.poppins(.medium, size: 14))
@@ -110,6 +118,7 @@ struct GuidedExerciseView: View {
             }
             .padding(.horizontal, 20).padding(.vertical, 8)
             .background(.white)
+            }
         }
         .background(.white)
         .overlay {
@@ -158,5 +167,10 @@ struct GuidedExerciseView: View {
         } catch {
             saveError = "Your exercise could not be completed. Please try again."
         }
+    }
+
+    private func nextStep() {
+        if stepIndex < steps.count - 1 { stepIndex += 1 }
+        else { complete() }
     }
 }

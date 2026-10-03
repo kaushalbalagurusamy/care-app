@@ -108,6 +108,9 @@
 		A20000000000000000000001 /* AdditionalExerciseViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* AdditionalExerciseViews.swift */; };
 		A30000000000000000000001 /* GuidedExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000002 /* GuidedExerciseView.swift */; };
 		A30000000000000000000003 /* GuidedExerciseContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000004 /* GuidedExerciseContent.swift */; };
+		A40000000000000000000001 /* FigmaExerciseScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* FigmaExerciseScreenView.swift */; };
+		A40000000000000000000003 /* FigmaExerciseScreens.json in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000004 /* FigmaExerciseScreens.json */; };
+		A40000000000000000000005 /* FigmaExerciseFrameMap.json in Resources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000006 /* FigmaExerciseFrameMap.json */; };
 		E8679D6206D3582FAA7559F7 /* AddRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1AE7E7D365DF8BFEDD314 /* AddRelationshipView.swift */; };
 		1C0EA4D0A8705767BC6517A4 /* CalmExercisesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16FED304BE55FDCA349FD1B /* CalmExercisesView.swift */; };
 		E70ED335D6715663A68FF2DA /* WatchFunnyExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988874762C3E544F9072FA9A /* WatchFunnyExerciseView.swift */; };
@@ -231,6 +234,9 @@
 		A20000000000000000000002 /* AdditionalExerciseViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AdditionalExerciseViews.swift"; sourceTree = "<group>"; };
 		A30000000000000000000002 /* GuidedExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GuidedExerciseView.swift"; sourceTree = "<group>"; };
 		A30000000000000000000004 /* GuidedExerciseContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GuidedExerciseContent.swift"; sourceTree = "<group>"; };
+		A40000000000000000000002 /* FigmaExerciseScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FigmaExerciseScreenView.swift"; sourceTree = "<group>"; };
+		A40000000000000000000004 /* FigmaExerciseScreens.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "FigmaExerciseScreens.json"; sourceTree = "<group>"; };
+		A40000000000000000000006 /* FigmaExerciseFrameMap.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "FigmaExerciseFrameMap.json"; sourceTree = "<group>"; };
 		8BD1AE7E7D365DF8BFEDD314 /* AddRelationshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddRelationshipView.swift"; sourceTree = "<group>"; };
 		C16FED304BE55FDCA349FD1B /* CalmExercisesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CalmExercisesView.swift"; sourceTree = "<group>"; };
 		988874762C3E544F9072FA9A /* WatchFunnyExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WatchFunnyExerciseView.swift"; sourceTree = "<group>"; };
@@ -329,6 +335,8 @@
 			isa = PBXGroup;
 			children = (
 				77000052EDUMANIFEST00001 /* EducationManifest.json */,
+				A40000000000000000000004 /* FigmaExerciseScreens.json */,
+				A40000000000000000000006 /* FigmaExerciseFrameMap.json */,
 			);
 			path = Resources/Education;
 			sourceTree = "<group>";
@@ -520,6 +528,7 @@
 				A20000000000000000000002 /* AdditionalExerciseViews.swift */,
 				A30000000000000000000002 /* GuidedExerciseView.swift */,
 				A30000000000000000000004 /* GuidedExerciseContent.swift */,
+				A40000000000000000000002 /* FigmaExerciseScreenView.swift */,
 				C16FED304BE55FDCA349FD1B /* CalmExercisesView.swift */,
 				988874762C3E544F9072FA9A /* WatchFunnyExerciseView.swift */,
 				27FEECFB8283543799CA7D5C /* KeepPhotoExerciseView.swift */,
@@ -669,6 +678,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				77000053EDUMANIFEST00002 /* EducationManifest.json in Resources */,
+				A40000000000000000000003 /* FigmaExerciseScreens.json in Resources */,
+				A40000000000000000000005 /* FigmaExerciseFrameMap.json in Resources */,
 				110000052C12345600000001 /* Assets.xcassets in Resources */,
 			
 				F184D45DB8322540EF97625E /* Poppins-Bold.ttf in Resources */,
@@ -800,6 +811,7 @@
 				A20000000000000000000001 /* AdditionalExerciseViews.swift in Sources */,
 				A30000000000000000000001 /* GuidedExerciseView.swift in Sources */,
 				A30000000000000000000003 /* GuidedExerciseContent.swift in Sources */,
+				A40000000000000000000001 /* FigmaExerciseScreenView.swift in Sources */,
 				1C0EA4D0A8705767BC6517A4 /* CalmExercisesView.swift in Sources */,
 				E70ED335D6715663A68FF2DA /* WatchFunnyExerciseView.swift in Sources */,
 				5D133A5EB97A55E0AC596885 /* KeepPhotoExerciseView.swift in Sources */,
