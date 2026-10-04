@@ -58,6 +58,20 @@ struct ExercisePageHeader: View {
             || item.id == "save-a-resonant-moment" || item.id == "revisit-an-early-spark"
             || item.id == "recall-a-warm-connection"
     }
+    private var prmColors: (fill: Color, text: Color, border: Color) {
+        switch item.id {
+        case "keep-photo-close":
+            return (Color(hex: "#DCEEFF"), Color(hex: "#1F66B1"), Color(hex: "#A8D2FF"))
+        case "accepted-moments-library":
+            return (Color(hex: "#DFF7EE"), Color(hex: "#1F8065"), Color(hex: "#A8E6D1"))
+        case "save-a-resonant-moment":
+            return (Color(hex: "#F0EBFF"), Color(hex: "#6652A8"), Color(hex: "#CFC2F2"))
+        case "revisit-an-early-spark", "recall-a-warm-connection":
+            return (Color(hex: "#FFF0DB"), Color(hex: "#A65C1F"), Color(hex: "#F5D1A8"))
+        default:
+            return (accent, .white, accent)
+        }
+    }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -77,9 +91,10 @@ struct ExercisePageHeader: View {
                     .background(Color(hex: "#F8FAFC"), in: Capsule())
                 if showsPRM {
                     Text("PRM")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(prmColors.text)
                         .padding(.horizontal, 12).padding(.vertical, 5)
-                        .background(accent, in: Capsule())
+                        .background(prmColors.fill, in: Capsule())
+                        .overlay(Capsule().stroke(prmColors.border, lineWidth: 1))
                 }
             }
             .font(Theme.Typography.poppins(.semiBold, size: 11))
