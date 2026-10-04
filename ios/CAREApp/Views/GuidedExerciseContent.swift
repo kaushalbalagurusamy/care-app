@@ -111,13 +111,12 @@ enum GuidedExerciseContent {
         .init(heading: "Make your connection plan", instructions: [], prompts: ["A person who feels good to be with...", "A simple thing we could do together...", "A place that feels comfortable...", "A time that could work for both of us...", "Something that would help me feel at ease..."], options: [])
     ],
     "make-room-for-resonant-relationships": [
-        .init(heading: "Map your relationships", instructions: [], prompts: ["Someone who helps me feel seen...", "A connection that leaves me drained...", "A person I feel at ease with...", "A relationship I want to tend...", "A boundary that might help..."], options: []),
-        .init(heading: "Spend a little more time together", instructions: [], prompts: [], options: ["Spend a little more time together", "Reach out to someone supportive", "Plan a gentle check-in", "Make space after a draining visit", "Set one small boundary"]),
+        .init(heading: "Choose a relationship to grow", instructions: ["Select someone from your assessments, then choose one small change."], prompts: [], options: ["Spend a little more time together", "Reach out to someone supportive", "Plan a gentle check-in", "Make space after a draining visit", "Set one small expectation"]),
         .init(heading: "Reflect on your choice", instructions: ["Reach out to someone supportive"], prompts: ["Who could you contact first?", "What would a comfortable invitation sound like?", "What might help you follow through?"], options: [])
     ],
     "find-an-emotion-in-your-body": [
         .init(heading: "Choose a feeling to explore", instructions: [], prompts: [], options: ["Interest", "Tenderness", "Calm", "Pride"]),
-        .init(heading: "Reflect on your choice", instructions: ["Recall a small moment when you felt this emotion.", "Pause and notice where your body responds.", "Recall another gentle moment and notice what shifts.", "If a memory feels too strong, return to the room around you."], prompts: [], options: []),
+        .init(heading: "Reflect on your choice", instructions: ["Recall a small moment when you felt this emotion.", "Pause and notice where your body responds.", "Recall a positive relational moment and notice what shifts.", "If a memory feels too strong, return to the room around you."], prompts: [], options: []),
         .init(heading: "What did you notice?", instructions: [], prompts: ["Where did you feel it in your body?", "How did the sensation change between moments?", "What words fit the sensation?"], options: [])
     ],
     "name-the-emotional-spectrum": [
@@ -126,7 +125,7 @@ enum GuidedExerciseContent {
     ],
     "bring-feelings-and-thoughts-together": [
         .init(heading: "Name both parts", instructions: [], prompts: ["What happened in a manageable moment?", "What thought came to mind?", "What feeling came with that thought?"], options: []),
-        .init(heading: "Put it into words", instructions: ["Name the feeling without judging it.", "Name the thought as a thought, not a fact.", "Try: “I feel... and I notice I’m thinking...”"], prompts: ["How would you express your feeling and thought together?"], options: [])
+        .init(heading: "Put it into words", instructions: ["Name the feeling without judging it.", "Name the thought as a thought, not a fact.", "Try: “I feel X” and “I notice I’m thinking Y”"], prompts: ["How would you express your feeling and thought together?"], options: [])
     ],
     "choose-a-gentler-media-moment": [
         .init(heading: "Notice the media shift", instructions: ["Recall a recent news story, violent clip, or other media that left you unsettled.", "Notice what you feel in your body and which thoughts linger afterward.", "Choose a gentler swap below, then check what changes."], prompts: ["What felt different after your media moment?"], options: ["A funny short clip", "A collaborative story", "A calming nature video", "A kind conversation", "A playful animal video", "Check in afterward"])

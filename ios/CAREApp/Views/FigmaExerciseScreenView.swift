@@ -94,6 +94,7 @@ enum FigmaExerciseScreenCatalog {
 }
 
 struct FigmaExerciseScreenView: View {
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     let screen: FigmaExerciseScreen
     let accent: Color
     @Binding var fields: [String: String]
@@ -102,6 +103,8 @@ struct FigmaExerciseScreenView: View {
     let onFavorite: () -> Void
     @State private var editingListItem: String?
     @State private var listEntry = ""
+    @State private var showingRelationshipPicker = false
+    @State private var assessedPeople: [Person] = []
 
     var body: some View {
         GeometryReader { geometry in
@@ -165,8 +168,25 @@ struct FigmaExerciseScreenView: View {
                                   y: (node.y - 64 + node.h / 2) * scale)
                         .accessibilityIdentifier("FigmaChoice_\(node.id)")
                     }
+                    ForEach(screen.nodes.filter { $0.n == "relationship-picker" }) { node in
+                        Button {
+                            Task { await showAssessedRelationships() }
+                        } label: {
+                            Color.clear.contentShape(Rectangle())
+                        }
+                        .frame(width: node.w * scale, height: node.h * scale)
+                        .position(x: (node.x + node.w / 2) * scale,
+                                  y: (node.y - 64 + node.h / 2) * scale)
+                        .accessibilityLabel("Choose a relationship from your assessments")
+                    }
                     ForEach(screen.nodes.filter { $0.n == "btn-complete-exercise" }) { node in
-                        Button(action: onNext) { Color.clear.contentShape(Rectangle()) }
+                        Button {
+                            if screen.id == "839:235" && (fields["relationship-person-id"] ?? "").isEmpty {
+                                Task { await showAssessedRelationships() }
+                            } else {
+                                onNext()
+                            }
+                        } label: { Color.clear.contentShape(Rectangle()) }
                             .frame(width: node.w * scale, height: node.h * scale)
                             .position(x: (node.x + node.w / 2) * scale,
                                       y: (node.y - 64 + node.h / 2) * scale)
@@ -201,6 +221,50 @@ struct FigmaExerciseScreenView: View {
             }
             Button("Cancel", role: .cancel) { editingListItem = nil }
         }
+        .sheet(isPresented: $showingRelationshipPicker) {
+            NavigationStack {
+                Group {
+                    if assessedPeople.isEmpty {
+                        VStack(spacing: 12) {
+                            Text("No assessed relationships yet")
+                                .font(Theme.Typography.poppins(.semiBold, size: 18))
+                            Text("Complete an assessment with someone to choose them here.")
+                                .font(Theme.Typography.poppins(.regular, size: 14))
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(Theme.Colors.textSecondary)
+                        }
+                        .padding(24)
+                    } else {
+                        List(assessedPeople) { person in
+                            Button(person.name) {
+                                fields["relationship-person-id"] = person.id.uuidString
+                                fields["relationship-person-name"] = person.name
+                                showingRelationshipPicker = false
+                            }
+                        }
+                    }
+                }
+                .navigationTitle("Choose a relationship")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showingRelationshipPicker = false }
+                    }
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func showAssessedRelationships() async {
+        if let history = try? await appEnvironment?.assessmentRepo.fetchAssessmentHistory() {
+            var seen = Set<UUID>()
+            assessedPeople = history.flatMap(\.individualResults)
+                .map(\.participant.person)
+                .filter { seen.insert($0.id).inserted }
+        } else {
+            assessedPeople = []
+        }
+        showingRelationshipPicker = true
     }
 
     @ViewBuilder
@@ -297,6 +361,9 @@ struct FigmaExerciseScreenView: View {
     }
 
     private func savedListValue(for node: FigmaExerciseNode) -> String? {
+        if node.n == "placeholder", node.path?.contains("relationship-picker") == true {
+            return fields["relationship-person-name"]
+        }
         guard node.n == "placeholder" || node.n.contains("support") else { return nil }
         let listItem = screen.nodes
             .filter { ($0.n.hasPrefix("list-item") || $0.n.hasPrefix("optional-support"))

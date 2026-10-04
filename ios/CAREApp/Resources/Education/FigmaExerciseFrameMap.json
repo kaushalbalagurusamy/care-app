@@ -10,8 +10,8 @@
   ],
   "relabel-stress-story": [
     "601:196",
-    "601:240",
-    "616:94"
+    "616:94",
+    "601:240"
   ],
   "notice-friendly-exchange": [
     "602:94"
@@ -108,7 +108,6 @@
     "835:230"
   ],
   "make-room-for-resonant-relationships": [
-    "839:105",
     "839:235",
     "839:365"
   ],

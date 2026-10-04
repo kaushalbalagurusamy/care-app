@@ -53,6 +53,9 @@ struct ExercisePageHeader: View {
 
     private var accent: Color { item.category.exerciseAccent }
     private var soft: Color { accent.opacity(0.08) }
+    private var showsPRM: Bool {
+        item.id == "keep-photo-close" || item.id == "accepted-moments-library"
+    }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -70,6 +73,12 @@ struct ExercisePageHeader: View {
                     .foregroundStyle(Theme.Colors.textSecondary)
                     .padding(.horizontal, 10).padding(.vertical, 5)
                     .background(Color(hex: "#F8FAFC"), in: Capsule())
+                if showsPRM {
+                    Text("PRM")
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12).padding(.vertical, 5)
+                        .background(accent, in: Capsule())
+                }
             }
             .font(Theme.Typography.poppins(.semiBold, size: 11))
             ZStack(alignment: .trailing) {
