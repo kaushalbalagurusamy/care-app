@@ -150,7 +150,7 @@ enum GuidedExerciseContent {
     ],
     "read-a-characters-feelings": [
         .init(heading: "Get started", instructions: [], prompts: [], options: []),
-        .init(heading: "What did you see?", instructions: [], prompts: ["What feeling might fit?", "What did you notice in their face or posture?", "What else could explain the expression?"], options: [])
+        .init(heading: "What did you see?", instructions: [], prompts: ["What character resonated with you the most and why?", "What did you notice in their face or posture, and what did you feel?", "Which emotion was easiest for you to identify and which emotion was the hardest for you to identify?"], options: [])
     ],
     "relabel-an-old-relational-image": [
         .init(heading: "Stories that can show up", instructions: [], prompts: ["An old message about myself...", "A familiar fear in relationships...", "A moment that triggers it...", "How I usually respond...", "A supportive counterexample..."], options: []),
@@ -158,7 +158,7 @@ enum GuidedExerciseContent {
         .init(heading: "Reflect on your choice", instructions: ["Say gently: ‘This may be an old relational image.’", "Notice the present moment around you.", "Recall a small memory of being seen, supported, or safe."], prompts: ["What shifted?", "What feels different when you name the story as old?"], options: [])
     ],
     "mirror-a-gentle-gesture": [
-        .init(heading: "Choose a gentle clip", instructions: [], prompts: [], options: []),
+        .init(heading: "Choose a gentle clip", instructions: ["Watch a Warm Smile and Mirror, or watch a hug compilation for up to 8 minutes. You can stop when the hugs bring a warm feeling; you do not need to finish the video."], prompts: [], options: []),
         .init(heading: "Reflect on your choice", instructions: [], prompts: ["What changed in your face or body?"], options: [])
     ],
     "check-your-read": [
@@ -179,7 +179,7 @@ enum GuidedExerciseContent {
     "energetic-relabel-and-refocus": [
         .init(heading: "What is happening?", instructions: [], prompts: ["What might be underneath the urge?", "What are you hoping the quick reward will give you?"], options: []),
         .init(heading: "Pause and relabel", instructions: ["Pause and take one easy breath.", "Name the feeling or need without judging it.", "Consider a small response that could truly help."], prompts: [], options: []),
-        .init(heading: "What could help instead?", instructions: [], prompts: ["What will you try?", "Which option feels kind and doable right now?"], options: [])
+        .init(heading: "What could help instead?", instructions: ["Choose as many options as fit, or add your own."], prompts: ["What option feels doable right now?"], options: [])
     ],
     "practice-feeling-better-together": [
         .init(heading: "Begin together", instructions: [], prompts: ["What is one feeling each of you can name?", "What support would feel welcome right now?"], options: []),
@@ -188,7 +188,7 @@ enum GuidedExerciseContent {
     ],
     "revisit-an-early-spark": [
         .init(heading: "Choose a memory", instructions: [], prompts: [], options: ["An early conversation", "A shared adventure", "A funny moment", "A favorite place", "A song or meal"]),
-        .init(heading: "Reflect on your choice", instructions: [], prompts: ["What detail do you each remember?", "What small part could you revisit together?"], options: [])
+        .init(heading: "Reflect on your choice", instructions: ["Optional: Add a photo of the two of you together, if you have one."], prompts: ["What detail do you each remember?", "What small part could you revisit together?"], options: [])
     ],
     "move-together": [
         .init(heading: "Choose a way to move", instructions: [], prompts: [], options: ["Take a short walk", "Stretch together", "Dance to a song", "Roll your shoulders", "Try a simple game"]),
@@ -211,8 +211,7 @@ enum GuidedExerciseContent {
         .init(heading: "Reflect on your choice", instructions: ["Agree on a small, low-pressure version.", "Give it a try and stay curious.", "Tell each other what surprised you."], prompts: ["What was fun or interesting about trying it together?"], options: [])
     ],
     "make-a-tiny-project-together": [
-        .init(heading: "Gather a few ideas", instructions: [], prompts: [], options: []),
-        .init(heading: "Photo collage", instructions: [], prompts: [], options: ["Photo collage", "Plant corner", "Shared playlist", "Recipe card", "Quick room refresh"]),
+        .init(heading: "Choose one tiny project", instructions: ["Pick a small project you can finish with another person."], prompts: [], options: ["Photo collage", "Plant corner", "Shared playlist", "Recipe card", "Quick room refresh"]),
         .init(heading: "Reflect on your choice", instructions: ["Agree on what finished means today.", "Split the first steps in a way that feels fair.", "Pause to appreciate what you made."], prompts: ["What part of working together felt energizing?"], options: [])
     ],
     "say-what-you-appreciate": [
@@ -233,7 +232,7 @@ enum GuidedExerciseContent {
         .init(heading: "Give yourself credit", instructions: [], prompts: ["What did you finish, try, or show up for?", "How could you acknowledge it?"], options: [])
     ],
     "recall-a-warm-connection": [
-        .init(heading: "Remember a good moment", instructions: [], prompts: ["Who were you with, or where were you?", "What small detail helps you remember the moment?", "What feeling is here now?"], options: [])
+        .init(heading: "Remember a good moment", instructions: ["Optional: Add a photo from this warm connection, if you have one."], prompts: ["Who were you with, or where were you?", "What small detail helps you remember the moment?", "What feeling is here now?"], options: [])
     ],
     "take-a-solo-movement-break": [
         .init(heading: "Walk a little", instructions: [], prompts: [], options: ["Walk a little", "Stretch your arms", "Dance to a song", "Roll your shoulders", "Step outside"]),

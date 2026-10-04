@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 #if !DEBUG
 #error("Paid CARE preview: complete the StoreKit, entitlement, media-rights, and App Review gates in docs/PAID_RELEASE_HANDOFF.md before making a distribution build.")
@@ -50,6 +51,7 @@ struct FigmaExerciseNode: Decodable, Identifiable {
         case "6941379a35337829adbeab7e6b76732ddaaa4423": return "FigmaBreathingArt"
         case "08c13ca33d9edfe16cf76c203d7e728a2438b244": return "FigmaMirrorGestureOne"
         case "0e6b7cd411f0a77b723d510fb9adb8314b81f990": return "FigmaMirrorGestureTwo"
+        case "699a7c1095ff6415a923bee6923275a2629d5a13": return "FigmaHugCompilation"
         default: return nil
         }
     }
@@ -83,9 +85,10 @@ enum FigmaExerciseScreenCatalog {
               let map = try? JSONDecoder().decode([String: [String]].self, from: data) else { return [:] }
         return map
     }()
-    static func screen(for exerciseID: String, step: Int) -> FigmaExerciseScreen? {
+    static func screen(for exerciseID: String, step: Int, selection: String? = nil) -> FigmaExerciseScreen? {
         guard let ids = frames[exerciseID], ids.indices.contains(step),
-              let screen = screens[ids[step]],
+              let screen = screens[exerciseID == "mirror-a-gentle-gesture" && step == 1 && selection == "hug"
+                  ? "880:105" : ids[step]],
               !screen.nodes.contains(where: { node in
                   node.f?.contains(where: { $0.t == "IMAGE" }) == true && node.imageAsset == nil
               }) else { return nil }
@@ -105,6 +108,18 @@ struct FigmaExerciseScreenView: View {
     @State private var listEntry = ""
     @State private var showingRelationshipPicker = false
     @State private var assessedPeople: [Person] = []
+    @State private var selectedPhoto: PhotosPickerItem?
+
+    private var photoKey: String { "photo:\(screen.id)" }
+
+    private var savedPhoto: UIImage? {
+        guard let filename = fields[photoKey],
+              let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return UIImage(contentsOfFile: directory.appendingPathComponent("ExercisePhotos")
+            .appendingPathComponent(filename).path)
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -137,6 +152,26 @@ struct FigmaExerciseScreenView: View {
                             .position(x: (node.x + node.w / 2) * scale,
                                       y: (node.y - 64 + node.h / 2) * scale)
                             .accessibilityIdentifier("FigmaReflection_\(node.id)")
+                    }
+                    if ["844:1664", "845:3034"].contains(screen.id),
+                       let node = screen.nodes.first(where: { $0.n == "upload-dashed-area" }) {
+                        if let photo = savedPhoto {
+                            Image(uiImage: photo)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: node.w * scale, height: node.h * scale)
+                                .clipped()
+                                .clipShape(RoundedRectangle(cornerRadius: (node.r ?? 12) * scale))
+                                .position(x: (node.x + node.w / 2) * scale,
+                                          y: (node.y - 64 + node.h / 2) * scale)
+                        }
+                        PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                            Color.clear.contentShape(Rectangle())
+                        }
+                        .frame(width: node.w * scale, height: node.h * scale)
+                        .position(x: (node.x + node.w / 2) * scale,
+                                  y: (node.y - 64 + node.h / 2) * scale)
+                        .accessibilityLabel("Add an optional photo")
                     }
                     ForEach(screen.nodes.filter {
                         $0.n.hasPrefix("list-item") || $0.n.hasPrefix("optional-support")
@@ -178,6 +213,28 @@ struct FigmaExerciseScreenView: View {
                         .position(x: (node.x + node.w / 2) * scale,
                                   y: (node.y - 64 + node.h / 2) * scale)
                         .accessibilityLabel("Choose a relationship from your assessments")
+                    }
+                    if screen.id == "840:729" {
+                        ForEach(screen.nodes.filter { $0.n == "choose-clip" }) { node in
+                            Button {
+                                fields["mirror-clip-choice"] = node.path?.contains("exercise-2-card") == true
+                                    ? "hug" : "smile"
+                                onNext()
+                            } label: { Color.clear.contentShape(Rectangle()) }
+                                .frame(width: node.w * scale, height: node.h * scale)
+                                .position(x: (node.x + node.w / 2) * scale,
+                                          y: (node.y - 64 + node.h / 2) * scale)
+                                .accessibilityLabel(node.path?.contains("exercise-2-card") == true
+                                    ? "Choose hug compilation" : "Choose warm smile")
+                        }
+                    }
+                    if screen.id == "880:105", let video = URL(string: "https://www.youtube.com/watch?v=0Bk5yoFJDo4"),
+                       let node = screen.nodes.first(where: { $0.n == "upload-dashed-area" }) {
+                        Link(destination: video) { Color.clear.contentShape(Rectangle()) }
+                            .frame(width: node.w * scale, height: node.h * scale)
+                            .position(x: (node.x + node.w / 2) * scale,
+                                      y: (node.y - 64 + node.h / 2) * scale)
+                            .accessibilityLabel("Watch the hug compilation on YouTube")
                     }
                     ForEach(screen.nodes.filter { $0.n == "btn-complete-exercise" }) { node in
                         Button {
@@ -252,6 +309,29 @@ struct FigmaExerciseScreenView: View {
                 }
             }
         }
+        .onChange(of: selectedPhoto) { _, item in
+            guard let item else { return }
+            Task { await savePhoto(item) }
+        }
+    }
+
+    @MainActor
+    private func savePhoto(_ item: PhotosPickerItem) async {
+        guard let data = try? await item.loadTransferable(type: Data.self),
+              let image = UIImage(data: data),
+              let jpeg = image.jpegData(compressionQuality: 0.8),
+              let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        let directory = documents.appendingPathComponent("ExercisePhotos", isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            let filename = UUID().uuidString + ".jpg"
+            try jpeg.write(to: directory.appendingPathComponent(filename), options: .atomic)
+            fields[photoKey] = filename
+        } catch {
+            return
+        }
     }
 
     @MainActor
@@ -318,7 +398,8 @@ struct FigmaExerciseScreenView: View {
             Circle()
                 .fill(node.fill ?? Color.clear)
                 .overlay(Circle().stroke(node.stroke ?? Color.clear, lineWidth: (node.sw ?? 1) * scale))
-        } else if node.n.hasPrefix("optional-support-") && node.t == "FRAME" {
+        } else if (node.n.hasPrefix("optional-support-") || node.n == "upload-dashed-area")
+                    && node.t == "FRAME" {
             RoundedRectangle(cornerRadius: (node.r ?? 14) * scale)
                 .fill(node.fill ?? Color.clear)
                 .overlay(RoundedRectangle(cornerRadius: (node.r ?? 14) * scale)

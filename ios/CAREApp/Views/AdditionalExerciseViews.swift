@@ -55,6 +55,8 @@ struct ExercisePageHeader: View {
     private var soft: Color { accent.opacity(0.08) }
     private var showsPRM: Bool {
         item.id == "keep-photo-close" || item.id == "accepted-moments-library"
+            || item.id == "save-a-resonant-moment" || item.id == "revisit-an-early-spark"
+            || item.id == "recall-a-warm-connection"
     }
 
     var body: some View {

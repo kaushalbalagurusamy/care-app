@@ -35,7 +35,8 @@ struct GuidedExerciseView: View {
             HeaderNavBar(accentColor: accent, onBack: {
                 if stepIndex > 0 { stepIndex -= 1 } else { showCancel = true }
             })
-            if let figmaScreen = FigmaExerciseScreenCatalog.screen(for: exerciseID, step: stepIndex) {
+            if let figmaScreen = FigmaExerciseScreenCatalog.screen(
+                for: exerciseID, step: stepIndex, selection: fields["mirror-clip-choice"]) {
                 FigmaExerciseScreenView(
                     screen: figmaScreen,
                     accent: accent,
