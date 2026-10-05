@@ -19,6 +19,7 @@ public struct ParticipantAllocation: Identifiable, Equatable, Codable {
 // MARK: - Vertical Time Allocation Bubble with Smooth Threshold-Based 5% Snapping (Figma Frame 41:4)
 public struct VerticalTimeAllocationBubble: View {
     @Binding public var allocations: [ParticipantAllocation]
+    public let photoDataByPersonID: [UUID: Data]
     
     // State tracking active drag per divider
     @State private var dragDividerIndex: Int? = nil
@@ -28,8 +29,9 @@ public struct VerticalTimeAllocationBubble: View {
     private let minPercentage: Double = 0.05
     private let outlineColor = Color(hex: "#94A2B8")
     
-    public init(allocations: Binding<[ParticipantAllocation]>) {
+    public init(allocations: Binding<[ParticipantAllocation]>, photoDataByPersonID: [UUID: Data] = [:]) {
         self._allocations = allocations
+        self.photoDataByPersonID = photoDataByPersonID
     }
     
     public var body: some View {
@@ -55,14 +57,25 @@ public struct VerticalTimeAllocationBubble: View {
                         
                         HStack(spacing: 8) {
                             // Uniform Compact Avatar Circle (Fits perfectly in 5% height without overflow)
-                            Circle()
-                                .fill(Color.white)
+                            Group {
+                                if let data = photoDataByPersonID[item.id], let image = UIImage(data: data) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .accessibilityLabel("Photo for \(item.firstName)")
+                                } else {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .overlay(
+                                            Text(item.initials)
+                                                .font(Theme.Typography.poppins(.bold, size: 9.5))
+                                                .foregroundColor(Theme.Colors.primary)
+                                        )
+                                        .accessibilityHidden(true)
+                                }
+                            }
                                 .frame(width: 20, height: 20)
-                                .overlay(
-                                    Text(item.initials)
-                                        .font(Theme.Typography.poppins(.bold, size: 9.5))
-                                        .foregroundColor(Theme.Colors.primary)
-                                )
+                                .clipShape(Circle())
                                 .shadow(color: Color.black.opacity(0.04), radius: 1.5, x: 0, y: 1)
                             
                             // First Name

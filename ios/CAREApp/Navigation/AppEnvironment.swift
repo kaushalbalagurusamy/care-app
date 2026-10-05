@@ -48,12 +48,13 @@ public final class AppEnvironment {
         let arguments = ProcessInfo.processInfo.arguments
         if arguments.contains("--uitesting-fresh") || arguments.contains("--uitesting-history") ||
             arguments.contains("--uitesting-assessment") || arguments.contains("--uitesting-final-assessment") ||
-            arguments.contains("--uitesting-quiz") {
+            arguments.contains("--uitesting-quiz") || arguments.contains("--uitesting-exercise") {
             return try makeIsolatedUITestEnvironment(
                 withHistory: arguments.contains("--uitesting-history"),
                 withAssessment: arguments.contains("--uitesting-assessment"),
                 withFinalAssessment: arguments.contains("--uitesting-final-assessment"),
-                withQuiz: arguments.contains("--uitesting-quiz")
+                withQuiz: arguments.contains("--uitesting-quiz"),
+                withExercise: arguments.contains("--uitesting-exercise")
             )
         }
         PickedExerciseMovie.removeStaleTemporaryMovies()
@@ -83,11 +84,11 @@ public final class AppEnvironment {
     }
 
     /// Explicit launch fixtures for simulator UI evaluations. Never used in a normal app launch.
-    private static func makeIsolatedUITestEnvironment(withHistory: Bool, withAssessment: Bool, withFinalAssessment: Bool, withQuiz: Bool) throws -> AppEnvironment {
+    private static func makeIsolatedUITestEnvironment(withHistory: Bool, withAssessment: Bool, withFinalAssessment: Bool, withQuiz: Bool, withExercise: Bool) throws -> AppEnvironment {
         let container = StorageContainerFactory.createInMemoryContainer()
         let repository = LocalDeviceRepository(modelContainer: container)
         let drafts = try UserDraftStore(container: container, migrateLegacyPhotos: false)
-        if withHistory || withAssessment || withFinalAssessment || withQuiz {
+        if withHistory || withAssessment || withFinalAssessment || withQuiz || withExercise {
             try ProfileSettingsStore(sharedStore: drafts).skipSetup()
         }
         if withHistory {
@@ -131,6 +132,14 @@ public final class AppEnvironment {
                                                  currentQuestionIndex: withFinalAssessment ? 19 : 1,
                                                  recordedAnswers: answers)
             try drafts.saveValue(session, key: "assessment-draft")
+        }
+        if withExercise {
+            try drafts.saveExercise(ExerciseDraft(exerciseID: "watch-something-funny"))
+            let people = Person.mockFigmaContacts
+            let samplePhoto = Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z5gAAAABJRU5ErkJggg==")
+            for (index, person) in people.enumerated() {
+                try drafts.commitContact(person, photoData: index == 0 ? samplePhoto : nil, editDraftKey: "contact-edit:new")
+            }
         }
         if withQuiz,
            let topic = try EducationManifestLoader.loadBundledManifest().first,

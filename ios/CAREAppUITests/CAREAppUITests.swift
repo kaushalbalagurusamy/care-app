@@ -152,6 +152,27 @@ final class CAREAppUITests: XCTestCase {
         )
     }
 
+    func testContactPhotoAppearsInSelectionAndFrequency() {
+        launch(fixture: "--uitesting-exercise", skipWelcome: false)
+        openChooseRelationships()
+        require(app.images["Photo for Sarah Mitchell"])
+        require(app.buttons["ChooseRelationshipsNextButton"]).tap()
+        require(app.staticTexts["Choose Frequency"])
+        require(app.images["Photo for Sarah"])
+    }
+
+    func testExerciseDraftOnlyShowsOnItsExerciseCard() {
+        launch(fixture: "--uitesting-exercise", skipWelcome: false)
+        require(app.staticTexts["Welcome Back"])
+        XCTAssertFalse(app.staticTexts["Exercises in progress"].exists,
+                       "The home screen should remain a normal entry point")
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.staticTexts["Exercise in progress"])
+        require(app.buttons["Continue"])
+        require(app.buttons["Discard"])
+    }
+
     func testExerciseHeadersAndUpdatedFunnyClipDurations() {
         require(app.buttons["Exercises"]).tap()
         require(app.buttons["Accepted"]).tap()

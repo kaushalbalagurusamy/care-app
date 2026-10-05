@@ -101,13 +101,6 @@ public struct HomeView: View {
                         title: "Exercises",
                         iconName: "icon_activity",
                         backgroundImageName: "card_exercises_bg",
-                        hasResumeControls: appEnvironment?.draftStore.mostRecentExerciseID != nil,
-                        onResume: { resumeExercise() },
-                        onDiscard: {
-                            guard let id = appEnvironment?.draftStore.mostRecentExerciseID else { return }
-                            do { try appEnvironment?.draftStore.discardExercise(id) }
-                            catch { draftError = "The exercise could not be discarded. Please try again." }
-                        },
                         action: {
                             router.navigate(to: .exercises)
                         }
@@ -162,20 +155,6 @@ public struct HomeView: View {
         router.navigate(to: .educationQuiz(topic: topic))
     }
 
-    private func resumeExercise() {
-        guard let id = appEnvironment?.draftStore.mostRecentExerciseID else { return }
-        switch id {
-        case "watch-something-funny": router.navigate(to: .watchFunny)
-        case "keep-photo-close": router.navigate(to: .keepPhoto)
-        case "belonging-list": router.navigate(to: .belongingList)
-        case "share-something-small": router.navigate(to: .shareSomethingSmall)
-        case "mirror-emotion": router.navigate(to: .mirrorEmotion)
-        case "mirror-loved-one": router.navigate(to: .mirrorLovedOne)
-        case "share-something-new": router.navigate(to: .shareSomethingNew)
-        case "connection-countdown": router.navigate(to: .connectionCountdown)
-        default: draftError = "That exercise is unavailable. Open Exercises to choose another."
-        }
-    }
 }
 
 // MARK: - Previews

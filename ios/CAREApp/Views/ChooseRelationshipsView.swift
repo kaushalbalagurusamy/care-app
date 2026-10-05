@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - Screen 5: Choose Relationships View (Figma Frame 17:4)
 public struct ChooseRelationshipsView: View {
@@ -8,6 +9,7 @@ public struct ChooseRelationshipsView: View {
     @Environment(AppEnvironment.self) private var appEnvironment
     
     @State private var availablePeople: [Person] = []
+    @State private var photoDataByPersonID: [UUID: Data] = [:]
     @State private var showSelectionLimit = false
     @State private var hasInitializedSelection = false
     @State private var autoSelectNewContacts = false
@@ -37,6 +39,11 @@ public struct ChooseRelationshipsView: View {
     
     private func refreshContacts() async {
         guard let loaded = try? await appEnvironment.contactsRepo.fetchContacts() else { return }
+        photoDataByPersonID = Dictionary(uniqueKeysWithValues: loaded.compactMap { person in
+            let key = "contact-photo:\(person.id.uuidString)"
+            guard let data = try? appEnvironment.draftStore.loadValue(Data.self, key: key) else { return nil }
+            return (person.id, data)
+        })
         if !hasInitializedSelection {
             let history = try? await appEnvironment.assessmentRepo.fetchAssessmentHistory()
             let previousIDs = history?.first.map { $0.individualResults.map(\.id) }
@@ -121,15 +128,26 @@ public struct ChooseRelationshipsView: View {
                                     } else { showSelectionLimit = true }
                                 } label: {
                                 HStack(spacing: 16) {
-                                // Pure White Circular Initials Badge
-                                Circle()
-                                    .fill(Color.white)
+                                // Contact photo when available, with initials as the fallback.
+                                Group {
+                                    if let data = photoDataByPersonID[person.id], let image = UIImage(data: data) {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .accessibilityLabel("Photo for \(person.name)")
+                                    } else {
+                                        Circle()
+                                            .fill(Color.white)
+                                            .overlay(
+                                                Text(person.initials)
+                                                    .font(Theme.Typography.poppins(.bold, size: 17))
+                                                    .foregroundColor(Theme.Colors.primary)
+                                            )
+                                            .accessibilityHidden(true)
+                                    }
+                                }
                                     .frame(width: 48, height: 48)
-                                    .overlay(
-                                        Text(person.initials)
-                                            .font(Theme.Typography.poppins(.bold, size: 17))
-                                            .foregroundColor(Theme.Colors.primary)
-                                    )
+                                    .clipShape(Circle())
                                     .overlay {
                                         Circle().stroke(isSelected ? Theme.Colors.primary : Color.clear, lineWidth: 2)
                                     }
