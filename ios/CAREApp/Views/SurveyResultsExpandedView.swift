@@ -11,20 +11,18 @@ public struct SurveyResultsExpandedView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Standardized Header Bar with Modular AppIcons
-            HeaderNavBar()
+            HeaderNavBar(showBackButton: true, onBack: { router.pop() })
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 14) {
                     
-                    // Title Header with Info Icon (Figma Frame 58:3)
-                    HStack(spacing: 10) {
-                        Image(systemName: "info.circle")
-                            .font(.system(size: 22, weight: .regular))
-                            .foregroundColor(Theme.Colors.primary)
-                        
-                        Text("About Relational Risk Groups")
-                            .font(Theme.Typography.poppins(.bold, size: 20))
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Relational Risk Groups")
+                            .font(Theme.Typography.poppins(.bold, size: 28))
                             .foregroundColor(Theme.Colors.textPrimary)
+                        Text("Understand how each relationship score reflects the safety and growth potential of your connections.")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundColor(Theme.Colors.textSecondary)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
@@ -34,30 +32,33 @@ public struct SurveyResultsExpandedView: View {
                         // 1. Safe Tier
                         RelationalRiskTierCard(
                             badgeTitle: "Safe",
-                            badgeColor: Theme.Colors.Safety.lowRisk,
+                            badgeColor: ResultsV2Palette.safe,
                             scoreRange: "75 or above",
+                            groupTitle: "High Safety Group",
                             explanation: "This score indicates a sturdy, supportive connection. It is a safe space for trying out new relational skills and discussing concrete ways to support one another."
                         )
                         
                         // 2. Moderate Risk Tier
                         RelationalRiskTierCard(
                             badgeTitle: "Moderate Risk",
-                            badgeColor: Theme.Colors.Safety.moderateRisk,
-                            scoreRange: "60 to 75",
+                            badgeColor: ResultsV2Palette.moderate,
+                            scoreRange: "60 to 74",
+                            groupTitle: "Moderate Safety Group",
                             explanation: "This score suggests moderate safety with room for improvement. While not the first place to turn for vulnerability, you can practice skills here as you gain confidence, and eventually invite the other person to work on deepening your connection."
                         )
                         
                         // 3. High Risk Tier
                         RelationalRiskTierCard(
                             badgeTitle: "High Risk",
-                            badgeColor: Theme.Colors.Safety.highRisk,
+                            badgeColor: ResultsV2Palette.highRisk,
                             scoreRange: "Less than 60",
+                            groupTitle: "High Risk Safety Group",
                             explanation: "This score indicates significant relational problems that cannot tolerate much vulnerability or conflict. Do not attempt new skills here. If the relationship is frankly abusive, please immediately seek help from a professional (like a counselor, physician, or domestic violence specialist) to explore extrication."
                         )
                     }
                     
                     // MARK: Bottom Action Button (Figma Frame 58:3)
-                    PrimaryButton(
+                    SecondaryButton(
                         title: "Back to Results",
                         icon: "arrow.left",
                         action: {
@@ -71,7 +72,7 @@ public struct SurveyResultsExpandedView: View {
                 .padding(.vertical, 12)
             }
         }
-        .background(Theme.Colors.background)
+        .background(Color(hex: "#F8FAFC"))
     }
 }
 
@@ -80,17 +81,20 @@ public struct RelationalRiskTierCard: View {
     public let badgeTitle: String
     public let badgeColor: Color
     public let scoreRange: String
+    public let groupTitle: String
     public let explanation: String
     
     public init(
         badgeTitle: String,
         badgeColor: Color,
         scoreRange: String,
+        groupTitle: String,
         explanation: String
     ) {
         self.badgeTitle = badgeTitle
         self.badgeColor = badgeColor
         self.scoreRange = scoreRange
+        self.groupTitle = groupTitle
         self.explanation = explanation
     }
     
@@ -113,6 +117,10 @@ public struct RelationalRiskTierCard: View {
                 Spacer()
             }
             
+            Text(groupTitle)
+                .font(Theme.Typography.poppins(.bold, size: 16))
+                .foregroundColor(Theme.Colors.textPrimary)
+
             // Explanation Body
             Text(explanation)
                 .font(Theme.Typography.poppins(.regular, size: 13.5))

@@ -56,6 +56,64 @@ public enum QuizOptionState: Hashable, Sendable {
     }
 }
 
+/// Common answer geometry for assessments and education quizzes.
+public struct AssessmentAnswerOptionCard: View {
+    public let text: String
+    public let state: QuizOptionState
+    public let isEnabled: Bool
+    public let fontSize: CGFloat
+    public let action: () -> Void
+
+    public init(text: String, state: QuizOptionState, isEnabled: Bool = true, fontSize: CGFloat = 14, action: @escaping () -> Void) {
+        self.text = text
+        self.state = state
+        self.isEnabled = isEnabled
+        self.fontSize = fontSize
+        self.action = action
+    }
+
+    public var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .stroke(state == .unselected ? Theme.Colors.primary : state.borderColor, lineWidth: 1.5)
+                        .frame(width: 20, height: 20)
+                    if state != .unselected {
+                        Circle()
+                            .fill(state == .selected ? Theme.Colors.primary : state.borderColor)
+                            .frame(width: 20, height: 20)
+                        if state == .selected {
+                            Circle().fill(Color.white).frame(width: 7, height: 7)
+                        } else {
+                            Image(systemName: state == .incorrect ? "xmark" : "checkmark")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                }
+                Text(text)
+                    .font(Theme.Typography.poppins(state == .unselected ? .regular : .semiBold, size: fontSize))
+                    .foregroundColor(Theme.Colors.textPrimary)
+                    .multilineTextAlignment(.leading)
+                    .lineSpacing(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+            .background(state.backgroundColor)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(state == .unselected ? Color.clear : state.borderColor, lineWidth: 1.5))
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .accessibilityAddTraits(state == .selected ? .isSelected : [])
+    }
+}
+
 // MARK: - Quiz Option Card (Figma Frame 18: 201:4 / Node 201:36)
 public struct QuizOptionCard: View {
     public let option: QuizOption
@@ -63,7 +121,7 @@ public struct QuizOptionCard: View {
     public let isEnabled: Bool
     public let action: () -> Void
     
-    public var minTouchTargetHeight: CGFloat { 56.0 }
+    public var minTouchTargetHeight: CGFloat { 48.0 }
     
     public init(
         option: QuizOption,
@@ -78,66 +136,11 @@ public struct QuizOptionCard: View {
     }
     
     public var body: some View {
-        Button(action: {
-            guard isEnabled else { return }
+        AssessmentAnswerOptionCard(text: option.text, state: state, isEnabled: isEnabled) {
             let generator = UIImpactFeedbackGenerator(style: .light)
             generator.impactOccurred()
             action()
-        }) {
-            HStack(spacing: 14) {
-                // Circular Letter Badge (A / B / C / D)
-                ZStack {
-                    Circle()
-                        .fill(state.letterBadgeBackground)
-                        .frame(width: 32, height: 32)
-                        .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 1)
-                    
-                    Text(option.letter)
-                        .font(Theme.Typography.poppins(.bold, size: 14))
-                        .foregroundColor(state.letterBadgeForeground)
-                }
-                .frame(width: 32, height: 32)
-                
-                // Option Text
-                Text(option.text)
-                    .font(Theme.Typography.poppins(.medium, size: 14))
-                    .foregroundColor(Theme.Colors.textPrimary)
-                    .lineSpacing(2)
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                // Trailing Feedback Icon (Checkmark or Cross)
-                Group {
-                    switch state {
-                    case .correct:
-                        Image(systemName: "checkmark.circle")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(Color(hex: "#5D9C59"))
-                    case .incorrect:
-                        Image(systemName: "xmark.circle")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(Color(hex: "#E07A5F"))
-                    case .unselected, .selected:
-                        EmptyView()
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .frame(minHeight: minTouchTargetHeight)
-            .background(state.backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(state.borderColor, lineWidth: state == .unselected ? 1 : 1.8)
-            )
-            .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
-        .buttonStyle(.plain)
-        .disabled(!isEnabled)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Option \(option.letter): \(option.text). State: \(stateDescription)")
         .accessibilityHint(isEnabled ? "Double tap to select this answer" : "")

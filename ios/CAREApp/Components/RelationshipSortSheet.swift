@@ -105,7 +105,8 @@ public struct RelationshipSortSheet: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 16)
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.height(390)])
+        .presentationCornerRadius(30)
         .presentationDragIndicator(.hidden)
     }
 }

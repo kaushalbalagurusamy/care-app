@@ -14,12 +14,12 @@ struct StorageBenchmarkTests {
         
         // 1. Seed 50 contacts
         for i in 1...50 {
-            let contact = Person(name: "Contact \(i)", initials: "C\(i)", category: .partner, age: 30)
+            let contact = Person(name: "Contact \(i)", initials: "C\(i)", category: .partner)
             _ = try await repo.createContact(contact)
         }
         
         // 2. Seed 50 assessment sessions (each with participant scores)
-        let sampleContacts = (1...5).map { Person(name: "Contact \($0)", initials: "C\($0)", category: .friend, age: 28) }
+        let sampleContacts = (1...5).map { Person(name: "Contact \($0)", initials: "C\($0)", category: .friend) }
         let sampleParticipants = sampleContacts.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
         
         for i in 1...50 {
@@ -79,7 +79,7 @@ struct StorageBenchmarkTests {
         let container = StorageContainerFactory.createInMemoryContainer()
         let repo = LocalDeviceRepository(modelContainer: container)
         
-        let sampleContacts = (1...5).map { Person(name: "Contact \($0)", initials: "C\($0)", category: .friend, age: 29) }
+        let sampleContacts = (1...5).map { Person(name: "Contact \($0)", initials: "C\($0)", category: .friend) }
         let sampleParticipants = sampleContacts.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
         
         for i in 1...50 {
@@ -122,7 +122,7 @@ struct StorageBenchmarkTests {
         let container = StorageContainerFactory.createInMemoryContainer()
         let repo = LocalDeviceRepository(modelContainer: container)
         
-        let person = Person(name: "Offline User", initials: "OU", category: .family, age: 40)
+        let person = Person(name: "Offline User", initials: "OU", category: .family)
         let created = try await repo.createContact(person)
         #expect(created.name == "Offline User")
         
@@ -145,7 +145,7 @@ struct StorageBenchmarkTests {
         #expect(try await env.notificationScheduler.isReminderScheduled() == false)
         
         // 2. Add custom contact
-        let customPerson = Person(name: "Dr. Alicia Vance", initials: "AV", category: .coworker, age: 38)
+        let customPerson = Person(name: "Dr. Alicia Vance", initials: "AV", category: .coworker)
         _ = try await env.contactsRepo.createContact(customPerson)
         #expect(try await env.contactsRepo.fetchContactCount() == 6)
         

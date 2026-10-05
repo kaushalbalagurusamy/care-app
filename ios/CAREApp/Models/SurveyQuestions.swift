@@ -30,11 +30,11 @@ public enum CAREDomain: String, CaseIterable, Codable, Hashable, Sendable {
         case .calm:
             return "Calmness is related to the functioning of the smart vagus nerve and your social engagement system. When these systems are healthy, they help you to modulate stress levels."
         case .accepted:
-            return "Acceptance reflects feelings of belonging, safety, and mutual respect in your relational network."
+            return "Acceptance is associated with the dorsal anterior cingulate cortex, which helps your brain register inclusion, exclusion, and social belonging."
         case .resonant:
-            return "Resonance captures emotional attunement and mutual empathy without losing your own grounding."
+            return "Resonance is associated with the mirror neuron system, which supports emotional attunement and empathy without losing your own grounding."
         case .energetic:
-            return "Energy describes the vitality, motivation, and positive arousal derived from growth-fostering social bonds."
+            return "Energy is associated with the dopamine reward system, which helps growth-fostering social bonds feel motivating, rewarding, and energizing."
         }
     }
     
@@ -44,6 +44,15 @@ public enum CAREDomain: String, CaseIterable, Codable, Hashable, Sendable {
         case .accepted: return Theme.Colors.Domains.accepted
         case .resonant: return Theme.Colors.Domains.resonant
         case .energetic: return Theme.Colors.Domains.energetic
+        }
+    }
+
+    public var accentColor: Color {
+        switch self {
+        case .calm: return Theme.Colors.Domains.calmAccent
+        case .accepted: return Theme.Colors.Domains.acceptedAccent
+        case .resonant: return Theme.Colors.Domains.resonantAccent
+        case .energetic: return Theme.Colors.Domains.energeticAccent
         }
     }
 }

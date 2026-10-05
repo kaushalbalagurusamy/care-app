@@ -411,3 +411,86 @@ public final class LocalEducationProgressRepository: EducationProgressRepository
         saveStoredMap(map)
     }
 }
+
+// Production education state uses the same SwiftData container as assessments,
+// contacts and in-progress quiz answers. A completed quiz and draft removal are
+// committed in one context save by UserDraftStore.finishQuiz.
+@MainActor
+public final class SwiftDataEducationProgressRepository: EducationProgressRepositoryProtocol {
+    private let store: UserDraftStore
+    private let key = "education-progress"
+
+    public init(store: UserDraftStore) { self.store = store }
+
+    private func read() throws -> [String: TopicProgressRecord] {
+        try store.loadValue([String: TopicProgressRecord].self, key: key) ?? [:]
+    }
+
+    private func write(_ records: [String: TopicProgressRecord]) throws {
+        try store.saveValue(records, key: key)
+    }
+
+    public func fetchProgress(for slug: EducationTopicSlug) async throws -> TopicProgressRecord {
+        try read()[slug.rawValue] ?? TopicProgressRecord(slug: slug)
+    }
+
+    public func fetchAllProgress() async throws -> [EducationTopicSlug: TopicProgressRecord] {
+        var result: [EducationTopicSlug: TopicProgressRecord] = [:]
+        for (key, value) in try read() { if let slug = EducationTopicSlug(rawValue: key) { result[slug] = value } }
+        return result
+    }
+
+    public func markTopicCompleted(slug: EducationTopicSlug) async throws {
+        var records = try read()
+        var record = records[slug.rawValue] ?? TopicProgressRecord(slug: slug)
+        record.isCompleted = true
+        if record.completedAt == nil { record.completedAt = .now }
+        records[slug.rawValue] = record
+        try write(records)
+    }
+
+    public func recordQuizResult(slug: EducationTopicSlug, passed: Bool) async throws {
+        var records = try read()
+        var record = records[slug.rawValue] ?? TopicProgressRecord(slug: slug)
+        if passed {
+            record.quizPassed = true
+            record.quizPassedAt = .now
+            record.isCompleted = true
+            if record.completedAt == nil { record.completedAt = .now }
+        }
+        records[slug.rawValue] = record
+        try write(records)
+    }
+
+    public func resetProgress() async throws { try store.removeValue(key: key) }
+
+    public func completedTopicsCount() async throws -> Int {
+        try read().values.filter(\.isCompleted).count
+    }
+
+    public func fetchNextQuizSession(for topic: EducationTopic, count: Int, deterministicShuffleSeed: Int?) async throws -> QuizSessionPayload {
+        var records = try read()
+        let all = topic.quizBank.isEmpty ? [topic.quiz] : topic.quizBank
+        var record = records[topic.slug.rawValue] ?? TopicProgressRecord(slug: topic.slug)
+        var available = all.filter { !record.usedQuestionIds.contains($0.id) }
+        let reset = available.count < count
+        if reset { record.usedQuestionIds = []; available = all }
+        let selected = Array((deterministicShuffleSeed == nil ? available.shuffled() : available.sorted { $0.id < $1.id }).prefix(count))
+        record.usedQuestionIds += selected.map(\.id)
+        records[topic.slug.rawValue] = record
+        try write(records)
+        return QuizSessionPayload(questions: selected, wasPoolReset: reset, remainingInPoolAfterSession: max(0, all.count - record.usedQuestionIds.count))
+    }
+
+    public func recordQuizSessionResult(slug: EducationTopicSlug, questionIds: [String], score: Int, totalQuestions: Int) async throws {
+        try store.finishQuiz(slug: slug, score: score, totalQuestions: totalQuestions)
+    }
+
+    public func resetQuizPool(for slug: EducationTopicSlug) async throws {
+        var records = try read()
+        var record = records[slug.rawValue] ?? TopicProgressRecord(slug: slug)
+        record.usedQuestionIds = []
+        records[slug.rawValue] = record
+        try write(records)
+    }
+}

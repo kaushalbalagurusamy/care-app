@@ -14,6 +14,16 @@ __pycache__/
 htmlcov/
 *.egg-info/
 .env
+*.p8
+fastlane/.env*
+fastlane/secrets/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+.bundle/
+vendor/bundle/
+docs/visual-proposals/
 
 # Xcode & Swift
 build/
@@ -42,3 +52,4 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.vercel/

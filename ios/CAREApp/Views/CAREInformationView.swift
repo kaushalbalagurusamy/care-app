@@ -16,7 +16,6 @@ public struct CAREInformationView: View {
             HeaderNavBar(
                 showBackButton: true,
                 showHomeButton: true,
-                showSparkleButton: true,
                 showChartButton: true,
                 showProfileButton: true,
                 onBack: { router?.pop() }
@@ -32,7 +31,7 @@ public struct CAREInformationView: View {
                             .foregroundColor(Theme.Colors.textPrimary)
                         
                         Text("Explore how each C.A.R.E. category reflects safety and connection in your relationships.")
-                            .font(Theme.Typography.poppins(.regular, size: 14))
+                            .font(Theme.Typography.screenSubtitle)
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(3)
                     }
@@ -53,10 +52,9 @@ public struct CAREInformationView: View {
                                     .frame(height: 38)
                                     .background(categoryBgColor(cat))
                                     .clipShape(Capsule())
-                                    .overlay(
-                                        Capsule()
-                                            .stroke(selectedCategory == cat ? categoryStrokeColor(cat) : Color.clear, lineWidth: 1.5)
-                                    )
+                                    .overlay {
+                                        Capsule().stroke(selectedCategory == cat ? cat.accentColor : .clear, lineWidth: 1.5)
+                                    }
                             }
                             .buttonStyle(.plain)
                         }
@@ -77,22 +75,19 @@ public struct CAREInformationView: View {
                     // 3 Guidance Cards (High, Moderate, Low)
                     VStack(spacing: 12) {
                         guidanceCard(
-                            level: "HIGH",
-                            levelColor: Color(hex: "#10B981"),
+                            levelColor: Color(hex: "#38B969"),
                             title: highTitle(selectedCategory),
                             description: highDescription(selectedCategory)
                         )
                         
                         guidanceCard(
-                            level: "MODERATE",
-                            levelColor: Color(hex: "#F59E0B"),
+                            levelColor: Color(hex: "#FABF2E"),
                             title: moderateTitle(selectedCategory),
                             description: moderateDescription(selectedCategory)
                         )
                         
                         guidanceCard(
-                            level: "LOW",
-                            levelColor: Color(hex: "#EF4444"),
+                            levelColor: Color(hex: "#E84D4D"),
                             title: lowTitle(selectedCategory),
                             description: lowDescription(selectedCategory)
                         )
@@ -117,25 +112,20 @@ public struct CAREInformationView: View {
             .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.Colors.background.ignoresSafeArea())
+        .background(Color(hex: "#F8FAFC").ignoresSafeArea())
     }
     
     @ViewBuilder
-    private func guidanceCard(level: String, levelColor: Color, title: String, description: String) -> some View {
+    private func guidanceCard(levelColor: Color, title: String, description: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                Text(level)
-                    .font(Theme.Typography.poppins(.bold, size: 11))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(levelColor)
-                    .clipShape(Capsule())
-                
-                Text(title)
-                    .font(Theme.Typography.poppins(.semiBold, size: 15))
-                    .foregroundColor(Theme.Colors.textPrimary)
-            }
+            Text(title)
+                .font(Theme.Typography.poppins(.semiBold, size: 13))
+                .foregroundColor(.white)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(levelColor)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
             
             Text(description)
                 .font(Theme.Typography.poppins(.regular, size: 13.5))
@@ -156,30 +146,11 @@ public struct CAREInformationView: View {
     
     // MARK: - Color & Copy Helpers
     private func categoryBgColor(_ cat: ExerciseCategory) -> Color {
-        let isSelected = selectedCategory == cat
-        switch cat {
-        case .calm:
-            return isSelected ? Color(hex: "#DBEAFE") : Color(hex: "#EFF6FF")
-        case .accepted:
-            return isSelected ? Color(hex: "#D1FAE5") : Color(hex: "#ECFDF5")
-        case .resonant:
-            return isSelected ? Color(hex: "#EDE9FE") : Color(hex: "#F5F3FF")
-        case .energetic:
-            return isSelected ? Color(hex: "#FFEDD5") : Color(hex: "#FFF7ED")
-        }
+        cat.badgeColor
     }
     
     private func categoryTextColor(_ cat: ExerciseCategory) -> Color {
-        switch cat {
-        case .calm: return Color(hex: "#1E40AF")
-        case .accepted: return Color(hex: "#065F46")
-        case .resonant: return Color(hex: "#5B21B6")
-        case .energetic: return Color(hex: "#9A3412")
-        }
-    }
-    
-    private func categoryStrokeColor(_ cat: ExerciseCategory) -> Color {
-        categoryTextColor(cat).opacity(0.6)
+        cat.accentColor
     }
     
     private func categoryHeadline(_ cat: ExerciseCategory) -> String {

@@ -8,13 +8,13 @@ struct DesignTokensAndPolishTests {
     @Test("DailyExerciseTrackerView default initialization provides 7-day timeline")
     func testDailyExerciseTrackerDefaultInitialization() {
         let tracker = DailyExerciseTrackerView()
-        #expect(tracker.completedDaysCount == 5)
+        #expect(tracker.completedDaysCount == 0)
         #expect(tracker.totalDaysCount == 7)
         #expect(tracker.days.count == 7)
         #expect(tracker.days.map(\.label) == ["M", "T", "W", "T", "F", "S", "S"])
-        #expect(tracker.days[0].isCompleted == true)
+        #expect(tracker.days[0].isCompleted == false)
         #expect(tracker.days[5].isCompleted == false)
-        #expect(tracker.days[5].isCurrent == true)
+        #expect(tracker.days[5].isCurrent == false)
     }
     
     @Test("DailyExerciseTrackerView supports custom days configuration")

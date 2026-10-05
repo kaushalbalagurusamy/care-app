@@ -4,23 +4,32 @@ import SwiftUI
 public struct SurveyQuestionView: View {
     public let router: AppRouter
     @State public var session: AssessmentSessionState
-    public let onSessionUpdate: ((AssessmentSessionState) -> Void)?
-    public let onComplete: (AssessmentResult) -> Void
+    public let sourceSession: AssessmentSessionState
+    public let onSessionUpdate: ((AssessmentSessionState) throws -> Void)?
+    public let onComplete: (AssessmentResult) async throws -> Void
+    public let onDiscardAssessment: (() throws -> Void)?
     
     @State private var selectedOption: SurveyOption? = nil
+    @State private var showSaveConfirmation = false
+    @State private var pendingDestination: AppRoute?
+    @State private var isSubmitting = false
+    @State private var submissionError: String?
     
     private let questions: [SurveyQuestion] = SurveyQuestion.full20QuestionBank
     
     public init(
         router: AppRouter,
         session: AssessmentSessionState,
-        onSessionUpdate: ((AssessmentSessionState) -> Void)? = nil,
-        onComplete: @escaping (AssessmentResult) -> Void
+        onSessionUpdate: ((AssessmentSessionState) throws -> Void)? = nil,
+        onComplete: @escaping (AssessmentResult) async throws -> Void,
+        onDiscardAssessment: (() throws -> Void)? = nil
     ) {
         self.router = router
         self._session = State(initialValue: session)
+        self.sourceSession = session
         self.onSessionUpdate = onSessionUpdate
         self.onComplete = onComplete
+        self.onDiscardAssessment = onDiscardAssessment
     }
     
     private var currentParticipant: AssessmentParticipant? {
@@ -31,7 +40,7 @@ public struct SurveyQuestionView: View {
         guard session.currentQuestionIndex < questions.count else { return nil }
         return questions[session.currentQuestionIndex]
     }
-    
+
     private func formattedQuestionPrompt(question: SurveyQuestion, participant: AssessmentParticipant?) -> String {
         guard let name = participant?.person.name else {
             return "\(session.currentQuestionIndex + 1). \(question.prompt)"
@@ -52,29 +61,94 @@ public struct SurveyQuestionView: View {
     
     private func advanceSession(with option: SurveyOption) {
         guard let q = currentQuestion else { return }
+        let previous = session
         session.recordAnswer(for: q.id, option: option)
-        onSessionUpdate?(session)
         
         if session.isComplete {
+            guard session.isFullyAnswered else {
+                submissionError = "The assessment needs five people and all 20 answers for each person before it can be submitted."
+                return
+            }
+            do { try onSessionUpdate?(session) }
+            catch { session = previous; submissionError = "Your answer could not be saved. Please try again."; return }
+            guard !isSubmitting else { return }
+            isSubmitting = true
             let engine = FlexibleScoringEngine()
             let result = engine.calculateResult(for: session)
-            onComplete(result)
-            router.navigate(to: .surveyResults)
+            Task {
+                do {
+                    try await onComplete(result)
+                    router.finishFlow(at: .surveyResults)
+                } catch {
+                    if error is AssessmentDailyLimitError {
+                        submissionError = "You have already completed an assessment today. Your answers are saved; you can submit another assessment tomorrow."
+                    } else {
+                        submissionError = "Your assessment could not be saved. Your answers are still here; please retry."
+                    }
+                }
+                isSubmitting = false
+            }
         } else {
             let prevParticipantIndex = session.currentParticipantIndex
             _ = session.advance()
-            onSessionUpdate?(session)
-            selectedOption = nil
+            do { try onSessionUpdate?(session) }
+            catch { session = previous; submissionError = "Your answer could not be saved. Please try again."; return }
+            selectedOption = session.currentAnswer
             if session.currentParticipantIndex != prevParticipantIndex {
                 router.navigate(to: .personTransition)
             }
         }
     }
+
+    private func requestLeave(to destination: AppRoute?) {
+        guard !isSubmitting else { return }
+        pendingDestination = destination
+        showSaveConfirmation = true
+    }
+
+    private func goBackWithinAssessment() {
+        guard !isSubmitting else { return }
+        var previous = session
+        guard previous.moveToPreviousQuestion() else { requestLeave(to: nil); return }
+        do {
+            try onSessionUpdate?(previous)
+            session = previous
+            selectedOption = previous.currentAnswer
+        } catch {
+            submissionError = "Your position could not be saved. Please try again."
+        }
+    }
+
+    private func finishLeaving(save: Bool) {
+        if save {
+            if let selectedOption, let question = currentQuestion {
+                session.recordAnswer(for: question.id, option: selectedOption)
+                do { try onSessionUpdate?(session) }
+                catch { submissionError = "Your answer could not be saved. Please try again."; return }
+            }
+        } else {
+            do { try onDiscardAssessment?() }
+            catch { submissionError = "Your saved assessment could not be discarded. Please try again."; return }
+        }
+        showSaveConfirmation = false
+        if let pendingDestination {
+            router.popToRoot()
+            if pendingDestination != .home { router.navigate(to: pendingDestination) }
+        } else {
+            router.pop()
+        }
+    }
     
     public var body: some View {
+        ZStack {
         VStack(spacing: 0) {
             // Header Bar (Matching Figma Frame 7 with all top controls)
-            HeaderNavBar()
+            HeaderNavBar(
+                onBack: { goBackWithinAssessment() },
+                onHome: { requestLeave(to: .home) },
+                onChart: { requestLeave(to: .pastResults) },
+                onProfile: { requestLeave(to: .profile) }
+            )
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 12) {
@@ -125,7 +199,7 @@ public struct SurveyQuestionView: View {
                     // Question Prompt (Figma Frame 7)
                     if let question = currentQuestion {
                         Text(formattedQuestionPrompt(question: question, participant: currentParticipant))
-                            .font(Theme.Typography.poppins(.semiBold, size: 15.5))
+                            .font(Theme.Typography.poppins(.semiBold, size: session.isFinalQuestion ? 15.5 : 17))
                             .foregroundColor(Theme.Colors.textPrimary)
                             .lineSpacing(3)
                             .fixedSize(horizontal: false, vertical: true)
@@ -134,58 +208,22 @@ public struct SurveyQuestionView: View {
                     
                     // 5-Point Likert Option Cards (Figma Frame 7 Left-Aligned Radio Style)
                     if let question = currentQuestion {
-                        VStack(spacing: 8) {
+                        VStack(spacing: session.isFinalQuestion ? 8 : 9) {
                             ForEach(question.options) { option in
                                 let isSelected = (selectedOption?.id == option.id)
                                 
-                                Button(action: {
+                                AssessmentAnswerOptionCard(text: option.text, state: isSelected ? .selected : .unselected, fontSize: session.isFinalQuestion ? 13 : 14) {
                                     withAnimation(.spring(response: 0.22, dampingFraction: 0.85)) {
                                         selectedOption = option
                                     }
+                                    guard !session.isFinalQuestion else { return }
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                        if selectedOption?.id == option.id {
+                                        if router.currentRoute == .surveyQuestion && selectedOption?.id == option.id {
                                             advanceSession(with: option)
                                         }
                                     }
-                                }) {
-                                    HStack(alignment: .center, spacing: 12) {
-                                        // Left-Side Circular Radio Indicator
-                                        ZStack {
-                                            if isSelected {
-                                                Circle()
-                                                    .fill(Theme.Colors.primary)
-                                                    .frame(width: 20, height: 20)
-                                                
-                                                Circle()
-                                                    .fill(Color.white)
-                                                    .frame(width: 7, height: 7)
-                                            } else {
-                                                Circle()
-                                                    .stroke(Theme.Colors.primary, lineWidth: 1.5)
-                                                    .frame(width: 20, height: 20)
-                                            }
-                                        }
-                                        
-                                        // Option Description Text
-                                        Text(option.text)
-                                            .font(Theme.Typography.poppins(isSelected ? .semiBold : .regular, size: 13))
-                                            .foregroundColor(Theme.Colors.textPrimary)
-                                            .multilineTextAlignment(.leading)
-                                            .lineSpacing(2)
-                                            .fixedSize(horizontal: false, vertical: true)
-                                        
-                                        Spacer(minLength: 0)
-                                    }
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 10)
-                                    .background(Theme.Colors.cardSurface)
-                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                            .stroke(isSelected ? Theme.Colors.primary : Color.clear, lineWidth: 1.5)
-                                    )
                                 }
-                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("AssessmentOption_\(option.id)")
                             }
                         }
                     }
@@ -195,29 +233,45 @@ public struct SurveyQuestionView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            // Pinned Bottom Action Bar (Directive #15: Submit button, remove arrow)
-            VStack(spacing: 0) {
-                Divider()
-                    .background(Theme.Colors.dividerSubtle)
-                
-                PrimaryButton(
-                    title: (session.isLastQuestionForCurrentPerson && session.isLastParticipant) ? "Complete Assessment" : "Submit",
-                    trailingIcon: nil,
-                    isEnabled: selectedOption != nil,
-                    action: {
-                        guard let chosen = selectedOption else { return }
-                        advanceSession(with: chosen)
-                    }
-                )
-                .accessibilityIdentifier("SurveyQuestionNextButton")
-                .padding(.horizontal, 20)
-                .padding(.top, 12)
-                .padding(.bottom, 10)
+            if session.isFinalQuestion {
+                VStack(spacing: 0) {
+                    Divider()
+                        .background(Theme.Colors.dividerSubtle)
+
+                    PrimaryButton(
+                        title: "Submit",
+                        trailingIcon: nil,
+                        isEnabled: selectedOption != nil && !isSubmitting,
+                        action: {
+                            guard let chosen = selectedOption else { return }
+                            advanceSession(with: chosen)
+                        }
+                    )
+                    .accessibilityIdentifier("SurveyQuestionSubmitButton")
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
+                    .padding(.bottom, 10)
+                }
+                .background(Theme.Colors.background)
             }
-            .background(Theme.Colors.background)
         }
         .background(Theme.Colors.background)
         .toolbar(.hidden, for: .navigationBar)
+        .onAppear { selectedOption = session.currentAnswer }
+        .onChange(of: sourceSession) { _, updated in
+            session = updated
+            selectedOption = updated.currentAnswer
+        }
+        .alert("Assessment not saved", isPresented: Binding(get: { submissionError != nil }, set: { if !$0 { submissionError = nil } })) {
+            Button("OK", role: .cancel) { submissionError = nil }
+        } message: { Text(submissionError ?? "") }
+        if showSaveConfirmation {
+            SaveAssessmentConfirmationView(
+                onSaveAssessment: { finishLeaving(save: true) },
+                onDiscardAssessment: { finishLeaving(save: false) }
+            )
+        }
+        }
     }
 }
 

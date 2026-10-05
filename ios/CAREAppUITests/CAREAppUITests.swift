@@ -1,375 +1,476 @@
 import XCTest
 
+/// End-to-end checks use app-owned, isolated launch fixtures. They never read or erase
+/// the simulator user's ordinary CARE data.
 final class CAREAppUITests: XCTestCase {
-
-    var app: XCUIApplication!
+    private var app: XCUIApplication!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        app = XCUIApplication()
-        app.launchArguments = ["--uitesting"]
-        app.launch()
+        launch(fixture: "--uitesting-fresh", skipWelcome: true)
     }
 
     override func tearDownWithError() throws {
+        app?.terminate()
         app = nil
     }
 
-    func testFullAssessmentJourney() throws {
-        // 1. Loading Screen transition to Home
-        let homeTitle = app.staticTexts["Welcome Back"]
-        let homeWait = homeTitle.waitForExistence(timeout: 4.0)
-        
-        // If still on loading view, check logo existence
-        if !homeWait {
-            let logo = app.images["care_logo"]
-            if logo.exists {
-                XCTAssertTrue(logo.waitForExistence(timeout: 2.0))
-            }
-        }
-
-        // 2. Tap Assessment Action Card on Home
-        let assessmentCard = app.staticTexts["Assessment"]
-        if assessmentCard.waitForExistence(timeout: 3.0) {
-            assessmentCard.tap()
-        }
-
-        // 3. Assessment Overview -> Continue
-        let startBtn = app.buttons["Start Assessment"]
-        if startBtn.waitForExistence(timeout: 3.0) {
-            startBtn.tap()
-        }
-
-        // 4. Survey Overview -> Continue
-        let understandBtn = app.buttons["I Understand, Let's Begin"]
-        if understandBtn.waitForExistence(timeout: 3.0) {
-            understandBtn.tap()
-        }
-
-        // 5. Choose Relationships (Select People)
-        let continueRelationshipBtn = app.buttons["Continue to Calibration"]
-        if continueRelationshipBtn.waitForExistence(timeout: 3.0) {
-            continueRelationshipBtn.tap()
-        }
-
-        // 6. Relationship Frequency Calibration
-        let startSurveyBtn = app.buttons["Begin Questionnaire"]
-        if startSurveyBtn.waitForExistence(timeout: 3.0) {
-            startSurveyBtn.tap()
-        }
-
-        // 7. Survey Questionnaire Progression
-        let nextBtn = app.buttons["Next"]
-        if nextBtn.waitForExistence(timeout: 3.0) {
-            // Check first question is present
-            XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS 'C.A.R.E.'")).firstMatch.exists)
+    private func launch(fixture: String, skipWelcome: Bool) {
+        app?.terminate()
+        app = XCUIApplication()
+        app.launchArguments = [fixture]
+        app.launch()
+        if skipWelcome, app.buttons["Skip for now"].waitForExistence(timeout: 5) {
+            app.buttons["Skip for now"].tap()
         }
     }
 
-    func testScrollGatedSurveyInstructionsJourney() throws {
-        // 1. Home -> Tap Assessment Card
-        let assessmentCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Assessment'")).firstMatch
-        if !assessmentCard.waitForExistence(timeout: 4.0) {
-            let assessmentText = app.staticTexts["Assessment"]
-            XCTAssertTrue(assessmentText.waitForExistence(timeout: 3.0))
-            assessmentText.tap()
-        } else {
-            assessmentCard.tap()
-        }
-        
-        // 2. Assessment Overview: Button visible from start, grayed out initially
-        let beginBtn = app.buttons["Begin the Survey"]
-        XCTAssertTrue(beginBtn.waitForExistence(timeout: 3.0))
-        Thread.sleep(forTimeInterval: 0.5)
-        
-        let overviewLockedShot = XCUIScreen.main.screenshot()
-        try? overviewLockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/assessment_overview_locked.png"))
-        
-        // Pull scroll all the way down to unlock
-        app.swipeUp()
-        Thread.sleep(forTimeInterval: 0.5)
-        
-        let overviewUnlockedShot = XCUIScreen.main.screenshot()
-        try? overviewUnlockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/assessment_overview_unlocked.png"))
-        
-        XCTAssertTrue(beginBtn.isEnabled)
-        beginBtn.tap()
-        
-        // 3. Survey Instructions Page: Next button visible from start, grayed out initially
-        let instructionsTitle = app.staticTexts["Survey Instructions"]
-        XCTAssertTrue(instructionsTitle.waitForExistence(timeout: 3.0))
-        
-        let nextBtn = app.buttons["Next"]
-        XCTAssertTrue(nextBtn.waitForExistence(timeout: 3.0))
-        Thread.sleep(forTimeInterval: 0.5)
-        
-        let instructionsLockedShot = XCUIScreen.main.screenshot()
-        try? instructionsLockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/survey_instructions_locked.png"))
-        
-        // Pull scroll down to the bottom through Do and Don't guidelines
-        app.swipeUp()
-        Thread.sleep(forTimeInterval: 0.5)
-        
-        let instructionsUnlockedShot = XCUIScreen.main.screenshot()
-        try? instructionsUnlockedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/survey_instructions_unlocked.png"))
-        
-        XCTAssertTrue(nextBtn.isEnabled)
-        nextBtn.tap()
-        
-        // 4. Choose Relationships Page: Verify header and title spacing
-        let chooseTitle = app.staticTexts["Choose Relationships"]
-        XCTAssertTrue(chooseTitle.waitForExistence(timeout: 3.0))
-        Thread.sleep(forTimeInterval: 0.5)
-        
-        let chooseShot = XCUIScreen.main.screenshot()
-        try? chooseShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/3430c6b9-04de-40ce-8472-fe539382f5b3/choose_relationships_spacing.png"))
-        
-        // Pop back to Home
-        let homeBtn = app.buttons["AppIcon_home"]
-        if homeBtn.waitForExistence(timeout: 2.0) {
-            homeBtn.tap()
-        }
+    @discardableResult
+    private func require(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
+        XCTAssertTrue(element.waitForExistence(timeout: 8), "Missing UI element: \(element.debugDescription)", file: file, line: line)
+        return element
     }
 
-    func testAddPersonSheetAgePlaceholder() throws {
-        // 1. Home -> Tap Assessment Card
-        let assessmentCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Assessment'")).firstMatch
-        if assessmentCard.waitForExistence(timeout: 4.0) {
-            assessmentCard.tap()
-        }
-        
-        // 2. Assessment Overview -> Begin the Survey (scroll-gated)
-        let beginBtn = app.buttons["Begin the Survey"]
-        if beginBtn.waitForExistence(timeout: 3.0) {
-            if !beginBtn.isEnabled {
-                app.swipeUp()
-            }
-            beginBtn.tap()
-        }
-        
-        // 3. Survey Overview -> Next (scroll-gated)
-        let nextBtn = app.buttons["Next"]
-        if nextBtn.waitForExistence(timeout: 3.0) {
-            if !nextBtn.isEnabled {
-                app.swipeUp()
-            }
-            nextBtn.tap()
-        }
-        
-        // 4. On Choose Relationships screen -> Tap "Add Person" button
-        let addPersonBtn = app.buttons["Add Person"]
-        if addPersonBtn.waitForExistence(timeout: 3.0) {
-            addPersonBtn.tap()
-            Thread.sleep(forTimeInterval: 0.8)
-            
-            // Take screenshot of the Add Relationship sheet
-            let sheetShot = XCUIScreen.main.screenshot()
-            try? sheetShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/add_person_age_placeholder.png"))
-            
-            // Verify Age text field exists and its value is empty placeholder "Age"
-            let ageField = app.textFields["NewPersonAgeField"]
-            XCTAssertTrue(ageField.waitForExistence(timeout: 2.0))
-            XCTAssertEqual(ageField.placeholderValue, "Age")
-            XCTAssertNotEqual(ageField.value as? String, "30")
-            
-            // Cancel sheet
-            let cancelBtn = app.buttons["Cancel"]
-            if cancelBtn.waitForExistence(timeout: 2.0) {
-                cancelBtn.tap()
-            }
-        }
-    }
-
-    func testPastResultsNavigation() throws {
-        // Tap Stats / Chart icon in header bar to open Past Results
-        let statsBtn = app.buttons["AppIcon_chart"]
-        if statsBtn.waitForExistence(timeout: 3.0) {
-            statsBtn.tap()
-            
-            // Verify Past Results header is visible
-            let pastResultsTitle = app.staticTexts["Past Results"]
-            XCTAssertTrue(pastResultsTitle.waitForExistence(timeout: 3.0))
-            
-            // Capture Top View (C.A.R.E. Results 4-Line Graph & Relational Safety)
-            Thread.sleep(forTimeInterval: 0.5)
-            let topShot = XCUIScreen.main.screenshot()
-            try? topShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_top.png"))
-            
-            // Scroll down to Results by Individual
+    private func enableByScrolling(_ button: XCUIElement, maxSwipes: Int = 12) {
+        require(button)
+        for _ in 0..<maxSwipes where !button.isEnabled {
             app.swipeUp()
-            Thread.sleep(forTimeInterval: 0.5)
-            let bottomShot = XCUIScreen.main.screenshot()
-            try? bottomShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_bottom.png"))
-            
-            // Navigate to next individual (James) via page dot or swipe
-            let pageDot1 = app.buttons["PageDot_1"]
-            if pageDot1.waitForExistence(timeout: 2.0) {
-                pageDot1.tap()
-            } else {
-                let carousel = app.descendants(matching: .any)["IndividualContactCarousel"]
-                if carousel.waitForExistence(timeout: 2.0) {
-                    carousel.swipeLeft()
-                }
-            }
-            Thread.sleep(forTimeInterval: 0.5)
-            let swipedShot = XCUIScreen.main.screenshot()
-            try? swipedShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_swiped_individual.png"))
-            
-            // Test Search Bar with typo "emly"
-            let searchField = app.textFields["Search individuals..."]
-            if searchField.waitForExistence(timeout: 2.0) {
-                searchField.tap()
-                searchField.typeText("emly")
-                Thread.sleep(forTimeInterval: 0.5)
-                
-                let searchShot = XCUIScreen.main.screenshot()
-                try? searchShot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/past_results_fuzzy_search.png"))
-            }
-            
-            // Return to Home
-            let homeBtn = app.buttons["AppIcon_home"]
-            if homeBtn.waitForExistence(timeout: 2.0) {
-                homeBtn.tap()
-            }
+        }
+        XCTAssertTrue(button.isEnabled, "The action never enabled after reaching the end of its content")
+    }
+
+    private func openChooseRelationships() {
+        require(app.buttons["Assessment"]).tap()
+        let begin = require(app.buttons["AssessmentOverviewBeginButton"])
+        enableByScrolling(begin)
+        begin.tap()
+        require(app.staticTexts["Survey Instructions"])
+        let next = require(app.buttons["SurveyOverviewNextButton"])
+        enableByScrolling(next)
+        next.tap()
+        require(app.staticTexts["Choose Relationships"])
+    }
+
+    private func addContact(named name: String) {
+        require(app.buttons["Add Person"]).tap()
+        require(app.staticTexts["Add Relationship"])
+        let nameField = require(app.textFields["RelationshipNameField"])
+        let relationship = require(app.textFields["RelationshipToYouField"])
+        XCTAssertTrue(relationship.exists, "Relationship to you should be optional free text")
+        XCTAssertFalse(app.textFields["NewPersonAgeField"].exists)
+        XCTAssertFalse(app.staticTexts["Other Relative"].exists)
+        let save = require(app.buttons["Save Relationship"])
+        XCTAssertFalse(save.isEnabled, "A blank name must not save")
+        nameField.tap()
+        nameField.typeText(name)
+        XCTAssertTrue(save.isEnabled, "Name alone should allow saving")
+        save.tap()
+        require(app.staticTexts["Choose Relationships"])
+    }
+
+    func testFirstLaunchProfileHasNoAgeField() {
+        launch(fixture: "--uitesting-fresh", skipWelcome: false)
+        require(app.staticTexts["Welcome"])
+        require(app.staticTexts["Set up your profile to explore your relationships and track your reflections over time."])
+        XCTAssertFalse(app.staticTexts["Let's finish setting up your account to start evaluating and tracking your relational health."].exists)
+        require(app.textFields["e.g., Alex Johnson"])
+        XCTAssertFalse(app.staticTexts["Age"].exists)
+        XCTAssertFalse(app.textFields["Age"].exists)
+        require(app.buttons["Skip for now"]).tap()
+        require(app.staticTexts["Welcome Back"])
+    }
+
+    func testFreeReleaseHasNoPurchaseEntryPoints() {
+        XCTAssertFalse(app.buttons["AppIcon_sparkle"].exists)
+        require(app.buttons["Exercises"]).tap()
+        XCTAssertFalse(app.buttons["AppIcon_sparkle"].exists)
+        XCTAssertFalse(app.buttons["UnlockFullBookExercisesButton"].exists)
+
+        for category in ["Calm", "Accepted", "Resonant", "Energetic"] {
+            require(app.buttons[category]).tap()
+            XCTAssertFalse(app.buttons["AppIcon_sparkle"].exists)
+            XCTAssertFalse(app.buttons["UnlockFullBookExercisesButton"].exists)
+            require(app.buttons["AppIcon_back"]).tap()
+        }
+        require(app.buttons["Calm"]).tap()
+        require(app.buttons["DoExercise_watch-something-funny"]).tap()
+        require(app.staticTexts["Watch Something Funny"])
+        let exerciseCapture = XCTAttachment(screenshot: app.screenshot())
+        exerciseCapture.name = "Free Calm exercise header and emoji"
+        exerciseCapture.lifetime = .keepAlways
+        add(exerciseCapture)
+    }
+
+    func testPrivacyDetailsAreAccessibleFromProfileAndSettings() {
+        require(app.buttons["Profile"]).tap()
+        let privacyTab = require(app.buttons["Privacy"])
+        XCTAssertTrue(privacyTab.isHittable, "The Privacy tab must be visible without horizontal scrolling")
+        privacyTab.tap()
+        require(app.buttons["ProfilePrivacyDetailsButton"]).tap()
+        require(app.staticTexts["Privacy & Data Use"])
+        require(app.descendants(matching: .any)["CAREPrivacyPolicyLink"])
+        require(app.staticTexts["What stays on your device"])
+        require(app.staticTexts["When you use other services"])
+        require(app.staticTexts["Your choices and deletion"])
+        require(app.buttons["Done"]).tap()
+
+        require(app.buttons["Open Privacy Settings"]).tap()
+        require(app.buttons["PrivacyDetailsLink"]).tap()
+        require(app.staticTexts["Privacy & Data Use"])
+    }
+
+    func testNameOnlyContactsAndFivePersonGate() {
+        openChooseRelationships()
+        require(app.staticTexts["Choose five"])
+        XCTAssertEqual(require(app.staticTexts["SelectedRelationshipCount"]).label, "0/5")
+        let next = require(app.buttons["ChooseRelationshipsNextButton"])
+        XCTAssertFalse(next.isEnabled, "Assessment must not start with zero selected contacts")
+
+        let names = ["Alex One", "Blair Two", "Casey Three", "Drew Four", "Evan Five"]
+        for (index, name) in names.enumerated() {
+            addContact(named: name)
+            require(app.buttons["Deselect \(name)"])
+            XCTAssertEqual(require(app.staticTexts["SelectedRelationshipCount"]).label, "\(index + 1)/5")
+            XCTAssertEqual(next.isEnabled, index == 4, "The gate should open at exactly five selections")
+        }
+        addContact(named: "Finley Six")
+        require(app.buttons["Select Finley Six"])
+        XCTAssertEqual(require(app.staticTexts["SelectedRelationshipCount"]).label, "5/5")
+
+        // The card edge is part of the selection target, not just the avatar or name.
+        require(app.buttons["Deselect Alex One"])
+            .coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.85)).tap()
+        XCTAssertEqual(require(app.staticTexts["SelectedRelationshipCount"]).label, "4/5")
+        require(app.buttons["Select Finley Six"]).tap()
+        XCTAssertEqual(require(app.staticTexts["SelectedRelationshipCount"]).label, "5/5")
+        next.tap()
+        require(app.staticTexts["Choose Frequency"])
+        XCTAssertEqual(
+            app.staticTexts.matching(NSPredicate(format: "label == '20%'" )).count,
+            5,
+            "Each relationship should start at 20% so every divider handle is easy to reach"
+        )
+    }
+
+    func testContactPhotoAppearsInSelectionAndFrequency() {
+        launch(fixture: "--uitesting-exercise", skipWelcome: false)
+        openChooseRelationships()
+        require(app.images["Photo for Sarah Mitchell"])
+        require(app.buttons["ChooseRelationshipsNextButton"]).tap()
+        require(app.staticTexts["Choose Frequency"])
+        require(app.images["Photo for Sarah"])
+    }
+
+    func testExerciseDraftOnlyShowsOnItsExerciseCard() {
+        launch(fixture: "--uitesting-exercise", skipWelcome: false)
+        require(app.staticTexts["Welcome Back"])
+        XCTAssertFalse(app.staticTexts["Exercises in progress"].exists,
+                       "The home screen should remain a normal entry point")
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.staticTexts["Exercise in progress"])
+        require(app.buttons["Continue"])
+        require(app.buttons["Discard"])
+    }
+
+    func testExerciseHeadersAndUpdatedFunnyClipDurations() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Accepted"]).tap()
+        require(app.buttons["DoExercise_belonging-list"]).tap()
+        let belongingTitle = require(app.staticTexts["Make a Belonging List"])
+        let belongingDescription = require(app.staticTexts["ExerciseDescription"])
+        XCTAssertGreaterThan(belongingDescription.frame.minY, belongingTitle.frame.maxY)
+        XCTAssertTrue(belongingDescription.isHittable)
+        XCTAssertTrue(app.staticTexts["◷ 3–5 min"].exists)
+
+        launch(fixture: "--uitesting-fresh", skipWelcome: true)
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.images["🔥"])
+        require(app.staticTexts["7–10 min • New exercise"])
+        require(app.buttons["DoExercise_watch-something-funny"]).tap()
+        let emojiBadge = require(app.images["ExerciseHeaderEmoji"])
+        XCTAssertTrue(emojiBadge.isHittable)
+        XCTAssertEqual(emojiBadge.frame.width, 48, accuracy: 1, "Figma uses a 48-point exercise emoji badge")
+        XCTAssertEqual(emojiBadge.frame.height, 48, accuracy: 1)
+        XCTAssertEqual(emojiBadge.frame.midX, app.frame.midX, accuracy: 1)
+        let exercisePreview = XCTAttachment(screenshot: app.screenshot())
+        exercisePreview.name = "Watch Something Funny emoji badge"
+        exercisePreview.lifetime = .keepAlways
+        add(exercisePreview)
+        let funnyTitle = require(app.staticTexts["Watch Something Funny"])
+        let funnyDescription = require(app.staticTexts["ExerciseDescription"])
+        XCTAssertGreaterThan(funnyDescription.frame.minY, funnyTitle.frame.maxY)
+        XCTAssertTrue(app.staticTexts["◷ 7–10 min"].exists)
+        require(app.staticTexts["About 10 min • Funny animals and pets"])
+        require(app.staticTexts["About 7 min • Wanda Sykes stand-up"])
+        let firstClip = require(app.buttons["Play Funny Animal Compilation"])
+        XCTAssertTrue(firstClip.isHittable)
+        app.swipeUp()
+        XCTAssertTrue(app.buttons["Play When Life Throws You Earthquakes"].isHittable,
+                      "The full-size exercise should remain vertically scrollable")
+
+        launch(fixture: "--uitesting-fresh", skipWelcome: true)
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.buttons["DoExercise_keep-photo-close"]).tap()
+        require(app.images["ExerciseHeaderEmoji"])
+        require(app.staticTexts["◷ 1–2 min"])
+        require(app.buttons["KeepPhotoNextArrowButton"])
+    }
+
+    func testExerciseCardsAcrossCareCategories() {
+        require(app.buttons["Exercises"]).tap()
+        for (category, exerciseID) in [
+            ("Calm", "watch-something-funny"),
+            ("Accepted", "belonging-list"),
+            ("Resonant", "mirror-emotion"),
+            ("Energetic", "share-something-new")
+        ] {
+            require(app.buttons[category]).tap()
+            require(app.buttons["DoExercise_\(exerciseID)"])
+            let screenshot = XCTAttachment(screenshot: app.screenshot())
+            screenshot.name = "\(category) exercise cards"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+            require(app.buttons["AppIcon_back"]).tap()
         }
     }
 
-    func testAccessibilityAuditCompliance() throws {
-        if #available(iOS 17.0, *) {
-            // Performs automated Apple Accessibility Audit on visible viewport
-            try app.performAccessibilityAudit { issue in
-                // Suppress non-critical contrast warnings on subtle decorative gradient card borders
-                return true
-            }
-        }
+    func testResumedAssessmentBackRestoresPreviousQuestionAndAnswer() {
+        launch(fixture: "--uitesting-assessment", skipWelcome: false)
+        require(app.buttons["ResumeAssessmentButton"]).tap()
+        require(app.staticTexts["Question 2 of 20"])
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Question 1 of 20"])
+        XCTAssertTrue(require(app.buttons["AssessmentOption_q1_opt_1"]).isSelected,
+                      "Back should restore the previously saved answer")
+        XCTAssertFalse(app.staticTexts["Welcome Back"].exists, "Back after resume must stay inside the assessment flow")
     }
-    
-    // MARK: - Phase 5: Education Module UI Journey & Accessibility
-    
-    func testEducationModuleJourney() throws {
-        // 1. Loading Screen transition to Home
-        let homeTitle = app.staticTexts["Welcome Back"]
-        _ = homeTitle.waitForExistence(timeout: 4.0)
-        
-        // 2. Tap Education Action Card on Home
-        let educationCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Education'")).firstMatch
-        if !educationCard.waitForExistence(timeout: 4.0) {
-            _ = app.staticTexts["Education"].waitForExistence(timeout: 2.0)
-            app.staticTexts["Education"].tap()
-        } else {
-            educationCard.tap()
-        }
-        
-        // 3. Verify Education Topics Hub screen
-        let hubTitle = app.staticTexts["Explore science-backed wellness practices"]
-        XCTAssertTrue(hubTitle.waitForExistence(timeout: 4.0))
-        let hubScreenshot = XCUIScreen.main.screenshot()
-        try? hubScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_hub.png"))
-        
-        // 4. Tap Relational-Cultural Theory Topic Card
-        let rctCard = app.staticTexts["Relational-Cultural Theory"]
-        XCTAssertTrue(rctCard.waitForExistence(timeout: 4.0))
-        rctCard.tap()
-        
-        // 5. Verify RCT Topic Detail View and Accordions
-        let detailTitle = app.staticTexts["Relational-Cultural Theory"]
-        XCTAssertTrue(detailTitle.waitForExistence(timeout: 4.0))
-        let topScreenshot = XCUIScreen.main.screenshot()
-        try? topScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_accordions.png"))
-        
-        app.swipeUp()
-        let detailScreenshot = XCUIScreen.main.screenshot()
-        try? detailScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_founders.png"))
-        
-        // 6. Scroll down to and tap "Test Your Understanding" (Clean button without arrow icon)
-        let quizBtn = app.buttons["Test Your Understanding"]
-        if quizBtn.waitForExistence(timeout: 3.0) {
-            if !quizBtn.isEnabled || !quizBtn.isHittable {
-                app.swipeUp()
-            }
-        }
-        let bottomScreenshot = XCUIScreen.main.screenshot()
-        try? bottomScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_rct_cta.png"))
-        
-        if quizBtn.waitForExistence(timeout: 3.0) {
-            quizBtn.tap()
-        }
-        
-        // 7. Verify Quiz View
-        let quizTitle = app.staticTexts["Relational-Cultural Theory Quiz"]
-        if quizTitle.waitForExistence(timeout: 3.0) {
-            let quizScreenshot = XCUIScreen.main.screenshot()
-            try? quizScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_quiz.png"))
-            
-            // Tap first available option on Question 1
-            let option1 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
-            if option1.waitForExistence(timeout: 3.0) {
-                option1.tap()
-            }
-            
-            // Advance through 3-question stepper
-            let nextBtn = app.buttons["Next Question"]
-            if nextBtn.waitForExistence(timeout: 2.0) {
-                nextBtn.tap()
-                
-                // Question 2
-                let opt2 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
-                if opt2.waitForExistence(timeout: 2.0) { opt2.tap() }
-                let nextBtn2 = app.buttons["Next Question"]
-                if nextBtn2.waitForExistence(timeout: 2.0) { nextBtn2.tap() }
-                
-                // Question 3
-                let opt3 = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Option'")).firstMatch
-                if opt3.waitForExistence(timeout: 2.0) { opt3.tap() }
-                let viewResultsBtn = app.buttons["View Results"]
-                if viewResultsBtn.waitForExistence(timeout: 2.0) {
-                    viewResultsBtn.tap()
-                    Thread.sleep(forTimeInterval: 0.5)
-                    let resultsScreenshot = XCUIScreen.main.screenshot()
-                    try? resultsScreenshot.pngRepresentation.write(to: URL(fileURLWithPath: "/Users/kaushal/.gemini/antigravity-cli/brain/1fc1e250-66ea-40fb-9185-34ded9047eca/scratch/education_quiz_results.png"))
-                }
-            }
-            
-            // Tap Return to Topic from Results or Cancel
-            let returnBtn = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Return to'")).firstMatch
-            if returnBtn.waitForExistence(timeout: 3.0) {
-                returnBtn.tap()
-            } else {
-                let backBtn = app.buttons["AppIcon_back"]
-                if backBtn.waitForExistence(timeout: 3.0) {
-                    backBtn.tap()
-                }
-            }
-        }
-        
-        // 8. Verify back on Topic Detail View, then pop back to Hub
-        let backToDetail = app.staticTexts["Relational-Cultural Theory"]
-        if backToDetail.waitForExistence(timeout: 3.0) {
-            let backBtn = app.buttons["AppIcon_back"]
-            if backBtn.waitForExistence(timeout: 3.0) {
-                backBtn.tap()
-            }
-        }
-        
-        // 9. Confirm returned to Education Hub
-        XCTAssertTrue(app.staticTexts["Education"].waitForExistence(timeout: 4.0))
+
+    func testFinalAssessmentSubmitSealsEditorAndBlocksAnotherToday() {
+        launch(fixture: "--uitesting-final-assessment", skipWelcome: false)
+        require(app.buttons["ResumeAssessmentButton"]).tap()
+        require(app.staticTexts["Person 5 of 5"])
+        require(app.staticTexts["Question 20 of 20"])
+        let submit = require(app.buttons["SurveyQuestionSubmitButton"])
+        XCTAssertTrue(submit.isEnabled, "All 100 saved answers should make final submission available")
+        submit.tap()
+        require(app.staticTexts["Survey Results"])
+
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Welcome Back"])
+        XCTAssertFalse(app.staticTexts["Question 20 of 20"].exists,
+                       "Back from committed results must never expose the completed editor")
+        XCTAssertFalse(app.buttons["ResumeAssessmentButton"].exists,
+                       "The completed assessment must no longer appear as a resumable draft")
+
+        require(app.buttons["Assessment"]).tap()
+        require(app.staticTexts["You’ve completed an assessment today. You can begin another tomorrow."])
+        XCTAssertFalse(require(app.buttons["AssessmentOverviewBeginButton"]).isEnabled,
+                       "A second completed assessment must not start on the same local day")
     }
-    
-    func testEducationModuleAccessibilityAudit() throws {
-        if #available(iOS 17.0, *) {
-            // Navigate to Education Hub
-            let homeTitle = app.staticTexts["Welcome Back"]
-            _ = homeTitle.waitForExistence(timeout: 4.0)
-            
-            let educationCard = app.staticTexts["Education"]
-            if educationCard.waitForExistence(timeout: 4.0) {
-                educationCard.tap()
-                
-                // Run automated Apple Accessibility Audit on Education Hub
-                try app.performAccessibilityAudit { issue in
-                    return true
-                }
-            }
-        }
+
+    func testHistoricalTrendPointsOpenTheirOwnSavedResults() {
+        launch(fixture: "--uitesting-history", skipWelcome: false)
+        require(app.staticTexts["Welcome Back"])
+        require(app.buttons["AppIcon_chart"]).tap()
+        require(app.staticTexts["Past Results"])
+        require(app.staticTexts["Tap a point to view that assessment’s full results."])
+
+        let points = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'View assessment results from'"))
+        XCTAssertTrue(points.element(boundBy: 0).waitForExistence(timeout: 8))
+        XCTAssertEqual(points.count, 2, "Both saved assessments need independent trend targets")
+        points.element(boundBy: 0).tap()
+        require(app.staticTexts["Survey Results"])
+        require(app.staticTexts["200"])
+        findTextByScrolling("Alice History")
+        XCTAssertFalse(app.staticTexts["Bob History"].exists)
+
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Past Results"])
+        let recentPoint = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'View assessment results from'"))
+        require(recentPoint.element(boundBy: 1)).tap()
+        require(app.staticTexts["Survey Results"])
+        require(app.staticTexts["400"])
+        findTextByScrolling("Bob History")
+        XCTAssertFalse(app.staticTexts["Alice History"].exists)
+    }
+
+    private func findTextByScrolling(_ text: String) {
+        let label = app.staticTexts[text]
+        for _ in 0..<8 where !label.exists { app.swipeUp() }
+        require(label)
+    }
+
+    private func captureStoreScreenshot(_ name: String) {
+        // Let navigation and scroll animations settle so App Store captures
+        // consistently include the full safe area and system status bar.
+        Thread.sleep(forTimeInterval: 1)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = name
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+    }
+
+    func testCaptureApprovedAppStoreScreenshots() {
+        launch(fixture: "--uitesting-history", skipWelcome: false)
+        require(app.staticTexts["Welcome Back"])
+        captureStoreScreenshot("01-home")
+
+        require(app.buttons["Assessment"]).tap()
+        require(app.staticTexts["Assessment Overview"])
+        captureStoreScreenshot("02-assessment-overview")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["AppIcon_chart"]).tap()
+        require(app.staticTexts["Past Results"])
+
+        let points = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'View assessment results from'"))
+        require(points.element(boundBy: 1)).tap()
+        require(app.staticTexts["Survey Results"])
+        captureStoreScreenshot("03-care-results")
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Past Results"])
+        captureStoreScreenshot("04-past-results")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["Education"]).tap()
+        require(app.staticTexts["Education"])
+        captureStoreScreenshot("06-education")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["Exercises"]).tap()
+        require(app.staticTexts["Daily Exercise"])
+        captureStoreScreenshot("05-exercises")
+    }
+
+    func testSurveyRelationshipBreakdownInfoOpensRiskGroups() {
+        launch(fixture: "--uitesting-history", skipWelcome: false)
+        require(app.buttons["AppIcon_chart"]).tap()
+        let point = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'View assessment results from'")).element(boundBy: 1)
+        require(point).tap()
+        require(app.staticTexts["Survey Results"])
+        let info = app.buttons["About relational risk groups"]
+        for _ in 0..<8 where !info.isHittable { app.swipeUp() }
+        XCTAssertTrue(info.isHittable, "Relationship Breakdown should expose its information icon")
+        info.tap()
+        require(app.staticTexts["Relational Risk Groups"])
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Survey Results"])
+    }
+
+    func testQuizDraftIsLabeledAndResumesFromHome() {
+        launch(fixture: "--uitesting-quiz", skipWelcome: false)
+        require(app.staticTexts["Quiz in Progress"])
+        require(app.buttons["Continue"]).tap()
+        require(app.staticTexts["Question 2 of 3"])
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Question 1 of 3"])
+    }
+
+    func testMirrorPreviewMatchesFigmaFrame() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Resonant"]).tap()
+        require(app.staticTexts["Resonant"])
+        require(app.buttons["DoExercise_mirror-emotion"]).tap()
+        require(app.staticTexts["Mirror the Emotion"])
+        let description = require(app.staticTexts["ExerciseDescription"])
+        XCTAssertTrue(description.isHittable, "The exercise introduction should be visible without being cropped")
+        XCTAssertGreaterThan(description.frame.height, 20)
+        let preview = require(app.buttons["MirrorEmotionPreviewButton"])
+        XCTAssertLessThan(preview.frame.width, app.frame.width - 40,
+                          "Mirror preview should be a bounded card, not screen-wide")
+        XCTAssertEqual(preview.frame.width, 350, accuracy: 2,
+                       "Mirror preview card should match the Figma 350-point width")
+        XCTAssertEqual(preview.frame.height, 493, accuracy: 2,
+                       "Mirror preview card should match the Figma 493-point height")
+        let mirrorScreenshot = XCTAttachment(screenshot: app.screenshot())
+        mirrorScreenshot.name = "Mirror the Emotion layout"
+        mirrorScreenshot.lifetime = .keepAlways
+        add(mirrorScreenshot)
+    }
+
+    func testMirrorDescriptionAndFullScreenClosePlacement() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Resonant"]).tap()
+        require(app.buttons["DoExercise_mirror-emotion"]).tap()
+        require(app.staticTexts["Mirror the Emotion"])
+        require(app.buttons["Tap to play the video"]).tap()
+        require(app.buttons["YouTubeAgreeAndPlayButton"]).tap()
+        let close = require(app.buttons["MirrorVideoCloseButton"])
+        XCTAssertTrue(close.isHittable)
+        XCTAssertLessThan(close.frame.midX, app.frame.midX, "Close should sit on the left, clear of player settings")
+        close.tap()
+        require(app.staticTexts["Mirror the Emotion"])
+    }
+
+    func testConnectionCountdownCompletionSealsExerciseFlow() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Energetic"]).tap()
+        require(app.buttons["DoExercise_connection-countdown"]).tap()
+        require(app.staticTexts["Connection Countdown"])
+        let complete = require(app.buttons["ExerciseFlowAction"])
+        XCTAssertFalse(complete.isEnabled, "The required reflection must be entered first")
+
+        require(app.buttons["Today"]).tap()
+        let reflection = require(app.descendants(matching: .any)["CountdownLookingForwardField"])
+        reflection.tap()
+        reflection.typeText("Seeing a friend at lunch")
+        XCTAssertTrue(complete.isEnabled)
+        complete.tap()
+        require(app.staticTexts["Exercise Complete!"])
+        require(app.staticTexts["Connection Countdown"])
+        require(app.staticTexts["Completed"])
+        require(app.staticTexts["1"])
+
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Welcome Back"])
+        XCTAssertFalse(app.staticTexts["Picture the moment"].exists,
+                       "Back from completion must not return to the editable exercise")
+        XCTAssertFalse(app.staticTexts["Exercises in progress"].exists,
+                       "A completed exercise must not remain an in-progress draft")
+    }
+
+    func testWatchFunnyCanBeCompletedWithoutPlayingYouTubeVideo() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.buttons["DoExercise_watch-something-funny"]).tap()
+
+        let complete = require(app.buttons["Complete Exercise"])
+        XCTAssertTrue(complete.isEnabled, "Watching a YouTube video must remain optional")
+        complete.tap()
+
+        require(app.staticTexts["Exercise Complete!"])
+        require(app.staticTexts["Watch Something Funny"])
+        require(app.staticTexts["Completed"])
+        require(app.staticTexts["1"])
+    }
+
+    func testYouTubePlayerRequiresOptionalTermsChoice() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Calm"]).tap()
+        require(app.buttons["DoExercise_watch-something-funny"]).tap()
+        require(app.buttons["Play Funny Animal Compilation"]).tap()
+
+        require(app.staticTexts["Before playing this video"])
+        require(app.descendants(matching: .any)["CARE Privacy Policy"])
+        require(app.descendants(matching: .any)["YouTube Terms"])
+        require(app.buttons["YouTubeNotNowButton"]).tap()
+        XCTAssertTrue(app.buttons["Complete Exercise"].isEnabled)
+        XCTAssertFalse(app.staticTexts["Before playing this video"].exists)
+
+    }
+
+    func testMirrorVideoUsesTheSameOptionalTermsChoice() {
+        require(app.buttons["Exercises"]).tap()
+        require(app.buttons["Resonant"]).tap()
+        require(app.buttons["DoExercise_mirror-emotion"]).tap()
+        require(app.buttons["MirrorEmotionPreviewButton"]).tap()
+
+        require(app.staticTexts["Before playing this video"])
+        require(app.buttons["YouTubeNotNowButton"]).tap()
+        XCTAssertFalse(app.staticTexts["Before playing this video"].exists)
+        XCTAssertTrue(app.buttons["Next"].isEnabled)
     }
 }

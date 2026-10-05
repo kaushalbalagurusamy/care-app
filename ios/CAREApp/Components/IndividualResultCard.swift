@@ -70,7 +70,7 @@ public struct IndividualResultCard: View {
 
 // MARK: - Previews
 #Preview("Individual Contact Card") {
-    let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)
+    let person = Person(name: "Sarah Mitchell", initials: "SM", category: .partner)
     let participant = AssessmentParticipant(person: person, percentTimeSpent: 0.30)
     let result = IndividualResult(
         participant: participant,

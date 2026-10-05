@@ -5,13 +5,15 @@ public struct RelationshipFrequencyView: View {
     public let router: AppRouter
     public let selectedPeople: [Person]
     @Binding public var allocations: [ParticipantAllocation]
-    public let onProceed: ([AssessmentParticipant]) -> Void
+    public let onProceed: ([AssessmentParticipant]) -> Bool
+    @Environment(AppEnvironment.self) private var appEnvironment
+    @State private var photoDataByPersonID: [UUID: Data] = [:]
     
     public init(
         router: AppRouter,
         selectedPeople: [Person],
         allocations: Binding<[ParticipantAllocation]>,
-        onProceed: @escaping ([AssessmentParticipant]) -> Void
+        onProceed: @escaping ([AssessmentParticipant]) -> Bool
     ) {
         self.router = router
         self.selectedPeople = selectedPeople
@@ -38,7 +40,10 @@ public struct RelationshipFrequencyView: View {
                 .padding(.top, Theme.Spacing.headerTitleSpacing)
                 
                 // 5-Person Vertical Partition Container (Takes flexible space in single screen)
-                VerticalTimeAllocationBubble(allocations: $allocations)
+                VerticalTimeAllocationBubble(
+                    allocations: $allocations,
+                    photoDataByPersonID: photoDataByPersonID
+                )
                     .frame(maxHeight: .infinity)
             }
             .padding(.horizontal, 20)
@@ -51,19 +56,17 @@ public struct RelationshipFrequencyView: View {
                     PrimaryButton(
                         title: "Next",
                         trailingIcon: "arrow.right",
+                        isEnabled: AssessmentSessionState.canStart(with: selectedPeople.count) && allocations.count == AssessmentSessionState.requiredParticipantCount,
                         action: {
                             // Map allocations back to AssessmentParticipants
                             var participants: [AssessmentParticipant] = []
                             for alloc in allocations {
                                 if let person = selectedPeople.first(where: { $0.id == alloc.id }) {
                                     participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
-                                } else {
-                                    // Fallback
-                                    let person = Person(name: alloc.firstName, initials: alloc.initials, category: .friend, age: 30)
-                                    participants.append(AssessmentParticipant(person: person, percentTimeSpent: alloc.percentage))
                                 }
                             }
-                            onProceed(participants)
+                            guard AssessmentSessionState.canStart(with: participants) else { return }
+                            guard onProceed(participants) else { return }
                             router.navigate(to: .personTransition)
                         }
                     )
@@ -77,47 +80,32 @@ public struct RelationshipFrequencyView: View {
             .background(Theme.Colors.background)
             .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            if allocations.isEmpty {
+            if Set(allocations.map(\.id)) != Set(selectedPeople.map(\.id)) {
                 setupInitialAllocations()
             }
+            loadContactPhotos()
         }
     }
     
     private func setupInitialAllocations() {
         let count = max(selectedPeople.count, 1)
-        if count == 5 {
-            // Default 80%, 5%, 5%, 5%, 5% (sum = 1.0)
-            let defaultPcts = [0.80, 0.05, 0.05, 0.05, 0.05]
-            allocations = selectedPeople.enumerated().map { index, person in
-                ParticipantAllocation(
-                    id: person.id,
-                    initials: person.initials,
-                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: defaultPcts[index]
-                )
-            }
-        } else if count > 1 {
-            // First person starts with majority, others with 5%
-            let othersPct = 0.05 * Double(count - 1)
-            let firstPct = max(1.0 - othersPct, 0.05)
-            allocations = selectedPeople.enumerated().map { index, person in
-                ParticipantAllocation(
-                    id: person.id,
-                    initials: person.initials,
-                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: index == 0 ? firstPct : 0.05
-                )
-            }
-        } else {
-            allocations = selectedPeople.map { person in
-                ParticipantAllocation(
-                    id: person.id,
-                    initials: person.initials,
-                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: 1.0
-                )
-            }
+        let equalPercentage = 1.0 / Double(count)
+        allocations = selectedPeople.map { person in
+            ParticipantAllocation(
+                id: person.id,
+                initials: person.initials,
+                firstName: person.name.components(separatedBy: " ").first ?? person.name,
+                percentage: equalPercentage
+            )
         }
+    }
+
+    private func loadContactPhotos() {
+        photoDataByPersonID = Dictionary(uniqueKeysWithValues: selectedPeople.compactMap { person in
+            let key = "contact-photo:\(person.id.uuidString)"
+            guard let data = try? appEnvironment.draftStore.loadValue(Data.self, key: key) else { return nil }
+            return (person.id, data)
+        })
     }
 }
 
@@ -125,11 +113,11 @@ public struct RelationshipFrequencyView: View {
 #Preview("Relationship Frequency View") {
     struct PreviewWrapper: View {
         @State var sampleAllocations = [
-            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.30),
-            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.25),
+            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.20),
+            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.20),
             ParticipantAllocation(initials: "LC", firstName: "Linda", percentage: 0.20),
-            ParticipantAllocation(initials: "DO", firstName: "David", percentage: 0.15),
-            ParticipantAllocation(initials: "RS", firstName: "Rachel", percentage: 0.10)
+            ParticipantAllocation(initials: "DO", firstName: "David", percentage: 0.20),
+            ParticipantAllocation(initials: "RS", firstName: "Rachel", percentage: 0.20)
         ]
         
         var body: some View {
@@ -137,7 +125,7 @@ public struct RelationshipFrequencyView: View {
                 router: AppRouter(),
                 selectedPeople: Person.mockFigmaContacts,
                 allocations: $sampleAllocations,
-                onProceed: { _ in }
+                onProceed: { _ in true }
             )
         }
     }

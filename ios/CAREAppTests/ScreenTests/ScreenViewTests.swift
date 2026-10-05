@@ -43,61 +43,57 @@ struct ScreenViewTests {
         #expect(router.currentRoute == .exercises)
     }
 
-    @Test("TEST-SCR-02C: HomeView HeaderNavBar sparkle button navigates to .personalizedActionPlan")
-    @MainActor
-    func testHomeViewSparkleNavigation() {
-        let router = AppRouter()
-        router.navigate(to: .home)
-        #expect(router.currentRoute == .home)
-        
-        // Simulating Header Sparkle button tap
-        router.navigate(to: .personalizedActionPlan)
-        #expect(router.currentRoute == .personalizedActionPlan)
-    }
-
     @Test("TEST-SCR-03: ChooseRelationshipsView validates participant selection count")
     @MainActor
     func testChooseRelationshipsSelection() {
-        let availablePeople = Person.mockRolodex
-        var selectedIds = Set<UUID>()
-        
-        #expect(selectedIds.isEmpty)
-        #expect(selectedIds.count == 0)
-        
-        // Select 3 people
-        for p in availablePeople.prefix(3) {
-            selectedIds.insert(p.id)
+        let availablePeople = Person.mockRolodex + [Person(name: "Sixth", initials: "S", category: .friend)]
+        var selected: [Person] = []
+        #expect(!AssessmentSessionState.canStart(with: selected.count))
+        for (index, person) in availablePeople.prefix(5).enumerated() {
+            selected = ChooseRelationshipsView.toggledSelection(selected, person: person)!
+            #expect(selected.count == index + 1)
+            if index < 4 { #expect(!AssessmentSessionState.canStart(with: selected.count)) }
         }
-        #expect(selectedIds.count == 3)
-        #expect(selectedIds.count >= 1)
-        #expect(selectedIds.count <= 5)
+        #expect(AssessmentSessionState.canStart(with: selected.count))
+        #expect(ChooseRelationshipsView.toggledSelection(selected, person: availablePeople[5]) == nil)
+        #expect(ChooseRelationshipsView.toggledSelection(selected, person: availablePeople[0])?.count == 4)
     }
 
-    @Test("TEST-SCR-03B: Add person form validates required age and avoids defaulting to 30")
-    func testAddPersonAgeValidation() {
-        // Validation logic helper matching ChooseRelationshipsView
-        func isValid(firstName: String, category: RelationshipCategory, customCategory: String, ageText: String) -> Bool {
-            let trimmedFirst = firstName.trimmingCharacters(in: .whitespaces)
-            guard !trimmedFirst.isEmpty else { return false }
-            if category == .custom {
-                guard !customCategory.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
-            }
-            let digits = ageText.filter { $0.isNumber }
-            guard let age = Int(digits), age > 0 else { return false }
-            return true
-        }
-        
-        // Empty age should not be valid
-        #expect(!isValid(firstName: "Alex", category: .friend, customCategory: "", ageText: ""))
-        // Non-positive age should not be valid
-        #expect(!isValid(firstName: "Alex", category: .friend, customCategory: "", ageText: "0"))
-        // Valid age should be valid
-        #expect(isValid(firstName: "Alex", category: .friend, customCategory: "", ageText: "27"))
-        
-        // Person created with explicit age
-        let person = Person(name: "Alex Smith", initials: "AS", category: .friend, age: 27)
-        #expect(person.age == 27)
-        #expect(person.age != 30)
+    @Test("First five contacts are preselected; later assessments reuse the last five")
+    @MainActor
+    func testChooseRelationshipsDefaults() {
+        let contacts = Person.mockRolodex + [Person(name: "Sixth", initials: "S", category: .friend)]
+        let first = ChooseRelationshipsView.initialSelection(contacts: contacts, previousIDs: nil, draft: [])
+        #expect(first.map(\.id) == Array(contacts.prefix(5)).map(\.id))
+        #expect(!first.contains(where: { $0.id == contacts[5].id }))
+
+        let lastAssessmentIDs = [contacts[5], contacts[1], contacts[3], contacts[2], contacts[4]].map(\.id)
+        let repeatSelection = ChooseRelationshipsView.initialSelection(contacts: contacts, previousIDs: lastAssessmentIDs, draft: [])
+        #expect(repeatSelection.map(\.id) == lastAssessmentIDs)
+
+        let changedDraft = Array(contacts.prefix(3))
+        let resumed = ChooseRelationshipsView.initialSelection(contacts: contacts, previousIDs: lastAssessmentIDs, draft: changedDraft)
+        #expect(resumed.map(\.id) == changedDraft.map(\.id))
+    }
+
+    @Test("W01/W02: legacy age is ignored and a name-only relationship is valid")
+    func testAgeFreeContactModel() throws {
+        #expect(ContactEditDraft.isValidName(" Alex "))
+        #expect(!ContactEditDraft.isValidName(" \n "))
+        let legacy = Data(#"{"id":"00000000-0000-0000-0000-000000000001","name":"Alex Smith","initials":"AS","category":"Friend","customCategoryName":null,"age":27}"#.utf8)
+        let person = try JSONDecoder().decode(Person.self, from: legacy)
+        #expect(person.name == "Alex Smith")
+        #expect(person.displayCategory == "Friend")
+        let encoded = String(decoding: try JSONEncoder().encode(person), as: UTF8.self)
+        #expect(!encoded.contains("age"))
+        let unspecified = Person(name: "Alex", initials: "A", category: .custom)
+        #expect(unspecified.displayCategory == "")
+        let nameOnly = ContactEditDraft(contactID: nil, name: " Alex Smith ", relationshipText: "", photoData: nil)
+        #expect(nameOnly.makePerson()?.name == "Alex Smith")
+        #expect(nameOnly.makePerson()?.displayCategory == "")
+        let named = ContactEditDraft(contactID: nil, name: "Alex", relationshipText: "  Best friend  ", photoData: nil)
+        #expect(named.makePerson()?.displayCategory == "Best friend")
+        #expect(ContactEditDraft(contactID: nil, name: " ", relationshipText: "Friend", photoData: nil).makePerson() == nil)
     }
 
     @Test("TEST-SCR-04: RelationshipFrequencyView allocations sum to exactly 100%")
@@ -114,9 +110,9 @@ struct ScreenViewTests {
         #expect(abs(sum - 1.0) < 0.001)
     }
 
-    @Test("TEST-SCR-05: SurveyQuestionView button title transitions dynamically")
+    @Test("TEST-SCR-05: Only the final participant's final question requires submission")
     @MainActor
-    func testSurveyQuestionButtonProgression() {
+    func testSurveyQuestionSubmissionBoundary() {
         let contacts = Person.mockFigmaContacts
         let participants = [
             AssessmentParticipant(person: contacts[0], percentTimeSpent: 0.30),
@@ -131,9 +127,10 @@ struct ScreenViewTests {
             totalQuestionsPerPerson: 4
         )
         
-        // At start (Person 0, Question 0) -> Next
+        // The assessment starts with automatic progression.
         #expect(session.currentParticipantIndex == 0)
         #expect(session.currentQuestionIndex == 0)
+        #expect(session.isFinalQuestion == false)
         
         // Answer questions for person 0
         session.recordAnswer(for: "q_1", option: SurveyQuestion.standard5PointLikertOptions[4])
@@ -144,8 +141,8 @@ struct ScreenViewTests {
         _ = session.advance()
         session.recordAnswer(for: "q_4", option: SurveyQuestion.standard5PointLikertOptions[4])
         
-        // Now on Person 0 last question -> prompts "Next: James Cooper"
-        #expect(session.currentButtonTitle == "Next: James Cooper")
+        // The last question for person 0 still advances to the next person.
+        #expect(session.isFinalQuestion == false)
     }
 
     @Test("TEST-SCR-06: SurveyResultsView computes donut segments and individual results")
@@ -230,14 +227,11 @@ struct ScreenViewTests {
         AssessmentSessionState.clearDraft()
         let router = AppRouter()
         let contacts = Person.mockFigmaContacts
-        let participants = [
-            AssessmentParticipant(person: contacts[0], percentTimeSpent: 0.50),
-            AssessmentParticipant(person: contacts[1], percentTimeSpent: 0.50)
-        ]
+        let participants = contacts.map { AssessmentParticipant(person: $0, percentTimeSpent: 0.20) }
         
         var session = AssessmentSessionState(
             participants: participants,
-            totalQuestionsPerPerson: 4
+            totalQuestionsPerPerson: 20
         )
         
         // Initially no answers -> not started
@@ -280,18 +274,6 @@ struct ScreenViewTests {
     }
 
 
-    @Test("TEST-SCR-14: PersonalizedActionPlanView renders correctly and supports Wired to Connect external link")
-    @MainActor
-    func testPersonalizedActionPlanViewRendering() {
-        let router = AppRouter()
-        let planView = PersonalizedActionPlanView(router: router)
-        #expect(planView.router === router)
-        
-        let url = URL(string: "https://www.penguinrandomhouse.com/books/318700/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")
-        #expect(url != nil)
-        #expect(url?.host == "www.penguinrandomhouse.com")
-    }
-
     @Test("TEST-SCR-15: SurveyOverviewView initializes with router and pinned action structure")
     @MainActor
     func testSurveyOverviewViewRendering() {
@@ -308,4 +290,3 @@ struct ScreenViewTests {
         #expect(overview.router === router)
     }
 }
-

@@ -63,7 +63,7 @@ struct AtomicComponentTests {
     @Test("TEST-CMP-06: IndividualResultCard initializes with normalized score")
     func testIndividualResultCardInit() {
         let result = IndividualResult(
-            participant: AssessmentParticipant(person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32)),
+            participant: AssessmentParticipant(person: Person(name: "Sarah Mitchell", initials: "SM", category: .partner)),
             normalizedScore: 83.0,
             safetyTier: .healthy,
             domainBreakdown: [.calm: 22.0, .accepted: 20.0, .resonant: 18.0, .energetic: 23.0]
@@ -115,23 +115,18 @@ struct AtomicComponentTests {
         #expect(legacyBadge.daysUntilNextAssessment == 5)
     }
 
-    @Test("TEST-CMP-08: HeaderNavBar sparkle placement and visibility options")
-    func testHeaderNavBarSparkleOptions() {
-        let navBarLeft = HeaderNavBar(
+    @Test("TEST-CMP-08: HeaderNavBar retains ordinary navigation controls")
+    func testHeaderNavBarNavigationOptions() {
+        let navBar = HeaderNavBar(
             showBackButton: false,
             showHomeButton: true,
-            showSparkleButton: true,
-            sparklePlacement: .left
+            showChartButton: false,
+            showProfileButton: true
         )
-        #expect(navBarLeft.showSparkleButton == true)
-        #expect(navBarLeft.sparklePlacement == .left)
-        #expect(navBarLeft.showBackButton == false)
-        
-        let navBarDefault = HeaderNavBar()
-        #expect(navBarDefault.showSparkleButton == true, "Sparkle button must be enabled by default across all app screens")
-        
-        let navBarCustomizationScreen = HeaderNavBar(showSparkleButton: false)
-        #expect(navBarCustomizationScreen.showSparkleButton == false, "Customization screen must be the only screen without sparkle button")
+        #expect(!navBar.showBackButton)
+        #expect(navBar.showHomeButton)
+        #expect(!navBar.showChartButton)
+        #expect(navBar.showProfileButton)
     }
 
     @Test("TEST-CMP-09: ActionCardView supports compact 149pt height and grayed-out resume controls")
@@ -183,5 +178,4 @@ struct AtomicComponentTests {
         #expect(!card.hasResumeControls)
     }
 }
-
 

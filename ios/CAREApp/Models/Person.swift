@@ -24,13 +24,13 @@ public struct Person: Identifiable, Hashable, Codable {
     public var initials: String
     public var category: RelationshipCategory
     public var customCategoryName: String?
-    public var age: Int
     
     public var displayCategory: String {
-        if category == .custom, let custom = customCategoryName, !custom.isEmpty {
-            return custom
+        if let custom = customCategoryName, !custom.isEmpty {
+            return custom == "Other Relative" ? "Other" : custom
         }
-        return category.rawValue
+        if category == .custom { return "" }
+        return category == .extendedFamily ? "Other" : category.rawValue
     }
     
     public init(
@@ -38,26 +38,24 @@ public struct Person: Identifiable, Hashable, Codable {
         name: String,
         initials: String,
         category: RelationshipCategory,
-        customCategoryName: String? = nil,
-        age: Int
+        customCategoryName: String? = nil
     ) {
         self.id = id
         self.name = name
         self.initials = initials
         self.category = category
         self.customCategoryName = customCategoryName
-        self.age = age
     }
 }
 
 // MARK: - Mock Initial Rolodex (Matching Figma Screen 5)
 public extension Person {
     static let mockFigmaContacts: [Person] = [
-        Person(name: "Sarah Mitchell", initials: "SM", category: .partner, age: 32),
-        Person(name: "James Cooper", initials: "JC", category: .friend, age: 28),
-        Person(name: "Linda Chen", initials: "LC", category: .colleague, age: 41),
-        Person(name: "David Okafor", initials: "DO", category: .sibling, age: 35),
-        Person(name: "Rachel Stein", initials: "RS", category: .parent, age: 58)
+        Person(name: "Sarah Mitchell", initials: "SM", category: .partner),
+        Person(name: "James Cooper", initials: "JC", category: .friend),
+        Person(name: "Linda Chen", initials: "LC", category: .colleague),
+        Person(name: "David Okafor", initials: "DO", category: .sibling),
+        Person(name: "Rachel Stein", initials: "RS", category: .parent)
     ]
     
     static let mockRolodex: [Person] = mockFigmaContacts
