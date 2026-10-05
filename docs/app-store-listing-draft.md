@@ -9,6 +9,7 @@
 | Promotional text | Assess five relationships, explore your C.A.R.E. scores, learn the science of connection, and practice eight guided exercises. CARE records stay on your device. |
 | Keywords | relationships,brain,neuroplasticity,connection,wellness,assessment,exercises |
 | Support URL | <https://care-app-privacy.vercel.app/support.html> is live and saved in App Store Connect. It provides a working support form without exposing Amy's receiving email address. |
+| Copyright | 2026 Amy Banks, MD (approved October 5, 2026; saved in App Store Connect) |
 
 ## Proposed description
 
