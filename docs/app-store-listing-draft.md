@@ -15,6 +15,7 @@
 | Age rating | 9+ globally; Brazil self-rated 12. Questionnaire answers approved by Jayme, saved, and verified on October 5, 2026. |
 | App Review contact | Amy Banks's private review contact information and cell phone were approved, saved, and verified on October 5, 2026. The private values are intentionally not duplicated in this repository. |
 | App Review notes | Account-free testing instructions, five-relationship assessment flow, exercise permissions, optional YouTube behavior, local storage, and educational disclaimer were approved, saved, and verified on October 5, 2026. |
+| App Privacy | Coarse Location, Product Interaction, and Advertising Data as collected but not linked to identity or used for tracking. Purposes are limited to app functionality, analytics, and third-party advertising as applicable. Approved October 5, 2026; App Store Connect publication pending. |
 
 ## Proposed description
 

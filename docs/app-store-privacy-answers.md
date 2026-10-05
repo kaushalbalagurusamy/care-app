@@ -1,6 +1,6 @@
 # CARE App Store privacy disclosure worksheet
 
-Status: source audit updated October 5, 2026; public policy published and accessible without sign-in at <https://care-app-privacy.vercel.app/>; the English (US) App Store privacy-policy URL and optional privacy-choices URL (`/#choices`) are set. On October 3, App Store Connect saved an **unpublished, incomplete** App Privacy draft declaring collection of Usage Data → Product Interaction. The October 5 release source now uses YouTube Privacy Enhanced Mode in a nonpersistent WKWebView after explicit user choice. The final selections below await approval and publication in App Store Connect.
+Status: source audit updated October 5, 2026; public policy published and accessible without sign-in at <https://care-app-privacy.vercel.app/>; the English (US) App Store privacy-policy URL and optional privacy-choices URL (`/#choices`) are set. On October 3, App Store Connect saved an **unpublished, incomplete** App Privacy draft declaring collection of Usage Data → Product Interaction. The October 5 release source now uses YouTube Privacy Enhanced Mode in a nonpersistent WKWebView after explicit user choice. Jayme approved the final selections below on October 5; publication in App Store Connect remains pending because its browser security check temporarily denied automation access.
 
 ## Source-backed inventory
 
@@ -22,7 +22,7 @@ Status: source audit updated October 5, 2026; public policy published and access
 
 ## Provisional data-type decisions for the current embedded player
 
-These are the proposed final answers, not yet a published App Privacy label. Apple says data sent through a functional web view must be declared. The app does not send locally stored CARE records to Google.
+These are the approved final answers, not yet a published App Privacy label. Apple says data sent through a functional web view must be declared. The app does not send locally stored CARE records to Google.
 
 | App Store item | Working answer | Basis / open question |
 | --- | --- | --- |
