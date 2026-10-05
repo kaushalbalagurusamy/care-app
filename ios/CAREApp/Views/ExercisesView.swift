@@ -43,7 +43,7 @@ public struct ExercisesView: View {
                         ExercisePathwayCard(
                             letter: "C",
                             title: "Calm",
-                            description: "Fosters down-regulation of stress systems, developing neural pathways toward safety and emotional grounding.",
+                            description: "Supports the smart vagus nerve, helping down-regulate stress and strengthen safety and grounding.",
                             color: ExerciseCategory.calm.accentColor,
                             badgeColor: ExerciseCategory.calm.badgeColor,
                             action: { router.navigate(to: .calmExercises) }
@@ -52,7 +52,7 @@ public struct ExercisesView: View {
                         ExercisePathwayCard(
                             letter: "A",
                             title: "Accepted",
-                            description: "Feeling valued, validated, and safely connected within healthy, supportive relationship cultures.",
+                            description: "Supports the dorsal anterior cingulate cortex, reinforcing belonging, safety, and mutual respect.",
                             color: ExerciseCategory.accepted.accentColor,
                             badgeColor: ExerciseCategory.accepted.badgeColor,
                             action: { router.navigate(to: .acceptedExercises) }
@@ -61,7 +61,7 @@ public struct ExercisesView: View {
                         ExercisePathwayCard(
                             letter: "R",
                             title: "Resonant",
-                            description: "Activating mirror neurons to sense and dynamically align with another's emotional state without losing yourself.",
+                            description: "Supports the mirror neuron system, helping you attune to others’ emotions without losing yourself.",
                             color: ExerciseCategory.resonant.accentColor,
                             badgeColor: ExerciseCategory.resonant.badgeColor,
                             action: { router.navigate(to: .resonantExercises) }
@@ -70,7 +70,7 @@ public struct ExercisesView: View {
                         ExercisePathwayCard(
                             letter: "E",
                             title: "Energetic",
-                            description: "The vitalizing emotional flow and neurochemical boost generated through growth-fostering, mutual bonds.",
+                            description: "Supports the dopamine reward system, helping healthy bonds feel motivating, rewarding, and energizing.",
                             color: ExerciseCategory.energetic.accentColor,
                             badgeColor: ExerciseCategory.energetic.badgeColor,
                             action: { router.navigate(to: .energeticExercises) }

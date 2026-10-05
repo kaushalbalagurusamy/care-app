@@ -39,6 +39,14 @@ Increment the TestFlight build number, archive, and upload to TestFlight
 
 Upload an already exported IPA to TestFlight
 
+### ios upload_screenshots
+
+```sh
+[bundle exec] fastlane ios upload_screenshots
+```
+
+Replace the English App Store screenshots without changing metadata or submitting for review
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

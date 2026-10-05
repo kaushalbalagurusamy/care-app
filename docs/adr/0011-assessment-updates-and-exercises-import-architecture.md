@@ -327,10 +327,10 @@ VStack(spacing: 0) {
   - Title: `"Exercises"` (Poppins Bold 30pt).
   - Subtitle: `"Strengthen your relational neural pathways"`
   - 4 Pathway Cards:
-    1. **Calm (C)**: "Fosters down-regulation of stress systems, developing neural pathways toward safety and emotional grounding."
-    2. **Accepted (A)**: "Feeling valued, validated, and safely connected within healthy, supportive relationship cultures."
-    3. **Resonant (R)**: "Activating mirror neurons to sense and dynamically align with another's emotional state without losing yourself."
-    4. **Energetic (E)**: "The vitalizing emotional flow and neurochemical boost generated through growth-fostering, mutual bonds."
+    1. **Calm (C)**: "Supports the smart vagus nerve, helping down-regulate stress and strengthen safety and grounding."
+    2. **Accepted (A)**: "Supports the dorsal anterior cingulate cortex, reinforcing belonging, safety, and mutual respect."
+    3. **Resonant (R)**: "Supports the mirror neuron system, helping you attune to others’ emotions without losing yourself."
+    4. **Energetic (E)**: "Supports the dopamine reward system, helping healthy bonds feel motivating, rewarding, and energizing."
   - Bottom Action: Pinned `"Unlock Full Book Exercises"` dark navy button (`#1E293B`, 56pt) navigating to `PersonalizedActionPlanView`.
 * **Architecture & State**:
   - Create `ExercisesView.swift` under `ios/CAREApp/Views/`.
@@ -530,4 +530,3 @@ The following open questions are documented to facilitate product, design (Jayme
 * **Context**: Directive #15 optimized `SurveyQuestionView` typography (15.5pt header, 13pt options) and removed padding so the entire view fits on a single screen without scrolling on iPhone 16 Pro (393x852).
 * **Open Questions**:
   1. On smaller legacy form factors such as iPhone SE (375x667), the pinned bottom bar and question options will require scrolling. Is standard vertical scrolling on compact devices acceptable, or should dynamic spacing scale down on smaller viewports?
-

@@ -309,14 +309,14 @@ final class CAREAppUITests: XCTestCase {
         captureStoreScreenshot("04-past-results")
         require(app.buttons["AppIcon_home"]).tap()
 
-        require(app.buttons["Exercises"]).tap()
-        require(app.staticTexts["Daily Exercise"])
-        captureStoreScreenshot("05-exercises")
-        require(app.buttons["AppIcon_home"]).tap()
-
         require(app.buttons["Education"]).tap()
         require(app.staticTexts["Education"])
         captureStoreScreenshot("06-education")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["Exercises"]).tap()
+        require(app.staticTexts["Daily Exercise"])
+        captureStoreScreenshot("05-exercises")
     }
 
     func testSurveyRelationshipBreakdownInfoOpensRiskGroups() {

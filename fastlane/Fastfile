@@ -1,6 +1,7 @@
 require "shellwords"
 require "fileutils"
 require "plist"
+require "tmpdir"
 
 opt_out_usage
 default_platform(:ios)
@@ -151,5 +152,36 @@ platform :ios do
       ipa: ipa_path,
       skip_waiting_for_build_processing: true
     )
+  end
+
+  desc "Replace the English App Store screenshots without changing metadata or submitting for review"
+  lane :upload_screenshots do
+    api_key = connect_api_key
+    source_path = File.expand_path(ENV.fetch("SCREENSHOTS_PATH"))
+    app_version = ENV.fetch("APP_VERSION", "1.0")
+    screenshots = Dir[File.join(source_path, "*.{png,jpg,jpeg}")].sort
+    UI.user_error!("No screenshots found in #{source_path}") if screenshots.empty?
+    UI.user_error!("Apple allows at most 10 screenshots per device family") if screenshots.count > 10
+
+    Dir.mktmpdir("care-appstore-screenshots-") do |staging_path|
+      locale_path = File.join(staging_path, "en-US")
+      FileUtils.mkdir_p(locale_path)
+      screenshots.each { |path| FileUtils.cp(path, locale_path) }
+
+      upload_to_app_store(
+        api_key: api_key,
+        app_identifier: ENV.fetch("APP_IDENTIFIER"),
+        app_version: app_version,
+        screenshots_path: staging_path,
+        skip_binary_upload: true,
+        skip_metadata: true,
+        skip_screenshots: false,
+        overwrite_screenshots: true,
+        force: true,
+        submit_for_review: false,
+        automatic_release: false,
+        run_precheck_before_submit: false
+      )
+    end
   end
 end
