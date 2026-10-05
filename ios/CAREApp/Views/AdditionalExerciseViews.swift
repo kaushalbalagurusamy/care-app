@@ -694,19 +694,11 @@ public struct MirrorExerciseView: View {
             Button { showYouTubeConsent = true } label: {
                 VStack(spacing: 16 * scale) {
                     ZStack {
-                        LinearGradient(
-                            colors: [Color(hex: "#F3E8FF"), Color(hex: "#E9D5FF")],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        VStack(spacing: 14 * scale) {
-                            Image(systemName: "play.rectangle.fill")
-                                .font(.system(size: 68 * scale, weight: .regular))
-                                .foregroundStyle(accent)
-                            Text("YouTube video preview")
-                                .font(Theme.Typography.poppins(.semiBold, size: 16 * scale))
-                                .foregroundStyle(Theme.Colors.textPrimary)
-                        }
+                        Image("mirror_emotion_preview")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 318 * scale, height: 424 * scale)
+                            .clipped()
                     }
                         .frame(width: 318 * scale, height: 424 * scale)
                         .clipped()

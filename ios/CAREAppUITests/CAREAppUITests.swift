@@ -145,6 +145,11 @@ final class CAREAppUITests: XCTestCase {
         XCTAssertEqual(require(app.staticTexts["SelectedRelationshipCount"]).label, "5/5")
         next.tap()
         require(app.staticTexts["Choose Frequency"])
+        XCTAssertEqual(
+            app.staticTexts.matching(NSPredicate(format: "label == '20%'" )).count,
+            5,
+            "Each relationship should start at 20% so every divider handle is easy to reach"
+        )
     }
 
     func testExerciseHeadersAndUpdatedFunnyClipDurations() {

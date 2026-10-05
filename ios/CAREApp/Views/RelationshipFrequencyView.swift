@@ -83,38 +83,14 @@ public struct RelationshipFrequencyView: View {
     
     private func setupInitialAllocations() {
         let count = max(selectedPeople.count, 1)
-        if count == 5 {
-            // Default 80%, 5%, 5%, 5%, 5% (sum = 1.0)
-            let defaultPcts = [0.80, 0.05, 0.05, 0.05, 0.05]
-            allocations = selectedPeople.enumerated().map { index, person in
-                ParticipantAllocation(
-                    id: person.id,
-                    initials: person.initials,
-                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: defaultPcts[index]
-                )
-            }
-        } else if count > 1 {
-            // First person starts with majority, others with 5%
-            let othersPct = 0.05 * Double(count - 1)
-            let firstPct = max(1.0 - othersPct, 0.05)
-            allocations = selectedPeople.enumerated().map { index, person in
-                ParticipantAllocation(
-                    id: person.id,
-                    initials: person.initials,
-                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: index == 0 ? firstPct : 0.05
-                )
-            }
-        } else {
-            allocations = selectedPeople.map { person in
-                ParticipantAllocation(
-                    id: person.id,
-                    initials: person.initials,
-                    firstName: person.name.components(separatedBy: " ").first ?? person.name,
-                    percentage: 1.0
-                )
-            }
+        let equalPercentage = 1.0 / Double(count)
+        allocations = selectedPeople.map { person in
+            ParticipantAllocation(
+                id: person.id,
+                initials: person.initials,
+                firstName: person.name.components(separatedBy: " ").first ?? person.name,
+                percentage: equalPercentage
+            )
         }
     }
 }
@@ -123,11 +99,11 @@ public struct RelationshipFrequencyView: View {
 #Preview("Relationship Frequency View") {
     struct PreviewWrapper: View {
         @State var sampleAllocations = [
-            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.30),
-            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.25),
+            ParticipantAllocation(initials: "SM", firstName: "Sarah", percentage: 0.20),
+            ParticipantAllocation(initials: "JC", firstName: "James", percentage: 0.20),
             ParticipantAllocation(initials: "LC", firstName: "Linda", percentage: 0.20),
-            ParticipantAllocation(initials: "DO", firstName: "David", percentage: 0.15),
-            ParticipantAllocation(initials: "RS", firstName: "Rachel", percentage: 0.10)
+            ParticipantAllocation(initials: "DO", firstName: "David", percentage: 0.20),
+            ParticipantAllocation(initials: "RS", firstName: "Rachel", percentage: 0.20)
         ]
         
         var body: some View {
