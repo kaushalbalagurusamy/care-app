@@ -1,13 +1,13 @@
 # RCT CARE App Store listing draft
 
-**Status:** English (US) version 1.0 draft entered in App Store Connect. Jayme approved the subtitle, description, and keywords on October 5, 2026; all three were saved and verified. The provisional support URL still needs review. This is not a submitted or public listing.
+**Status:** English (US) version 1.0 draft entered in App Store Connect. Jayme approved the subtitle, description, and keywords on October 5, 2026; all three were saved and verified. The dedicated support URL was published, tested, saved, and read back the same day. This is not a submitted or public listing.
 
 | Field | Proposed text |
 | --- | --- |
 | App name | RCT CARE (existing App Store Connect name) |
 | Subtitle | Rewire How You Connect (approved October 5, 2026; saved in App Store Connect) |
 | Keywords | relationships,brain,neuroplasticity,connection,wellness,assessment,exercises |
-| Support URL | <https://care-app-privacy.vercel.app/#contact> is entered provisionally. It is reachable and contains Amy's published contact email; a dedicated CARE app support page with app-specific help remains preferable before submission. |
+| Support URL | <https://care-app-privacy.vercel.app/support.html> is live and saved in App Store Connect. It provides a working support form without exposing Amy's receiving email address. |
 
 ## Proposed description
 
@@ -22,7 +22,7 @@ CARE is for education and personal reflection. It does not provide a medical dia
 ## Verification before publication
 
 - Confirm the approved description, subtitle, and keywords with Amy; keep educational claims aligned with the app's actual content.
-- Review the entered copy and replace the provisional support URL with a dedicated CARE app help page if available.
+- Recheck the live support form before submission if its website delivery configuration changes.
 - Apple's API verified the app's starting price as Free and the primary category as Education. Confirm storefront availability, screenshots, rights, age rating, and App Privacy answers in App Store Connect.
 - App Review sign-in is marked not required because the app has no account. The review contact, copyright holder, and release timing still require the team's exact details/choice.
 - Use screenshots from the final phone-sized release build, without sample data or purchase UI.

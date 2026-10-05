@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f9">
+  <meta name="description" content="Contact the RCT CARE support team about app issues, questions, feedback, or feature requests.">
+  <title>App Support | RCT CARE</title>
+  <style>
+    :root { color-scheme: light; --navy: #1e293b; --blue: #246bb8; --blue-dark: #174e8e; --muted: #64748b; --line: #d8e3ee; --surface: #eff5fc; --error: #b42318; --success: #17663a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f7f9; color: var(--navy); font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    a { color: var(--blue); text-underline-offset: 3px; }
+    a:hover { color: var(--blue-dark); }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+    .wrap { width: min(100% - 40px, 760px); margin-inline: auto; }
+    header { background: #fff; border-bottom: 1px solid var(--line); }
+    header .wrap { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { color: var(--blue); font-size: 19px; font-weight: 800; letter-spacing: .06em; text-decoration: none; }
+    .privacy-link { font-size: 14px; }
+    main { padding-block: 40px 64px; }
+    .hero { padding: 35px 38px; border: 1px solid #d8e6f5; border-radius: 24px; background: linear-gradient(125deg, #eaf3fc, #f8fbff 68%); }
+    .eyebrow { margin: 0 0 8px; color: var(--blue); font-size: 13px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(32px, 6vw, 44px); letter-spacing: -.03em; line-height: 1.15; }
+    .hero p { max-width: 60ch; margin: 15px 0 0; }
+    .panel { margin-top: 28px; padding: 30px 32px; border: 1px solid var(--line); border-radius: 20px; background: #fff; }
+    .note { margin: 0 0 24px; padding: 15px 18px; border-left: 4px solid #93c5fd; border-radius: 0 10px 10px 0; background: var(--surface); }
+    form { display: grid; gap: 20px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    label { display: grid; gap: 7px; font-weight: 650; }
+    .optional { color: var(--muted); font-size: 13px; font-weight: 500; }
+    input, select, textarea { width: 100%; border: 1px solid #b9c8d8; border-radius: 10px; background: #fff; color: var(--navy); font: inherit; padding: 12px 13px; }
+    textarea { min-height: 160px; resize: vertical; }
+    input:invalid:not(:placeholder-shown), textarea:invalid:not(:placeholder-shown) { border-color: var(--error); }
+    .help { margin: -10px 0 0; color: var(--muted); font-size: 13px; }
+    .honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+    button { justify-self: start; min-width: 160px; border: 0; border-radius: 999px; background: var(--blue); color: #fff; cursor: pointer; font: inherit; font-weight: 750; padding: 13px 22px; }
+    button:hover { background: var(--blue-dark); }
+    button:disabled { cursor: wait; opacity: .65; }
+    .status { display: none; margin: 0; padding: 13px 16px; border-radius: 10px; }
+    .status.success { display: block; background: #eaf8ef; color: var(--success); }
+    .status.error { display: block; background: #fff1f0; color: var(--error); }
+    footer { padding: 0 0 42px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 600px) { .wrap { width: min(100% - 28px, 760px); } .hero, .panel { padding: 24px 22px; } .row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><a class="brand" href="./">RCT CARE</a><a class="privacy-link" href="./">Privacy policy</a></div></header>
+  <main class="wrap">
+    <div class="hero">
+      <p class="eyebrow">We’re here to help</p>
+      <h1>RCT CARE App Support</h1>
+      <p>Send a question, report a problem, share feedback, or suggest an improvement. The support team will reply by email.</p>
+    </div>
+
+    <section class="panel" aria-labelledby="support-form-title">
+      <h2 id="support-form-title">Send a support request</h2>
+      <p class="note"><strong>Protect your privacy:</strong> Please do not include assessment answers, relationship names, health information, passwords, or other sensitive personal information.</p>
+      <form id="support-form">
+        <div class="row">
+          <label>Your name
+            <input name="name" type="text" autocomplete="name" maxlength="100" required placeholder="Name">
+          </label>
+          <label>Email for our reply
+            <input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+          </label>
+        </div>
+
+        <label>What can we help with?
+          <select name="topic" required>
+            <option value="" selected disabled>Choose a topic</option>
+            <option>Technical issue</option>
+            <option>Assessment or results</option>
+            <option>Exercises or education</option>
+            <option>Privacy or data deletion</option>
+            <option>Feedback or feature request</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>Message
+          <textarea name="message" maxlength="180" required placeholder="Briefly tell us what happened or what you would like help with."></textarea>
+        </label>
+        <p class="help">Up to 180 characters. The support team can ask for more detail when replying.</p>
+        <p class="help">By submitting this form, you agree that the information you provide may be used to respond to your request. See the <a href="./">CARE Privacy Policy</a>.</p>
+
+        <label class="honeypot" aria-hidden="true">Leave this field blank
+          <input name="website" type="text" tabindex="-1" autocomplete="off">
+        </label>
+        <input name="startedAt" type="hidden" id="started-at">
+        <button type="submit">Send request</button>
+        <p id="form-status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <footer class="wrap">RCT CARE · App support</footer>
+
+  <script>
+    const form = document.getElementById('support-form');
+    const status = document.getElementById('form-status');
+    const button = form.querySelector('button[type="submit"]');
+    document.getElementById('started-at').value = Date.now().toString();
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.className = 'status';
+      status.textContent = '';
+      button.disabled = true;
+      button.textContent = 'Sending…';
+
+      try {
+        const response = await fetch('/api/support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'We could not send your request. Please try again.');
+
+        form.reset();
+        document.getElementById('started-at').value = Date.now().toString();
+        status.textContent = 'Your request was sent. The CARE support team will reply by email.';
+        status.className = 'status success';
+      } catch (error) {
+        status.textContent = error.message || 'We could not send your request. Please try again.';
+        status.className = 'status error';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Send request';
+      }
+    });
+  </script>
+</body>
+</html>
