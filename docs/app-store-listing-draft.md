@@ -1,6 +1,6 @@
 # RCT CARE App Store listing draft
 
-**Status:** English (US) version 1.0 draft entered in App Store Connect. Jayme approved the subtitle, description, keywords, and promotional text on October 5, 2026; all four were saved and verified. The dedicated support URL was published, tested, saved, and read back the same day. This is not a submitted or public listing.
+**Status:** English (US) version 1.0 was submitted to App Review on October 5, 2026, with Build 11 and is waiting for review. Jayme approved the subtitle, description, keywords, and promotional text; all four were saved and verified. The dedicated support URL was published, tested, saved, and read back the same day. The release remains U.S.-only and will publish automatically after Apple approves it.
 
 | Field | Proposed text |
 | --- | --- |
@@ -32,7 +32,7 @@ CARE is for education and personal reflection. It does not provide a medical dia
 
 - Confirm the approved description, subtitle, and keywords with Amy; keep educational claims aligned with the app's actual content.
 - Recheck the live support form before submission if its website delivery configuration changes.
-- Apple's API verified the app's starting price as Free, the primary category as Education, and United States as the only enabled storefront. Six approved iPhone 6.7-inch screenshots are uploaded. Rights, age rating, and App Privacy answers have been completed; recheck the final summary before submission.
+- Apple's API verified the app's starting price as Free, the primary category as Education, and United States as the only enabled storefront. Six approved iPhone 6.7-inch screenshots and six 13-inch iPad screenshots are uploaded. Rights, age rating, and App Privacy answers were completed before submission.
 - App Review sign-in is marked not required because the app has no account. The review contact, copyright holder, and release timing still require the team's exact details/choice.
 - Use screenshots from the final phone-sized release build, without sample data or purchase UI.
 
