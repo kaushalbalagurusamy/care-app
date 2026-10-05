@@ -12,6 +12,7 @@
 | Marketing URL | Intentionally blank for version 1.0; approved October 5, 2026. |
 | Copyright | 2026 Amy Banks, MD (approved October 5, 2026; saved in App Store Connect) |
 | Content rights | Uses third-party content with the necessary rights or permission. Approved by Jayme and saved in App Store Connect on October 5, 2026. |
+| Age rating | 9+ globally; Brazil self-rated 12. Questionnaire answers approved by Jayme, saved, and verified on October 5, 2026. |
 
 ## Proposed description
 
