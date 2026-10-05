@@ -303,18 +303,17 @@ private struct YouTubeExercisePlayer: UIViewRepresentable {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = controller
         configuration.allowsInlineMediaPlayback = true
+        configuration.websiteDataStore = .nonPersistent()
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.isOpaque = false
         webView.backgroundColor = .black
         let appOrigin = "https://\((Bundle.main.bundleIdentifier ?? "com.careapp.CAREApp").lowercased())"
         let html = """
         <!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"></head>
-        <body style="margin:0;background:#000;display:flex;align-items:center;height:100vh"><div style="width:100vw;aspect-ratio:16/9"><div id="player" style="width:100%;height:100%"></div></div>
+        <body style="margin:0;background:#000;display:flex;align-items:center;height:100vh"><div style="width:100vw;aspect-ratio:16/9"><iframe id="player" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/\(clip.videoID)?enablejsapi=1&amp;controls=1&amp;rel=0&amp;playsinline=1&amp;origin=\(appOrigin)" title="YouTube video player" frameborder="0" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
         <script src="https://www.youtube.com/iframe_api"></script><script>
         function onYouTubeIframeAPIReady() {
-          new YT.Player('player', { videoId: '\(clip.videoID)', width: '100%', height: '100%',
-            playerVars: { controls: 1, rel: 0, playsinline: 1, origin: '\(appOrigin)' },
-            events: { onStateChange: function(e) {
+          new YT.Player('player', { events: { onStateChange: function(e) {
               if (e.data === YT.PlayerState.ENDED) window.webkit.messageHandlers.videoEnded.postMessage(true);
             } }
           });

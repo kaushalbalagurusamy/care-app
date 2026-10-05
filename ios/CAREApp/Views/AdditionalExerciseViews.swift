@@ -833,15 +833,16 @@ private struct MirrorYouTubePlayer: UIViewRepresentable {
         let config = WKWebViewConfiguration()
         config.userContentController = controller
         config.allowsInlineMediaPlayback = true
+        config.websiteDataStore = .nonPersistent()
         let view = WKWebView(frame: .zero, configuration: config)
         view.isOpaque = false
         view.backgroundColor = .black
         let origin = "https://\((Bundle.main.bundleIdentifier ?? "com.careapp.CAREApp").lowercased())"
         let html = """
-        <!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-        <body style="margin:0;background:black;display:flex;align-items:center;justify-content:center;height:100vh"><div id="player" style="width:100vw;aspect-ratio:16/9"></div>
+        <!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"></head>
+        <body style="margin:0;background:black;display:flex;align-items:center;justify-content:center;height:100vh"><iframe id="player" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/\(videoID)?enablejsapi=1&amp;controls=1&amp;rel=0&amp;playsinline=1&amp;origin=\(origin)" title="YouTube video player" frameborder="0" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
         <script src="https://www.youtube.com/iframe_api"></script><script>
-        function onYouTubeIframeAPIReady(){new YT.Player('player',{videoId:'\(videoID)',width:'100%',height:'100%',playerVars:{controls:1,playsinline:1,origin:'\(origin)'},events:{onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)window.webkit.messageHandlers.videoEnded.postMessage(true)}}});}
+        function onYouTubeIframeAPIReady(){new YT.Player('player',{events:{onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)window.webkit.messageHandlers.videoEnded.postMessage(true)}}});}
         </script></body></html>
         """
         view.loadHTMLString(html, baseURL: URL(string: origin))

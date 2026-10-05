@@ -379,7 +379,7 @@ public struct PrivacyDetailsView: View {
 
                 section(
                     "When you use other services",
-                    "Playing an embedded YouTube video loads Google's player, which may receive device, network, and playback information under Google's policies. If you choose to share an exercise by text, iOS opens Messages with the content you selected; you decide whether to send it. Opening an outside link also takes you to that provider."
+                    "Playing an embedded YouTube video loads Google's Privacy Enhanced Mode player in temporary browser storage. Google may still receive device, network, advertising, and playback information, but the video view is not used to personalize your YouTube experience or ads outside CARE. If you choose to share an exercise by text, iOS opens Messages with the content you selected; you decide whether to send it. Opening an outside link also takes you to that provider."
                 )
 
                 Link("Read Google's Privacy Policy", destination: URL(string: "https://policies.google.com/privacy")!)
