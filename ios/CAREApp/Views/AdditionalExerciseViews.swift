@@ -693,15 +693,22 @@ public struct MirrorExerciseView: View {
             Spacer(minLength: 0)
             Button { showYouTubeConsent = true } label: {
                 VStack(spacing: 16 * scale) {
-                    Rectangle()
-                        .fill(Color.clear)
-                        .frame(width: 318 * scale, height: 424 * scale)
-                        .overlay {
-                            Image("exercise_mirror_emotion")
-                                .resizable()
-                                .scaledToFill()
-                                .accessibilityHidden(true)
+                    ZStack {
+                        LinearGradient(
+                            colors: [Color(hex: "#F3E8FF"), Color(hex: "#E9D5FF")],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        VStack(spacing: 14 * scale) {
+                            Image(systemName: "play.rectangle.fill")
+                                .font(.system(size: 68 * scale, weight: .regular))
+                                .foregroundStyle(accent)
+                            Text("YouTube video preview")
+                                .font(Theme.Typography.poppins(.semiBold, size: 16 * scale))
+                                .foregroundStyle(Theme.Colors.textPrimary)
                         }
+                    }
+                        .frame(width: 318 * scale, height: 424 * scale)
                         .clipped()
                         .clipShape(RoundedRectangle(cornerRadius: 14 * scale))
                         .overlay {
@@ -712,6 +719,7 @@ public struct MirrorExerciseView: View {
                                 .background(.white, in: Circle())
                                 .overlay(Circle().stroke(Color(hex: "#D8B4FE"), lineWidth: 1))
                         }
+                        .accessibilityHidden(true)
                     Text("Tap to play the video")
                         .font(Theme.Typography.poppins(.regular, size: 12 * scale))
                         .foregroundStyle(Theme.Colors.textSecondary)

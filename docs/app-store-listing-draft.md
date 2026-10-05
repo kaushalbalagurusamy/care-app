@@ -11,6 +11,7 @@
 | Support URL | <https://care-app-privacy.vercel.app/support.html> is live and saved in App Store Connect. It provides a working support form without exposing Amy's receiving email address. |
 | Marketing URL | Intentionally blank for version 1.0; approved October 5, 2026. |
 | Copyright | 2026 Amy Banks, MD (approved October 5, 2026; saved in App Store Connect) |
+| Content rights | Proposed: Yes, the app contains, shows, or accesses third-party content, and CARE has the necessary rights or permission. Awaiting Jayme's approval before saving in App Store Connect. |
 
 ## Proposed description
 
