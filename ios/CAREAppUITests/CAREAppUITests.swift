@@ -277,6 +277,48 @@ final class CAREAppUITests: XCTestCase {
         require(label)
     }
 
+    private func captureStoreScreenshot(_ name: String) {
+        // Let navigation and scroll animations settle so App Store captures
+        // consistently include the full safe area and system status bar.
+        Thread.sleep(forTimeInterval: 1)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = name
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+    }
+
+    func testCaptureApprovedAppStoreScreenshots() {
+        launch(fixture: "--uitesting-history", skipWelcome: false)
+        require(app.staticTexts["Welcome Back"])
+        captureStoreScreenshot("01-home")
+
+        require(app.buttons["Assessment"]).tap()
+        require(app.staticTexts["Assessment Overview"])
+        captureStoreScreenshot("02-assessment-overview")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["AppIcon_chart"]).tap()
+        require(app.staticTexts["Past Results"])
+
+        let points = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'View assessment results from'"))
+        require(points.element(boundBy: 1)).tap()
+        require(app.staticTexts["Survey Results"])
+        captureStoreScreenshot("03-care-results")
+        require(app.buttons["AppIcon_back"]).tap()
+        require(app.staticTexts["Past Results"])
+        captureStoreScreenshot("04-past-results")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["Exercises"]).tap()
+        require(app.staticTexts["Daily Exercise"])
+        captureStoreScreenshot("05-exercises")
+        require(app.buttons["AppIcon_home"]).tap()
+
+        require(app.buttons["Education"]).tap()
+        require(app.staticTexts["Education"])
+        captureStoreScreenshot("06-education")
+    }
+
     func testSurveyRelationshipBreakdownInfoOpensRiskGroups() {
         launch(fixture: "--uitesting-history", skipWelcome: false)
         require(app.buttons["AppIcon_chart"]).tap()
