@@ -92,12 +92,14 @@ public struct PersonalizedActionPlanView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Recommended for you")
                             .font(Theme.Typography.poppins(.bold, size: 19))
-                            .foregroundStyle(Theme.Colors.textPrimary)
+                            .foregroundStyle(focusCategory.accentColor)
                         Text("A starting set for your \(focusDomain.title) pathway")
                             .font(Theme.Typography.poppins(.regular, size: 13))
                             .foregroundStyle(Theme.Colors.textSecondary)
                         ForEach(recommendations) { exercise in exerciseRow(exercise, showDescription: true) }
                     }
+                    .padding(14)
+                    .background(focusCategory.accentColor.opacity(0.07), in: RoundedRectangle(cornerRadius: 18))
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Explore every pathway")
@@ -122,7 +124,7 @@ public struct PersonalizedActionPlanView: View {
                                 }
                             }
                             .padding(14)
-                            .background(Theme.Colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
+                            .background(category.accentColor.opacity(0.07), in: RoundedRectangle(cornerRadius: 16))
                         }
                     }
                 }
@@ -154,28 +156,64 @@ public struct PersonalizedActionPlanView: View {
     }
 
     private func exerciseRow(_ item: ExerciseItem, showDescription: Bool) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            ExerciseEmojiView(emoji: item.emoji, size: 21)
-                .frame(width: 34, height: 34)
-                .background(item.category.accentColor.opacity(0.1), in: Circle())
-            VStack(alignment: .leading, spacing: 3) {
-                Text(item.title)
-                    .font(Theme.Typography.poppins(.semiBold, size: 13))
-                    .foregroundStyle(Theme.Colors.textPrimary)
-                if showDescription {
-                    Text(item.subtitle)
-                        .font(Theme.Typography.poppins(.regular, size: 12))
-                        .foregroundStyle(Theme.Colors.textSecondary)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top, spacing: 10) {
+                ExerciseEmojiView(emoji: item.emoji, size: 21)
+                    .frame(width: 34, height: 34)
+                    .background(item.category.accentColor.opacity(0.12), in: Circle())
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(item.title)
+                        .font(Theme.Typography.poppins(.semiBold, size: 13))
+                        .foregroundStyle(Theme.Colors.textPrimary)
+                    if showDescription {
+                        Text(item.subtitle)
+                            .font(Theme.Typography.poppins(.regular, size: 12))
+                            .foregroundStyle(Theme.Colors.textSecondary)
+                    }
+                    Text(item.durationMinutesRange)
+                        .font(Theme.Typography.poppins(.medium, size: 11))
+                        .foregroundStyle(item.category.accentColor)
                 }
-                Text(item.durationMinutesRange)
-                    .font(Theme.Typography.poppins(.medium, size: 11))
-                    .foregroundStyle(item.category.accentColor)
+                Spacer(minLength: 0)
             }
-            Spacer(minLength: 0)
+            HStack {
+                Spacer()
+                Button {
+                    router.navigate(to: exerciseRoute(for: item))
+                } label: {
+                    HStack(spacing: 5) {
+                        Text("Do Exercise")
+                        Image(systemName: "arrow.right")
+                    }
+                    .font(Theme.Typography.poppins(.semiBold, size: 12))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 13)
+                    .frame(height: 34)
+                    .background(item.category.accentColor, in: RoundedRectangle(cornerRadius: 10))
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("PlanDoExercise_\(item.id)")
+            }
         }
-        .padding(11)
+        .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Theme.Colors.surfaceSecondary, in: RoundedRectangle(cornerRadius: 12))
+        .background(item.category.accentColor.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12)
+            .strokeBorder(item.category.accentColor.opacity(0.55), lineWidth: 1.2))
+    }
+
+    private func exerciseRoute(for item: ExerciseItem) -> AppRoute {
+        switch item.id {
+        case "watch-something-funny": return .watchFunny
+        case "keep-photo-close": return .keepPhoto
+        case "belonging-list": return .belongingList
+        case "share-something-small": return .shareSomethingSmall
+        case "mirror-emotion": return .mirrorEmotion
+        case "mirror-loved-one": return .mirrorLovedOne
+        case "share-something-new": return .shareSomethingNew
+        case "connection-countdown": return .connectionCountdown
+        default: return .guidedExercise(item.id)
+        }
     }
 }
 

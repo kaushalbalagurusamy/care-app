@@ -427,6 +427,17 @@ struct ResultsV2TrendChart: View {
         max(280, CGFloat(max(pointCount - 1, 0)) * 52 + 32)
     }
 
+    private func dotOffset(seriesIndex: Int, pointIndex: Int) -> CGFloat {
+        guard series[seriesIndex].values.indices.contains(pointIndex) else { return 0 }
+        let value = series[seriesIndex].values[pointIndex]
+        let tied = series.indices.filter {
+            series[$0].values.indices.contains(pointIndex) &&
+            abs(series[$0].values[pointIndex] - value) < 0.001
+        }
+        guard tied.count > 1, let rank = tied.firstIndex(of: seriesIndex) else { return 0 }
+        return (CGFloat(rank) - CGFloat(tied.count - 1) / 2) * 7
+    }
+
     let dates: [Date]
     let series: [ResultsV2TrendSeries]
     let maximum: Double
@@ -484,9 +495,19 @@ struct ResultsV2TrendChart: View {
                         let y = plot.maxY - plot.height * CGFloat(min(max(value / maximum, 0), 1))
                         let point = CGPoint(x: x, y: y)
                         if index == 0 { line.move(to: point) } else { line.addLine(to: point) }
-                        context.fill(Path(ellipseIn: CGRect(x: x - 3, y: y - 3, width: 6, height: 6)), with: .color(item.color))
                     }
                     context.stroke(line, with: .color(item.color), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                }
+
+                for (seriesIndex, item) in series.enumerated() {
+                    for (pointIndex, value) in item.values.enumerated() {
+                        let x = plot.minX + (item.values.count == 1
+                            ? plot.width / 2
+                            : plot.width * CGFloat(pointIndex) / CGFloat(item.values.count - 1))
+                            + dotOffset(seriesIndex: seriesIndex, pointIndex: pointIndex)
+                        let y = plot.maxY - plot.height * CGFloat(min(max(value / maximum, 0), 1))
+                        context.fill(Path(ellipseIn: CGRect(x: x - 3, y: y - 3, width: 6, height: 6)), with: .color(item.color))
+                    }
                 }
             }
             .frame(height: height)

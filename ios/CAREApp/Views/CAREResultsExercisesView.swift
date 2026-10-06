@@ -47,7 +47,7 @@ public struct CAREResultsExercisesView: View {
                             .font(Theme.Typography.poppins(.bold, size: 28))
                             .foregroundColor(Theme.Colors.textPrimary)
                         
-                        Text("Based on your latest assessment, let's explore your pathways and next steps.")
+                        Text("Based on your latest assessment.")
                             .font(Theme.Typography.poppins(.regular, size: 14))
                             .foregroundColor(Theme.Colors.textSecondary)
                             .lineSpacing(2)
@@ -75,7 +75,7 @@ public struct CAREResultsExercisesView: View {
                         // 4 Pathway Indicator Bars
                         HStack(spacing: 8) {
                             ForEach(CAREDomain.allCases, id: \.self) { domain in
-                                pathwayMiniPill(label: domain.title, score: score(for: domain), color: ResultsV2Palette.donutColor(for: domain))
+                                pathwayMiniPill(domain: domain, score: score(for: domain))
                             }
                         }
                         
@@ -184,19 +184,21 @@ public struct CAREResultsExercisesView: View {
     }
     
     @ViewBuilder
-    private func pathwayMiniPill(label: String, score: String, color: Color) -> some View {
+    private func pathwayMiniPill(domain: CAREDomain, score: String) -> some View {
         VStack(spacing: 3) {
-            Text(label)
-                .font(Theme.Typography.poppins(.medium, size: 11))
-                .foregroundColor(Theme.Colors.textSecondary)
+            Text(domain.title)
+                .font(Theme.Typography.poppins(.semiBold, size: 11))
+                .foregroundColor(Theme.Colors.textPrimary)
             Text(score)
                 .font(Theme.Typography.poppins(.bold, size: 12))
-                .foregroundColor(color)
+                .foregroundColor(ResultsV2Palette.labelColor(for: domain))
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
-        .background(Color(hex: "#F8FAFC"))
+        .background(ResultsV2Palette.labelColor(for: domain).opacity(0.10))
         .cornerRadius(10)
+        .overlay(RoundedRectangle(cornerRadius: 10)
+            .strokeBorder(ResultsV2Palette.labelColor(for: domain).opacity(0.45), lineWidth: 1))
     }
     
     @ViewBuilder

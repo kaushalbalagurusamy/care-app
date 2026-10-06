@@ -100,19 +100,17 @@ public struct RelationalRiskTierCard: View {
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Badge & Score Range Header
-            HStack(spacing: 12) {
-                Text(badgeTitle)
+            // Keep the tier and its threshold together in the same colored badge.
+            HStack {
+                Text("\(badgeTitle)  \(scoreRange)")
                     .font(Theme.Typography.poppins(.bold, size: 13))
                     .foregroundColor(.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 5)
                     .background(badgeColor)
                     .clipShape(Capsule())
-                
-                Text(scoreRange)
-                    .font(Theme.Typography.poppins(.bold, size: 15.5))
-                    .foregroundColor(Theme.Colors.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 
                 Spacer()
             }
