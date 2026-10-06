@@ -170,13 +170,14 @@ public struct PersonalizedActionPlanView: View {
                             .font(Theme.Typography.poppins(.regular, size: 12))
                             .foregroundStyle(Theme.Colors.textSecondary)
                     }
-                    Text(item.durationMinutesRange)
-                        .font(Theme.Typography.poppins(.medium, size: 11))
-                        .foregroundStyle(item.category.accentColor)
                 }
                 Spacer(minLength: 0)
             }
-            HStack {
+            HStack(spacing: 10) {
+                Text(item.durationMinutesRange)
+                    .font(Theme.Typography.poppins(.medium, size: 11))
+                    .foregroundStyle(item.category.accentColor)
+                    .padding(.leading, 44)
                 Spacer()
                 Button {
                     router.navigate(to: exerciseRoute(for: item))
@@ -197,9 +198,9 @@ public struct PersonalizedActionPlanView: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(item.category.accentColor.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
+        .background(Color.white, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12)
-            .strokeBorder(item.category.accentColor.opacity(0.55), lineWidth: 1.2))
+            .strokeBorder(item.category.accentColor.opacity(0.55), lineWidth: 1))
     }
 
     private func exerciseRoute(for item: ExerciseItem) -> AppRoute {
