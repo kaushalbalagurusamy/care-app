@@ -6,6 +6,7 @@ public struct PRMLibraryView: View {
     @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     @State private var searchText = ""
     @State private var selectedFilter: MomentFilter = .all
+    @State private var selectedCategory: ExerciseCategory?
     @State private var saveError: String?
 
     public init() {}
@@ -20,10 +21,11 @@ public struct PRMLibraryView: View {
     private var visibleMoments: [PRMSavedMoment] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         var moments = (appEnvironment?.draftStore.savedMoments ?? []).filter {
-            query.isEmpty || $0.title.localizedCaseInsensitiveContains(query) ||
+            (selectedCategory == nil || $0.category == selectedCategory) &&
+            (query.isEmpty || $0.title.localizedCaseInsensitiveContains(query) ||
                 $0.summary.localizedCaseInsensitiveContains(query) ||
                 $0.answers.contains { $0.response.localizedCaseInsensitiveContains(query) } ||
-                $0.category.rawValue.localizedCaseInsensitiveContains(query)
+                $0.category.rawValue.localizedCaseInsensitiveContains(query))
         }
         switch selectedFilter {
         case .all, .recent: moments.sort { $0.savedAt > $1.savedAt }
@@ -95,9 +97,35 @@ public struct PRMLibraryView: View {
                 .font(Theme.Typography.poppins(.regular, size: 13))
                 .autocorrectionDisabled()
                 .accessibilityIdentifier("SearchMoments")
-            Image(systemName: "slider.horizontal.3")
-                .font(.system(size: 18, weight: .medium))
-                .accessibilityHidden(true)
+            Menu {
+                Button {
+                    selectedCategory = nil
+                } label: {
+                    if selectedCategory == nil { Label("All categories", systemImage: "checkmark") }
+                    else { Text("All categories") }
+                }
+                ForEach(ExerciseCategory.allCases) { category in
+                    Button {
+                        selectedCategory = category
+                    } label: {
+                        if selectedCategory == category { Label(category.rawValue, systemImage: "checkmark") }
+                        else { Text(category.rawValue) }
+                    }
+                }
+            } label: {
+                HStack(spacing: 5) {
+                    if let selectedCategory {
+                        Text(selectedCategory.rawValue)
+                            .font(Theme.Typography.poppins(.medium, size: 11))
+                    }
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.system(size: 18, weight: .medium))
+                }
+                .frame(minWidth: 36, minHeight: 36)
+                .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Filter by category")
+            .accessibilityIdentifier("PRMCategoryFilter")
         }
         .foregroundColor(Theme.Colors.textSecondary)
         .padding(.horizontal, 12)
@@ -203,6 +231,7 @@ public struct PRMLibraryView: View {
     private var emptyState: some View {
         Text(selectedFilter == .lastViewed ? "Moments you open will appear here." :
              selectedFilter == .favorites ? "Favorite a moment to see it here." :
+             selectedCategory != nil ? "No \(selectedCategory!.rawValue) moments yet." :
              searchText.isEmpty ? "Complete a PRM exercise to save your first moment." : "No moments found.")
             .font(Theme.Typography.poppins(.regular, size: 13))
             .foregroundColor(Theme.Colors.textSecondary)

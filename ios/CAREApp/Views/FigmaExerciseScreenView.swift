@@ -153,7 +153,7 @@ struct FigmaExerciseScreenView: View {
                                       y: (node.y - 64 + node.h / 2) * scale)
                             .accessibilityIdentifier("FigmaReflection_\(node.id)")
                     }
-                    if ["844:1664", "845:3034"].contains(screen.id),
+                    if ["792:357", "844:1664", "845:3034"].contains(screen.id),
                        let node = screen.nodes.first(where: { $0.n == "upload-dashed-area" }) {
                         if let photo = savedPhoto {
                             Image(uiImage: photo)
@@ -356,7 +356,8 @@ struct FigmaExerciseScreenView: View {
                 .frame(width: node.w * scale, height: node.h * scale)
                 .clipShape(RoundedRectangle(cornerRadius: (node.r ?? 0) * scale))
         } else if node.t == "TEXT", let value = node.txt {
-            if value == "0 / 3 Completed" && screen.name.contains("safe-support-plan") {
+            if value == "0 / 3 Completed" &&
+                (screen.name.contains("safe-support-plan") || screen.id == "792:357") {
                 let required = screen.nodes.filter { ["list-item-1", "list-item-2", "list-item-3"].contains($0.n) }
                 Text("\(required.filter { !(fields[$0.id] ?? "").isEmpty }.count) / 3 Completed")
                     .font(.custom(fontName(node.fn), size: (node.fs ?? 12) * scale))
