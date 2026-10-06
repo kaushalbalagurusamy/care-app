@@ -9,6 +9,7 @@ public enum AppIcon {
     case info
     case checkmark
     case sparkle
+    case prmLibrary
     case calendar
     case arrowRight
     case arrowLeft
@@ -55,6 +56,10 @@ public enum AppIcon {
             Image(systemName: "sparkles")
                 .font(.system(size: size, weight: weight))
                 .foregroundColor(color)
+        case .prmLibrary:
+            PRMOpenBookShape()
+                .stroke(color, style: StrokeStyle(lineWidth: size * 1.66667 / 19, lineCap: .round, lineJoin: .round))
+                .frame(width: size, height: size)
         case .calendar:
             Image("icon_calendar")
                 .renderingMode(.template)
@@ -86,6 +91,7 @@ public enum AppIcon {
         case .info: return "AppIcon_info"
         case .checkmark: return "AppIcon_checkmark"
         case .sparkle: return "AppIcon_sparkle"
+        case .prmLibrary: return "AppIcon_prmLibrary"
         case .calendar: return "AppIcon_calendar"
         case .arrowRight: return "AppIcon_arrowRight"
         case .arrowLeft: return "AppIcon_arrowLeft"
@@ -102,11 +108,31 @@ public enum AppIcon {
         case .info: return "Information"
         case .checkmark: return "Completed"
         case .sparkle: return "Personalized Action Plan"
+        case .prmLibrary: return "Positive Relational Moments Library"
         case .calendar: return "Calendar"
         case .arrowRight: return "Next"
         case .arrowLeft: return "Previous"
         case .custom(let name): return name.replacingOccurrences(of: ".", with: " ").capitalized
         }
+    }
+}
+
+// The two strokes trace the open-book icon in the PRM library Figma header.
+private struct PRMOpenBookShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let x = rect.width / 19
+        let y = rect.height / 19
+        path.move(to: CGPoint(x: 9.5 * x, y: 5.14583 * y))
+        path.addCurve(to: CGPoint(x: 2.77083 * x, y: 3.16667 * y), control1: CGPoint(x: 7.67917 * x, y: 3.5625 * y), control2: CGPoint(x: 5.7 * x, y: 3.16667 * y))
+        path.addLine(to: CGPoint(x: 2.77083 * x, y: 14.25 * y))
+        path.addCurve(to: CGPoint(x: 9.5 * x, y: 16.2292 * y), control1: CGPoint(x: 5.7 * x, y: 14.25 * y), control2: CGPoint(x: 7.67917 * x, y: 14.6458 * y))
+        path.addCurve(to: CGPoint(x: 16.2292 * x, y: 14.25 * y), control1: CGPoint(x: 11.3208 * x, y: 14.6458 * y), control2: CGPoint(x: 13.3 * x, y: 14.25 * y))
+        path.addLine(to: CGPoint(x: 16.2292 * x, y: 3.16667 * y))
+        path.addCurve(to: CGPoint(x: 9.5 * x, y: 5.14583 * y), control1: CGPoint(x: 13.3 * x, y: 3.16667 * y), control2: CGPoint(x: 11.3208 * x, y: 3.5625 * y))
+        path.move(to: CGPoint(x: 9.5 * x, y: 5.14583 * y))
+        path.addLine(to: CGPoint(x: 9.5 * x, y: 16.2292 * y))
+        return path
     }
 }
 

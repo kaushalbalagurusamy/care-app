@@ -15,6 +15,7 @@ public struct HeaderNavBar: View {
     
     public let showBackButton: Bool
     public let showHomeButton: Bool
+    public let showLibraryButton: Bool
     public let showSparkleButton: Bool
     public let sparklePlacement: SparklePlacement
     public let showChartButton: Bool
@@ -32,6 +33,7 @@ public struct HeaderNavBar: View {
     public init(
         showBackButton: Bool = true,
         showHomeButton: Bool = true,
+        showLibraryButton: Bool = true,
         showSparkleButton: Bool = true,
         sparklePlacement: SparklePlacement = .right,
         showChartButton: Bool = true,
@@ -48,6 +50,7 @@ public struct HeaderNavBar: View {
     ) {
         self.showBackButton = showBackButton
         self.showHomeButton = showHomeButton
+        self.showLibraryButton = showLibraryButton
         self.showSparkleButton = showSparkleButton
         self.sparklePlacement = sparklePlacement
         self.showChartButton = showChartButton
@@ -88,6 +91,19 @@ public struct HeaderNavBar: View {
                             navigateWithProgressWarning { if let onHome { onHome() } else { router?.popToRoot() } }
                         }
                     )
+                }
+
+                if showLibraryButton {
+                    CircularNavIconButton(
+                        icon: .prmLibrary,
+                        accentColor: accentColor,
+                        action: {
+                            navigateWithProgressWarning {
+                                if router?.currentRoute != .prmLibrary { router?.navigate(to: .prmLibrary) }
+                            }
+                        }
+                    )
+                    .accessibilityIdentifier("PRMLibraryTab")
                 }
                 
                 if showSparkleButton && sparklePlacement == .left {

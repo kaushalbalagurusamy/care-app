@@ -342,6 +342,9 @@ struct ContentView: View {
         case .personalizedActionPlan:
             if let latestResult { PersonalizedActionPlanView(router: router, result: latestResult) }
             else { NoAssessmentResultsView(router: router) }
+
+        case .prmLibrary:
+            PRMLibraryView()
             
         case .profile:
             ProfileView(router: router, onDataCleared: { scope in
