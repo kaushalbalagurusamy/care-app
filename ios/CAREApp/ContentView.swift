@@ -345,6 +345,9 @@ struct ContentView: View {
 
         case .prmLibrary:
             PRMLibraryView()
+
+        case .prmMoment(let momentID):
+            PRMMomentDetailView(momentID: momentID)
             
         case .profile:
             ProfileView(router: router, onDataCleared: { scope in

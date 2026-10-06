@@ -162,7 +162,9 @@ struct GuidedExerciseView: View {
 
     private func complete() {
         do {
-            try progress?.completeAndDiscard(exerciseID)
+            guard let appEnvironment, let progress else { throw CocoaError(.fileNoSuchFile) }
+            try appEnvironment.draftStore.saveExercise(draftSnapshot)
+            try progress.completeAndDiscard(exerciseID)
             finished = true
             router?.finishFlow(at: .exerciseCompleteFor(exerciseID))
         } catch {

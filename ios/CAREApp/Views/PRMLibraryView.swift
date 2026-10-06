@@ -3,11 +3,10 @@ import SwiftUI
 // Figma frame 932:106 — Positive Relational Moments Library.
 public struct PRMLibraryView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     @State private var searchText = ""
     @State private var selectedFilter: MomentFilter = .all
-    @State private var favoriteIDs: Set<String> = ["photo-close"]
-    @State private var viewedDates: [String: Date] = [:]
-    @State private var selectedMoment: PreviewMoment?
+    @State private var saveError: String?
 
     public init() {}
 
@@ -18,44 +17,20 @@ public struct PRMLibraryView: View {
         case lastViewed = "Last Viewed"
     }
 
-    // These are the example moments shown in the Figma review screen. Real saved
-    // moments will come from the PRM storage flow when that flow is implemented.
-    private struct PreviewMoment: Identifiable {
-        let id: String
-        let title: String
-        let emoji: String
-        let detail: String
-        let category: ExerciseCategory
-        let savedLabel: String
-        let savedOrder: Int
-    }
-
-    private var previewMoments: [PreviewMoment] {
-        #if DEBUG
-        return [
-            .init(id: "photo-close", title: "Keep a Photo Close", emoji: "📷", detail: "That afternoon at the lake when Dad and I laughed together.", category: .calm, savedLabel: "Saved today", savedOrder: 0),
-            .init(id: "share-small", title: "Share Something Small", emoji: "💬", detail: "Maya listened when I told her about my day. I felt understood.", category: .accepted, savedLabel: "Saved yesterday", savedOrder: 1),
-            .init(id: "friendly-exchange", title: "Notice a Friendly Exchange", emoji: "✨", detail: "The barista remembered my name and made me smile.", category: .calm, savedLabel: "Saved 3 days ago", savedOrder: 2)
-        ]
-        #else
-        return []
-        #endif
-    }
-
-    private var visibleMoments: [PreviewMoment] {
+    private var visibleMoments: [PRMSavedMoment] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        var moments = previewMoments.filter {
+        var moments = (appEnvironment?.draftStore.savedMoments ?? []).filter {
             query.isEmpty || $0.title.localizedCaseInsensitiveContains(query) ||
-                $0.detail.localizedCaseInsensitiveContains(query) ||
+                $0.summary.localizedCaseInsensitiveContains(query) ||
+                $0.answers.contains { $0.response.localizedCaseInsensitiveContains(query) } ||
                 $0.category.rawValue.localizedCaseInsensitiveContains(query)
         }
         switch selectedFilter {
-        case .all: break
-        case .favorites: moments = moments.filter { favoriteIDs.contains($0.id) }
-        case .recent: moments.sort { $0.savedOrder < $1.savedOrder }
+        case .all, .recent: moments.sort { $0.savedAt > $1.savedAt }
+        case .favorites: moments = moments.filter(\.isFavorite)
         case .lastViewed:
-            moments = moments.filter { viewedDates[$0.id] != nil }
-            moments.sort { (viewedDates[$0.id] ?? .distantPast) > (viewedDates[$1.id] ?? .distantPast) }
+            moments = moments.filter { $0.lastViewedAt != nil }
+            moments.sort { ($0.lastViewedAt ?? .distantPast) > ($1.lastViewedAt ?? .distantPast) }
         }
         return moments
     }
@@ -92,10 +67,10 @@ public struct PRMLibraryView: View {
             }
         }
         .background(.white)
-        .sheet(item: $selectedMoment) { moment in
-            momentDetail(moment)
-                .presentationDetents([.medium])
-        }
+        .alert("Could not save moment", isPresented: Binding(
+            get: { saveError != nil }, set: { if !$0 { saveError = nil } }
+        )) { Button("OK", role: .cancel) { saveError = nil } }
+            message: { Text(saveError ?? "") }
     }
 
     private var heading: some View {
@@ -148,7 +123,7 @@ public struct PRMLibraryView: View {
         .accessibilityIdentifier("MomentFilters")
     }
 
-    private func momentCard(_ moment: PreviewMoment) -> some View {
+    private func momentCard(_ moment: PRMSavedMoment) -> some View {
         let colors = cardColors(for: moment.category)
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
@@ -161,18 +136,18 @@ public struct PRMLibraryView: View {
                     .minimumScaleFactor(0.85)
                 Spacer(minLength: 0)
                 Button {
-                    if favoriteIDs.contains(moment.id) { favoriteIDs.remove(moment.id) }
-                    else { favoriteIDs.insert(moment.id) }
+                    do { try appEnvironment?.draftStore.updateMoment(moment.id) { $0.isFavorite.toggle() } }
+                    catch { saveError = "Your favorite could not be saved. Please try again." }
                 } label: {
-                    Image(systemName: favoriteIDs.contains(moment.id) ? "heart.fill" : "heart")
+                    Image(systemName: moment.isFavorite ? "heart.fill" : "heart")
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(favoriteIDs.contains(moment.id) ? colors.action : Theme.Colors.textSecondary)
+                        .foregroundColor(moment.isFavorite ? colors.action : Theme.Colors.textSecondary)
                         .frame(width: 24, height: 24)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(favoriteIDs.contains(moment.id) ? "Remove from favorites" : "Add to favorites")
+                .accessibilityLabel(moment.isFavorite ? "Remove from favorites" : "Add to favorites")
             }
-            Text(moment.detail)
+            Text(moment.summary)
                 .font(Theme.Typography.poppins(.regular, size: 11.5))
                 .foregroundColor(Theme.Colors.textSecondary)
                 .lineSpacing(2)
@@ -180,7 +155,7 @@ public struct PRMLibraryView: View {
             Rectangle()
                 .fill(Color(hex: "#D8E0E9"))
                 .frame(height: 1)
-            Text("\(moment.category.rawValue.uppercased())  •  \(moment.savedLabel)")
+            Text("\(moment.category.rawValue.uppercased())  •  Saved \(moment.savedAt.formatted(.dateTime.month(.abbreviated).day()))")
                 .font(Theme.Typography.poppins(.regular, size: 10.5))
                 .foregroundColor(Theme.Colors.textSecondary)
             HStack {
@@ -189,8 +164,10 @@ public struct PRMLibraryView: View {
                     .foregroundColor(Theme.Colors.textSecondary)
                 Spacer()
                 Button {
-                    viewedDates[moment.id] = .now
-                    selectedMoment = moment
+                    do {
+                        try appEnvironment?.draftStore.updateMoment(moment.id) { $0.lastViewedAt = .now }
+                        router?.navigate(to: .prmMoment(moment.id))
+                    } catch { saveError = "This moment could not be opened. Please try again." }
                 } label: {
                     HStack(spacing: 4) {
                         Text("View Moment")
@@ -226,25 +203,151 @@ public struct PRMLibraryView: View {
     private var emptyState: some View {
         Text(selectedFilter == .lastViewed ? "Moments you open will appear here." :
              selectedFilter == .favorites ? "Favorite a moment to see it here." :
-             searchText.isEmpty ? "Your saved moments will appear here." : "No moments found.")
+             searchText.isEmpty ? "Complete a PRM exercise to save your first moment." : "No moments found.")
             .font(Theme.Typography.poppins(.regular, size: 13))
             .foregroundColor(Theme.Colors.textSecondary)
             .frame(maxWidth: .infinity, minHeight: 120)
     }
 
-    private func momentDetail(_ moment: PreviewMoment) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(moment.emoji).font(.system(size: 32))
-            Text(moment.title)
-                .font(Theme.Typography.poppins(.bold, size: 22))
-                .foregroundColor(Theme.Colors.textPrimary)
-            Text(moment.detail)
-                .font(Theme.Typography.poppins(.regular, size: 16))
-                .foregroundColor(Theme.Colors.textSecondary)
-            Spacer()
+}
+
+// A saved moment presents only what the person entered, without exercise instructions.
+public struct PRMMomentDetailView: View {
+    @Environment(AppRouter.self) private var router: AppRouter?
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
+    public let momentID: UUID
+    @State private var isEditingDescription = false
+    @State private var descriptionDraft = ""
+    @State private var saveError: String?
+    @State private var showingDeleteConfirmation = false
+
+    public init(momentID: UUID) { self.momentID = momentID }
+    private var moment: PRMSavedMoment? { appEnvironment?.draftStore.savedMoments.first { $0.id == momentID } }
+
+    public var body: some View {
+        let accent = moment?.category.accentColor ?? ExerciseCategory.calm.accentColor
+        VStack(spacing: 0) {
+            HeaderNavBar(accentColor: accent, onBack: { router?.pop() })
+            if let moment {
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 18) {
+                        HStack(spacing: 12) {
+                            ExerciseEmojiView(emoji: moment.emoji, size: 36)
+                                .frame(width: 58, height: 58)
+                                .background(accent.opacity(0.1), in: Circle())
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("\(moment.category.rawValue.uppercased())  •  PRM")
+                                    .font(Theme.Typography.poppins(.semiBold, size: 11)).foregroundColor(accent)
+                                Text(moment.title)
+                                    .font(Theme.Typography.poppins(.bold, size: 23))
+                                    .foregroundColor(Theme.Colors.textPrimary)
+                            }
+                            Spacer(minLength: 0)
+                            Button { toggleFavorite() } label: {
+                                Image(systemName: moment.isFavorite ? "heart.fill" : "heart")
+                                    .font(.system(size: 22)).foregroundColor(accent)
+                            }
+                            .accessibilityLabel(moment.isFavorite ? "Remove from favorites" : "Add to favorites")
+                        }
+                        Text("Saved \(moment.savedAt.formatted(.dateTime.month(.wide).day().year()))")
+                            .font(Theme.Typography.poppins(.regular, size: 12))
+                            .foregroundColor(Theme.Colors.textSecondary)
+
+                        if let image = savedPhoto(moment) {
+                            Image(uiImage: image).resizable().scaledToFit()
+                                .frame(maxWidth: .infinity).frame(maxHeight: 300)
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .accessibilityLabel("Saved moment photo")
+                        }
+                        if moment.photoFilename != nil {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("About this photo")
+                                    .font(Theme.Typography.poppins(.semiBold, size: 15))
+                                if isEditingDescription {
+                                    TextField("Add a description (optional)", text: $descriptionDraft, axis: .vertical)
+                                        .lineLimit(2...5).padding(10)
+                                        .background(.white, in: RoundedRectangle(cornerRadius: 10))
+                                    Button("Save description") { saveDescription() }.foregroundColor(accent)
+                                } else {
+                                    if !moment.photoDescription.isEmpty { Text(moment.photoDescription) }
+                                    Button(moment.photoDescription.isEmpty ? "Add a description" : "Edit description") {
+                                        descriptionDraft = moment.photoDescription
+                                        isEditingDescription = true
+                                    }.foregroundColor(accent)
+                                }
+                            }
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .padding(16).frame(maxWidth: .infinity, alignment: .leading)
+                            .background(accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
+                        }
+
+                        if !moment.answers.isEmpty {
+                            Text("Your reflections")
+                                .font(Theme.Typography.poppins(.bold, size: 17))
+                            ForEach(Array(moment.answers.enumerated()), id: \.offset) { _, answer in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(answer.question)
+                                        .font(Theme.Typography.poppins(.semiBold, size: 13))
+                                        .foregroundColor(Theme.Colors.textPrimary)
+                                    Text(answer.response)
+                                        .font(Theme.Typography.poppins(.regular, size: 14))
+                                        .foregroundColor(Theme.Colors.textSecondary)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(16)
+                                .background(accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
+                            }
+                        } else {
+                            Text("No written reflection was added to this moment.")
+                                .font(Theme.Typography.poppins(.regular, size: 13))
+                                .foregroundColor(Theme.Colors.textSecondary)
+                        }
+                        Button("Delete Moment", role: .destructive) { showingDeleteConfirmation = true }
+                            .font(Theme.Typography.poppins(.medium, size: 12))
+                            .foregroundColor(.red)
+                            .padding(.top, 12)
+                            .accessibilityIdentifier("DeletePRMMoment")
+                    }
+                    .padding(.horizontal, 20).padding(.top, 16).padding(.bottom, 30)
+                }
+            } else {
+                Text("This saved moment is unavailable.")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
-        .padding(24)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(cardColors(for: moment.category).background)
+        .background(.white)
+        .alert("Could not save moment", isPresented: Binding(
+            get: { saveError != nil }, set: { if !$0 { saveError = nil } }
+        )) { Button("OK", role: .cancel) { saveError = nil } }
+            message: { Text(saveError ?? "") }
+        .confirmationDialog("Delete this saved moment?", isPresented: $showingDeleteConfirmation) {
+            Button("Delete Moment", role: .destructive) {
+                do {
+                    try appEnvironment?.draftStore.deleteMoment(momentID)
+                    router?.pop()
+                } catch { saveError = "The moment could not be deleted. Please try again." }
+            }
+        } message: {
+            Text("Its photo and reflections will no longer appear in your library.")
+        }
+    }
+
+    private func savedPhoto(_ moment: PRMSavedMoment) -> UIImage? {
+        guard let filename = moment.photoFilename,
+              let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        return UIImage(contentsOfFile: documents.appendingPathComponent("ExercisePhotos")
+            .appendingPathComponent(filename).path)
+    }
+    private func toggleFavorite() {
+        do { try appEnvironment?.draftStore.updateMoment(momentID) { $0.isFavorite.toggle() } }
+        catch { saveError = "Your favorite could not be saved. Please try again." }
+    }
+    private func saveDescription() {
+        do {
+            try appEnvironment?.draftStore.updateMoment(momentID) {
+                $0.photoDescription = descriptionDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            isEditingDescription = false
+        } catch { saveError = "The description could not be saved. Please try again." }
     }
 }

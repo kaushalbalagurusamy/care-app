@@ -428,6 +428,65 @@ public struct ExerciseDraft: Codable, Equatable, Sendable {
     public init(exerciseID: String) { self.exerciseID = exerciseID }
 }
 
+public struct PRMMomentAnswer: Codable, Equatable, Sendable {
+    public let question: String
+    public let response: String
+}
+
+public struct PRMSavedMoment: Codable, Equatable, Sendable, Identifiable {
+    public let id: UUID
+    public let exerciseID: String
+    public let title: String
+    public let emoji: String
+    public let category: ExerciseCategory
+    public let savedAt: Date
+    public let answers: [PRMMomentAnswer]
+    public let photoFilename: String?
+    public var photoDescription: String
+    public var isFavorite: Bool
+    public var lastViewedAt: Date?
+
+    public var summary: String { answers.first?.response ?? "A moment to revisit" }
+
+    static func capture(_ draft: ExerciseDraft, at date: Date) -> PRMSavedMoment? {
+        guard let item = ExerciseItem.allExercises.first(where: { $0.id == draft.exerciseID }),
+              item.isPositiveRelationalMoment else { return nil }
+        var answers: [PRMMomentAnswer] = []
+        if item.id == "keep-photo-close" {
+            let prompts = [
+                ("firstReflection", "After looking at the photo, do you notice any warmth, calm, or shift in your body?"),
+                ("secondReflection", "What did you notice?")
+            ]
+            for (key, question) in prompts {
+                if let response = draft.fields[key]?.trimmingCharacters(in: .whitespacesAndNewlines), !response.isEmpty {
+                    answers.append(.init(question: question, response: response))
+                }
+            }
+        } else {
+            for step in 0..<8 {
+                guard let screen = FigmaExerciseScreenCatalog.screen(for: item.id, step: step) else { break }
+                for input in screen.nodes where input.n == "reflection-input" || input.n.hasPrefix("list-item") {
+                    guard let response = draft.fields[input.id]?.trimmingCharacters(in: .whitespacesAndNewlines),
+                          !response.isEmpty else { continue }
+                    let question: String
+                    if input.n == "reflection-input" {
+                        question = screen.nodes.filter { $0.n == "question" && $0.y < input.y }
+                            .min { input.y - $0.y < input.y - $1.y }?.txt ?? "Your reflection"
+                    } else {
+                        question = screen.nodes.filter { $0.n == "placeholder" && abs($0.y - input.y) < 35 }
+                            .min { abs($0.y - input.y) < abs($1.y - input.y) }?.txt ?? "A detail to remember"
+                    }
+                    answers.append(.init(question: question, response: response))
+                }
+            }
+        }
+        return .init(id: draft.completionToken ?? UUID(), exerciseID: item.id, title: item.title,
+                     emoji: item.emoji, category: item.category, savedAt: date, answers: answers,
+                     photoFilename: draft.fields["prm-photo"] ?? draft.fields.first(where: { $0.key.hasPrefix("photo:") })?.value,
+                     photoDescription: "", isFavorite: false, lastViewedAt: nil)
+    }
+}
+
 public struct QuizDraft: Codable, Equatable, Sendable {
     public let topicSlug: EducationTopicSlug
     public var questionIDs: [String]
@@ -490,6 +549,7 @@ public final class StoredUserDraft {
 public final class UserDraftStore {
     @ObservationIgnored private let container: ModelContainer
     public private(set) var exerciseDrafts: [String: ExerciseDraft] = [:]
+    public private(set) var savedMoments: [PRMSavedMoment] = []
     public private(set) var quizDrafts: [EducationTopicSlug: QuizDraft] = [:]
     public private(set) var mostRecentExerciseID: String?
     public private(set) var mostRecentQuizSlug: EducationTopicSlug?
@@ -505,6 +565,10 @@ public final class UserDraftStore {
                 if let draft = try? JSONDecoder().decode(ExerciseDraft.self, from: record.payload) {
                     exerciseDrafts[draft.exerciseID] = draft
                     if mostRecentExerciseID == nil { mostRecentExerciseID = draft.exerciseID }
+                } else { unreadableDraftKeys.insert(record.key) }
+            } else if record.key == "prm-moments" {
+                if let moments = try? JSONDecoder().decode([PRMSavedMoment].self, from: record.payload) {
+                    savedMoments = moments
                 } else { unreadableDraftKeys.insert(record.key) }
             } else if record.key.hasPrefix("quiz:") {
                 if let draft = try? JSONDecoder().decode(QuizDraft.self, from: record.payload) {
@@ -609,6 +673,7 @@ public final class UserDraftStore {
         _ = try loadValue([Person].self, key: "assessment-selection")
         _ = try loadValue([ParticipantAllocation].self, key: "assessment-allocations")
         _ = try loadValue([String: ExerciseProgressRecord].self, key: "exercise-progress")
+        _ = try loadValue([PRMSavedMoment].self, key: "prm-moments")
         _ = try loadValue([String: TopicProgressRecord].self, key: "education-progress")
         _ = try loadValue(Bool.self, key: "com.careapp.security.isAppLockEnabled")
     }
@@ -779,6 +844,7 @@ public final class UserDraftStore {
             try context.save()
             Self.removeLegacyContactPhotos()
             exerciseDrafts = [:]
+            savedMoments = []
             quizDrafts = [:]
             unreadableDraftKeys = []
             mostRecentExerciseID = nil
@@ -790,6 +856,7 @@ public final class UserDraftStore {
         let context = container.mainContext
         let draftKey = "exercise:\(id)"
         let progressKey = "exercise-progress"
+        let momentsKey = "prm-moments"
         let draftDescriptor = FetchDescriptor<StoredUserDraft>(predicate: #Predicate { $0.key == draftKey })
         let progressDescriptor = FetchDescriptor<StoredUserDraft>(predicate: #Predicate { $0.key == progressKey })
         do {
@@ -797,11 +864,13 @@ public final class UserDraftStore {
                 throw CocoaError(.fileNoSuchFile)
             }
             let draft = try JSONDecoder().decode(ExerciseDraft.self, from: draftRecord.payload)
+            guard !unreadableDraftKeys.contains(momentsKey) else { throw CocoaError(.fileReadCorruptFile) }
             let progressRecord = try context.fetch(progressDescriptor).first
             var all = try progressRecord.map { try JSONDecoder().decode([String: ExerciseProgressRecord].self, from: $0.payload) } ?? [:]
             var progress = all[id] ?? .init()
             let token = draft.completionToken ?? UUID()
-            if !(progress.completionTokens ?? []).contains(token) {
+            let isNewCompletion = !(progress.completionTokens ?? []).contains(token)
+            if isNewCompletion {
                 progress.completionDates.append(date)
                 progress.completionTokens = (progress.completionTokens ?? []) + [token]
                 all[id] = progress
@@ -809,15 +878,41 @@ public final class UserDraftStore {
             let payload = try JSONEncoder().encode(all)
             if let progressRecord { progressRecord.payload = payload; progressRecord.updatedAt = .now }
             else { context.insert(StoredUserDraft(key: progressKey, payload: payload)) }
+            var nextMoments = savedMoments
+            if isNewCompletion, let moment = PRMSavedMoment.capture(draft, at: date),
+               !nextMoments.contains(where: { $0.id == moment.id }) {
+                nextMoments.insert(moment, at: 0)
+                let descriptor = FetchDescriptor<StoredUserDraft>(predicate: #Predicate { $0.key == momentsKey })
+                let momentsPayload = try JSONEncoder().encode(nextMoments)
+                if let record = try context.fetch(descriptor).first {
+                    record.payload = momentsPayload; record.updatedAt = .now
+                } else { context.insert(StoredUserDraft(key: momentsKey, payload: momentsPayload)) }
+            }
             context.delete(draftRecord)
             try context.save()
             exerciseDrafts.removeValue(forKey: id)
+            savedMoments = nextMoments
             if mostRecentExerciseID == id { mostRecentExerciseID = exerciseDrafts.keys.sorted().first }
             return all
         } catch {
             context.rollback()
             throw error
         }
+    }
+
+    public func updateMoment(_ id: UUID, _ edit: (inout PRMSavedMoment) -> Void) throws {
+        guard let index = savedMoments.firstIndex(where: { $0.id == id }) else { return }
+        var next = savedMoments
+        edit(&next[index])
+        try saveValue(next, key: "prm-moments")
+        savedMoments = next
+    }
+
+    public func deleteMoment(_ id: UUID) throws {
+        let next = savedMoments.filter { $0.id != id }
+        guard next.count != savedMoments.count else { return }
+        try saveValue(next, key: "prm-moments")
+        savedMoments = next
     }
 
     public func finishQuiz(slug: EducationTopicSlug, score: Int, totalQuestions: Int, at date: Date = .now) throws {

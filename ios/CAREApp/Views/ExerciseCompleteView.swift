@@ -4,6 +4,7 @@ import SwiftUI
 public struct ExerciseCompleteView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
     @Environment(ExerciseProgressStore.self) private var progress: ExerciseProgressStore?
+    @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     public let exerciseID: String
     @State private var selectedRating = 0
     @State private var recommendedID: String?
@@ -18,6 +19,9 @@ public struct ExerciseCompleteView: View {
         ExerciseItem.allExercises.first { $0.id == recommendedID }
     }
     private var accent: Color { exercise.category.accentColor }
+    private var savedMoment: PRMSavedMoment? {
+        appEnvironment?.draftStore.savedMoments.first { $0.exerciseID == exerciseID }
+    }
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -70,7 +74,27 @@ public struct ExerciseCompleteView: View {
                     .padding(18)
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#DCE4EE")))
 
-                    if let recommendation {
+                    if let savedMoment {
+                        VStack(alignment: .leading, spacing: 9) {
+                            Text("SAVED TO YOUR PRM LIBRARY")
+                                .font(Theme.Typography.poppins(.semiBold, size: 10))
+                                .foregroundColor(accent)
+                            Text(savedMoment.photoFilename == nil
+                                 ? "Your positive relational moment is saved. You can revisit your reflections any time."
+                                 : "Your positive relational moment is saved. You can revisit your photo and reflections any time.")
+                                .font(Theme.Typography.poppins(.regular, size: 13))
+                                .foregroundColor(Theme.Colors.textPrimary)
+                            Button { router?.navigate(to: .prmMoment(savedMoment.id)) } label: {
+                                Label("View Your Moment", systemImage: "arrow.right")
+                                    .font(Theme.Typography.poppins(.semiBold, size: 12))
+                                    .foregroundColor(.white).padding(.horizontal, 14).frame(height: 34)
+                                    .background(accent, in: RoundedRectangle(cornerRadius: 10))
+                            }
+                            .accessibilityIdentifier("ViewSavedPRMMoment")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading).padding(16)
+                        .background(accent.opacity(0.1), in: RoundedRectangle(cornerRadius: 15))
+                    } else if let recommendation {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("TRY NEXT")
                                 .font(Theme.Typography.poppins(.semiBold, size: 10))
@@ -111,9 +135,9 @@ public struct ExerciseCompleteView: View {
             VStack(spacing: 8) {
                 Button {
                     router?.popToRoot()
-                    router?.navigate(to: .exercises)
+                    router?.navigate(to: savedMoment == nil ? .exercises : .prmLibrary)
                 } label: {
-                    Text("View All Exercises")
+                    Text(savedMoment == nil ? "View All Exercises" : "View PRM Library")
                         .font(Theme.Typography.poppins(.semiBold, size: 15))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, minHeight: 50)
@@ -135,7 +159,7 @@ public struct ExerciseCompleteView: View {
         .background(.white)
         .onAppear {
             selectedRating = record.rating
-            if recommendedID == nil {
+            if recommendedID == nil && savedMoment == nil {
                 if exerciseID == "watch-something-funny" {
                     recommendedID = "keep-photo-close"
                 } else if exerciseID == "keep-photo-close" {

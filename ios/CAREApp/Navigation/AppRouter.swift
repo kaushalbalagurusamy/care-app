@@ -20,6 +20,7 @@ public enum AppRoute: Hashable {
     case welcomeAccountSetup
     case personalizedActionPlan
     case prmLibrary
+    case prmMoment(UUID)
     case profile
     case careInfo
     case addRelationship

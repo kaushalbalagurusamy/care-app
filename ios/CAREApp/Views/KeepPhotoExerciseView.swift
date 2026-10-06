@@ -14,6 +14,7 @@ public struct KeepPhotoExerciseView: View {
     @State private var showCancelConfirmation = false
     @State private var loadError: String?
     @State private var photoAssetID: String?
+    @State private var savedPRMPhotoFilename: String?
     @State private var restoredDraft = false
     @State private var didComplete = false
 
@@ -45,6 +46,15 @@ public struct KeepPhotoExerciseView: View {
                             guard !didComplete else { return }
                             do {
                                 guard let progress else { throw CocoaError(.fileNoSuchFile) }
+                                guard let appEnvironment, let photo else { throw CocoaError(.fileNoSuchFile) }
+                                let filename = try savePhotoForLibrary(photo)
+                                savedPRMPhotoFilename = filename
+                                var draft = ExerciseDraft(exerciseID: "keep-photo-close")
+                                draft.step = 1
+                                draft.fields = ["firstReflection": firstReflection, "secondReflection": secondReflection,
+                                                "prm-photo": filename]
+                                draft.photoAssetID = photoAssetID
+                                try appEnvironment.draftStore.saveExercise(draft)
                                 try progress.completeAndDiscard("keep-photo-close")
                                 didComplete = true
                                 router?.finishFlow(at: .exerciseCompleteFor("keep-photo-close"))
@@ -84,6 +94,7 @@ public struct KeepPhotoExerciseView: View {
                     }
                     photo = selected
                     photoAssetID = newValue.itemIdentifier
+                    savedPRMPhotoFilename = nil
                     persistDraft()
                 } catch {
                     loadError = "This photo could not be opened. Please choose another one."
@@ -96,15 +107,12 @@ public struct KeepPhotoExerciseView: View {
                 firstReflection = draft.fields["firstReflection"] ?? ""
                 secondReflection = draft.fields["secondReflection"] ?? ""
                 photoAssetID = draft.photoAssetID
-                if let photoAssetID {
-                    photo = await ExercisePhotoReference.loadImage(assetID: photoAssetID)
-                    if photo == nil {
-                        isReflecting = false
-                        loadError = "The saved photo is unavailable. Choose it again to continue."
-                    }
-                } else if isReflecting {
+                savedPRMPhotoFilename = draft.fields["prm-photo"]
+                if let photoAssetID { photo = await ExercisePhotoReference.loadImage(assetID: photoAssetID) }
+                if photo == nil, let savedPRMPhotoFilename { photo = libraryPhoto(filename: savedPRMPhotoFilename) }
+                if photo == nil, isReflecting {
                     isReflecting = false
-                    loadError = "Choose the photo again to continue."
+                    loadError = "The saved photo is unavailable. Choose it again to continue."
                 }
             }
             restoredDraft = true
@@ -123,9 +131,26 @@ public struct KeepPhotoExerciseView: View {
         var draft = ExerciseDraft(exerciseID: "keep-photo-close")
         draft.step = isReflecting ? 1 : 0
         draft.fields = ["firstReflection": firstReflection, "secondReflection": secondReflection]
+        if let savedPRMPhotoFilename { draft.fields["prm-photo"] = savedPRMPhotoFilename }
         draft.photoAssetID = photoAssetID
         do { try appEnvironment.draftStore.saveExercise(draft) }
         catch { loadError = "Your exercise progress could not be saved. Please try again before leaving." }
+    }
+
+    private func libraryPhoto(filename: String) -> UIImage? {
+        guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        return UIImage(contentsOfFile: documents.appendingPathComponent("ExercisePhotos")
+            .appendingPathComponent(filename).path)
+    }
+
+    private func savePhotoForLibrary(_ image: UIImage) throws -> String {
+        guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
+              let data = image.jpegData(compressionQuality: 0.82) else { throw CocoaError(.fileWriteUnknown) }
+        let directory = documents.appendingPathComponent("ExercisePhotos", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let filename = savedPRMPhotoFilename ?? UUID().uuidString + ".jpg"
+        try data.write(to: directory.appendingPathComponent(filename), options: .atomic)
+        return filename
     }
 
     private var uploadStep: some View {
