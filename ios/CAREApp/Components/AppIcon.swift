@@ -57,9 +57,13 @@ public enum AppIcon {
                 .font(.system(size: size, weight: weight))
                 .foregroundColor(color)
         case .prmLibrary:
-            PRMBookIconShape()
-                .stroke(color, style: StrokeStyle(lineWidth: size * 0.095, lineCap: .round, lineJoin: .round))
-                .frame(width: size * 1.2, height: size * 1.2)
+            ZStack {
+                PRMBookSpineFillShape().fill(color)
+                PRMBookmarkFillShape().fill(color)
+                PRMBookIconShape()
+                    .stroke(color, style: StrokeStyle(lineWidth: size * 0.095, lineCap: .round, lineJoin: .round))
+            }
+            .frame(width: size * 1.2, height: size * 1.2)
         case .calendar:
             Image("icon_calendar")
                 .renderingMode(.template)
@@ -145,6 +149,37 @@ private struct PRMBookIconShape: Shape {
         path.addLine(to: point(12.5, 7.1))
         path.addLine(to: point(14, 8.2))
         path.addLine(to: point(14, 2.5))
+        return path
+    }
+}
+
+private struct PRMBookSpineFillShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let x = rect.width / 19
+        let y = rect.height / 19
+        var path = Path()
+        path.move(to: CGPoint(x: 4.8 * x, y: 2.5 * y))
+        path.addLine(to: CGPoint(x: 5.3 * x, y: 2.5 * y))
+        path.addLine(to: CGPoint(x: 5.3 * x, y: 16 * y))
+        path.addQuadCurve(to: CGPoint(x: 2.5 * x, y: 13.5 * y), control: CGPoint(x: 2.5 * x, y: 16 * y))
+        path.addLine(to: CGPoint(x: 2.5 * x, y: 4.8 * y))
+        path.addQuadCurve(to: CGPoint(x: 4.8 * x, y: 2.5 * y), control: CGPoint(x: 2.5 * x, y: 2.5 * y))
+        path.closeSubpath()
+        return path
+    }
+}
+
+private struct PRMBookmarkFillShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let x = rect.width / 19
+        let y = rect.height / 19
+        var path = Path()
+        path.move(to: CGPoint(x: 11 * x, y: 2.5 * y))
+        path.addLine(to: CGPoint(x: 14 * x, y: 2.5 * y))
+        path.addLine(to: CGPoint(x: 14 * x, y: 8.2 * y))
+        path.addLine(to: CGPoint(x: 12.5 * x, y: 7.1 * y))
+        path.addLine(to: CGPoint(x: 11 * x, y: 8.2 * y))
+        path.closeSubpath()
         return path
     }
 }
