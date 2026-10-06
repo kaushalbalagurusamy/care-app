@@ -60,6 +60,30 @@ public struct ExerciseItem: Identifiable, Codable, Sendable, Equatable {
     public var lastCompletedDate: String?
     public var ratingStars: Int
     public var isFavorite: Bool
+
+    // The labels on the reviewed exercise screens are the source for these
+    // catalog traits. Exercises without a two-person label can be done solo.
+    public var isPositiveRelationalMoment: Bool {
+        Self.positiveRelationalMomentIDs.contains(id)
+    }
+
+    public var requiresTwoPeople: Bool {
+        Self.twoPersonExerciseIDs.contains(id)
+    }
+
+    private static let positiveRelationalMomentIDs: Set<String> = [
+        "keep-photo-close", "accepted-moments-library", "save-a-resonant-moment",
+        "revisit-an-early-spark", "recall-a-warm-connection"
+    ]
+
+    private static let twoPersonExerciseIDs: Set<String> = [
+        "active-listening-together", "relational-mindfulness", "ask-for-a-safe-hug",
+        "what-are-you-hiding", "listen-across-difference", "invite-a-trusted-perspective",
+        "check-your-read", "practice-feeling-better-together", "revisit-an-early-spark",
+        "move-together", "daylight-connection", "make-a-nourishing-meal-together",
+        "try-something-new-together", "make-a-tiny-project-together",
+        "do-a-small-kindness-together", "share-a-music-moment"
+    ]
     
     public init(
         id: String,

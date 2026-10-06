@@ -15,6 +15,8 @@ public struct ExerciseCategoryHomeView: View {
     @State private var searchText = ""
     @State private var selectedTab = "All"
     @State private var sortOption: ExerciseSortOption = .mostRecentlyCompleted
+    @State private var participationFilter: ExerciseParticipationFilter = .any
+    @State private var prmOnly = false
     @State private var isShowingSortSheet = false
     @State private var draftError: String?
 
@@ -58,6 +60,12 @@ public struct ExerciseCategoryHomeView: View {
             query.isEmpty || $0.title.localizedCaseInsensitiveContains(query) || $0.subtitle.localizedCaseInsensitiveContains(query)
         }
         if selectedTab == "Favorites" { items = items.filter { record($0.id).isFavorite } }
+        switch participationFilter {
+        case .any: break
+        case .onePerson: items = items.filter { !$0.requiresTwoPeople }
+        case .twoPeople: items = items.filter(\.requiresTwoPeople)
+        }
+        if prmOnly { items = items.filter(\.isPositiveRelationalMoment) }
         // Recent and Most Used are sort shortcuts. Choosing a sheet option returns to All
         // (or keeps Favorites as a filter), so the requested order is always visible.
         let effectiveSort: ExerciseSortOption
@@ -138,7 +146,10 @@ public struct ExerciseCategoryHomeView: View {
         }
         .background(.white)
         .sheet(isPresented: $isShowingSortSheet) {
-            ExerciseSortSheet(selectedOption: $sortOption, onApply: { _ in
+            ExerciseSortSheet(selectedOption: $sortOption,
+                              participationFilter: $participationFilter,
+                              prmOnly: $prmOnly,
+                              onApply: { _ in
                 if selectedTab == "Recent" || selectedTab == "Most Used" { selectedTab = "All" }
                 isShowingSortSheet = false
             }, onCancel: { isShowingSortSheet = false }, accent: accent)
@@ -197,23 +208,41 @@ public struct ExerciseCategoryHomeView: View {
         let entry = record(item.id)
         let lastCompleted = entry.completionDates.max()
         return VStack(alignment: .leading, spacing: 7) {
-            HStack(alignment: .center, spacing: 10) {
-                ExerciseEmojiView(emoji: item.emoji, size: 20)
-                    .frame(width: 32, height: 32)
-                    .background(soft, in: Circle())
-                Text(item.title)
-                    .font(Theme.Typography.poppins(.bold, size: 13))
-                    .foregroundColor(Theme.Colors.textPrimary)
-                Spacer()
-                Button { progress?.toggleFavorite(item.id) } label: {
-                    Image(systemName: entry.isFavorite ? "heart.fill" : "heart").foregroundColor(accent)
+            HStack(alignment: .top, spacing: 12) {
+                ExerciseEmojiView(emoji: item.emoji, size: 28)
+                    .frame(width: 42, height: 42)
+                    .background(.white.opacity(0.7), in: Circle())
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(alignment: .top, spacing: 8) {
+                        Text(item.title)
+                            .font(Theme.Typography.poppins(.bold, size: 14))
+                            .foregroundColor(Theme.Colors.textPrimary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer(minLength: 0)
+                        Button { progress?.toggleFavorite(item.id) } label: {
+                            Image(systemName: entry.isFavorite ? "heart.fill" : "heart")
+                                .foregroundColor(accent)
+                                .frame(width: 26, height: 26)
+                        }
+                        .accessibilityLabel(entry.isFavorite ? "Remove from favorites" : "Add to favorites")
+                    }
+                    Text(item.subtitle)
+                        .font(Theme.Typography.poppins(.regular, size: 11))
+                        .foregroundColor(Theme.Colors.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if item.isPositiveRelationalMoment || item.requiresTwoPeople {
+                        HStack(spacing: 6) {
+                            if item.isPositiveRelationalMoment {
+                                traitBadge("PRM", colors: prmBadgeColors)
+                            }
+                            if item.requiresTwoPeople {
+                                traitBadge("Requires 2 people", colors: twoPeopleBadgeColors)
+                            }
+                        }
+                        .padding(.top, 3)
+                    }
                 }
-                .accessibilityLabel(entry.isFavorite ? "Remove from favorites" : "Add to favorites")
             }
-            Text(item.subtitle)
-                .font(Theme.Typography.poppins(.regular, size: 11))
-                .foregroundColor(Theme.Colors.textSecondary)
-                .padding(.leading, 42)
             Divider()
             Text(lastCompleted.map { "\(item.durationMinutesRange) • \(entry.completionDates.count) times completed • Last done: \($0.formatted(date: .abbreviated, time: .omitted))" } ?? "\(item.durationMinutesRange) • New exercise")
                 .font(Theme.Typography.poppins(.regular, size: 10))
@@ -262,6 +291,35 @@ public struct ExerciseCategoryHomeView: View {
                 })
             }
         }
+    }
+
+    private var prmBadgeColors: (fill: String, text: String, border: String) {
+        switch category {
+        case .calm: return ("#DCEEFF", "#1F66B1", "#A8D2FF")
+        case .accepted: return ("#DFF7EE", "#1F8065", "#A8E6D1")
+        case .resonant: return ("#F0EBFF", "#6652A8", "#CFC2F2")
+        case .energetic: return ("#FFF0DB", "#A65C1F", "#F5D1A8")
+        }
+    }
+
+    private var twoPeopleBadgeColors: (fill: String, text: String, border: String) {
+        switch category {
+        case .calm: return ("#C9E3FF", "#164F8B", "#7CB6F0")
+        case .accepted: return ("#C3EFDE", "#12694E", "#7FD6B5")
+        case .resonant: return ("#DDD2FB", "#503A91", "#B39CE8")
+        case .energetic: return ("#F5D5AE", "#8A420E", "#DAA66A")
+        }
+    }
+
+    private func traitBadge(_ title: String, colors: (fill: String, text: String, border: String)) -> some View {
+        Text(title)
+            .font(Theme.Typography.poppins(.semiBold, size: 10))
+            .foregroundStyle(Color(hex: colors.text))
+            .padding(.horizontal, 9)
+            .frame(height: 24)
+            .background(Color(hex: colors.fill), in: Capsule())
+            .overlay(Capsule().stroke(Color(hex: colors.border), lineWidth: 1))
+            .accessibilityLabel(title == "PRM" ? "Positive Relational Moment exercise" : title)
     }
 
     private func navigateToExercise(_ id: String) {

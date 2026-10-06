@@ -19,3 +19,11 @@ public enum ExerciseSortOption: String, CaseIterable, Identifiable, Sendable {
     
     public var id: String { rawValue }
 }
+
+public enum ExerciseParticipationFilter: String, CaseIterable, Identifiable, Sendable {
+    case any = "Any"
+    case onePerson = "1 person"
+    case twoPeople = "2 people"
+
+    public var id: String { rawValue }
+}
