@@ -87,13 +87,13 @@ public final class LocalDeviceRepository: ContactsRepositoryProtocol, Assessment
         let duplicate = FetchDescriptor<StoredAssessmentSession>(predicate: #Predicate { $0.id == resultID })
         if try context.fetch(duplicate).first != nil { return }
         let existing = try context.fetch(FetchDescriptor<StoredAssessmentSession>())
-        guard !existing.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: result.timestamp) }) else {
-            throw AssessmentDailyLimitError.alreadyCompletedToday
-        }
-        // Results are immutable history. Pruning here would leave trend points without detail pages.
-        let storedSession = StoredAssessmentSession(from: result)
-        context.insert(storedSession)
-        try context.save()
+        do {
+            for previous in existing where Calendar.current.isDate(previous.date, inSameDayAs: result.timestamp) {
+                context.delete(previous)
+            }
+            context.insert(StoredAssessmentSession(from: result))
+            try context.save()
+        } catch { context.rollback(); throw error }
     }
     
     @MainActor

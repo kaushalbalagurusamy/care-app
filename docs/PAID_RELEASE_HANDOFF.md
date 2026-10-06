@@ -1,12 +1,13 @@
 # CARE paid update: design handoff and release protocol
 
-Updated 2026-10-02. This handoff applies to the local `feature/paid-care-action-plan-preview` branch in this checkout. The free app release is being prepared separately in the `CARE App` chat on `jayme/initial-work`.
+Updated 2026-10-06. This handoff applies to `feature/paid-care-action-plan-preview`. The free app release is being prepared separately in the `CARE App` chat on `jayme/initial-work`.
 
 ## The current state
 
 - The paid branch contains the Action Plan preview and 61 added exercises across Calm, Accepted, Resonant, and Energetic. Their 120 screen steps are imported from the four CARE Figma pages. The app keeps its existing top bar.
-- This is a **design preview**, not a purchasable build. There is no StoreKit purchase, restoration, entitlement, or refund handling. The Action Plan and exercises can currently be opened without payment.
-- The paid branch is committed locally. A verified Git bundle backup is at `../../../outputs/care-paid-preview.bundle`. GitHub publication is pending a private destination or an explicit decision to publish the full source to the public repository; the public push was rejected by automatic approval review.
+- The first two exercises in each pathway (eight total), assessments, and the Positive Relational Moments library are free. The 61 added exercises and full personalized Action Plan require the one-time unlock. Free Action Plan buttons open the Figma unlock screen; paid buttons open the plan.
+- StoreKit 2 loads product `com.careapp.care.premium.unlock`, grants access from verified current entitlements, observes transaction updates, and supports an explicit Restore Purchases action. A Debug-only button previews paid access without payment; it resets on relaunch. The real purchase button stays disabled until the product is configured and loaded. No real purchase has been tested.
+- The paid branch has been published to the public GitHub repository with the user's explicit approval. Commit and push this update after review; keep the free release branch unchanged.
 - The current iOS app target uses bundle ID `com.careapp.CAREApp`, marketing version `1.0`, and build `7`. Record the **actual** free-release version, build, and commit after the other agent finishes; these values will change.
 - The paid branch has a compile-time guard in `FigmaExerciseScreenView.swift`: Debug builds work for design review, and distribution/Release builds stop with a message pointing to this protocol. The release engineer removes the guard only after the gates below are complete.
 
@@ -14,11 +15,15 @@ Updated 2026-10-02. This handoff applies to the local `feature/paid-care-action-
 
 Jayme can edit copy, layouts, routing, recommendations, and exercise steps in this paid checkout. Save work with local commits on `feature/paid-care-action-plan-preview`. Keep the four Figma exercise pages as the visual source and preserve the shared app top bar.
 
-When an edit changes what a buyer receives, add a short note to the release handoff: which feature is free, which feature requires purchase, and how a user reaches it. Keep example purchase prices out of the UI until the product and price are configured in App Store Connect. If adding a video, image, or external clip, record its source and permission/license in the media register below.
+When an edit changes what a buyer receives, add a short note to the release handoff: which feature is free, which feature requires purchase, and how a user reaches it. The Figma unlock preview shows $9.99; StoreKit supplies the actual storefront price when a product is available. Do not enable purchasing until the App Store Connect product and price are confirmed. If adding a video, image, or external clip, record its source and permission/license in the media register below.
 
 Jayme does not need to create an App Store product or decide review metadata during design work. The release owner takes those steps after design is frozen.
 
-## Purchase decision to settle before implementation
+## Purchase model
+
+The design uses a one-time non-consumable unlock for the full Action Plan and expanded exercise library. The product ID in code is `com.careapp.care.premium.unlock`; create the matching product in App Store Connect before a real purchase test. The Account Holder must configure the Paid Apps Agreement, banking, tax, localization, and price. Set the US price to $9.99 if that remains the approved price. Other storefront prices come from Apple's configured price schedule, not a hardcoded UI string.
+
+To review without payment in the current simulator: launch the Debug build, tap **Unlock Your C.A.R.E. Action Plan**, then **Preview Paid Access (No Payment)**. The full plan and added exercises appear immediately. Relaunching resets this preview. For a real purchase simulation, create a local StoreKit configuration in Xcode for the same product ID and attach it to the Run scheme; then test purchase, restore, cancellation, and revocation. Also test the configured product in Apple's sandbox before release.
 
 Choose the smallest product that describes what buyers actually receive:
 
@@ -46,15 +51,17 @@ Do not use a recurring subscription just to unlock a fixed library. Apple says s
 | Gate | State on 2026-10-02 | Owner |
 | --- | --- | --- |
 | Free release commit/build recorded | Pending today's free submission | Free-release agent |
-| Product model, price, ID, and agreement | Decision pending | Kaushal / App Store Connect owner |
-| StoreKit purchase, verified entitlement, restore, refund handling | Not implemented | iOS release engineer |
-| Paid content locked until entitlement | Not implemented; preview opens directly | iOS release engineer |
-| Purchase and upgrade-path testing | Not started | iOS release engineer |
+| Product model, price, ID, and agreement | One-time product and ID chosen in code; App Store Connect setup pending | Kaushal / App Store Connect owner |
+| StoreKit purchase, verified entitlement, restore, refund handling | Implemented in Debug build; needs StoreKit configuration, sandbox and revocation testing | iOS release engineer |
+| Paid content locked until entitlement | Eight originals free; added exercises and Action Plan gated; Debug-only preview bypass | iOS release engineer |
+| Purchase and upgrade-path testing | Free-to-paid preview verified in simulator; actual purchase and upgrade-over-release pending | iOS release engineer |
 | Media rights/third-party service review | Open; see register below | Content owner |
 | Bundled Apple emoji artwork replaced with platform rendering or licensed artwork | Open; a trial switch caused simulator test restarts, so the visual preview remains unchanged | iOS release engineer |
 | Updated privacy and health-claim review | Open | Release owner |
 | IAP review screenshot, notes, metadata, submission | Not started | App Store Connect owner |
-| Remote private backup of paid branch | Pending destination | Repository owner |
+| Remote branch backup | Public GitHub branch approved and published; push latest changes | Repository owner |
+
+Assessments may be retaken on the same local day. A newly started or unfinished assessment leaves the earlier result untouched. A successful submission atomically replaces that day's earlier saved result, so history keeps one final result per day.
 
 ## Media register to resolve before paid submission
 

@@ -49,19 +49,6 @@ struct AssessmentSessionTests {
         #expect(moved.currentAnswer?.id == last.id)
     }
 
-    @Test("Daily assessment policy uses calendar day, not elapsed hours")
-    func testDailyAssessmentPolicy() throws {
-        let utc = try #require(TimeZone(secondsFromGMT: 0))
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = utc
-        let first = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 29, hour: 23, minute: 59)))
-        let sameDay = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 29, hour: 1)))
-        let nextDay = try #require(calendar.date(from: DateComponents(year: 2026, month: 9, day: 30, hour: 0, minute: 1)))
-        #expect(!AssessmentDailyPolicy.canStart(after: first, now: sameDay, calendar: calendar))
-        #expect(AssessmentDailyPolicy.canStart(after: first, now: nextDay, calendar: calendar))
-        #expect(AssessmentDailyPolicy.canStart(after: nil, now: sameDay, calendar: calendar))
-    }
-
     @Test("Submission requires exactly five distinct people and every answer")
     func testFullSubmissionValidation() {
         let people = Person.mockFigmaContacts

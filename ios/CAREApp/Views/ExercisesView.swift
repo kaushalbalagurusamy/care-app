@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Screen 20: Exercises Hub View (Figma Frame 214:4)
 public struct ExercisesView: View {
     @Environment(ExerciseProgressStore.self) private var exerciseProgress: ExerciseProgressStore?
+    @Environment(CAREPremiumAccess.self) private var premium: CAREPremiumAccess?
     public let router: AppRouter
     
     public init(router: AppRouter) {
@@ -93,7 +94,7 @@ public struct ExercisesView: View {
                     generator.impactOccurred()
                     router.navigate(to: .personalizedActionPlan)
                 }) {
-                    Label("View Your C.A.R.E. Action Plan", systemImage: "sparkles")
+                    Label(premium?.hasAccess == true ? "View Your C.A.R.E. Action Plan" : "Unlock Your C.A.R.E. Action Plan", systemImage: "sparkles")
                         .font(Theme.Typography.poppins(.semiBold, size: 14))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)

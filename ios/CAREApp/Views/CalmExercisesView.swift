@@ -10,6 +10,7 @@ public struct ExerciseCategoryHomeView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
     @Environment(ExerciseProgressStore.self) private var progress: ExerciseProgressStore?
     @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
+    @Environment(CAREPremiumAccess.self) private var premium: CAREPremiumAccess?
 
     public let category: ExerciseCategory
     @State private var searchText = ""
@@ -51,7 +52,10 @@ public struct ExerciseCategoryHomeView: View {
         }
     }
 
-    private var exercises: [ExerciseItem] { ExerciseItem.allExercises.filter { $0.category == category } }
+    private var exercises: [ExerciseItem] {
+        (premium?.hasAccess == true ? ExerciseItem.allExercises : ExerciseItem.freeExercises)
+            .filter { $0.category == category }
+    }
     private func record(_ id: String) -> ExerciseProgressRecord { progress?.record(for: id) ?? .init() }
 
     private var displayedExercises: [ExerciseItem] {
@@ -132,7 +136,7 @@ public struct ExerciseCategoryHomeView: View {
                 .padding(.bottom, 20)
             }
             Button { router?.navigate(to: .personalizedActionPlan) } label: {
-                Label("View Your C.A.R.E. Action Plan", systemImage: "sparkles")
+                Label(premium?.hasAccess == true ? "View Your C.A.R.E. Action Plan" : "Unlock Your C.A.R.E. Action Plan", systemImage: "sparkles")
                     .font(Theme.Typography.poppins(.semiBold, size: 14))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

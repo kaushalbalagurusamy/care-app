@@ -180,7 +180,7 @@ struct StorageEngineTests {
         #expect(history.contains(where: { $0.id == firstID }))
     }
 
-    @Test("W07: alternate assessment repository writer also rejects a second result on the same local day")
+    @Test("W07: alternate assessment repository writer replaces a second result on the same local day")
     @MainActor
     func testRepositoryRejectsSecondAssessmentToday() async throws {
         let repo = LocalDeviceRepository(modelContainer: StorageContainerFactory.createInMemoryContainer())
@@ -188,12 +188,10 @@ struct StorageEngineTests {
         let first = AssessmentResult(domainScores: [:], safetyDistribution: .init(safePercentage: 1, moderatePercentage: 0, highRiskPercentage: 0), individualResults: [], timestamp: timestamp)
         let second = AssessmentResult(domainScores: [:], safetyDistribution: .init(safePercentage: 0, moderatePercentage: 1, highRiskPercentage: 0), individualResults: [], timestamp: timestamp.addingTimeInterval(60))
         try await repo.saveAssessmentResult(first)
-        do {
-            try await repo.saveAssessmentResult(second)
-            Issue.record("A second assessment on the same day was saved")
-        } catch AssessmentDailyLimitError.alreadyCompletedToday {
-            #expect(try await repo.fetchHistoryCount() == 1)
-        }
+        try await repo.saveAssessmentResult(second)
+        let history = try await repo.fetchAssessmentHistory()
+        #expect(history.count == 1)
+        #expect(history.first?.id == second.id)
     }
 
     @Test("TEST-STO-06: Maximum capacity storage footprint benchmark strictly conforms to < 500 KB ceiling")

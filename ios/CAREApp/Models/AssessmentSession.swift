@@ -1,12 +1,5 @@
 import Foundation
 
-public enum AssessmentDailyPolicy {
-    public static func canStart(after latestCompletion: Date?, now: Date = .now, calendar: Calendar = .current) -> Bool {
-        guard let latestCompletion else { return true }
-        return !calendar.isDate(latestCompletion, inSameDayAs: now)
-    }
-}
-
 // MARK: - Transient Assessment Participant (Screen 6 Frequency Calibration)
 public struct AssessmentParticipant: Identifiable, Hashable, Codable {
     public let person: Person

@@ -1,4 +1,79 @@
 import SwiftUI
+import StoreKit
+
+@MainActor @Observable
+final class CAREPremiumAccess {
+    static let productID = "com.careapp.care.premium.unlock"
+    var product: Product?
+    var isPurchased = false
+    var isBusy = false
+    var errorMessage: String?
+#if DEBUG
+    var previewUnlocked = false
+#endif
+    private var updatesTask: Task<Void, Never>?
+
+    var hasAccess: Bool {
+#if DEBUG
+        isPurchased || previewUnlocked
+#else
+        isPurchased
+#endif
+    }
+
+    func start() async {
+        if updatesTask == nil {
+            updatesTask = Task { [weak self] in
+                for await update in Transaction.updates {
+                    if case .verified(let transaction) = update { await transaction.finish() }
+                    await self?.refreshEntitlement()
+                }
+            }
+        }
+        await refreshEntitlement()
+        do { product = try await Product.products(for: [Self.productID]).first }
+        catch { errorMessage = "The purchase is temporarily unavailable. Please try again later." }
+    }
+
+    func refreshEntitlement() async {
+        var found = false
+        for await entitlement in Transaction.currentEntitlements {
+            if case .verified(let transaction) = entitlement,
+               transaction.productID == Self.productID,
+               transaction.revocationDate == nil { found = true }
+        }
+        isPurchased = found
+    }
+
+    func purchase() async {
+        guard let product else {
+            errorMessage = "The purchase is not available yet. Please try again later."
+            return
+        }
+        isBusy = true
+        defer { isBusy = false }
+        do {
+            switch try await product.purchase() {
+            case .success(.verified(let transaction)):
+                await transaction.finish()
+                await refreshEntitlement()
+            case .success(.unverified): errorMessage = "The purchase could not be verified."
+            case .pending, .userCancelled: break
+            @unknown default: break
+            }
+        } catch { errorMessage = "The purchase could not be completed. Please try again." }
+    }
+
+    func restore() async {
+        isBusy = true
+        defer { isBusy = false }
+        do {
+            try await AppStore.sync()
+            await refreshEntitlement()
+            if !isPurchased { errorMessage = "No previous purchase was found for this Apple Account." }
+        } catch { errorMessage = "Purchases could not be restored. Please try again." }
+    }
+}
 
 // MARK: - Main Application Navigation Container
 struct ContentView: View {
@@ -7,6 +82,7 @@ struct ContentView: View {
     @State private var profileSettings: ProfileSettingsStore
     @State private var contactsRevision = 0
     @State private var exerciseProgress: ExerciseProgressStore
+    @State private var premiumAccess = CAREPremiumAccess()
     @State private var isShowingSplash: Bool = false
     
     // Shared State Across Assessment Funnel
@@ -131,6 +207,7 @@ struct ContentView: View {
             .environment(router)
             .environment(appEnvironment)
             .environment(exerciseProgress)
+            .environment(premiumAccess)
             .environment(profileSettings)
             
             // Splash Screen Overlay
@@ -181,6 +258,7 @@ struct ContentView: View {
             appEnvironment.appLockManager.handleScenePhaseChange(newPhase)
         }
         .task {
+            await premiumAccess.start()
             if let history = try? await appEnvironment.assessmentRepo.fetchAssessmentHistory() {
                 latestResult = history.first
                 if let activeSession, history.contains(where: { $0.id == activeSession.id }) {
@@ -237,10 +315,6 @@ struct ContentView: View {
                 allocations: durableAllocations,
                 onProceed: { participants in
                     guard AssessmentSessionState.canStart(with: participants) else { return false }
-                    guard AssessmentDailyPolicy.canStart(after: latestResult?.timestamp), !hasCompletedAssessmentToday else {
-                        storageError = "You’ve already completed an assessment today. You can begin another tomorrow."
-                        return false
-                    }
                     let session = AssessmentSessionState(
                         participants: participants,
                         totalQuestionsPerPerson: 20
@@ -340,8 +414,10 @@ struct ContentView: View {
             WelcomeAccountSetupView(router: router)
             
         case .personalizedActionPlan:
-            if let latestResult { PersonalizedActionPlanView(router: router, result: latestResult) }
-            else { NoAssessmentResultsView(router: router) }
+            if premiumAccess.hasAccess {
+                if let latestResult { PersonalizedActionPlanView(router: router, result: latestResult) }
+                else { NoAssessmentResultsView(router: router) }
+            } else { PremiumUnlockView(router: router, result: latestResult) }
 
         case .prmLibrary:
             PRMLibraryView()
@@ -416,11 +492,15 @@ struct ContentView: View {
             ConnectionCountdownExerciseView()
 
         case .guidedExercise(let exerciseID):
-            GuidedExerciseView(exerciseID: exerciseID)
+            if premiumAccess.hasAccess || ExerciseItem.freeExerciseIDs.contains(exerciseID) {
+                GuidedExerciseView(exerciseID: exerciseID)
+            } else { PremiumUnlockView(router: router, result: latestResult) }
             
         case .careResultsExercises:
-            if let latestResult { CAREResultsExercisesView(result: latestResult) }
-            else { NoAssessmentResultsView(router: router) }
+            if premiumAccess.hasAccess {
+                if let latestResult { CAREResultsExercisesView(result: latestResult) }
+                else { NoAssessmentResultsView(router: router) }
+            } else { PremiumUnlockView(router: router, result: latestResult) }
             
         case .exerciseComplete:
             ExerciseCompleteView()

@@ -87,8 +87,8 @@ public struct AssessmentOverviewView: View {
             VStack(spacing: 0) {
                 Divider()
                     .background(Theme.Colors.dividerSubtle)
-                if hasCompletedToday || !AssessmentDailyPolicy.canStart(after: latestAssessmentDate) {
-                    Text("You’ve completed an assessment today. You can begin another tomorrow.")
+                if hasCompletedToday {
+                    Text("You can take another assessment today. Submitting it will replace today’s saved result.")
                         .font(Theme.Typography.poppins(.medium, size: 13))
                         .foregroundColor(Theme.Colors.textSecondary)
                         .multilineTextAlignment(.center)
@@ -98,7 +98,7 @@ public struct AssessmentOverviewView: View {
                 
                 PrimaryButton(
                     title: "Begin the Survey",
-                    isEnabled: hasScrolledToBottom && !hasCompletedToday && AssessmentDailyPolicy.canStart(after: latestAssessmentDate),
+                    isEnabled: hasScrolledToBottom,
                     action: {
                         router.navigate(to: .surveyOverview)
                     }

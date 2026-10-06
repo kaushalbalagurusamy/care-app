@@ -241,6 +241,13 @@ public struct ExerciseItem: Identifiable, Codable, Sendable, Equatable {
     public static var allExercises: [ExerciseItem] {
         sampleCalmExercises + sampleAcceptedExercises + sampleResonantExercises + sampleEnergeticExercises + additionalExercises
     }
+
+    /// The original two exercises in each pathway remain available to everyone.
+    public static var freeExercises: [ExerciseItem] {
+        sampleCalmExercises + sampleAcceptedExercises + sampleResonantExercises + sampleEnergeticExercises
+    }
+
+    public static var freeExerciseIDs: Set<String> { Set(freeExercises.map(\.id)) }
 }
 
 public struct ExerciseProgressRecord: Codable, Equatable {
@@ -520,14 +527,6 @@ public struct QuizDraft: Codable, Equatable, Sendable {
         hasSubmitted = try values.decode(Bool.self, forKey: .hasSubmitted)
         score = try values.decode(Int.self, forKey: .score)
         answeredLetters = try values.decodeIfPresent([String: String].self, forKey: .answeredLetters) ?? [:]
-    }
-}
-
-public enum AssessmentDailyLimitError: LocalizedError, Equatable {
-    case alreadyCompletedToday
-
-    public var errorDescription: String? {
-        "You already completed an assessment today. You can start another tomorrow."
     }
 }
 
@@ -812,8 +811,8 @@ public final class UserDraftStore {
         do {
             if try context.fetch(duplicate).isEmpty {
                 let all = try context.fetch(FetchDescriptor<StoredAssessmentSession>())
-                guard !all.contains(where: { calendar.isDate($0.date, inSameDayAs: result.timestamp) }) else {
-                    throw AssessmentDailyLimitError.alreadyCompletedToday
+                for previous in all where calendar.isDate(previous.date, inSameDayAs: result.timestamp) {
+                    context.delete(previous)
                 }
                 context.insert(StoredAssessmentSession(from: result))
             }

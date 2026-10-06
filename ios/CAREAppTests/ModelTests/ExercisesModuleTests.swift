@@ -89,8 +89,12 @@ struct ExercisesModuleTests {
 
     @Test("Duration sorting uses lower or upper numeric bounds with stable ties")
     func testDurationOrdering() {
-        let items = ExerciseItem.allExercises
+        let items = ExerciseItem.freeExercises
         #expect(items.count == 8)
+        for category in ExerciseCategory.allCases {
+            #expect(items.filter { $0.category == category }.count == 2)
+        }
+        #expect(ExerciseItem.allExercises.count > items.count)
         #expect(items.allSatisfy { $0.minimumDurationMinutes > 0 && $0.maximumDurationMinutes >= $0.minimumDurationMinutes })
         #expect(items.first(where: { $0.id == "watch-something-funny" })?.minimumDurationMinutes == 7)
         #expect(items.first(where: { $0.id == "watch-something-funny" })?.maximumDurationMinutes == 10)
@@ -149,7 +153,7 @@ struct ExercisesModuleTests {
         #expect(store.currentStreak(for: .accepted, now: sunday, calendar: calendar) == 0)
     }
 
-    @Test("A second result on the same local day is rejected atomically; tomorrow is allowed")
+    @Test("A second submitted result replaces the same local day; tomorrow is separate")
     @MainActor
     func testOneAssessmentPerLocalDayAtCommit() throws {
         let container = StorageContainerFactory.createInMemoryContainer()
@@ -169,9 +173,12 @@ struct ExercisesModuleTests {
         #expect(try store.hasCompletedAssessment(on: nextDate, calendar: calendar) == false)
         try store.commitAssessmentResult(first, calendar: calendar)
         try store.saveValue("keep this", key: "assessment-draft")
-        #expect(throws: AssessmentDailyLimitError.self) { try store.commitAssessmentResult(result(at: sameDate), calendar: calendar) }
-        #expect(try store.loadValue(String.self, key: "assessment-draft") == "keep this")
-        #expect(try container.mainContext.fetch(FetchDescriptor<StoredAssessmentSession>()).count == 1)
+        let replacement = result(at: sameDate)
+        try store.commitAssessmentResult(replacement, calendar: calendar)
+        #expect(try store.loadValue(String.self, key: "assessment-draft") == nil)
+        let storedToday = try container.mainContext.fetch(FetchDescriptor<StoredAssessmentSession>())
+        #expect(storedToday.count == 1)
+        #expect(storedToday.first?.id == replacement.id)
         try store.commitAssessmentResult(result(at: nextDate), calendar: calendar)
         #expect(try container.mainContext.fetch(FetchDescriptor<StoredAssessmentSession>()).count == 2)
     }

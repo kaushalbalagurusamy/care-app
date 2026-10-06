@@ -1,5 +1,133 @@
 import SwiftUI
 
+/// Free preview based on Figma frame 215:5. The purchase button uses StoreKit's
+/// storefront price when available; preview access exists only in Debug builds.
+struct PremiumUnlockView: View {
+    @Environment(CAREPremiumAccess.self) private var premium
+    let router: AppRouter
+    let result: AssessmentResult?
+
+    private var focus: CAREDomain? {
+        guard let result else { return nil }
+        return CAREDomain.allCases.min {
+            (result.domainScores[$0]?.percentage ?? 1) < (result.domainScores[$1]?.percentage ?? 1)
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HeaderNavBar(showBackButton: true, showHomeButton: true, showSparkleButton: false, onBack: { router.pop() })
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 7) {
+                        Text("Unlock Your C.A.R.E. Exercises")
+                            .font(Theme.Typography.poppins(.bold, size: 22))
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                        Text("Turn your assessment results into a personalized path for strengthening connection.")
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundStyle(Theme.Colors.textSecondary)
+                    }
+                    .padding(.top, Theme.Spacing.headerTitleSpacing)
+
+                    VStack(alignment: .leading, spacing: 17) {
+                        HStack(spacing: 8) {
+                            AppIcon.sparkle.view(size: 20)
+                            Text("Your C.A.R.E. Plan")
+                                .font(Theme.Typography.poppins(.bold, size: 17))
+                                .foregroundStyle(Theme.Colors.textPrimary)
+                            Spacer()
+                            Text("TAILORED")
+                                .font(Theme.Typography.poppins(.bold, size: 10))
+                                .foregroundStyle(Theme.Colors.primary)
+                                .padding(.horizontal, 11).padding(.vertical, 6)
+                                .background(.white, in: Capsule())
+                        }
+                        HStack(spacing: 6) {
+                            ForEach(CAREDomain.allCases, id: \.self) { domain in
+                                VStack(spacing: 7) {
+                                    Circle().fill(domain.accentColor).frame(width: 9, height: 9)
+                                    Text(domain.title)
+                                        .font(Theme.Typography.poppins(.medium, size: 10))
+                                    Text(score(domain))
+                                        .font(Theme.Typography.poppins(.bold, size: 13))
+                                        .foregroundStyle(domain.accentColor)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(.white, in: RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                        Text(focus.map { "Your current focus: \($0.title) Pathway" } ?? "Complete an assessment to see your pathway focus")
+                            .font(Theme.Typography.poppins(.semiBold, size: 13))
+                            .foregroundStyle(Theme.Colors.primary)
+                    }
+                    .padding(18)
+                    .background(Color(hex: "#E1EFFE"), in: RoundedRectangle(cornerRadius: 20))
+
+                    VStack(alignment: .leading, spacing: 18) {
+                        benefit("Personalized plan based on your latest C.A.R.E. scores")
+                        benefit("Dozens of additional exercises from Wired to Connect by Amy Banks, MD")
+                        benefit("Exercise recommendations based on the pathways that need the most support")
+                    }
+                    .padding(.vertical, 4)
+
+                    Button { Task { await premium.purchase() } } label: {
+                        Text("Unlock Exercises + Personalization — \(premium.product?.displayPrice ?? "$9.99")")
+                            .font(Theme.Typography.poppins(.semiBold, size: 14))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity, minHeight: 54)
+                            .background(Theme.Colors.primary, in: RoundedRectangle(cornerRadius: 18))
+                    }
+                    .disabled(premium.isBusy || premium.product == nil)
+                    .accessibilityIdentifier("UnlockCAREPurchaseButton")
+
+                    Button("Restore Purchases") { Task { await premium.restore() } }
+                        .font(Theme.Typography.poppins(.medium, size: 13))
+                        .frame(maxWidth: .infinity)
+                        .accessibilityIdentifier("RestoreCAREPurchaseButton")
+
+                    Link(destination: URL(string: "https://www.penguinrandomhouse.com/books/316116/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")!) {
+                        Text("Explore Wired to Connect →")
+                            .font(Theme.Typography.poppins(.semiBold, size: 14))
+                            .foregroundStyle(Theme.Colors.primary)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Colors.primary, lineWidth: 1))
+                    }
+#if DEBUG
+                    Button("Preview Paid Access (No Payment)") { premium.previewUnlocked = true }
+                        .font(Theme.Typography.poppins(.medium, size: 12))
+                        .frame(maxWidth: .infinity)
+                        .accessibilityIdentifier("PreviewCAREUnlockButton")
+#endif
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 30)
+            }
+        }
+        .background(.white)
+        .alert("Purchase unavailable", isPresented: Binding(get: { premium.errorMessage != nil }, set: { if !$0 { premium.errorMessage = nil } })) {
+            Button("OK", role: .cancel) { premium.errorMessage = nil }
+        } message: { Text(premium.errorMessage ?? "") }
+        .accessibilityIdentifier("CAREUnlockScreen")
+    }
+
+    private func score(_ domain: CAREDomain) -> String {
+        guard let score = result?.domainScores[domain] else { return "—/125" }
+        return "\(Int(score.earnedPoints.rounded()))/\(Int(score.maxPossiblePoints.rounded()))"
+    }
+
+    private func benefit(_ copy: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(Theme.Colors.primary)
+                .font(.system(size: 20))
+            Text(copy)
+                .font(Theme.Typography.poppins(.medium, size: 13))
+                .foregroundStyle(Theme.Colors.textPrimary)
+        }
+    }
+}
+
 /// Visual review of the action plan after the assessment has been unlocked.
 public struct PersonalizedActionPlanView: View {
     public let router: AppRouter

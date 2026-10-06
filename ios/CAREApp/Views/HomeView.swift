@@ -6,6 +6,7 @@ public struct HomeView: View {
     @Environment(ExerciseProgressStore.self) private var exerciseProgress: ExerciseProgressStore?
     @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     @Environment(ProfileSettingsStore.self) private var profileSettings: ProfileSettingsStore?
+    @Environment(CAREPremiumAccess.self) private var premium: CAREPremiumAccess?
     @State private var draftError: String?
     public let router: AppRouter
     @Binding public var activeSession: AssessmentSessionState?
@@ -130,7 +131,7 @@ public struct HomeView: View {
                     Button {
                         router.navigate(to: .personalizedActionPlan)
                     } label: {
-                        Label("View Your C.A.R.E. Action Plan", systemImage: "sparkles")
+                        Label(premium?.hasAccess == true ? "View Your C.A.R.E. Action Plan" : "Unlock Your C.A.R.E. Action Plan", systemImage: "sparkles")
                             .font(Theme.Typography.poppins(.semiBold, size: 13))
                             .foregroundStyle(Theme.Colors.primary)
                             .frame(maxWidth: .infinity, minHeight: 40)

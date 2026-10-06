@@ -65,6 +65,8 @@ public final class MockAssessmentRepository: AssessmentRepositoryProtocol, @unch
     public func saveAssessmentResult(_ result: AssessmentResult) async throws {
         lock.lock()
         defer { lock.unlock() }
+        if history.contains(where: { $0.id == result.id }) { return }
+        history.removeAll { Calendar.current.isDate($0.timestamp, inSameDayAs: result.timestamp) }
         history.insert(result, at: 0)
     }
     

@@ -80,11 +80,7 @@ public struct SurveyQuestionView: View {
                     try await onComplete(result)
                     router.finishFlow(at: .surveyResults)
                 } catch {
-                    if error is AssessmentDailyLimitError {
-                        submissionError = "You have already completed an assessment today. Your answers are saved; you can submit another assessment tomorrow."
-                    } else {
-                        submissionError = "Your assessment could not be saved. Your answers are still here; please retry."
-                    }
+                    submissionError = "Your assessment could not be saved. Your answers are still here; please retry."
                 }
                 isSubmitting = false
             }
