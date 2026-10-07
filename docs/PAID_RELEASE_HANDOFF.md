@@ -54,8 +54,8 @@ Do not use a recurring subscription just to unlock a fixed library. Apple says s
 | Product model, price, ID, and agreement | Local StoreKit non-consumable tested at $9.99; production App Store Connect product and account agreements remain pending. The web session requested a fresh sign-in on October 7 | App Store Connect owner |
 | StoreKit purchase, verified entitlement, restore, refund handling | Local StoreKit product and successful no-charge purchase verified October 7; cancellation, restore, revocation, sandbox and TestFlight pending | iOS release engineer |
 | Paid content locked until entitlement | Eight originals free; read-only Action Plan preview; added exercise routes gated; Debug-only simulated purchase bypass | iOS release engineer |
-| Purchase and upgrade-path testing | Local StoreKit purchase and paid route verified; fresh install and upgrade-over-release still need end-to-end tests | iOS release engineer |
-| Media rights/third-party service review | Open; see register below | Content owner |
+| Purchase and upgrade-path testing | Local StoreKit purchase and paid route verified. A normal fresh install on a separate iPad simulator showed onboarding with no records in any of the four app storage tables on October 7. Upgrade-over-1.0 with existing records still needs an end-to-end test | iOS release engineer |
+| Media rights/third-party service review | Three screenshot previews replaced with approved original AI art and all three video taps connected on October 7; linked clip rights and remaining imported artwork still need review. See register below | Content owner |
 | Bundled Apple emoji artwork replaced with platform rendering or licensed artwork | Free-release Noto artwork and Apache license carried forward for 21 icons; remaining emoji render through iOS. Rebuild and visually verify before distribution | iOS release engineer |
 | Updated privacy and health-claim review | Open | Release owner |
 | IAP review screenshot, notes, metadata, submission | Not started | App Store Connect owner |
@@ -67,9 +67,9 @@ Assessments may be retaken on the same local day. A newly started or unfinished 
 
 | Asset/content | Where it appears | Evidence needed |
 | --- | --- | --- |
-| `FigmaReadCharacterClip` image, visually depicting *Inside Out* characters | Read a Character's Feelings | License/permission, or replace with original/licensed media and update Figma and app. |
-| `FigmaMirrorGestureOne`, `FigmaMirrorGestureTwo` and external gesture clips | Mirror a Gentle Gesture | Source rights and third-party service terms, or replace. |
-| YouTube clip used in existing exercise flow | Mirror a Gentle Gesture | Confirm permitted embedding and a safe fallback when unavailable. |
+| `FigmaReadCharacterClip` preview and YouTube video `dOkyKyVFnSs` | Read a Character's Feelings | Original realistic-people art is installed and Jayme supplied the YouTube link on October 7. The video is titled “Inside Out: Guessing the feelings.” Its use as a paid-exercise source needs a content-rights and availability check; the original video/film artwork is not bundled. |
+| `FigmaMirrorGestureOne` preview and TikTok video `7406052816931933482` | Mirror a Gentle Gesture | Original warm-smile art is installed. Jayme supplied the TikTok link on October 7 and the image now opens it externally. Check playback on a device and confirm third-party terms. The unused `FigmaMirrorGestureTwo` screenshot was removed. |
+| Hug compilation YouTube video `0Bk5yoFJDo4` | Mirror a Gentle Gesture | Original preview art is installed and the link opens YouTube. Jayme confirmed this eight-minute compilation stays in the exercise; the eight-second welcoming-gesture TikTok is not used. Confirm the video remains available and its use is permitted. |
 | Other imported Figma image assets | Breathing, share illustrations | Confirm source ownership/license. |
 
 The paid checkout now carries the free release's Google Noto Emoji PNGs for 21 icons and bundles the Apache 2.0 license; additional Unicode emoji render through iOS at runtime. This removes the Apple-rendered emoji PNGs from the asset catalog. Verify visual sizing and the compiled asset catalog before paid submission. Apple's guideline 5.2.5 prohibits bundling Apple emoji artwork.
@@ -92,3 +92,12 @@ The paid update must include all of the current branch's approved design and con
 A new installation must start without sample assessments, contacts, saved moments, quiz progress, or exercise progress. `AppEnvironment.makeLive()` uses an empty local store on first launch; sample contacts and assessment history are confined to explicit `--uitesting-*` launch fixtures or SwiftUI previews. A normal update must retain the user's existing local records, including assessments, exercise progress, photos, and saved moments. Do not add a data reset or change the bundle ID. Test both a fresh install and an in-place upgrade from free version 1.0 (11) before submission. The populated CARE Paid Preview simulator is review/test data on that simulator only; it is not bundled into the app.
 
 Relevant free-release fixes carried forward include relationship contact photos in selection and frequency views, optional embedded-video consent, Privacy Enhanced Mode YouTube players with temporary web storage, the public privacy-policy link, licensed Noto exercise icons, and original Mirror preview artwork. Remaining content-rights and release gates below still apply.
+
+## October 7 pre-submission audit
+
+- The paid app and submitted free app use the same bundle ID, `com.careapp.CAREApp`. Their SwiftData storage model files and container configuration are identical at the two recorded commits. The paid app also retains the free app's legacy exercise and Education progress migration. This is a source-level compatibility check; an install-over-1.0 test with real saved data is still required.
+- A normal first launch on the separate iPad Pro 13-inch (M5) simulator, without `--uitesting-*` arguments, showed empty onboarding. Its new SwiftData database contained zero assessment sessions, contacts, participant results, and user-draft rows. The CARE Paid Preview simulator and its review data were not changed.
+- The current Debug simulator build compiles with the approved original video-preview images. The Release compile guard remains in place until all review gates are closed.
+- Apple limits a localized In-App Purchase display name to 30 characters and description to 45 characters. The draft in `PAID_UPDATE_APP_STORE_COPY.md` has been shortened to fit. Confirm those values and the actual $9.99 price in App Store Connect.
+- Jayme supplied the warm-smile TikTok and character-feelings YouTube links; both are connected to their exercise screens. All three Figma video preview taps now have destinations. Confirm real-device playback and the rights/third-party-service basis for the linked clips, especially the *Inside Out* video.
+- CARE's public privacy-policy URL returned HTTP 200 on October 7. The existing policy describes external links in general and embedded YouTube playback, but the release owner should review whether its wording and App Store Connect privacy answers accurately cover the new paid update and TikTok link.

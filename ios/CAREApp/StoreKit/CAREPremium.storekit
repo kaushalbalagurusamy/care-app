@@ -9,13 +9,13 @@
       "internalID" : "C4A3E002",
       "localizations" : [
         {
-          "description" : "Unlock the full C.A.R.E. Action Plan and 61 additional exercises.",
-          "displayName" : "C.A.R.E. Exercises + Personalization",
+          "description" : "Unlock your plan and 61 more exercises.",
+          "displayName" : "C.A.R.E. Plan + Exercises",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.careapp.care.premium.unlock",
-      "referenceName" : "C.A.R.E. Exercises + Personalization",
+      "referenceName" : "C.A.R.E. Plan + Exercises",
       "type" : "NonConsumable"
     }
   ],

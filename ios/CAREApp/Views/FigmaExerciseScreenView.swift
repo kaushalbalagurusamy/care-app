@@ -111,6 +111,19 @@ struct FigmaExerciseScreenView: View {
 
     private var photoKey: String { "photo:\(screen.id)" }
 
+    private var exerciseVideoURL: URL? {
+        switch screen.id {
+        case "840:499":
+            return URL(string: "https://www.youtube.com/watch?v=dOkyKyVFnSs")
+        case "840:839":
+            return URL(string: "https://www.tiktok.com/@selfiequeen1977/video/7406052816931933482")
+        case "880:105":
+            return URL(string: "https://www.youtube.com/watch?v=0Bk5yoFJDo4")
+        default:
+            return nil
+        }
+    }
+
     private var savedPhoto: UIImage? {
         guard let filename = fields[photoKey],
               let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -227,13 +240,15 @@ struct FigmaExerciseScreenView: View {
                                     ? "Choose hug compilation" : "Choose warm smile")
                         }
                     }
-                    if screen.id == "880:105", let video = URL(string: "https://www.youtube.com/watch?v=0Bk5yoFJDo4"),
+                    if let video = exerciseVideoURL,
                        let node = screen.nodes.first(where: { $0.n == "upload-dashed-area" }) {
                         Link(destination: video) { Color.clear.contentShape(Rectangle()) }
                             .frame(width: node.w * scale, height: node.h * scale)
                             .position(x: (node.x + node.w / 2) * scale,
                                       y: (node.y - 64 + node.h / 2) * scale)
-                            .accessibilityLabel("Watch the hug compilation on YouTube")
+                            .accessibilityLabel(screen.id == "840:499" ? "Watch the character feelings video on YouTube"
+                                : screen.id == "840:839" ? "Watch a warm smile on TikTok"
+                                : "Watch the hug compilation on YouTube")
                     }
                     ForEach(screen.nodes.filter { $0.n == "btn-complete-exercise" }) { node in
                         Button {

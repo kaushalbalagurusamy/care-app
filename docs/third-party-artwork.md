@@ -24,6 +24,12 @@
 - **Other embedded videos:** CARE also uses YouTube's official iframe player for
   `A1CVa6NrPpk` and `dbj85TIYyrQ`. The app does not bundle either video's audio,
   video, or thumbnail.
+- **Paid external exercise clips:** The Figma exercise flow opens a warm-smile
+  TikTok video (`7406052816931933482`) and two YouTube videos: a hug compilation
+  (`0Bk5yoFJDo4`) and a character-feelings clip (`dOkyKyVFnSs`). CARE bundles
+  none of their video or audio. Their public links were supplied by Jayme, but
+  third-party terms, availability, and permission to use the *Inside Out* clip
+  as paid exercise content still need review before distribution.
 
 The CARE rights holder should retain the original artwork files and written
 permission records outside the repository in case Apple requests supporting
