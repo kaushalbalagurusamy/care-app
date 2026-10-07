@@ -61,6 +61,11 @@ public struct EducationTopicsView: View {
                         Text("Explore science-backed wellness practices")
                             .font(Theme.Typography.poppins(.regular, size: 14.5))
                             .foregroundColor(Theme.Colors.textSecondary)
+
+                        Text("Each quiz shows 3 questions from a rotating set of 10. Retake it to see different questions.")
+                            .font(Theme.Typography.poppins(.regular, size: 12.5))
+                            .foregroundColor(Theme.Colors.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)
                     
