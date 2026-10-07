@@ -21,7 +21,7 @@ Jayme does not need to create an App Store product or decide review metadata dur
 
 ## Purchase model
 
-The design uses a one-time non-consumable unlock for the full Action Plan and expanded exercise library. The product ID in code is `com.careapp.care.premium.unlock`; create the matching product in App Store Connect before a real purchase test. The Account Holder must configure the Paid Apps Agreement, banking, tax, localization, and price. Set the US price to $9.99 if that remains the approved price. Other storefront prices come from Apple's configured price schedule, not a hardcoded UI string.
+The design uses a one-time non-consumable unlock for the full Action Plan and expanded exercise library. The product ID in code and App Store Connect is `com.careapp.care.premium.unlock` (Apple IAP ID `6820168912`). The product is **Prepare for Submission**, with English (U.S.) localization, a U.S. base price of $9.99, and availability in all 175 countries or regions. Other storefront prices come from Apple's configured price schedule, not a hardcoded UI string. The Account Holder must verify/update legal entity information, sign the Paid Apps Agreement, and check banking and tax setup before the product can be sold. On October 7 the agreement was **New**; no agreement was signed. App Store Connect separately requires a trader-status declaration for EU distribution.
 
 To review without payment in the current simulator: launch the Debug build and tap **Unlock Your C.A.R.E. Action Plan**. **Preview Your C.A.R.E. Action Plan** opens a read-only plan; exercise buttons are replaced by lock labels. The separate **Preview Paid Screens (No Charge)** button enables a temporary Debug preview. For the StoreKit path, tap the $9.99 button, confirm **Continue to Apple Purchase**, and use Xcode's no-charge test sheet. The Run scheme selects `CAREPremium.storekit`. Test cancellation, restore, and revocation locally, then test the configured product in Apple's sandbox and TestFlight before release.
 
@@ -51,14 +51,14 @@ Do not use a recurring subscription just to unlock a fixed library. Apple says s
 | Gate | State on 2026-10-07 | Owner |
 | --- | --- | --- |
 | Free release commit/build recorded | 1.0 (11), `537107bb4e14f4f885dc60b442ce6a6297373f6a`; submitted, awaiting review as of October 5 | Release owner |
-| Product model, price, ID, and agreement | Local StoreKit non-consumable tested at $9.99; production App Store Connect product and account agreements remain pending. The web session requested a fresh sign-in on October 7 | App Store Connect owner |
+| Product model, price, ID, and agreement | Production non-consumable `6820168912` created October 7, U.S. base price $9.99, 175 regions, English (U.S.) metadata, **Prepare for Submission**. Paid Apps Agreement remains **New**; Account Holder must verify legal entity details before signing, then verify tax and banking. EU trader status is also unresolved | App Store Connect owner |
 | StoreKit purchase, verified entitlement, restore, refund handling | Local StoreKit product and successful no-charge purchase verified October 7; cancellation, restore, revocation, sandbox and TestFlight pending | iOS release engineer |
 | Paid content locked until entitlement | Eight originals free; read-only Action Plan preview; added exercise routes gated; Debug-only simulated purchase bypass | iOS release engineer |
 | Purchase and upgrade-path testing | Local StoreKit purchase and paid route verified. A normal fresh install on a separate iPad simulator showed onboarding with no records in any of the four app storage tables on October 7. Upgrade-over-1.0 with existing records still needs an end-to-end test | iOS release engineer |
 | Media rights/third-party service review | Three screenshot previews replaced with approved original AI art and all three video taps connected on October 7; linked clip rights and remaining imported artwork still need review. See register below | Content owner |
 | Bundled Apple emoji artwork replaced with platform rendering or licensed artwork | Free-release Noto artwork and Apache license carried forward for 21 icons; remaining emoji render through iOS. Rebuild and visually verify before distribution | iOS release engineer |
 | Updated privacy and health-claim review | Open | Release owner |
-| IAP review screenshot, notes, metadata, submission | Not started | App Store Connect owner |
+| IAP review screenshot, notes, metadata, submission | Product localization is saved. Review screenshot still missing; final build needed. Draft review notes are in `PAID_UPDATE_APP_STORE_COPY.md`; an attempt to save them in App Store Connect did not persist. No IAP was submitted | App Store Connect owner |
 | Remote branch backup | Public GitHub branch approved and published; push latest changes | Repository owner |
 
 Assessments may be retaken on the same local day. A newly started or unfinished assessment leaves the earlier result untouched. A successful submission atomically replaces that day's earlier saved result, so history keeps one final result per day.

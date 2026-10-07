@@ -13,8 +13,10 @@ Explore the free Positive Relational Moments library to revisit moments saved fr
 - Type: non-consumable, one-time unlock
 - English (U.S.) display name: C.A.R.E. Plan + Exercises
 - English (U.S.) description: Unlock your plan and 61 more exercises.
-- Proposed U.S. price: $9.99. The app displays Apple's live storefront price; confirm the configured price and other territories in App Store Connect.
-- Family Sharing: off in the local test configuration; decide before creating the production product.
+- Apple IAP ID: `6820168912`; App Store Connect status: **Prepare for Submission** on October 7, 2026.
+- U.S. base price: $9.99, saved in App Store Connect. Availability is set to all 175 countries or regions, with Apple-generated comparable prices outside the U.S. The app displays Apple's live storefront price.
+- Family Sharing: off in both the local test configuration and the App Store Connect product.
+- Account blockers: the Paid Apps Agreement is **New**. App Store Connect requires the Account Holder to verify/update legal entity information before signing it, then check banking and tax setup. A separate EU compliance notice asks the Account Holder to declare trader status for EU distribution.
 
 ## App Review notes draft
 
@@ -33,7 +35,7 @@ Capture the actual 1.1 unlock screen on the final review build showing the produ
 ## Submission checks
 
 - Confirm 1.0 is approved or live and version 1.1 build 12 is available for the same bundle ID.
-- Complete App Store Connect agreements, tax, banking, IAP localization, availability, price, and product review image.
+- Complete the Paid Apps Agreement, legal entity, tax, and banking setup. IAP localization, availability, and price are already saved; add the product review screenshot from the final review build.
 - Verify sandbox and TestFlight purchase, cancellation, restore, revocation, and an update over 1.0 with existing local data.
 - Clear media rights and health/privacy review; remove the distribution build guard only then.
 - Confirm the released app contains the free PRM library and Education changes as well as the paid content.
