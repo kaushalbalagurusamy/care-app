@@ -1,12 +1,12 @@
 # CARE paid update: design handoff and release protocol
 
-Updated 2026-10-06. This handoff applies to `feature/paid-care-action-plan-preview`. The free app release is being prepared separately in the `CARE App` chat on `jayme/initial-work`.
+Updated 2026-10-07. This handoff applies to `feature/paid-care-action-plan-preview`. The free app release is being prepared separately in the `CARE App` chat on `jayme/initial-work`.
 
 ## The current state
 
 - The paid branch contains the Action Plan preview and 61 added exercises across Calm, Accepted, Resonant, and Energetic. Their 120 screen steps are imported from the four CARE Figma pages. The app keeps its existing top bar.
 - The first two exercises in each pathway (eight total), assessments, and the Positive Relational Moments library are free. The 61 added exercises and full personalized Action Plan require the one-time unlock. Free Action Plan buttons open the Figma unlock screen; paid buttons open the plan.
-- StoreKit 2 loads product `com.careapp.care.premium.unlock`, grants access from verified current entitlements, observes transaction updates, and supports an explicit Restore Purchases action. A Debug-only button previews paid access without payment; it resets on relaunch. The real purchase button stays disabled until the product is configured and loaded. No real purchase has been tested.
+- StoreKit 2 loads product `com.careapp.care.premium.unlock`, grants access from verified current entitlements, observes transaction updates, and supports Restore Purchase from My Profile. The free Action Plan preview shows recommendations and all pathway titles without opening exercises or granting access. In Debug, the $9.99 button opens a no-charge confirmation that simulates the paid unlock; the simulated unlock resets on relaunch. In Release, the button requires the configured product and leads to StoreKit's purchase confirmation. No real purchase has been tested.
 - The paid branch has been published to the public GitHub repository with the user's explicit approval. Commit and push this update after review; keep the free release branch unchanged.
 - The current iOS app target uses bundle ID `com.careapp.CAREApp`, marketing version `1.0`, and build `7`. Record the **actual** free-release version, build, and commit after the other agent finishes; these values will change.
 - The paid branch has a compile-time guard in `FigmaExerciseScreenView.swift`: Debug builds work for design review, and distribution/Release builds stop with a message pointing to this protocol. The release engineer removes the guard only after the gates below are complete.
@@ -23,7 +23,7 @@ Jayme does not need to create an App Store product or decide review metadata dur
 
 The design uses a one-time non-consumable unlock for the full Action Plan and expanded exercise library. The product ID in code is `com.careapp.care.premium.unlock`; create the matching product in App Store Connect before a real purchase test. The Account Holder must configure the Paid Apps Agreement, banking, tax, localization, and price. Set the US price to $9.99 if that remains the approved price. Other storefront prices come from Apple's configured price schedule, not a hardcoded UI string.
 
-To review without payment in the current simulator: launch the Debug build, tap **Unlock Your C.A.R.E. Action Plan**, then **Preview Paid Access (No Payment)**. The full plan and added exercises appear immediately. Relaunching resets this preview. For a real purchase simulation, create a local StoreKit configuration in Xcode for the same product ID and attach it to the Run scheme; then test purchase, restore, cancellation, and revocation. Also test the configured product in Apple's sandbox before release.
+To review without payment in the current simulator: launch the Debug build and tap **Unlock Your C.A.R.E. Action Plan**. **Preview Your C.A.R.E. Action Plan** opens a read-only plan; exercise buttons are replaced by lock labels. Return to the unlock screen, tap the $9.99 button, and confirm **Unlock Demo (No Charge)** to see the paid plan and added exercises. Relaunching resets the simulated purchase. For a real purchase simulation, create a local StoreKit configuration in Xcode for the same product ID and attach it to the Run scheme; then test purchase, restore, cancellation, and revocation. Also test the configured product in Apple's sandbox before release.
 
 Choose the smallest product that describes what buyers actually receive:
 
@@ -53,7 +53,7 @@ Do not use a recurring subscription just to unlock a fixed library. Apple says s
 | Free release commit/build recorded | Pending today's free submission | Free-release agent |
 | Product model, price, ID, and agreement | One-time product and ID chosen in code; App Store Connect setup pending | Kaushal / App Store Connect owner |
 | StoreKit purchase, verified entitlement, restore, refund handling | Implemented in Debug build; needs StoreKit configuration, sandbox and revocation testing | iOS release engineer |
-| Paid content locked until entitlement | Eight originals free; added exercises and Action Plan gated; Debug-only preview bypass | iOS release engineer |
+| Paid content locked until entitlement | Eight originals free; read-only Action Plan preview; added exercise routes gated; Debug-only simulated purchase bypass | iOS release engineer |
 | Purchase and upgrade-path testing | Free-to-paid preview verified in simulator; actual purchase and upgrade-over-release pending | iOS release engineer |
 | Media rights/third-party service review | Open; see register below | Content owner |
 | Bundled Apple emoji artwork replaced with platform rendering or licensed artwork | Open; a trial switch caused simulator test restarts, so the visual preview remains unchanged | iOS release engineer |

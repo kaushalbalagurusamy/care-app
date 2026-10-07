@@ -7,6 +7,7 @@ public struct ProfileView: View {
     @Environment(ProfileSettingsStore.self) private var settings: ProfileSettingsStore
     @Environment(AppEnvironment.self) private var environment: AppEnvironment
     @Environment(ExerciseProgressStore.self) private var exerciseProgress: ExerciseProgressStore
+    @Environment(CAREPremiumAccess.self) private var premium: CAREPremiumAccess?
     public let onDataCleared: (String) -> Void
     
     @State private var fullName: String = ""
@@ -20,7 +21,17 @@ public struct ProfileView: View {
     @State private var photoData: Data?
     @State private var deletionScope: String?
     @State private var deletionError: String?
+    @State private var purchaseStatus: String?
     @State private var editLoaded = false
+
+    private var purchaseSummary: String {
+#if DEBUG
+        if premium?.simulatedPurchase == true { return "Demo unlock is active on this simulator." }
+#endif
+        return premium?.isPurchased == true
+            ? "Your paid access is active."
+            : "Bought the one-time unlock on another device?"
+    }
 
     private var editSnapshot: ProfileEditDraft {
         ProfileEditDraft(name: fullName, frequency: selectedFrequency, photoData: photoData)
@@ -144,6 +155,31 @@ public struct ProfileView: View {
                             }
                         }
                     }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("C.A.R.E. Purchase")
+                            .font(Theme.Typography.poppins(.semiBold, size: 15))
+                            .foregroundStyle(Theme.Colors.textPrimary)
+                        Text(purchaseSummary)
+                            .font(Theme.Typography.poppins(.regular, size: 13))
+                            .foregroundStyle(Theme.Colors.textSecondary)
+                        Button("Restore Purchase") {
+                            Task {
+                                await premium?.restore()
+                                purchaseStatus = premium?.isPurchased == true
+                                    ? "Your C.A.R.E. purchase was restored."
+                                    : (premium?.errorMessage ?? "No previous purchase was found.")
+                                premium?.errorMessage = nil
+                            }
+                        }
+                        .font(Theme.Typography.poppins(.semiBold, size: 14))
+                        .foregroundStyle(Theme.Colors.primary)
+                        .disabled(premium?.isBusy == true)
+                        .accessibilityIdentifier("ProfileRestorePurchaseButton")
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Theme.Colors.cardSurface, in: RoundedRectangle(cornerRadius: 16))
                     } else if selectedTab == "Notifications" {
                         Text("Assessment reminders")
                             .font(Theme.Typography.poppins(.semiBold, size: 17))
@@ -310,6 +346,9 @@ public struct ProfileView: View {
         .alert("Could not clear data", isPresented: Binding(get: { deletionError != nil }, set: { if !$0 { deletionError = nil } })) {
             Button("OK") { deletionError = nil }
         } message: { Text(deletionError ?? "") }
+        .alert("Purchase status", isPresented: Binding(get: { purchaseStatus != nil }, set: { if !$0 { purchaseStatus = nil } })) {
+            Button("OK") { purchaseStatus = nil }
+        } message: { Text(purchaseStatus ?? "") }
     }
     
     @ViewBuilder

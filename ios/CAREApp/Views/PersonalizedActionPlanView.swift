@@ -4,6 +4,7 @@ import SwiftUI
 /// storefront price when available; preview access exists only in Debug builds.
 struct PremiumUnlockView: View {
     @Environment(CAREPremiumAccess.self) private var premium
+    @State private var showUnlockConfirmation = false
     let router: AppRouter
     let result: AssessmentResult?
 
@@ -66,25 +67,20 @@ struct PremiumUnlockView: View {
 
                     VStack(alignment: .leading, spacing: 18) {
                         benefit("Personalized plan based on your latest C.A.R.E. scores")
-                        benefit("Dozens of additional exercises from Wired to Connect by Amy Banks, MD")
+                        benefit("Unlock \(ExerciseItem.allExercises.count - ExerciseItem.freeExercises.count) additional exercises from Wired to Connect by Amy Banks, MD")
                         benefit("Exercise recommendations based on the pathways that need the most support")
                     }
                     .padding(.vertical, 4)
 
-                    Button { Task { await premium.purchase() } } label: {
+                    Button { showUnlockConfirmation = true } label: {
                         Text("Unlock Exercises + Personalization — \(premium.product?.displayPrice ?? "$9.99")")
                             .font(Theme.Typography.poppins(.semiBold, size: 14))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity, minHeight: 54)
                             .background(Theme.Colors.primary, in: RoundedRectangle(cornerRadius: 18))
                     }
-                    .disabled(premium.isBusy || premium.product == nil)
+                    .disabled(premium.isBusy || purchaseUnavailable)
                     .accessibilityIdentifier("UnlockCAREPurchaseButton")
-
-                    Button("Restore Purchases") { Task { await premium.restore() } }
-                        .font(Theme.Typography.poppins(.medium, size: 13))
-                        .frame(maxWidth: .infinity)
-                        .accessibilityIdentifier("RestoreCAREPurchaseButton")
 
                     Link(destination: URL(string: "https://www.penguinrandomhouse.com/books/316116/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")!) {
                         Text("Explore Wired to Connect →")
@@ -93,22 +89,44 @@ struct PremiumUnlockView: View {
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Colors.primary, lineWidth: 1))
                     }
-#if DEBUG
-                    Button("Preview Paid Access (No Payment)") { premium.previewUnlocked = true }
-                        .font(Theme.Typography.poppins(.medium, size: 12))
+
+                    Button("Preview Your C.A.R.E. Action Plan") { premium.previewActionPlan() }
+                        .font(Theme.Typography.poppins(.medium, size: 13))
                         .frame(maxWidth: .infinity)
-                        .accessibilityIdentifier("PreviewCAREUnlockButton")
-#endif
+                        .disabled(result == nil)
+                        .accessibilityIdentifier("PreviewCAREActionPlanButton")
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 30)
             }
         }
         .background(.white)
+        .alert("Unlock all C.A.R.E. exercises?", isPresented: $showUnlockConfirmation) {
+            Button("Cancel", role: .cancel) {}
+#if DEBUG
+            Button("Unlock Demo (No Charge)") { premium.simulatePurchase() }
+#else
+            Button("Continue to Apple Purchase") { Task { await premium.purchase() } }
+#endif
+        } message: {
+#if DEBUG
+            Text("This preview will unlock the paid screens in this simulator without a payment. A real purchase would be a one-time \(premium.product?.displayPrice ?? "$9.99") charge.")
+#else
+            Text("Apple will ask you to confirm the one-time \(premium.product?.displayPrice ?? "$9.99") purchase before charging you.")
+#endif
+        }
         .alert("Purchase unavailable", isPresented: Binding(get: { premium.errorMessage != nil }, set: { if !$0 { premium.errorMessage = nil } })) {
             Button("OK", role: .cancel) { premium.errorMessage = nil }
         } message: { Text(premium.errorMessage ?? "") }
         .accessibilityIdentifier("CAREUnlockScreen")
+    }
+
+    private var purchaseUnavailable: Bool {
+#if DEBUG
+        false
+#else
+        premium.product == nil
+#endif
     }
 
     private func score(_ domain: CAREDomain) -> String {
@@ -130,12 +148,15 @@ struct PremiumUnlockView: View {
 
 /// Visual review of the action plan after the assessment has been unlocked.
 public struct PersonalizedActionPlanView: View {
+    @Environment(CAREPremiumAccess.self) private var premium: CAREPremiumAccess?
     public let router: AppRouter
     public let result: AssessmentResult
+    public let isPreview: Bool
 
-    public init(router: AppRouter, result: AssessmentResult) {
+    public init(router: AppRouter, result: AssessmentResult, isPreview: Bool = false) {
         self.router = router
         self.result = result
+        self.isPreview = isPreview
     }
 
     private var focusDomain: CAREDomain {
@@ -163,7 +184,10 @@ public struct PersonalizedActionPlanView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            HeaderNavBar(showBackButton: true, showHomeButton: true, showSparkleButton: false, onBack: { router.pop() })
+            HeaderNavBar(showBackButton: true, showHomeButton: true, showSparkleButton: false, onBack: {
+                if isPreview { premium?.isPreviewingActionPlan = false }
+                else { router.pop() }
+            })
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
                     VStack(alignment: .leading, spacing: 5) {
@@ -179,6 +203,16 @@ public struct PersonalizedActionPlanView: View {
                             .foregroundStyle(Theme.Colors.textSecondary)
                     }
                     .padding(.top, Theme.Spacing.headerTitleSpacing)
+
+                    if isPreview {
+                        Text("PREVIEW · This plan is for viewing only")
+                            .font(Theme.Typography.poppins(.semiBold, size: 12))
+                            .foregroundStyle(Theme.Colors.primary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 9)
+                            .background(Theme.Colors.primary.opacity(0.09), in: Capsule())
+                            .accessibilityIdentifier("CareActionPlanReadOnlyPreview")
+                    }
 
                     VStack(alignment: .leading, spacing: 14) {
                         Text("Your C.A.R.E. pathways")
@@ -255,6 +289,15 @@ public struct PersonalizedActionPlanView: View {
                             .background(category.accentColor.opacity(0.07), in: RoundedRectangle(cornerRadius: 16))
                         }
                     }
+
+                    if isPreview {
+                        Button("Unlock Exercises + Personalization") { premium?.isPreviewingActionPlan = false }
+                            .font(Theme.Typography.poppins(.semiBold, size: 14))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Theme.Colors.primary, in: RoundedRectangle(cornerRadius: 14))
+                            .accessibilityIdentifier("PreviewToUnlockButton")
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 28)
@@ -263,6 +306,9 @@ public struct PersonalizedActionPlanView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Colors.background.ignoresSafeArea())
         .accessibilityIdentifier("CareActionPlanScreen")
+        .onDisappear {
+            if isPreview { premium?.isPreviewingActionPlan = false }
+        }
     }
 
     private func scoreLabel(_ domain: CAREDomain) -> String {
@@ -307,21 +353,23 @@ public struct PersonalizedActionPlanView: View {
                     .foregroundStyle(item.category.accentColor)
                     .padding(.leading, 44)
                 Spacer()
-                Button {
-                    router.navigate(to: exerciseRoute(for: item))
-                } label: {
-                    HStack(spacing: 5) {
-                        Text("Do Exercise")
-                        Image(systemName: "arrow.right")
+                if !isPreview {
+                    Button {
+                        router.navigate(to: exerciseRoute(for: item))
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text("Do Exercise")
+                            Image(systemName: "arrow.right")
+                        }
+                        .font(Theme.Typography.poppins(.semiBold, size: 12))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 13)
+                        .frame(height: 34)
+                        .background(item.category.accentColor, in: RoundedRectangle(cornerRadius: 10))
                     }
-                    .font(Theme.Typography.poppins(.semiBold, size: 12))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 13)
-                    .frame(height: 34)
-                    .background(item.category.accentColor, in: RoundedRectangle(cornerRadius: 10))
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("PlanDoExercise_\(item.id)")
                 }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("PlanDoExercise_\(item.id)")
             }
         }
         .padding(12)

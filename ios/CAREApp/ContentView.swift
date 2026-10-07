@@ -8,18 +8,31 @@ final class CAREPremiumAccess {
     var isPurchased = false
     var isBusy = false
     var errorMessage: String?
+    var isPreviewingActionPlan = false
 #if DEBUG
-    var previewUnlocked = false
+    var simulatedPurchase = false
 #endif
     private var updatesTask: Task<Void, Never>?
 
     var hasAccess: Bool {
 #if DEBUG
-        isPurchased || previewUnlocked
+        isPurchased || simulatedPurchase
 #else
         isPurchased
 #endif
     }
+
+    func previewActionPlan() {
+        guard !hasAccess else { return }
+        isPreviewingActionPlan = true
+    }
+
+#if DEBUG
+    func simulatePurchase() {
+        simulatedPurchase = true
+        isPreviewingActionPlan = false
+    }
+#endif
 
     func start() async {
         if updatesTask == nil {
@@ -417,6 +430,8 @@ struct ContentView: View {
             if premiumAccess.hasAccess {
                 if let latestResult { PersonalizedActionPlanView(router: router, result: latestResult) }
                 else { NoAssessmentResultsView(router: router) }
+            } else if premiumAccess.isPreviewingActionPlan, let latestResult {
+                PersonalizedActionPlanView(router: router, result: latestResult, isPreview: true)
             } else { PremiumUnlockView(router: router, result: latestResult) }
 
         case .prmLibrary:

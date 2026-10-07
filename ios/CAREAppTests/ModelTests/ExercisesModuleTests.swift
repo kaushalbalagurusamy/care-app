@@ -6,6 +6,21 @@ import SwiftData
 @Suite("Exercises Module Data Models & Views Test Suite")
 struct ExercisesModuleTests {
 
+    @Test("Action Plan preview does not grant exercise access")
+    @MainActor
+    func testPreviewAndSimulatedPurchaseAreSeparate() {
+        let access = CAREPremiumAccess()
+        #expect(!access.hasAccess)
+        access.previewActionPlan()
+        #expect(access.isPreviewingActionPlan)
+        #expect(!access.hasAccess)
+#if DEBUG
+        access.simulatePurchase()
+        #expect(!access.isPreviewingActionPlan)
+        #expect(access.hasAccess)
+#endif
+    }
+
     @Test("Every exercise and choice emoji has bundled color artwork")
     func testExerciseEmojiArtwork() {
         for item in ExerciseItem.allExercises {
