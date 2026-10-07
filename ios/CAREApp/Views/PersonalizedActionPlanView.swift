@@ -83,11 +83,14 @@ struct PremiumUnlockView: View {
                     .accessibilityIdentifier("UnlockCAREPurchaseButton")
 
                     Link(destination: URL(string: "https://www.penguinrandomhouse.com/books/316116/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")!) {
-                        Text("Explore Wired to Connect →")
-                            .font(Theme.Typography.poppins(.semiBold, size: 14))
-                            .foregroundStyle(Theme.Colors.primary)
-                            .frame(maxWidth: .infinity, minHeight: 50)
-                            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Colors.primary, lineWidth: 1))
+                        HStack(spacing: 6) {
+                            Text("Explore Wired to Connect")
+                            AppIcon.arrowRight.view(size: 14, weight: .semibold, color: Theme.Colors.primary)
+                        }
+                        .font(Theme.Typography.poppins(.semiBold, size: 14))
+                        .foregroundStyle(Theme.Colors.primary)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Colors.primary, lineWidth: 1))
                     }
 
                     Button("Preview Your C.A.R.E. Action Plan") { premium.previewActionPlan() }
