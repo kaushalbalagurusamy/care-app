@@ -447,18 +447,15 @@ struct ResultsV2TrendChart: View {
     var onPointTap: ((UUID) -> Void)? = nil
 
     var body: some View {
-        Group {
-            if interactivePoints.isEmpty {
+        GeometryReader { viewport in
+            NoHorizontalBounceScrollView(showsIndicators: dates.count > 5) {
                 chartContent
-            } else {
-                NoHorizontalBounceScrollView(showsIndicators: true) {
-                    chartContent
-                        .frame(width: Self.requiredInteractiveWidth(pointCount: interactivePoints.count))
-                }
-                .defaultScrollAnchor(.trailing)
-                .accessibilityHint("Scroll horizontally to reach older assessment points")
+                    .frame(width: max(viewport.size.width, Self.requiredInteractiveWidth(pointCount: dates.count)))
             }
+            .defaultScrollAnchor(.trailing)
+            .accessibilityHint("Scroll horizontally to reach older assessment points")
         }
+        .frame(height: height + 20)
     }
 
     private var chartContent: some View {

@@ -58,11 +58,12 @@ public struct EducationTopicsView: View {
                             .foregroundColor(Theme.Colors.textPrimary)
                             .accessibilityAddTraits(.isHeader)
                         
-                        Text("Explore science-backed wellness practices")
+                        Text("Learn about the science behind the C.A.R.E. Assessment and the exercises that support it.")
                             .font(Theme.Typography.poppins(.regular, size: 14.5))
                             .foregroundColor(Theme.Colors.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
 
-                        Text("Each quiz shows 3 questions from a rotating set of 10. Retake it to see different questions.")
+                        Text("Then take a quiz. Each one draws 3 questions from a rotating set of 10. Retake it to see different questions.")
                             .font(Theme.Typography.poppins(.regular, size: 12.5))
                             .foregroundColor(Theme.Colors.textSecondary)
                             .fixedSize(horizontal: false, vertical: true)
