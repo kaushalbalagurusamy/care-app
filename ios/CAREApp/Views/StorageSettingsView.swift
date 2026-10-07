@@ -28,7 +28,7 @@ public struct StorageSettingsView: View {
                         // Section 1: Storage & Capacity Metrics
                         storageMetricsCard
                         
-                        // Section 2: Bi-Weekly Local Reminders
+                        // Section 2: Local Reminders
                         notificationsCard
                         
                         // Section 3: App Security & Biometric Lock
@@ -143,7 +143,7 @@ public struct StorageSettingsView: View {
         )
     }
     
-    // MARK: - Bi-Weekly Local Notifications Card
+    // MARK: - Local Notifications Card
     private var notificationsCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
             HStack {
@@ -158,10 +158,10 @@ public struct StorageSettingsView: View {
             
             Toggle(isOn: $isRemindersEnabled) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Bi-Weekly Assessment")
+                    Text("Assessment reminder")
                         .font(Theme.Typography.subheadline)
                         .foregroundColor(Theme.Colors.textPrimary)
-                    Text("Every 2nd Sunday at 7:00 PM")
+                    Text("\(reminderIntervalDescription) after you enable or update it")
                         .font(Theme.Typography.caption)
                         .foregroundColor(Theme.Colors.textSecondary)
                 }
@@ -190,6 +190,16 @@ public struct StorageSettingsView: View {
         )
     }
     
+    private var reminderIntervalDescription: String {
+        switch profileSettings.frequency {
+        case "2x/week": return "Repeats every 3½ days"
+        case "1x/week": return "Repeats every 7 days"
+        case "monthly": return "Repeats every 30 days"
+        case "every 3 months": return "Repeats every 90 days"
+        default: return "Repeats every 14 days"
+        }
+    }
+
     // MARK: - App Security & Biometric Lock Card
     private var appSecurityCard: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
@@ -369,17 +379,17 @@ public struct PrivacyDetailsView: View {
 
                 section(
                     "What stays on your device",
-                    "CARE saves your profile name and photo, saved contacts and their photos, assessment answers and results, unfinished quiz and exercise answers, and exercise completion history on this device. CARE does not upload this information to a CARE account or sync it across devices. Your device's own backup settings are managed by iOS."
+                    "CARE saves your profile name and photo, saved contacts and their photos, unfinished assessment, quiz, and exercise answers, assessment results, education and exercise progress, and saved Positive Relational Moments on this device. Saved moments include completed reflections, descriptions, and photos. CARE does not upload this information to a CARE account or sync it across devices. Your device's own backup settings are managed by iOS."
                 )
 
                 section(
                     "Photos and videos",
-                    "You choose media with Apple's photo picker. Profile and contact photos are resized and saved in CARE's local data. For unfinished exercises, CARE saves a reference to a selected photo or video when available; the original remains in your Photos library. A selected video may be copied temporarily on this device for playback."
+                    "You choose media with Apple's photo picker. Profile and contact photos are resized and saved in CARE's local data. Exercises may keep a reference to selected media so you can continue later. Positive Relational Moments can also save a local copy of a selected photo after you complete the exercise. The original remains in your Photos library. A selected video may be copied temporarily on this device for playback."
                 )
 
                 section(
                     "When you use other services",
-                    "Playing an embedded YouTube video loads Google's Privacy Enhanced Mode player in temporary browser storage. Google may still receive device, network, advertising, and playback information. If you choose to share an exercise by text, iOS opens Messages with the content you selected; you decide whether to send it. Opening an outside link also takes you to that provider."
+                    "Playing an embedded YouTube video loads Google's Privacy Enhanced Mode player in temporary browser storage. Google may still receive device, network, advertising, and playback information. If you choose to share an exercise by text, iOS opens Messages with the content you selected; you decide whether to send it. Opening a YouTube or TikTok link takes you to that provider. For the optional CARE Action Plan purchase, Apple handles payment and CARE checks the verified purchase status on your device; CARE does not receive your payment-card details."
                 )
 
                 Link("Read Google's Privacy Policy", destination: URL(string: "https://policies.google.com/privacy")!)
@@ -389,7 +399,7 @@ public struct PrivacyDetailsView: View {
 
                 section(
                     "Your choices and deletion",
-                    "Photo selection and messaging are optional. You can manage photo access, notifications, and Face ID in iOS Settings. CARE keeps local records until you delete them. Completed exercises keep dates and counts, not your written answers. In Profile → Privacy you can clear profile information, saved contacts, assessment data, or all CARE data. Clearing saved contacts alone leaves their names in past assessment results; also clear assessments or all data to remove those names from this device."
+                    "Photo selection and messaging are optional. You can manage photo access, notifications, and Face ID in iOS Settings. CARE keeps local records until you delete them. Completed Positive Relational Moments keep their saved reflections, descriptions, and photos in the free library; other completed exercises keep progress such as dates, counts, favorites, and ratings. You can edit or delete saved moments in the library. In Profile → Privacy you can clear profile information, saved contacts, assessment data, or all CARE data. Clearing saved contacts alone leaves their names in past assessment results; also clear assessments or all data to remove those names from this device."
                 )
             }
             .padding(Theme.Spacing.large)

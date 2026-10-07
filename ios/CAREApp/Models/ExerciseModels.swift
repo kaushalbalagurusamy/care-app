@@ -547,6 +547,7 @@ public final class StoredUserDraft {
 @MainActor
 public final class UserDraftStore {
     @ObservationIgnored private let container: ModelContainer
+    @ObservationIgnored private let exercisePhotosDirectory: URL?
     public private(set) var exerciseDrafts: [String: ExerciseDraft] = [:]
     public private(set) var savedMoments: [PRMSavedMoment] = []
     public private(set) var quizDrafts: [EducationTopicSlug: QuizDraft] = [:]
@@ -556,8 +557,12 @@ public final class UserDraftStore {
     public private(set) var failedQuizSaves: Set<EducationTopicSlug> = []
     public private(set) var unreadableDraftKeys: Set<String> = []
 
-    public init(container: ModelContainer, migrateLegacyPhotos: Bool = true) throws {
+    public init(container: ModelContainer, migrateLegacyPhotos: Bool = true,
+                exercisePhotosDirectory: URL? = nil) throws {
         self.container = container
+        self.exercisePhotosDirectory = exercisePhotosDirectory ?? FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("ExercisePhotos", isDirectory: true)
         let records = try container.mainContext.fetch(FetchDescriptor<StoredUserDraft>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]))
         for record in records {
             if record.key.hasPrefix("exercise:") {
@@ -623,6 +628,9 @@ public final class UserDraftStore {
         guard !unreadableDraftKeys.contains("exercise:\(draft.exerciseID)") else {
             throw CocoaError(.fileReadCorruptFile)
         }
+        let replacedPhotos = exerciseDrafts[draft.exerciseID]?.fields
+            .filter { $0.key == "prm-photo" || $0.key.hasPrefix("photo:") }
+            .map(\.value) ?? []
         var stableDraft = draft
         stableDraft.completionToken = exerciseDrafts[draft.exerciseID]?.completionToken ?? draft.completionToken ?? UUID()
         do { try save(key: "exercise:\(draft.exerciseID)", payload: JSONEncoder().encode(stableDraft)) }
@@ -630,6 +638,7 @@ public final class UserDraftStore {
         failedExerciseSaves.remove(draft.exerciseID)
         exerciseDrafts[draft.exerciseID] = stableDraft
         mostRecentExerciseID = draft.exerciseID
+        for filename in replacedPhotos { removeUnreferencedExercisePhoto(filename) }
     }
 
     public func saveQuiz(_ draft: QuizDraft) throws {
@@ -644,11 +653,15 @@ public final class UserDraftStore {
     }
 
     public func discardExercise(_ id: String) throws {
+        let photoFilenames = exerciseDrafts[id]?.fields
+            .filter { $0.key == "prm-photo" || $0.key.hasPrefix("photo:") }
+            .map(\.value) ?? []
         try remove(key: "exercise:\(id)")
         exerciseDrafts.removeValue(forKey: id)
         unreadableDraftKeys.remove("exercise:\(id)")
         failedExerciseSaves.remove(id)
         if mostRecentExerciseID == id { mostRecentExerciseID = exerciseDrafts.keys.sorted().first }
+        for filename in photoFilenames { removeUnreferencedExercisePhoto(filename) }
     }
 
     public func discardQuiz(for slug: EducationTopicSlug) throws {
@@ -841,14 +854,24 @@ public final class UserDraftStore {
             for result in try context.fetch(FetchDescriptor<StoredAssessmentSession>()) { context.delete(result) }
             for record in try context.fetch(FetchDescriptor<StoredUserDraft>()) { context.delete(record) }
             try context.save()
-            Self.removeLegacyContactPhotos()
-            exerciseDrafts = [:]
-            savedMoments = []
-            quizDrafts = [:]
-            unreadableDraftKeys = []
-            mostRecentExerciseID = nil
-            mostRecentQuizSlug = nil
         } catch { context.rollback(); throw error }
+        Self.removeLegacyContactPhotos()
+        for key in ["care.exerciseProgress.v1", "com.careapp.education_progress",
+                    "care.profile.settings.v1", "com.careapp.security.isAppLockEnabled",
+                    AssessmentSessionState.draftStorageKey] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+        PickedExerciseMovie.removeStaleTemporaryMovies()
+        exerciseDrafts = [:]
+        savedMoments = []
+        quizDrafts = [:]
+        unreadableDraftKeys = []
+        mostRecentExerciseID = nil
+        mostRecentQuizSlug = nil
+        if let directory = exercisePhotosDirectory,
+           FileManager.default.fileExists(atPath: directory.path) {
+            try FileManager.default.removeItem(at: directory)
+        }
     }
 
     public func finishExercise(_ id: String, at date: Date = .now) throws -> [String: ExerciseProgressRecord] {
@@ -863,6 +886,9 @@ public final class UserDraftStore {
                 throw CocoaError(.fileNoSuchFile)
             }
             let draft = try JSONDecoder().decode(ExerciseDraft.self, from: draftRecord.payload)
+            let draftPhotoFilenames = draft.fields
+                .filter { $0.key == "prm-photo" || $0.key.hasPrefix("photo:") }
+                .map(\.value)
             guard !unreadableDraftKeys.contains(momentsKey) else { throw CocoaError(.fileReadCorruptFile) }
             let progressRecord = try context.fetch(progressDescriptor).first
             var all = try progressRecord.map { try JSONDecoder().decode([String: ExerciseProgressRecord].self, from: $0.payload) } ?? [:]
@@ -892,6 +918,7 @@ public final class UserDraftStore {
             exerciseDrafts.removeValue(forKey: id)
             savedMoments = nextMoments
             if mostRecentExerciseID == id { mostRecentExerciseID = exerciseDrafts.keys.sorted().first }
+            for filename in draftPhotoFilenames { removeUnreferencedExercisePhoto(filename) }
             return all
         } catch {
             context.rollback()
@@ -901,17 +928,34 @@ public final class UserDraftStore {
 
     public func updateMoment(_ id: UUID, _ edit: (inout PRMSavedMoment) -> Void) throws {
         guard let index = savedMoments.firstIndex(where: { $0.id == id }) else { return }
+        let previousPhoto = savedMoments[index].photoFilename
         var next = savedMoments
         edit(&next[index])
         try saveValue(next, key: "prm-moments")
         savedMoments = next
+        if let previousPhoto { removeUnreferencedExercisePhoto(previousPhoto) }
     }
 
     public func deleteMoment(_ id: UUID) throws {
+        let previousPhoto = savedMoments.first(where: { $0.id == id })?.photoFilename
         let next = savedMoments.filter { $0.id != id }
         guard next.count != savedMoments.count else { return }
         try saveValue(next, key: "prm-moments")
         savedMoments = next
+        if let previousPhoto { removeUnreferencedExercisePhoto(previousPhoto) }
+    }
+
+    private func removeUnreferencedExercisePhoto(_ filename: String) {
+        guard !filename.isEmpty, filename == (filename as NSString).lastPathComponent,
+              !unreadableDraftKeys.contains(where: { $0 == "prm-moments" || $0.hasPrefix("exercise:") }),
+              !savedMoments.contains(where: { $0.photoFilename == filename }),
+              !exerciseDrafts.values.contains(where: { draft in
+                  draft.fields.contains { key, value in
+                      (key == "prm-photo" || key.hasPrefix("photo:")) && value == filename
+                  }
+              }),
+              let directory = exercisePhotosDirectory else { return }
+        try? FileManager.default.removeItem(at: directory.appendingPathComponent(filename))
     }
 
     public func finishQuiz(slug: EducationTopicSlug, score: Int, totalQuestions: Int, at date: Date = .now) throws {

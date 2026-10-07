@@ -240,7 +240,7 @@ struct ExercisesModuleTests {
         #expect(decoded.questionIDs == ["one"])
     }
 
-    @Test("Exercise drafts survive a new store instance and completion erases answers")
+    @Test("Exercise drafts survive a new store instance and can be discarded")
     @MainActor
     func testExerciseDraftRoundTrip() throws {
         let container = StorageContainerFactory.createInMemoryContainer()
@@ -275,6 +275,54 @@ struct ExercisesModuleTests {
         #expect(ExerciseProgressStore(sharedStore: reopened).completionCount(for: .calm) == 1)
         #expect(reopened.exercise(for: "keep-photo-close") == nil)
         #expect(throws: CocoaError.self) { try progress.completeAndDiscard("keep-photo-close") }
+    }
+
+    @Test("Exercise completion, saved moment edits, and full erasure remove unneeded photo copies")
+    @MainActor
+    func testSavedMomentPhotoDeletion() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("care-prm-photos-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try UserDraftStore(container: StorageContainerFactory.createInMemoryContainer(),
+                                       exercisePhotosDirectory: directory)
+        let first = UUID().uuidString + ".jpg"
+        let second = UUID().uuidString + ".jpg"
+        try Data([1]).write(to: directory.appendingPathComponent(first))
+        try Data([2]).write(to: directory.appendingPathComponent(second))
+        var draft = ExerciseDraft(exerciseID: "keep-photo-close")
+        draft.fields = ["firstReflection": "A warm moment", "prm-photo": first]
+        try store.saveExercise(draft)
+        _ = try store.finishExercise("keep-photo-close")
+        let moment = try #require(store.savedMoments.first)
+        #expect(moment.answers.first?.response == "A warm moment")
+        #expect(FileManager.default.fileExists(atPath: directory.appendingPathComponent(first).path))
+
+        try store.updateMoment(moment.id) { $0.photoFilename = second }
+        #expect(!FileManager.default.fileExists(atPath: directory.appendingPathComponent(first).path))
+        try store.deleteMoment(moment.id)
+        #expect(!FileManager.default.fileExists(atPath: directory.appendingPathComponent(second).path))
+
+        let unsavedPhoto = UUID().uuidString + ".jpg"
+        try Data([4]).write(to: directory.appendingPathComponent(unsavedPhoto))
+        var otherExercise = ExerciseDraft(exerciseID: "watch-something-funny")
+        otherExercise.fields["photo:test"] = unsavedPhoto
+        try store.saveExercise(otherExercise)
+        _ = try store.finishExercise("watch-something-funny")
+        #expect(!FileManager.default.fileExists(atPath: directory.appendingPathComponent(unsavedPhoto).path))
+
+        let third = UUID().uuidString + ".jpg"
+        try Data([3]).write(to: directory.appendingPathComponent(third))
+        draft.fields["prm-photo"] = third
+        try store.saveExercise(draft)
+        UserDefaults.standard.set(Data([9]), forKey: "care.exerciseProgress.v1")
+        UserDefaults.standard.set(Data([8]), forKey: "com.careapp.education_progress")
+        try store.eraseAllUserData()
+        #expect(!FileManager.default.fileExists(atPath: directory.path))
+        #expect(store.savedMoments.isEmpty)
+        #expect(store.exercise(for: "keep-photo-close") == nil)
+        #expect(UserDefaults.standard.object(forKey: "care.exerciseProgress.v1") == nil)
+        #expect(UserDefaults.standard.object(forKey: "com.careapp.education_progress") == nil)
     }
     
     @Test("Exercise Views instantiate cleanly without runtime fatal errors")
