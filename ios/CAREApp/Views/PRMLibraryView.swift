@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 // Figma frame 932:106 — Positive Relational Moments Library.
 public struct PRMLibraryView: View {
@@ -245,18 +246,36 @@ public struct PRMMomentDetailView: View {
     @Environment(AppRouter.self) private var router: AppRouter?
     @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     public let momentID: UUID
+    @State private var editingReflection: Int?
     @State private var isEditingDescription = false
+    @State private var draftResponses: [String] = []
     @State private var descriptionDraft = ""
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var replacementPhoto: UIImage?
+    @State private var pendingLeave: (() -> Void)?
+    @State private var showingUnsavedPrompt = false
     @State private var saveError: String?
     @State private var showingDeleteConfirmation = false
 
     public init(momentID: UUID) { self.momentID = momentID }
     private var moment: PRMSavedMoment? { appEnvironment?.draftStore.savedMoments.first { $0.id == momentID } }
+    private var hasUnsavedChanges: Bool {
+        guard let moment else { return false }
+        return replacementPhoto != nil ||
+            descriptionDraft != moment.photoDescription ||
+            draftResponses != moment.answers.map(\.response)
+    }
 
     public var body: some View {
         let accent = moment?.category.accentColor ?? ExerciseCategory.calm.accentColor
         VStack(spacing: 0) {
-            HeaderNavBar(accentColor: accent, onBack: { router?.pop() })
+            HeaderNavBar(accentColor: accent,
+                onBack: { attemptLeave { router?.pop() } },
+                onHome: { attemptLeave { router?.popToRoot() } },
+                onLibrary: { attemptLeave { router?.navigate(to: .prmLibrary) } },
+                onSparkle: { attemptLeave { router?.navigate(to: .personalizedActionPlan) } },
+                onChart: { attemptLeave { router?.navigate(to: .pastResults) } },
+                onProfile: { attemptLeave { router?.navigate(to: .profile) } })
             if let moment {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 18) {
@@ -282,13 +301,20 @@ public struct PRMMomentDetailView: View {
                             .font(Theme.Typography.poppins(.regular, size: 12))
                             .foregroundColor(Theme.Colors.textSecondary)
 
-                        if let image = savedPhoto(moment) {
+                        if let image = replacementPhoto ?? savedPhoto(moment) {
                             Image(uiImage: image).resizable().scaledToFit()
                                 .frame(maxWidth: .infinity).frame(maxHeight: 300)
                                 .clipShape(RoundedRectangle(cornerRadius: 16))
                                 .accessibilityLabel("Saved moment photo")
                         }
-                        if moment.photoFilename != nil {
+                        PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                            Label(moment.photoFilename == nil && replacementPhoto == nil ? "Add a photo" : "Choose a different photo",
+                                  systemImage: "photo.on.rectangle")
+                                .font(Theme.Typography.poppins(.semiBold, size: 13))
+                                .foregroundColor(accent)
+                        }
+                        .accessibilityIdentifier("ChangePRMPhoto")
+                        if moment.photoFilename != nil || replacementPhoto != nil {
                             VStack(alignment: .leading, spacing: 10) {
                                 Text("About this photo")
                                     .font(Theme.Typography.poppins(.semiBold, size: 15))
@@ -296,11 +322,10 @@ public struct PRMMomentDetailView: View {
                                     TextField("Add a description (optional)", text: $descriptionDraft, axis: .vertical)
                                         .lineLimit(2...5).padding(10)
                                         .background(.white, in: RoundedRectangle(cornerRadius: 10))
-                                    Button("Save description") { saveDescription() }.foregroundColor(accent)
+                                    Button("Done editing") { isEditingDescription = false }.foregroundColor(accent)
                                 } else {
-                                    if !moment.photoDescription.isEmpty { Text(moment.photoDescription) }
-                                    Button(moment.photoDescription.isEmpty ? "Add a description" : "Edit description") {
-                                        descriptionDraft = moment.photoDescription
+                                    if !descriptionDraft.isEmpty { Text(descriptionDraft) }
+                                    Button(descriptionDraft.isEmpty ? "Add a description" : "Edit description") {
                                         isEditingDescription = true
                                     }.foregroundColor(accent)
                                 }
@@ -313,14 +338,27 @@ public struct PRMMomentDetailView: View {
                         if !moment.answers.isEmpty {
                             Text("Your reflections")
                                 .font(Theme.Typography.poppins(.bold, size: 17))
-                            ForEach(Array(moment.answers.enumerated()), id: \.offset) { _, answer in
+                            ForEach(Array(moment.answers.enumerated()), id: \.offset) { index, answer in
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text(answer.question)
                                         .font(Theme.Typography.poppins(.semiBold, size: 13))
                                         .foregroundColor(Theme.Colors.textPrimary)
-                                    Text(answer.response)
-                                        .font(Theme.Typography.poppins(.regular, size: 14))
-                                        .foregroundColor(Theme.Colors.textSecondary)
+                                    if editingReflection == index && draftResponses.indices.contains(index) {
+                                        TextField("Your reflection", text: $draftResponses[index], axis: .vertical)
+                                            .lineLimit(2...6)
+                                            .font(Theme.Typography.poppins(.regular, size: 14))
+                                            .padding(10)
+                                            .background(.white, in: RoundedRectangle(cornerRadius: 10))
+                                    } else {
+                                        Text(draftResponses.indices.contains(index) ? draftResponses[index] : answer.response)
+                                            .font(Theme.Typography.poppins(.regular, size: 14))
+                                            .foregroundColor(Theme.Colors.textSecondary)
+                                    }
+                                    Button(editingReflection == index ? "Done editing" : "Edit reflection") {
+                                        editingReflection = editingReflection == index ? nil : index
+                                    }
+                                    .font(Theme.Typography.poppins(.semiBold, size: 12))
+                                    .foregroundColor(accent)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(16)
@@ -330,6 +368,14 @@ public struct PRMMomentDetailView: View {
                             Text("No written reflection was added to this moment.")
                                 .font(Theme.Typography.poppins(.regular, size: 13))
                                 .foregroundColor(Theme.Colors.textSecondary)
+                        }
+                        if hasUnsavedChanges {
+                            Button("Save changes") { _ = saveChanges() }
+                                .font(Theme.Typography.poppins(.semiBold, size: 14))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .background(accent, in: RoundedRectangle(cornerRadius: 12))
+                                .accessibilityIdentifier("SavePRMMomentChanges")
                         }
                         Button("Delete Moment", role: .destructive) { showingDeleteConfirmation = true }
                             .font(Theme.Typography.poppins(.medium, size: 12))
@@ -345,6 +391,21 @@ public struct PRMMomentDetailView: View {
             }
         }
         .background(.white)
+        .onAppear { loadDraft() }
+        .onChange(of: moment?.id) { _, _ in loadDraft() }
+        .onChange(of: selectedPhoto) { _, item in
+            guard let item else { return }
+            Task { await stagePhoto(item) }
+        }
+        .alert("Save changes to this moment?", isPresented: $showingUnsavedPrompt) {
+            Button("Save and Leave") {
+                if saveChanges() { completePendingLeave() }
+            }
+            Button("Discard Changes", role: .destructive) { completePendingLeave() }
+            Button("Keep Editing", role: .cancel) { pendingLeave = nil }
+        } message: {
+            Text("Your edits to this positive relational moment have not been saved.")
+        }
         .alert("Could not save moment", isPresented: Binding(
             get: { saveError != nil }, set: { if !$0 { saveError = nil } }
         )) { Button("OK", role: .cancel) { saveError = nil } }
@@ -371,12 +432,67 @@ public struct PRMMomentDetailView: View {
         do { try appEnvironment?.draftStore.updateMoment(momentID) { $0.isFavorite.toggle() } }
         catch { saveError = "Your favorite could not be saved. Please try again." }
     }
-    private func saveDescription() {
+    private func loadDraft() {
+        guard let moment else { return }
+        draftResponses = moment.answers.map(\.response)
+        descriptionDraft = moment.photoDescription
+    }
+    private func attemptLeave(_ action: @escaping () -> Void) {
+        guard hasUnsavedChanges else { action(); return }
+        pendingLeave = action
+        showingUnsavedPrompt = true
+    }
+    private func completePendingLeave() {
+        let action = pendingLeave
+        pendingLeave = nil
+        action?()
+    }
+    @MainActor
+    private func stagePhoto(_ item: PhotosPickerItem) async {
         do {
-            try appEnvironment?.draftStore.updateMoment(momentID) {
-                $0.photoDescription = descriptionDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let data = try await item.loadTransferable(type: Data.self),
+                  let image = UIImage(data: data) else { throw CocoaError(.fileReadCorruptFile) }
+            replacementPhoto = image
+        } catch { saveError = "The photo could not be opened. Please choose another photo." }
+    }
+    @discardableResult
+    private func saveChanges() -> Bool {
+        guard let moment, let store = appEnvironment?.draftStore else { return false }
+        guard draftResponses.count == moment.answers.count else {
+            saveError = "This moment is still loading. Please try again."
+            return false
+        }
+        var newPhotoURL: URL?
+        do {
+            if let replacementPhoto {
+                guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
+                      let data = replacementPhoto.jpegData(compressionQuality: 0.82) else {
+                    throw CocoaError(.fileWriteUnknown)
+                }
+                let directory = documents.appendingPathComponent("ExercisePhotos", isDirectory: true)
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+                let url = directory.appendingPathComponent(UUID().uuidString + ".jpg")
+                try data.write(to: url, options: .atomic)
+                newPhotoURL = url
             }
+            let responses = draftResponses
+            let description = descriptionDraft
+            let filename = newPhotoURL?.lastPathComponent
+            try store.updateMoment(momentID) { saved in
+                saved.answers = zip(moment.answers, responses).map {
+                    PRMMomentAnswer(question: $0.0.question, response: $0.1)
+                }
+                saved.photoDescription = description
+                if let filename { saved.photoFilename = filename }
+            }
+            replacementPhoto = nil
             isEditingDescription = false
-        } catch { saveError = "The description could not be saved. Please try again." }
+            editingReflection = nil
+            return true
+        } catch {
+            if let newPhotoURL { try? FileManager.default.removeItem(at: newPhotoURL) }
+            saveError = "Your changes could not be saved. Please try again."
+            return false
+        }
     }
 }

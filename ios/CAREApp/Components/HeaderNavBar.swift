@@ -24,6 +24,7 @@ public struct HeaderNavBar: View {
     public let title: String?
     public let onBack: (() -> Void)?
     public let onHome: (() -> Void)?
+    public let onLibrary: (() -> Void)?
     public let onSparkle: (() -> Void)?
     public let onChart: (() -> Void)?
     public let onProfile: (() -> Void)?
@@ -42,6 +43,7 @@ public struct HeaderNavBar: View {
         title: String? = nil,
         onBack: (() -> Void)? = nil,
         onHome: (() -> Void)? = nil,
+        onLibrary: (() -> Void)? = nil,
         onSparkle: (() -> Void)? = nil,
         onChart: (() -> Void)? = nil,
         onProfile: (() -> Void)? = nil,
@@ -59,6 +61,7 @@ public struct HeaderNavBar: View {
         self.title = title
         self.onBack = onBack
         self.onHome = onHome
+        self.onLibrary = onLibrary
         self.onSparkle = onSparkle
         self.onChart = onChart
         self.onProfile = onProfile
@@ -99,7 +102,8 @@ public struct HeaderNavBar: View {
                         accentColor: accentColor,
                         action: {
                             navigateWithProgressWarning {
-                                if router?.currentRoute != .prmLibrary { router?.navigate(to: .prmLibrary) }
+                                if let onLibrary { onLibrary() }
+                                else if router?.currentRoute != .prmLibrary { router?.navigate(to: .prmLibrary) }
                             }
                         }
                     )

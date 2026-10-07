@@ -173,7 +173,11 @@ public struct PersonalizedActionPlanView: View {
     }
 
     private var recommendations: [ExerciseItem] {
-        Array(ExerciseItem.allExercises.filter { $0.category == focusCategory }.prefix(3))
+        let pathway = ExerciseItem.allExercises.filter { $0.category == focusCategory }
+        guard let prm = pathway.first(where: \.isPositiveRelationalMoment) else {
+            return Array(pathway.prefix(3))
+        }
+        return [prm] + pathway.filter { !$0.isPositiveRelationalMoment }.prefix(2)
     }
 
     private var focusCopy: String {

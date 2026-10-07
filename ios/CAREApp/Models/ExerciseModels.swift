@@ -447,8 +447,8 @@ public struct PRMSavedMoment: Codable, Equatable, Sendable, Identifiable {
     public let emoji: String
     public let category: ExerciseCategory
     public let savedAt: Date
-    public let answers: [PRMMomentAnswer]
-    public let photoFilename: String?
+    public var answers: [PRMMomentAnswer]
+    public var photoFilename: String?
     public var photoDescription: String
     public var isFavorite: Bool
     public var lastViewedAt: Date?
