@@ -25,6 +25,8 @@ The design uses a one-time non-consumable unlock for the full Action Plan and ex
 
 To review without payment in the current simulator: launch the Debug build and tap **Unlock Your C.A.R.E. Action Plan**. **Preview Your C.A.R.E. Action Plan** opens a read-only plan; exercise buttons are replaced by lock labels. The separate **Preview Paid Screens (No Charge)** button enables a temporary Debug preview. For the StoreKit path, tap the $9.99 button, confirm **Continue to Apple Purchase**, and use Xcode's no-charge test sheet. The Run scheme selects `CAREPremium.storekit`. Test cancellation, restore, and revocation locally, then test the configured product in Apple's sandbox and TestFlight before release.
 
+For Apple's sandbox, select the separate **CAREApp Sandbox** Xcode scheme. It omits the local `.storekit` configuration so StoreKit requests the App Store Connect product. Run it on a dedicated test simulator or device with development signing and a Sandbox Apple Account; keep the **CAREApp** scheme for no-charge local testing on CARE Paid Preview. Do not use an ad-hoc `simctl` installation as evidence of sandbox product availability.
+
 Choose the smallest product that describes what buyers actually receive:
 
 | Model | Appropriate when | Implementation consequence |
