@@ -44,8 +44,21 @@ final class CAREPremiumAccess {
             }
         }
         await refreshEntitlement()
-        do { product = try await Product.products(for: [Self.productID]).first }
-        catch { errorMessage = "The purchase is temporarily unavailable. Please try again later." }
+        await loadProduct()
+    }
+
+    func loadProduct() async {
+        do {
+            product = try await Product.products(for: [Self.productID]).first
+            if product == nil {
+                errorMessage = "The purchase is temporarily unavailable. Please try again later."
+            } else {
+                errorMessage = nil
+            }
+        } catch {
+            product = nil
+            errorMessage = "The purchase is temporarily unavailable. Please try again later."
+        }
     }
 
     func refreshEntitlement() async {
@@ -61,6 +74,10 @@ final class CAREPremiumAccess {
     func purchase() async {
         guard let product else {
             errorMessage = "The purchase is not available yet. Please try again later."
+            return
+        }
+        guard product.id == Self.productID, product.type == .nonConsumable else {
+            errorMessage = "The purchase is not configured correctly. Please try again later."
             return
         }
         isBusy = true

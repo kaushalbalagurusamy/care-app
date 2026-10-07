@@ -5,8 +5,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 import WebKit
 
-// Bundle rendered color glyphs so the exercise artwork does not depend on the
-// active text font's emoji fallback (which can display a missing-glyph box).
+// Use licensed Noto artwork where bundled; render other Unicode emoji through iOS.
+// Never bundle glyphs rendered from Apple's emoji font.
 enum ExerciseEmojiAsset {
     static let names: [String: String] = [
         "🎬": "clapper", "📷": "camera", "👥": "people", "💬": "chat",
@@ -17,7 +17,10 @@ enum ExerciseEmojiAsset {
     ]
 
     static func name(for emoji: String) -> String? {
-        if let name = names[emoji] { return "ExerciseEmoji_\(name)" }
+        if let name = names[emoji] {
+            let asset = "ExerciseEmoji_\(name)"
+            return UIImage(named: asset) == nil ? nil : asset
+        }
         let codepoints = emoji.unicodeScalars
             .map { String($0.value, radix: 16) }
             .joined(separator: "_")
@@ -570,6 +573,8 @@ public struct MirrorExerciseView: View {
     @State private var step = 0
     @State private var showCancel = false
     @State private var showVideo = false
+    @State private var showYouTubeConsent = false
+    @State private var consentedToPlayYouTube = false
     @State private var selectedVideo: PhotosPickerItem?
     @State private var videoURL: URL?
     @State private var videoPlayer: AVPlayer?
@@ -622,6 +627,17 @@ public struct MirrorExerciseView: View {
             } else {
                 reflectionCard
             }
+        }
+        .sheet(isPresented: $showYouTubeConsent, onDismiss: {
+            if consentedToPlayYouTube {
+                showVideo = true
+                consentedToPlayYouTube = false
+            }
+        }) {
+            YouTubePlaybackConsentSheet(
+                onPlay: { consentedToPlayYouTube = true; showYouTubeConsent = false },
+                onCancel: { showYouTubeConsent = false }
+            )
         }
         .fullScreenCover(isPresented: $showVideo) {
             ZStack(alignment: .topLeading) {
@@ -709,13 +725,13 @@ public struct MirrorExerciseView: View {
         let scale = cardWidth / 350
         return HStack {
             Spacer(minLength: 0)
-            Button { showVideo = true } label: {
+            Button { showYouTubeConsent = true } label: {
                 VStack(spacing: 16 * scale) {
                     Rectangle()
                         .fill(Color.clear)
                         .frame(width: 318 * scale, height: 424 * scale)
                         .overlay {
-                            Image("exercise_mirror_emotion")
+                            Image("mirror_emotion_preview")
                                 .resizable()
                                 .scaledToFill()
                                 .accessibilityHidden(true)
@@ -843,15 +859,16 @@ private struct MirrorYouTubePlayer: UIViewRepresentable {
         let config = WKWebViewConfiguration()
         config.userContentController = controller
         config.allowsInlineMediaPlayback = true
+        config.websiteDataStore = .nonPersistent()
         let view = WKWebView(frame: .zero, configuration: config)
         view.isOpaque = false
         view.backgroundColor = .black
         let origin = "https://\((Bundle.main.bundleIdentifier ?? "com.careapp.CAREApp").lowercased())"
         let html = """
-        <!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-        <body style="margin:0;background:black;display:flex;align-items:center;justify-content:center;height:100vh"><div id="player" style="width:100vw;aspect-ratio:16/9"></div>
+        <!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"></head>
+        <body style="margin:0;background:black;display:flex;align-items:center;justify-content:center;height:100vh"><iframe id="player" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/\(videoID)?enablejsapi=1&amp;controls=1&amp;rel=0&amp;playsinline=1&amp;origin=\(origin)" title="YouTube video player" frameborder="0" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
         <script src="https://www.youtube.com/iframe_api"></script><script>
-        function onYouTubeIframeAPIReady(){new YT.Player('player',{videoId:'\(videoID)',width:'100%',height:'100%',playerVars:{controls:1,playsinline:1,origin:'\(origin)'},events:{onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)window.webkit.messageHandlers.videoEnded.postMessage(true)}}});}
+        function onYouTubeIframeAPIReady(){new YT.Player('player',{events:{onStateChange:function(e){if(e.data===YT.PlayerState.ENDED)window.webkit.messageHandlers.videoEnded.postMessage(true)}}});}
         </script></body></html>
         """
         view.loadHTMLString(html, baseURL: URL(string: origin))

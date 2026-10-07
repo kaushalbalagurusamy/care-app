@@ -73,14 +73,26 @@ struct PremiumUnlockView: View {
                     .padding(.vertical, 4)
 
                     Button { showUnlockConfirmation = true } label: {
-                        Text("Unlock Exercises + Personalization — \(premium.product?.displayPrice ?? "$9.99")")
+                        Text(premium.product.map { "Unlock Exercises + Personalization — \($0.displayPrice)" } ?? "Checking purchase availability…")
                             .font(Theme.Typography.poppins(.semiBold, size: 14))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity, minHeight: 54)
                             .background(Theme.Colors.primary, in: RoundedRectangle(cornerRadius: 18))
                     }
-                    .disabled(premium.isBusy || purchaseUnavailable)
+                    .disabled(premium.isBusy || premium.product == nil)
                     .accessibilityIdentifier("UnlockCAREPurchaseButton")
+
+                    if premium.product == nil {
+                        Button("Try loading purchase again") { Task { await premium.loadProduct() } }
+                            .font(Theme.Typography.poppins(.medium, size: 12))
+                            .frame(maxWidth: .infinity)
+                    }
+
+#if DEBUG
+                    Button("Preview Paid Screens (No Charge)") { premium.simulatePurchase() }
+                        .font(Theme.Typography.poppins(.medium, size: 12))
+                        .frame(maxWidth: .infinity)
+#endif
 
                     Link(destination: URL(string: "https://www.penguinrandomhouse.com/books/316116/wired-to-connect-by-amy-banks-md-with-leigh-ann-hirschman/")!) {
                         HStack(spacing: 6) {
@@ -106,30 +118,18 @@ struct PremiumUnlockView: View {
         .background(.white)
         .alert("Unlock all C.A.R.E. exercises?", isPresented: $showUnlockConfirmation) {
             Button("Cancel", role: .cancel) {}
-#if DEBUG
-            Button("Unlock Demo (No Charge)") { premium.simulatePurchase() }
-#else
             Button("Continue to Apple Purchase") { Task { await premium.purchase() } }
-#endif
         } message: {
 #if DEBUG
-            Text("This preview will unlock the paid screens in this simulator without a payment. A real purchase would be a one-time \(premium.product?.displayPrice ?? "$9.99") charge.")
+            Text("Apple will ask you to confirm the one-time \(premium.product?.displayPrice ?? "") purchase. Xcode and TestFlight test purchases do not charge you.")
 #else
-            Text("Apple will ask you to confirm the one-time \(premium.product?.displayPrice ?? "$9.99") purchase before charging you.")
+            Text("Apple will ask you to confirm the one-time \(premium.product?.displayPrice ?? "") purchase before charging you.")
 #endif
         }
         .alert("Purchase unavailable", isPresented: Binding(get: { premium.errorMessage != nil }, set: { if !$0 { premium.errorMessage = nil } })) {
             Button("OK", role: .cancel) { premium.errorMessage = nil }
         } message: { Text(premium.errorMessage ?? "") }
         .accessibilityIdentifier("CAREUnlockScreen")
-    }
-
-    private var purchaseUnavailable: Bool {
-#if DEBUG
-        false
-#else
-        premium.product == nil
-#endif
     }
 
     private func score(_ domain: CAREDomain) -> String {

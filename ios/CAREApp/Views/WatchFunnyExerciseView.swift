@@ -11,6 +11,8 @@ public struct WatchFunnyExerciseView: View {
     @Environment(ExerciseProgressStore.self) private var progress: ExerciseProgressStore?
     @Environment(AppEnvironment.self) private var appEnvironment: AppEnvironment?
     @State private var activeClip: ExerciseVideoClip?
+    @State private var clipAwaitingConsent: ExerciseVideoClip?
+    @State private var consentedClip: ExerciseVideoClip?
     @State private var selectedVideo: PhotosPickerItem?
     @State private var uploadedPlayer: AVPlayer?
     @State private var uploadedVideoURL: URL?
@@ -137,6 +139,17 @@ public struct WatchFunnyExerciseView: View {
         .alert("Video unavailable", isPresented: Binding(get: { uploadError != nil }, set: { if !$0 { uploadError = nil } })) {
             Button("OK", role: .cancel) { uploadError = nil }
         } message: { Text(uploadError ?? "") }
+        .sheet(item: $clipAwaitingConsent, onDismiss: {
+            if let consentedClip {
+                activeClip = consentedClip
+                self.consentedClip = nil
+            }
+        }) { clip in
+            YouTubePlaybackConsentSheet(
+                onPlay: { consentedClip = clip; clipAwaitingConsent = nil },
+                onCancel: { clipAwaitingConsent = nil }
+            )
+        }
         .fullScreenCover(item: $activeClip) { clip in
             ZStack(alignment: .topTrailing) {
                 Color.black.ignoresSafeArea()
@@ -189,7 +202,7 @@ public struct WatchFunnyExerciseView: View {
     }
 
     private func clipCard(_ clip: ExerciseVideoClip) -> some View {
-        Button { activeClip = clip } label: {
+        Button { clipAwaitingConsent = clip } label: {
             VStack(alignment: .center, spacing: 8) {
                 GeometryReader { geometry in
                     Image(clip.thumbnailAsset)
@@ -239,6 +252,43 @@ private enum ExerciseVideoClip: String, CaseIterable, Identifiable {
     var videoID: String { self == .animals ? "A1CVa6NrPpk" : "dbj85TIYyrQ" }
 }
 
+struct YouTubePlaybackConsentSheet: View {
+    let onPlay: () -> Void
+    let onCancel: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Before playing this video")
+                .font(Theme.Typography.poppins(.bold, size: 20))
+                .foregroundStyle(Theme.Colors.textPrimary)
+            Text("The embedded YouTube player connects to Google and may share device, network, and playback information. Watching is optional; you can still complete the exercise without it.")
+                .font(Theme.Typography.poppins(.regular, size: 14))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .multilineTextAlignment(.center)
+            HStack(spacing: 18) {
+                Link("CARE Privacy Policy", destination: PrivacyDetailsView.policyURL)
+                Link("YouTube Terms", destination: URL(string: "https://www.youtube.com/t/terms")!)
+            }
+            .font(Theme.Typography.poppins(.medium, size: 13))
+            Text("By choosing Agree & Play, you agree to the linked CARE Privacy Policy and YouTube Terms of Service.")
+                .font(Theme.Typography.poppins(.regular, size: 12))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .multilineTextAlignment(.center)
+            PrimaryButton(title: "Agree & Play Video", action: onPlay)
+                .accessibilityIdentifier("YouTubeAgreeAndPlayButton")
+            Button("Not Now", action: onCancel)
+                .font(Theme.Typography.poppins(.medium, size: 14))
+                .foregroundStyle(Theme.Colors.textSecondary)
+                .accessibilityIdentifier("YouTubeNotNowButton")
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
+        .presentationDetents([.height(390)])
+        .presentationDragIndicator(.visible)
+    }
+}
+
 private struct YouTubeExercisePlayer: UIViewRepresentable {
     let clip: ExerciseVideoClip
     let onEnded: () -> Void
@@ -251,18 +301,17 @@ private struct YouTubeExercisePlayer: UIViewRepresentable {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = controller
         configuration.allowsInlineMediaPlayback = true
+        configuration.websiteDataStore = .nonPersistent()
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.isOpaque = false
         webView.backgroundColor = .black
         let appOrigin = "https://\((Bundle.main.bundleIdentifier ?? "com.careapp.CAREApp").lowercased())"
         let html = """
         <!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"></head>
-        <body style="margin:0;background:#000;display:flex;align-items:center;height:100vh"><div style="width:100vw;aspect-ratio:16/9"><div id="player" style="width:100%;height:100%"></div></div>
+        <body style="margin:0;background:#000;display:flex;align-items:center;height:100vh"><div style="width:100vw;aspect-ratio:16/9"><iframe id="player" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/\(clip.videoID)?enablejsapi=1&amp;controls=1&amp;rel=0&amp;playsinline=1&amp;origin=\(appOrigin)" title="YouTube video player" frameborder="0" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
         <script src="https://www.youtube.com/iframe_api"></script><script>
         function onYouTubeIframeAPIReady() {
-          new YT.Player('player', { videoId: '\(clip.videoID)', width: '100%', height: '100%',
-            playerVars: { controls: 1, rel: 0, playsinline: 1, origin: '\(appOrigin)' },
-            events: { onStateChange: function(e) {
+          new YT.Player('player', { events: { onStateChange: function(e) {
               if (e.data === YT.PlayerState.ENDED) window.webkit.messageHandlers.videoEnded.postMessage(true);
             } }
           });

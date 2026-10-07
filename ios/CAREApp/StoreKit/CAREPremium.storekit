@@ -1,0 +1,30 @@
+{
+  "identifier" : "C4A3E001",
+  "nonRenewingSubscriptions" : [
+  ],
+  "products" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "C4A3E002",
+      "localizations" : [
+        {
+          "description" : "Unlock the full C.A.R.E. Action Plan and 61 additional exercises.",
+          "displayName" : "C.A.R.E. Exercises + Personalization",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.careapp.care.premium.unlock",
+      "referenceName" : "C.A.R.E. Exercises + Personalization",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+  },
+  "subscriptionGroups" : [
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

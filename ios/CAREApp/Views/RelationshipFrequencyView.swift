@@ -6,6 +6,8 @@ public struct RelationshipFrequencyView: View {
     public let selectedPeople: [Person]
     @Binding public var allocations: [ParticipantAllocation]
     public let onProceed: ([AssessmentParticipant]) -> Bool
+    @Environment(AppEnvironment.self) private var appEnvironment
+    @State private var photoDataByPersonID: [UUID: Data] = [:]
     
     public init(
         router: AppRouter,
@@ -38,7 +40,7 @@ public struct RelationshipFrequencyView: View {
                 .padding(.top, Theme.Spacing.headerTitleSpacing)
                 
                 // 5-Person Vertical Partition Container (Takes flexible space in single screen)
-                VerticalTimeAllocationBubble(allocations: $allocations)
+                VerticalTimeAllocationBubble(allocations: $allocations, photoDataByPersonID: photoDataByPersonID)
                     .frame(maxHeight: .infinity)
             }
             .padding(.horizontal, 20)
@@ -78,6 +80,7 @@ public struct RelationshipFrequencyView: View {
             if Set(allocations.map(\.id)) != Set(selectedPeople.map(\.id)) {
                 setupInitialAllocations()
             }
+            loadContactPhotos()
         }
     }
     
@@ -91,6 +94,14 @@ public struct RelationshipFrequencyView: View {
                 percentage: initialPercentage
             )
         }
+    }
+
+    private func loadContactPhotos() {
+        photoDataByPersonID = Dictionary(uniqueKeysWithValues: selectedPeople.compactMap { person in
+            let key = "contact-photo:\(person.id.uuidString)"
+            guard let data = try? appEnvironment.draftStore.loadValue(Data.self, key: key) else { return nil }
+            return (person.id, data)
+        })
     }
 }
 
