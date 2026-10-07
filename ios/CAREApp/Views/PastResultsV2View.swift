@@ -12,6 +12,7 @@ public struct PastResultsV2View: View {
     @State private var isShowingSortSheet = false
     @State private var selectedCategory: CAREDomain = .calm
     @State private var selectedPersonID: UUID?
+    @State private var showsAllPeople = false
 
     public init(recentResult: AssessmentResult? = nil) {
         self.recentResult = recentResult
@@ -39,6 +40,10 @@ public struct PastResultsV2View: View {
         case .highestScore:
             return filtered.sorted { $0.normalizedScore > $1.normalizedScore }
         }
+    }
+
+    private var visiblePeople: [IndividualResult] {
+        showsAllPeople ? latestPeople : Array(latestPeople.prefix(10))
     }
 
     private func personHistoryCount(_ id: UUID) -> Int {
@@ -124,6 +129,7 @@ public struct PastResultsV2View: View {
             )
         }
         .onChange(of: searchText) { _, _ in
+            showsAllPeople = false
             selectedPersonID = latestPeople.first?.id
         }
         .task {
@@ -332,7 +338,7 @@ public struct PastResultsV2View: View {
                     .foregroundColor(Theme.Colors.textSecondary)
             }
 
-            ForEach(latestPeople) { person in
+            ForEach(visiblePeople) { person in
                 VStack(alignment: .leading, spacing: 8) {
                     Button {
                         selectedPersonID = person.id
@@ -363,9 +369,28 @@ public struct PastResultsV2View: View {
                         )
                     }
                 }
-                if person.id != latestPeople.last?.id {
+                if person.id != visiblePeople.last?.id {
                     Divider().background(Theme.Colors.dividerSubtle)
                 }
+            }
+
+            if latestPeople.count > 10 {
+                Button {
+                    showsAllPeople.toggle()
+                    if !showsAllPeople, !visiblePeople.contains(where: { $0.id == selectedPersonID }) {
+                        selectedPersonID = visiblePeople.first?.id
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(showsAllPeople ? "See less" : "See more")
+                        Image(systemName: showsAllPeople ? "chevron.up" : "chevron.down")
+                    }
+                    .font(Theme.Typography.poppins(.semiBold, size: 12))
+                    .foregroundColor(Theme.Colors.primary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 4)
+                }
+                .buttonStyle(.plain)
             }
         }
         .padding(16)
