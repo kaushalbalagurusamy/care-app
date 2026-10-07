@@ -269,7 +269,7 @@ public struct SurveyResultsV2View: View {
                 
                 SecondaryButton(
                     title: "View Past Results",
-                    icon: "chart.line.uptrend.xyaxis",
+                    appIcon: .chart,
                     action: {
                         router?.navigate(to: .pastResults)
                     }
