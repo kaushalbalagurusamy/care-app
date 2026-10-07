@@ -24,6 +24,8 @@ To inspect the paid flow, complete an assessment, open **Unlock Your C.A.R.E. Ac
 
 The app stores user assessments, saved moments, and exercise progress locally. Updating from free CARE 1.0 preserves that data; fresh installations contain no sample records.
 
+Some exercises offer optional video examples. The original Calm clips and Mirror the Emotion use a consent-gated YouTube player; the paid Mirror a Gentle Gesture and Read a Character's Feelings screens open the selected TikTok or YouTube page in the external browser. CARE does not bundle those videos or their captured frames. Supply any requested third-party content permission or service-terms documentation with review materials.
+
 ## IAP review screenshot
 
 Capture the actual 1.1 unlock screen on the final review build showing the product name, Apple's configured price, one-time purchase wording, and 61-exercise benefit. Do not submit a Debug screenshot with **Preview Paid Screens (No Charge)**.
