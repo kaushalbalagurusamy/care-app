@@ -152,19 +152,22 @@ struct EducationModelTests {
         #expect(allQuestionIds.count == 60, "All 60 questions must have unique IDs")
     }
 
-    @Test("Relational Neuroscience quiz has complete questions, answers, and explanations")
-    func testRelationalNeuroscienceQuizCopy() throws {
+    @Test("All education quizzes have complete questions, answers, and explanations")
+    func testEducationQuizCopy() throws {
         let manifest = try EducationManifestLoader.loadBundledManifest()
-        let topic = try #require(manifest.first { $0.slug == .relationalNeuroscience })
-        #expect(topic.quizBank.count == 10)
-        for question in topic.quizBank {
-            #expect(question.prompt.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("?"),
-                    "Question \(question.id) needs a complete prompt")
-            #expect(question.rationale.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("."),
-                    "Question \(question.id) needs a complete explanation")
-            for option in question.options {
-                #expect(option.text.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("."),
-                        "Question \(question.id), option \(option.letter) needs a complete sentence")
+        #expect(manifest.count == 6)
+        for topic in manifest {
+            #expect(topic.quizBank.count == 10)
+            for question in topic.quizBank {
+                #expect(question.prompt.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("?"),
+                        "Question \(question.id) needs a complete prompt")
+                #expect(question.rationale.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("."),
+                        "Question \(question.id) needs a complete explanation")
+                for option in question.options {
+                    let text = option.text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    #expect(text.hasSuffix(".") && !text.hasSuffix("..") && text.first?.isUppercase == true,
+                            "Question \(question.id), option \(option.letter) needs a complete sentence")
+                }
             }
         }
     }

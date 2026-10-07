@@ -141,19 +141,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Dr. Judith V. Jordan"
+            "text": "The psychiatrist was Dr. Judith V. Jordan."
           },
           {
             "letter": "B",
-            "text": "Dr. Jean Baker Miller"
+            "text": "The psychiatrist was Dr. Jean Baker Miller."
           },
           {
             "letter": "C",
-            "text": "Dr. Janet Surrey"
+            "text": "The psychiatrist was Dr. Janet Surrey."
           },
           {
             "letter": "D",
-            "text": "Dr. Irene Stiver"
+            "text": "The psychiatrist was Dr. Irene Stiver."
           }
         ],
         "correctOptionLetter": "B",
@@ -165,19 +165,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Dr. Irene Stiver"
+            "text": "The scholar was Dr. Irene Stiver."
           },
           {
             "letter": "B",
-            "text": "Dr. Jean Baker Miller"
+            "text": "The scholar was Dr. Jean Baker Miller."
           },
           {
             "letter": "C",
-            "text": "Dr. Judith V. Jordan"
+            "text": "The scholar was Dr. Judith V. Jordan."
           },
           {
             "letter": "D",
-            "text": "Dr. Amy Banks"
+            "text": "The scholar was Dr. Amy Banks."
           }
         ],
         "correctOptionLetter": "C",
@@ -189,19 +189,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Interpersonal neurobiology and somatic experiencing"
+            "text": "She bridged relational psychology with interpersonal neurobiology and somatic experiencing."
           },
           {
             "letter": "B",
-            "text": "Cognitive behavioral restructuring and exposure therapy"
+            "text": "She bridged relational psychology with cognitive behavioral restructuring and exposure therapy."
           },
           {
             "letter": "C",
-            "text": "Hierarchical organizational structures and power dynamics"
+            "text": "She bridged relational psychology with hierarchical organizational structures and power dynamics."
           },
           {
             "letter": "D",
-            "text": "Mindfulness and contemplative practices to foster deep empathy and resilience"
+            "text": "She bridged relational psychology with mindfulness and contemplative practices to foster deep empathy and resilience."
           }
         ],
         "correctOptionLetter": "D",
@@ -213,19 +213,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "The 5 Good Things of growth-fostering relationships"
+            "text": "She defined the 5 Good Things of growth-fostering relationships."
           },
           {
             "letter": "B",
-            "text": "The \"strategies of disconnection\" people use to protect themselves"
+            "text": "She defined the \"strategies of disconnection\" people use to protect themselves."
           },
           {
             "letter": "C",
-            "text": "The mirror neuron engine of empathy"
+            "text": "She defined the mirror neuron engine of empathy."
           },
           {
             "letter": "D",
-            "text": "The smart vagal response to social pain"
+            "text": "She defined the smart vagal response to social pain."
           }
         ],
         "correctOptionLetter": "B",
@@ -237,19 +237,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "The realization that one is valued and deserving of care"
+            "text": "Zest is the realization that one is valued and deserving of care."
           },
           {
             "letter": "B",
-            "text": "An expanded clarity regarding relational dynamics between two people"
+            "text": "Zest is an expanded clarity regarding relational dynamics between two people."
           },
           {
             "letter": "C",
-            "text": "The surge of emotional energy, vitality, and enthusiasm experienced in mutually authentic connection"
+            "text": "Zest is the surge of emotional energy, vitality, and enthusiasm experienced in mutually authentic connection."
           },
           {
             "letter": "D",
-            "text": "The spark of original problem-solving without fear of defense"
+            "text": "Zest is the spark of original problem-solving without fear of defense."
           }
         ],
         "correctOptionLetter": "C",
@@ -261,19 +261,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "By encouraging individuals to achieve independence from external validation."
+            "text": "It grows by encouraging individuals to achieve independence from external validation."
           },
           {
             "letter": "B",
-            "text": "By ensuring one person takes full responsibility for the emotional well-being of the other."
+            "text": "It grows by ensuring one person takes full responsibility for the emotional well-being of the other."
           },
           {
             "letter": "C",
-            "text": "By suppressing emotional expressions that might cause relational conflict."
+            "text": "It grows by suppressing emotional expressions that might cause relational conflict."
           },
           {
             "letter": "D",
-            "text": "Through genuine reception and validation by another, strengthening the realization that one is deserving of care."
+            "text": "It grows through genuine reception and validation by another, strengthening the realization that one is deserving of care."
           }
         ],
         "correctOptionLetter": "D",
@@ -285,19 +285,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "An expanded understanding of oneself, the other person, and the relational dynamic between them"
+            "text": "Clarity is an expanded understanding of oneself, the other person, and the relational dynamic between them."
           },
           {
             "letter": "B",
-            "text": "A logical analysis of social pain signals sent by the dACC"
+            "text": "Clarity is a logical analysis of social pain signals sent by the dACC."
           },
           {
             "letter": "C",
-            "text": "The intellectual ability to isolate one's emotions from physical body sensations"
+            "text": "Clarity is the intellectual ability to isolate one's emotions from physical body sensations."
           },
           {
             "letter": "D",
-            "text": "The establishment of strict boundaries that eliminate emotional vulnerability"
+            "text": "Clarity is the establishment of strict boundaries that eliminate emotional vulnerability."
           }
         ],
         "correctOptionLetter": "A",
@@ -377,7 +377,7 @@
             "domain": "accepted",
             "name": "Dorsal Anterior Cingulate Cortex",
             "brainRegion": "DACC / Insula",
-            "function": "Brain imaging studies link this region to distress during social exclusion. Physical pain can also activate this region, but the two experiences do not appear to have identical neural patterns.",
+            "function": "Brain imaging studies link this region to distress during social exclusion. This area and pathway of the brain is also associated with the experience of physical pain, showing how the brain registers isolation similar to how it registers physical pain.",
             "exerciseSuggestion": "Name and validate moments of relational sting without judgment, seeking comforting verbal reassurance."
           },
           {
@@ -812,19 +812,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "From open engagement to hypervigilance"
+            "text": "It shifts from open engagement to hypervigilance."
           },
           {
             "letter": "B",
-            "text": "From mutual empathy to self-sufficient isolation"
+            "text": "It shifts from mutual empathy to self-sufficient isolation."
           },
           {
             "letter": "C",
-            "text": "From emotional resonance to intellectual cognition"
+            "text": "It shifts from emotional resonance to intellectual cognition."
           },
           {
             "letter": "D",
-            "text": "From defensive self-protection to relaxed belonging"
+            "text": "It shifts from defensive self-protection to relaxed belonging."
           }
         ],
         "correctOptionLetter": "D",
@@ -836,19 +836,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Repeatedly engaging in safe, authentic, and growth-fostering connections over time"
+            "text": "It requires repeatedly engaging in safe, authentic, and growth-fostering connections over time."
           },
           {
             "letter": "B",
-            "text": "Complete reliance on power-over dynamics in stressful situations"
+            "text": "It requires complete reliance on power-over dynamics in stressful situations."
           },
           {
             "letter": "C",
-            "text": "Suppressing the mirror neuron system during difficult interactions"
+            "text": "It requires suppressing the mirror neuron system during difficult interactions."
           },
           {
             "letter": "D",
-            "text": "Avoiding all relational vulnerability to prevent social pain"
+            "text": "It requires avoiding all relational vulnerability to prevent social pain."
           }
         ],
         "correctOptionLetter": "A",
@@ -860,19 +860,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "By proving that brain structure is unchangeable, protecting us from bad relationships."
+            "text": "It does so by proving that brain structure is unchangeable, protecting us from bad relationships."
           },
           {
             "letter": "B",
-            "text": "By showing that healing happens in relationship, allowing us to physically transform our brains through human connection."
+            "text": "It does so by showing that healing happens in relationship, allowing us to physically transform our brains through human connection."
           },
           {
             "letter": "C",
-            "text": "By demonstrating that isolation is the fastest route to neural repair."
+            "text": "It does so by demonstrating that isolation is the fastest route to neural repair."
           },
           {
             "letter": "D",
-            "text": "By proving that cognitive willpower alone can rewrite social pain pathways."
+            "text": "It does so by proving that cognitive willpower alone can rewrite social pain pathways."
           }
         ],
         "correctOptionLetter": "B",
@@ -908,19 +908,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Stepping into places of mutual trust and authentic vulnerability"
+            "text": "It involves stepping into places of mutual trust and authentic vulnerability."
           },
           {
             "letter": "B",
-            "text": "Exercising power-over dynamics in moments of conflict"
+            "text": "It involves exercising power-over dynamics in moments of conflict."
           },
           {
             "letter": "C",
-            "text": "Maintaining chronic emotional distance to avoid dACC activation"
+            "text": "It involves maintaining chronic emotional distance to avoid dACC activation."
           },
           {
             "letter": "D",
-            "text": "Relying on one-way empathy to analyze others safely"
+            "text": "It involves relying on one-way empathy to analyze others safely."
           }
         ],
         "correctOptionLetter": "A",
@@ -1074,19 +1074,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Cortisol"
+            "text": "The neurochemical is cortisol."
           },
           {
             "letter": "B",
-            "text": "Adrenaline"
+            "text": "The neurochemical is adrenaline."
           },
           {
             "letter": "C",
-            "text": "Dopamine"
+            "text": "The neurochemical is dopamine."
           },
           {
             "letter": "D",
-            "text": "Melatonin"
+            "text": "The neurochemical is melatonin."
           }
         ],
         "correctOptionLetter": "C",
@@ -1098,19 +1098,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Immediate biological signals that it is safe to drop instinctual defenses"
+            "text": "It sends immediate biological signals that it is safe to drop instinctual defenses."
           },
           {
             "letter": "B",
-            "text": "Urgent danger signals to prepare for fight-or-flight"
+            "text": "It sends urgent danger signals to prepare for fight-or-flight."
           },
           {
             "letter": "C",
-            "text": "Signals to increase systemic inflammation"
+            "text": "It sends signals to increase systemic inflammation."
           },
           {
             "letter": "D",
-            "text": "Commands to suppress mirror neuron attunement"
+            "text": "It sends commands to suppress mirror neuron attunement."
           }
         ],
         "correctOptionLetter": "A",
@@ -1146,19 +1146,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "A continuous demand for hypervigilant monitoring"
+            "text": "They provide a continuous demand for hypervigilant monitoring."
           },
           {
             "letter": "B",
-            "text": "A framework for establishing dominance over others"
+            "text": "They provide a framework for establishing dominance over others."
           },
           {
             "letter": "C",
-            "text": "The neurobiological baseline necessary to rest, restore, and flourish"
+            "text": "They provide the neurobiological baseline necessary to rest, restore, and flourish."
           },
           {
             "letter": "D",
-            "text": "A mechanism to eliminate the desire for community"
+            "text": "They provide a mechanism to eliminate the desire for community."
           }
         ],
         "correctOptionLetter": "C",
@@ -1170,19 +1170,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "By keeping the dACC alarm continuously active to remind us of pain."
+            "text": "It does so by keeping the dACC alarm continuously active to remind us of pain."
           },
           {
             "letter": "B",
-            "text": "By demonstrating that self-sufficiency is safer than vulnerability."
+            "text": "It does so by demonstrating that self-sufficiency is safer than vulnerability."
           },
           {
             "letter": "C",
-            "text": "By encouraging power-over control mechanisms."
+            "text": "It does so by encouraging power-over control mechanisms."
           },
           {
             "letter": "D",
-            "text": "By stimulating the dopamine reward system and reinforcing feel-good neurochemical cascades."
+            "text": "It does so by stimulating the dopamine reward system and reinforcing feel-good neurochemical cascades."
           }
         ],
         "correctOptionLetter": "D",
@@ -1263,19 +1263,19 @@
       "options": [
         {
           "letter": "A",
-          "text": "Control, dominance, and coercion that dictate human interactions"
+          "text": "These interactions rely on control, dominance, and coercion."
         },
         {
           "letter": "B",
-          "text": "Shared agency, mutual growth, and collaborative problem-solving"
+          "text": "These interactions involve shared agency, mutual growth, and collaborative problem-solving."
         },
         {
           "letter": "C",
-          "text": "Deep emotional resonance and vagal regulation"
+          "text": "These interactions involve deep emotional resonance and vagal regulation."
         },
         {
           "letter": "D",
-          "text": "Reciprocal vulnerability and equal emotional expression"
+          "text": "These interactions involve reciprocal vulnerability and equal emotional expression."
         }
       ],
       "correctOptionLetter": "A",
@@ -1288,19 +1288,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Control, dominance, and coercion that dictate human interactions"
+            "text": "These interactions rely on control, dominance, and coercion."
           },
           {
             "letter": "B",
-            "text": "Shared agency, mutual growth, and collaborative problem-solving"
+            "text": "These interactions involve shared agency, mutual growth, and collaborative problem-solving."
           },
           {
             "letter": "C",
-            "text": "Deep emotional resonance and vagal regulation"
+            "text": "These interactions involve deep emotional resonance and vagal regulation."
           },
           {
             "letter": "D",
-            "text": "Reciprocal vulnerability and equal emotional expression"
+            "text": "These interactions involve reciprocal vulnerability and equal emotional expression."
           }
         ],
         "correctOptionLetter": "A",
@@ -1344,7 +1344,7 @@
           },
           {
             "letter": "C",
-            "text": "when individuals are subjected to power-over relational dynamics?"
+            "text": "It reduces sensitivity to social exclusion during these interactions."
           },
           {
             "letter": "D",
@@ -1360,19 +1360,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "A system where power is held by one benevolent leader"
+            "text": "It is a system where power is held by one benevolent leader."
           },
           {
             "letter": "B",
-            "text": "A structure that eliminates all individual differences to maintain equality"
+            "text": "It is a structure that eliminates all individual differences to maintain equality."
           },
           {
             "letter": "C",
-            "text": "A strategy of disconnection used to avoid relational conflict"
+            "text": "It is a strategy of disconnection used to avoid relational conflict."
           },
           {
             "letter": "D",
-            "text": "A dynamic grounded in mutual respect, shared agency, and collaborative growth"
+            "text": "It is a dynamic grounded in mutual respect, shared agency, and collaborative growth."
           }
         ],
         "correctOptionLetter": "D",
@@ -1384,19 +1384,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "To expand the relational capacity and confidence of everyone involved"
+            "text": "The goal is to expand the relational capacity and confidence of everyone involved."
           },
           {
             "letter": "B",
-            "text": "To enforce compliance through subtle neurochemical rewards"
+            "text": "The goal is to enforce compliance through subtle neurochemical rewards."
           },
           {
             "letter": "C",
-            "text": "To eliminate the need for vulnerability in relationships"
+            "text": "The goal is to eliminate the need for vulnerability in relationships."
           },
           {
             "letter": "D",
-            "text": "To quieten the mirror neuron system during decision-making"
+            "text": "The goal is to quieten the mirror neuron system during decision-making."
           }
         ],
         "correctOptionLetter": "A",
@@ -1408,19 +1408,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "A state of mild hypervigilance that sharpens focus"
+            "text": "It creates a state of mild hypervigilance that sharpens focus."
           },
           {
             "letter": "B",
-            "text": "Complete suppression of stress hormones to prevent any conflict"
+            "text": "It creates complete suppression of stress hormones to prevent any conflict."
           },
           {
             "letter": "C",
-            "text": "Automatic engagement of defensive neural highways"
+            "text": "It creates automatic engagement of defensive neural highways."
           },
           {
             "letter": "D",
-            "text": "The neurobiological safety required for true vulnerability, honest self-expression, and dynamic problem-solving"
+            "text": "It creates the neurobiological safety required for true vulnerability, honest self-expression, and dynamic problem-solving."
           }
         ],
         "correctOptionLetter": "D",
@@ -1456,19 +1456,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Increased systemic inflammation and elevated cortisol"
+            "text": "It can lead to increased systemic inflammation and elevated cortisol."
           },
           {
             "letter": "B",
-            "text": "A loss of clarity regarding individual goals and worth"
+            "text": "It can lead to a loss of clarity regarding individual goals and worth."
           },
           {
             "letter": "C",
-            "text": "Unlocked human potential and long-lasting psychological and relational resilience"
+            "text": "It can unlock human potential and support lasting psychological and relational resilience."
           },
           {
             "letter": "D",
-            "text": "Deactivation of the dopamine reward system"
+            "text": "It can lead to deactivation of the dopamine reward system."
           }
         ],
         "correctOptionLetter": "C",
@@ -1480,19 +1480,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Because they keep the brain trapped in fear and defensive postures, preventing true neurobiological safety."
+            "text": "They fail because they keep the brain trapped in fear and defensive postures, preventing true neurobiological safety."
           },
           {
             "letter": "B",
-            "text": "Because they rely on dopamine rewards that wear off quickly."
+            "text": "They fail because they rely on dopamine rewards that wear off quickly."
           },
           {
             "letter": "C",
-            "text": "Because they demand too much mutual empathy from leaders."
+            "text": "They fail because they demand too much mutual empathy from leaders."
           },
           {
             "letter": "D",
-            "text": "Because they activate the smart vagus nerve too frequently."
+            "text": "They fail because they activate the smart vagus nerve too frequently."
           }
         ],
         "correctOptionLetter": "A",
@@ -1549,19 +1549,19 @@
       "options": [
         {
           "letter": "A",
-          "text": "Individual genetic inheritance"
+          "text": "The proposed determinant is individual genetic inheritance."
         },
         {
           "letter": "B",
-          "text": "Our relationships and relational bonds"
+          "text": "The proposed determinant is our relationships and relational bonds."
         },
         {
           "letter": "C",
-          "text": "Strict adherence to diet and physical exercise alone"
+          "text": "The proposed determinant is strict adherence to diet and physical exercise alone."
         },
         {
           "letter": "D",
-          "text": "The complete avoidance of all social stress"
+          "text": "The proposed determinant is the complete avoidance of all social stress."
         }
       ],
       "correctOptionLetter": "B",
@@ -1574,19 +1574,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Individual genetic inheritance"
+            "text": "The proposed determinant is individual genetic inheritance."
           },
           {
             "letter": "B",
-            "text": "Our relationships and relational bonds"
+            "text": "The proposed determinant is our relationships and relational bonds."
           },
           {
             "letter": "C",
-            "text": "Strict adherence to diet and physical exercise alone"
+            "text": "The proposed determinant is strict adherence to diet and physical exercise alone."
           },
           {
             "letter": "D",
-            "text": "The complete avoidance of all social stress"
+            "text": "The proposed determinant is the complete avoidance of all social stress."
           }
         ],
         "correctOptionLetter": "B",
@@ -1598,19 +1598,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Only cerebral cortex volume and memory storage"
+            "text": "They influence only cerebral cortex volume and memory storage."
           },
           {
             "letter": "B",
-            "text": "Voluntary motor muscle movement exclusively"
+            "text": "They influence voluntary motor muscle movement exclusively."
           },
           {
             "letter": "C",
-            "text": "Digestive enzyme production alone"
+            "text": "They influence digestive enzyme production alone."
           },
           {
             "letter": "D",
-            "text": "Cardiovascular health, immune system function, and stress physiology"
+            "text": "They influence cardiovascular health, immune system function, and stress physiology."
           }
         ],
         "correctOptionLetter": "D",
@@ -1622,19 +1622,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "As a severe biological stressor that elevates systemic inflammation and accelerates bodily wear and tear"
+            "text": "It acts as a severe biological stressor that elevates systemic inflammation and accelerates bodily wear and tear."
           },
           {
             "letter": "B",
-            "text": "As a protective state that lowers metabolic energy expenditure"
+            "text": "It acts as a protective state that lowers metabolic energy expenditure."
           },
           {
             "letter": "C",
-            "text": "As a neutral state that has no impact on physical health"
+            "text": "It acts as a neutral state that has no impact on physical health."
           },
           {
             "letter": "D",
-            "text": "As a trigger for oxytocin release to soothe the body"
+            "text": "It acts as a trigger for oxytocin release to soothe the body."
           }
         ],
         "correctOptionLetter": "A",
@@ -1670,19 +1670,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "High-frequency stress signals that increase blood pressure"
+            "text": "It sends high-frequency stress signals that increase blood pressure."
           },
           {
             "letter": "B",
-            "text": "Calming signals that regulate heart rate variability (HRV) and stabilize blood pressure"
+            "text": "It sends calming signals that regulate heart rate variability (HRV) and stabilize blood pressure."
           },
           {
             "letter": "C",
-            "text": "Signals that activate the dACC social pain alarm"
+            "text": "It sends signals that activate the dACC social pain alarm."
           },
           {
             "letter": "D",
-            "text": "Signals that shut down the dopamine reward system"
+            "text": "It sends signals that shut down the dopamine reward system."
           }
         ],
         "correctOptionLetter": "B",
@@ -1718,19 +1718,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "A vulnerability to social pain that weakens physical immunity"
+            "text": "We create a vulnerability to social pain that weakens physical immunity."
           },
           {
             "letter": "B",
-            "text": "A state of self-sufficiency that removes the need for others"
+            "text": "We create a state of self-sufficiency that removes the need for others."
           },
           {
             "letter": "C",
-            "text": "A continuous cycle of hypervigilance and defense"
+            "text": "We create a continuous cycle of hypervigilance and defense."
           },
           {
             "letter": "D",
-            "text": "A physiological buffer that equips us to navigate life's challenges with greater strength"
+            "text": "We create a physiological buffer that equips us to navigate life's challenges with greater strength."
           }
         ],
         "correctOptionLetter": "D",
@@ -1742,19 +1742,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "By proving that physical health is entirely independent of social experience."
+            "text": "It does so by proving that physical health is entirely independent of social experience."
           },
           {
             "letter": "B",
-            "text": "By showing that power-over dynamics are essential for cardiovascular fitness."
+            "text": "It does so by showing that power-over dynamics are essential for cardiovascular fitness."
           },
           {
             "letter": "C",
-            "text": "By demonstrating that we neurobiologically need one another to survive and thrive."
+            "text": "It does so by demonstrating that we neurobiologically need one another to survive and thrive."
           },
           {
             "letter": "D",
-            "text": "By proving that isolation strengthens the smart vagus nerve."
+            "text": "It does so by proving that isolation strengthens the smart vagus nerve."
           }
         ],
         "correctOptionLetter": "C",
@@ -1790,19 +1790,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Because connection directly regulates our nervous system, cardiovascular health, immune function, and gene expression."
+            "text": "It is necessary because connection directly regulates our nervous system, cardiovascular health, immune function, and gene expression."
           },
           {
             "letter": "B",
-            "text": "Because isolation causes immediate cognitive failure in all adults."
+            "text": "It is necessary because isolation causes immediate cognitive failure in all adults."
           },
           {
             "letter": "C",
-            "text": "Because traditional psychological models demand social participation."
+            "text": "It is necessary because traditional psychological models demand social participation."
           },
           {
             "letter": "D",
-            "text": "Because power-over structures cannot function without social groups."
+            "text": "It is necessary because power-over structures cannot function without social groups."
           }
         ],
         "correctOptionLetter": "A",
