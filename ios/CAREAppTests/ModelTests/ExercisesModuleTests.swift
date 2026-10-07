@@ -21,18 +21,17 @@ struct ExercisesModuleTests {
 #endif
     }
 
-    @Test("Every exercise and choice emoji has bundled color artwork")
+    @Test("Licensed exercise artwork exists and other emoji can use the iOS fallback")
     func testExerciseEmojiArtwork() {
         for item in ExerciseItem.allExercises {
-            let asset = ExerciseEmojiAsset.name(for: item.emoji)
-            #expect(asset != nil, "Missing artwork mapping for \(item.title)")
-            if let asset { #expect(UIImage(named: asset) != nil, "Missing image \(asset)") }
+            #expect(!item.emoji.isEmpty, "Missing emoji for \(item.title)")
         }
-        for emoji in ["😂", "💭", "🫶", "✨", "➕", "🍲", "🎵", "💃", "📸", "😄", "🔥"] {
+        for emoji in ExerciseEmojiAsset.names.keys {
             let asset = ExerciseEmojiAsset.name(for: emoji)
-            #expect(asset != nil)
+            #expect(asset != nil, "Missing licensed image for \(emoji)")
             if let asset { #expect(UIImage(named: asset) != nil) }
         }
+        #expect(ExerciseEmojiAsset.name(for: "🦋") == nil)
     }
     
     @Test("ExerciseCategory allCases covers all 4 CARE dimensions")
