@@ -48,10 +48,10 @@ Do not use a recurring subscription just to unlock a fixed library. Apple says s
 
 ## Current paid-release gates
 
-| Gate | State on 2026-10-02 | Owner |
+| Gate | State on 2026-10-07 | Owner |
 | --- | --- | --- |
 | Free release commit/build recorded | 1.0 (11), `537107bb4e14f4f885dc60b442ce6a6297373f6a`; submitted, awaiting review as of October 5 | Release owner |
-| Product model, price, ID, and agreement | One-time product and ID chosen in code; App Store Connect setup pending | Kaushal / App Store Connect owner |
+| Product model, price, ID, and agreement | Local StoreKit non-consumable tested at $9.99; production App Store Connect product and account agreements remain pending. The web session requested a fresh sign-in on October 7 | App Store Connect owner |
 | StoreKit purchase, verified entitlement, restore, refund handling | Local StoreKit product and successful no-charge purchase verified October 7; cancellation, restore, revocation, sandbox and TestFlight pending | iOS release engineer |
 | Paid content locked until entitlement | Eight originals free; read-only Action Plan preview; added exercise routes gated; Debug-only simulated purchase bypass | iOS release engineer |
 | Purchase and upgrade-path testing | Local StoreKit purchase and paid route verified; fresh install and upgrade-over-release still need end-to-end tests | iOS release engineer |
