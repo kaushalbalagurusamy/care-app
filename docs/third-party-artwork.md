@@ -11,6 +11,11 @@
 - **Calm exercise previews:** `exercise_animals` and `exercise_comedy` are
   AI-generated illustrations created for CARE. They do not copy frames from the
   linked YouTube videos.
+- **Paid exercise video previews:** `FigmaMirrorGestureOne`,
+  `FigmaHugCompilation`, and `FigmaReadCharacterClip` use original AI-generated
+  images approved by Jayme on October 7, 2026. They replace captured video
+  frames, social-media screenshots, and film-character artwork. They are
+  independent preview art and do not depict the linked videos' exact frames.
 - **Mirror the Emotion video:** CARE embeds YouTube video `XS7cC4rj1VU` using
   YouTube's official iframe player. The former bundled screenshot was removed on
   October 5, 2026. Before consent, the app shows original interface artwork;
@@ -32,4 +37,4 @@ These icons replace PNGs rendered from Apple's emoji font. CARE retains Unicode 
 
 ## Paid exercise additions pending review
 
-The paid branch adds Figma-imported exercise images and external media beyond the free-release list. Before distribution, replace or document rights for each paid image, especially `FigmaReadCharacterClip` (appears to depict characters from *Inside Out*), and check linked video sources, embed behavior, and the app privacy disclosure. The free-release permissions above do not establish rights for the added paid assets.
+The paid branch adds Figma-imported exercise images and external media beyond the free-release list. Before distribution, review remaining paid images, linked video sources, embed behavior, and the app privacy disclosure. The free-release permissions above do not establish rights for the added paid assets.

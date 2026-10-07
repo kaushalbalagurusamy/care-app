@@ -50,7 +50,6 @@ struct FigmaExerciseNode: Decodable, Identifiable {
         case "6aeac22d2f406f19e5deab3aff147bbf4afba5d9": return "FigmaShareIcon"
         case "6941379a35337829adbeab7e6b76732ddaaa4423": return "FigmaBreathingArt"
         case "08c13ca33d9edfe16cf76c203d7e728a2438b244": return "FigmaMirrorGestureOne"
-        case "0e6b7cd411f0a77b723d510fb9adb8314b81f990": return "FigmaMirrorGestureTwo"
         case "699a7c1095ff6415a923bee6923275a2629d5a13": return "FigmaHugCompilation"
         default: return nil
         }
