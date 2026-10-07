@@ -277,7 +277,7 @@ public struct EducationQuizView: View {
         let percent = Int((Double(sessionScore) / Double(max(1, questions.count))) * 100)
         
         VStack(spacing: 20) {
-            // Mastery Icon Badge
+            // Completion Icon Badge
             ZStack {
                 Circle()
                     .fill(isMastered ? Theme.Colors.primary.opacity(0.12) : Color.orange.opacity(0.12))
@@ -290,7 +290,7 @@ public struct EducationQuizView: View {
             .padding(.top, 16)
             
             VStack(spacing: 8) {
-                Text(isMastered ? "Mastery Achieved!" : (sessionScore == 2 ? "Almost There!" : "Keep Going!"))
+                Text(isMastered ? "Topic Complete!" : (sessionScore == 2 ? "Almost There!" : "Keep Going!"))
                     .font(Theme.Typography.poppins(.bold, size: 24))
                     .foregroundColor(Theme.Colors.textPrimary)
                 
@@ -300,7 +300,7 @@ public struct EducationQuizView: View {
                         .foregroundColor(Theme.Colors.textSecondary)
                         .multilineTextAlignment(.center)
                 } else {
-                    Text("You answered \(sessionScore) of \(questions.count) correctly (\(percent)%). Score 3 of 3 to achieve category mastery and earn your checkmark.")
+                    Text("You answered \(sessionScore) of \(questions.count) correctly (\(percent)%). Answer all three correctly to earn your checkmark.")
                         .font(Theme.Typography.poppins(.medium, size: 14.5))
                         .foregroundColor(Theme.Colors.textSecondary)
                         .multilineTextAlignment(.center)

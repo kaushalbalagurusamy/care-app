@@ -19,7 +19,7 @@ public struct NeurobiologyPathwayCard: View {
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Header Row: Domain pill, Pathway Name, Disclosure
+            // Header Row: Domain pill
             HStack(alignment: .center, spacing: 10) {
                 // Domain Pill Badge (e.g. "C - Calm")
                 HStack(spacing: 5) {
@@ -41,11 +41,6 @@ public struct NeurobiologyPathwayCard: View {
                 )
                 
                 Spacer()
-                
-                // Brain Region Callout
-                Text(pathway.brainRegion)
-                    .font(Theme.Typography.poppins(.medium, size: 12))
-                    .foregroundColor(Theme.Colors.textSecondary)
             }
             
             // Pathway Name Title
@@ -90,7 +85,7 @@ public struct NeurobiologyPathwayCard: View {
                 .stroke(Theme.Colors.dividerSubtle, lineWidth: 1)
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(pathway.domain.title) pathway: \(pathway.name), \(pathway.brainRegion). \(pathway.function)")
+        .accessibilityLabel("\(pathway.domain.title) pathway: \(pathway.name). \(pathway.function)")
     }
 }
 

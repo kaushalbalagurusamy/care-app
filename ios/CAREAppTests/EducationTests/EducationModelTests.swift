@@ -151,6 +151,23 @@ struct EducationModelTests {
         #expect(totalQuestions == 60, "Global question bank must contain exactly 60 questions")
         #expect(allQuestionIds.count == 60, "All 60 questions must have unique IDs")
     }
+
+    @Test("Relational Neuroscience quiz has complete questions, answers, and explanations")
+    func testRelationalNeuroscienceQuizCopy() throws {
+        let manifest = try EducationManifestLoader.loadBundledManifest()
+        let topic = try #require(manifest.first { $0.slug == .relationalNeuroscience })
+        #expect(topic.quizBank.count == 10)
+        for question in topic.quizBank {
+            #expect(question.prompt.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("?"),
+                    "Question \(question.id) needs a complete prompt")
+            #expect(question.rationale.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("."),
+                    "Question \(question.id) needs a complete explanation")
+            for option in question.options {
+                #expect(option.text.trimmingCharacters(in: .whitespacesAndNewlines).hasSuffix("."),
+                        "Question \(question.id), option \(option.letter) needs a complete sentence")
+            }
+        }
+    }
     
     @Test("TEST-EDM-07: Quiz bank has balanced A/B/C/D answer distribution across all topics")
     func testBalancedAnswerDistribution() throws {

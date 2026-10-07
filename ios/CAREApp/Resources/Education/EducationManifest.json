@@ -377,7 +377,7 @@
             "domain": "accepted",
             "name": "Dorsal Anterior Cingulate Cortex",
             "brainRegion": "DACC / Insula",
-            "function": "Functioning as the brain's social pain alarm, this region processes social rejection and ostracism using the exact same neurochemical pathways as acute physical injury, signaling vital warnings when our need for belonging is threatened.",
+            "function": "Brain imaging studies link this region to distress during social exclusion. Physical pain can also activate this region, but the two experiences do not appear to have identical neural patterns.",
             "exerciseSuggestion": "Name and validate moments of relational sting without judgment, seeking comforting verbal reassurance."
           },
           {
@@ -450,7 +450,7 @@
       },
       {
         "id": "rn-q02",
-        "prompt": "How does the Dorsal/Anterior Cingulate Cortex (dACC) process relational rejection and exclusion?",
+        "prompt": "What do brain imaging studies suggest about the dorsal anterior cingulate cortex (dACC) during social rejection?",
         "options": [
           {
             "letter": "A",
@@ -458,11 +458,11 @@
           },
           {
             "letter": "B",
-            "text": "process relational rejection and exclusion?"
+            "text": "It serves as the brain's primary visual center for recognizing faces."
           },
           {
             "letter": "C",
-            "text": "It processes relational pain along the exact same neural pathways as physical injury."
+            "text": "It can become active during social rejection, though rejection and physical pain do not have identical neural patterns."
           },
           {
             "letter": "D",
@@ -470,7 +470,7 @@
           }
         ],
         "correctOptionLetter": "C",
-        "rationale": "The dACC functions as the brain's social pain alarm, processing relational exclusion and rejection along the exact same neural pathways as physical injury."
+        "rationale": "Some brain imaging studies find dACC activity during social rejection. Physical pain can also engage this region, but finer analyses suggest the two experiences have distinct neural patterns."
       },
       {
         "id": "rn-q03",
@@ -478,19 +478,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "The Dorsal Anterior Cingulate Cortex"
+            "text": "The dorsal anterior cingulate cortex serves this role."
           },
           {
             "letter": "B",
-            "text": "The Dopamine Reward System"
+            "text": "The dopamine reward system serves this role."
           },
           {
             "letter": "C",
-            "text": "The Smart Vagus Nerve"
+            "text": "The smart vagus nerve serves this role."
           },
           {
             "letter": "D",
-            "text": "The Mirror Neuron System"
+            "text": "The mirror neuron system serves this role."
           }
         ],
         "correctOptionLetter": "D",
@@ -550,19 +550,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Assessing whether an interaction relies on \"power-over\" tactics"
+            "text": "It helps people assess whether an interaction relies on \"power-over\" tactics."
           },
           {
             "letter": "B",
-            "text": "Suppressing emotional responses during acute physical injury"
+            "text": "It suppresses emotional responses during acute physical injury."
           },
           {
             "letter": "C",
-            "text": "Increasing metabolic energy spent on vigilance"
+            "text": "It increases metabolic energy spent on vigilance."
           },
           {
             "letter": "D",
-            "text": "Experiencing the profound feeling of being genuinely seen and understood"
+            "text": "It helps people feel genuinely seen and understood."
           }
         ],
         "correctOptionLetter": "D",
@@ -598,19 +598,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Dominance and control over social hierarchies"
+            "text": "Dominance and control over social hierarchies fuel its activation."
           },
           {
             "letter": "B",
-            "text": "Warm, responsive, and emotionally attuned interactions"
+            "text": "Warm, responsive, and emotionally attuned interactions can activate it."
           },
           {
             "letter": "C",
-            "text": "The activation of physical and social pain alarms in the dACC"
+            "text": "Physical and social pain alarms in the dACC fuel its activation."
           },
           {
             "letter": "D",
-            "text": "Solitary reflection and self-sufficient autonomy"
+            "text": "Solitary reflection and self-sufficient autonomy fuel its activation."
           }
         ],
         "correctOptionLetter": "B",
@@ -646,19 +646,19 @@
         "options": [
           {
             "letter": "A",
-            "text": "Safe neurobiological grounds for mutual empathy, attunement, and authentic connection"
+            "text": "Together, they may support mutual empathy, attunement, and authentic connection."
           },
           {
             "letter": "B",
-            "text": "The creation of a \"power-over\" dynamic in social interactions"
+            "text": "Together, they create a \"power-over\" dynamic in social interactions."
           },
           {
             "letter": "C",
-            "text": "A decrease in heart rate variability and increased cortisol production"
+            "text": "Together, they lower heart rate variability and increase cortisol production."
           },
           {
             "letter": "D",
-            "text": "The permanent dismantling of all defensive neural pathways"
+            "text": "Together, they permanently dismantle all defensive neural pathways."
           }
         ],
         "correctOptionLetter": "A",
