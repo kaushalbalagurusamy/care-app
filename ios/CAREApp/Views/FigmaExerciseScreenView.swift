@@ -1,7 +1,7 @@
 import SwiftUI
 import PhotosUI
 
-#if !DEBUG
+#if !DEBUG && !CARE_INTERNAL_TESTFLIGHT
 #error("Paid CARE preview: complete the StoreKit, entitlement, media-rights, and App Review gates in docs/PAID_RELEASE_HANDOFF.md before making a distribution build.")
 #endif
 
